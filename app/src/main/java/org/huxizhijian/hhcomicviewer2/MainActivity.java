@@ -1,14 +1,16 @@
 package org.huxizhijian.hhcomicviewer2;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.view.View;
 
 import org.huxizhijian.hhcomicviewer2.utils.Constants;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends Activity {
 
 
     @Override
@@ -26,5 +28,10 @@ public class MainActivity extends FragmentActivity {
 //            System.out.println("action bar != null");
             actionBar.setBackgroundDrawable(ld);
         }
+    }
+
+    public void open(View view) {
+        Intent intent = new Intent(this, GalleryActivity.class);
+        startActivity(intent);
     }
 }
