@@ -23,7 +23,6 @@ public class SplashActivity extends Activity {
                 .centerCrop()
                 .into(imageView_splash);
         Handler handler = new Handler();
-        overridePendingTransition(R.anim.activity_fade_action, R.anim.activity_hold_action);
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {

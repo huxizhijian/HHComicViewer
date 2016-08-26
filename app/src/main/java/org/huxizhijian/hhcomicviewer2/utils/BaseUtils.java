@@ -1,6 +1,10 @@
 package org.huxizhijian.hhcomicviewer2.utils;
 
+import android.app.ActionBar;
 import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.view.WindowManager;
@@ -94,5 +98,14 @@ public class BaseUtils {
         String date = df.format(new Date(System.currentTimeMillis()));// new
         // Date()为获取当前系统时间
         return date;
+    }
+
+    public static void initActionBar(ActionBar actionBar, int newColor) {
+        Drawable colorDrawable = new ColorDrawable(newColor);
+        LayerDrawable ld = new LayerDrawable(new Drawable[]{colorDrawable});
+        if (actionBar != null) {
+//            System.out.println("action bar != null");
+            actionBar.setBackgroundDrawable(ld);
+        }
     }
 }

@@ -62,7 +62,6 @@ public class ZoomImageView extends ImageView implements OnScaleGestureListener,
     private boolean isCheckLeftAndRight = true;
 
     private OnCenterTapListener onCenterTapListener;
-    private boolean isOnceSingleTap = false; //是否同一单击事件
 
     public ZoomImageView(Context context) {
         this(context, null);
@@ -78,27 +77,27 @@ public class ZoomImageView extends ImageView implements OnScaleGestureListener,
                     public boolean onSingleTapConfirmed(MotionEvent event) {
                         //单击屏幕中心开启菜单功能
                         //如果没有设置listener则直接略过
-                        if (onCenterTapListener == null) return true;
+                        if (onCenterTapListener == null) return false;
 
                         float x_up, y_up;
                         x_up = event.getX();
                         y_up = event.getY();
                         if (onCenterTapListener.isOpen()) {
                             onCenterTapListener.closeMenu();
-                            isOnceSingleTap = true;
+                            return true;
                         }
                         if (event.getPointerCount() == 1) {
                             if ((x_up > (getWidth() / 3)) && (x_up < (getWidth() / 3 * 2))) {
                                 if ((y_up > (getHeight() / 3)) && (y_up < (getHeight() / 3 * 2))) {
                                     //当短按屏幕中心时，开启menu
-                                    if (!onCenterTapListener.isOpen() && !isOnceSingleTap) {
+                                    if (!onCenterTapListener.isOpen()) {
                                         onCenterTapListener.openMenu();
+                                        return true;
                                     }
                                 }
                             }
                         }
-                        isOnceSingleTap = false;
-                        return true;
+                        return false;
                     }
 
                     @Override
@@ -337,10 +336,6 @@ public class ZoomImageView extends ImageView implements OnScaleGestureListener,
                 float dx = x - mLastX;
                 float dy = y - mLastY;
 
-                if (dx <= 10 && dy <= 10) {
-                    return false;
-                }
-
                 if (!isCanDrag) {
                     isCanDrag = isCanDrag(dx, dy);
                 }
@@ -364,7 +359,7 @@ public class ZoomImageView extends ImageView implements OnScaleGestureListener,
                             dx = 0;
                             isCheckLeftAndRight = false;
                         }
-                        // 如果高度小雨屏幕高度，则禁止上下移动
+                        // 如果高度小于屏幕高度，则禁止上下移动
                         if (rectF.height() < getHeight()) {
                             dy = 0;
                             isCheckTopAndBottom = false;
