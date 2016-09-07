@@ -29,19 +29,21 @@ public class Comic implements Serializable, Comparable {
     @Column(name = "thumbnail_url")
     private String thumbnailUrl;  //缩略图的网址
     @Column(name = "is_mark")
-    private boolean isMark; //是否收藏
+    private boolean isMark = false; //是否收藏
     @Column(name = "is_download")
-    private boolean isDownload; //是否下载
+    private boolean isDownload = false; //是否下载
     @Column(name = "read_capture")
-    private int readCapture; //阅读的章节
+    private int readCapture = 0; //阅读的章节
     @Column(name = "read_page")
-    private int readPage; //阅读的页数
+    private int readPage = 0; //阅读的页数
     @Column(name = "last_read_time")
     private long lastReadTime;  //最后一次阅读时间，用于排序
     @Column(name = "capture_count")
     private int captureCount; //章节总数
     @Column(name = "capture_name_list")
     private String captureNameList; //为了更好的离线观看，将以字符串的方式记录章节名称
+    @Column(name = "is_update")
+    private boolean isUpdate = false; //是否有更新(章节数变化)
 
     //无法保存在数据库里，如果isDownload为true将会创建数个实体类保存在download表里
     private String[] captureName; //章节名
@@ -51,6 +53,17 @@ public class Comic implements Serializable, Comparable {
     //离线时解析出章节名
     public String[] getCaptureNameInString() {
         return captureNameList.split(":");
+    }
+
+    //存储章节名
+    public void saveCaptureNameList() {
+        if (captureName == null) return;
+        StringBuilder nameList = new StringBuilder();
+        String splitString = ":";
+        for (String splitCaptureName : captureName) {
+            nameList.append(splitCaptureName).append(splitString);
+        }
+        this.captureNameList = nameList.toString();
     }
 
     public ArrayList<ComicCapture> initDownloadList() {
@@ -66,7 +79,8 @@ public class Comic implements Serializable, Comparable {
     public Comic() {
     }
 
-    public Comic(String content) {
+    public Comic(String comicUrl, String content) {
+        this.comicUrl = comicUrl;
         //获取到网页内容时自动完善内容
         Document doc = Jsoup.parse(content);
         this.title = doc.title().split(",")[0];
@@ -85,9 +99,36 @@ public class Comic implements Serializable, Comparable {
         this.captureName = new String[vols.size()];
         this.captureUrl = new String[vols.size()];
         for (int i = 0; i < vols.size(); i++) {
-            this.captureName[i] = vols.get(i).text();
-            this.captureUrl[i] = vols.get(i).attr("href");
+            this.captureName[i] = vols.get(vols.size() - i - 1).text();
+            this.captureUrl[i] = vols.get(vols.size() - i - 1).attr("href");
         }
+        this.captureCount = captureName.length;
+    }
+
+    public boolean checkUpdate(String content) {
+        //查看是否有更新
+        Document doc = Jsoup.parse(content);
+        Element volSrc = doc.select("div[class=vol]").first();
+        Elements vols = volSrc.select("a[target=_blank]");
+        this.captureName = new String[vols.size()];
+        this.captureUrl = new String[vols.size()];
+        for (int i = 0; i < vols.size(); i++) {
+            this.captureName[i] = vols.get(vols.size() - i - 1).text();
+            this.captureUrl[i] = vols.get(vols.size() - i - 1).attr("href");
+        }
+        if (this.captureCount != this.captureName.length) {
+            this.isUpdate = true;
+        }
+        this.captureCount = this.captureName.length;
+        return isUpdate;
+    }
+
+    public boolean isUpdate() {
+        return isUpdate;
+    }
+
+    public void setUpdate(boolean update) {
+        isUpdate = update;
     }
 
     public String getCaptureNameList() {

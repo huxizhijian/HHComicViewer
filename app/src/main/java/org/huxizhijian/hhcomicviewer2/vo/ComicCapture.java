@@ -4,14 +4,15 @@ import org.huxizhijian.hhcomicviewer2.utils.ParsePicUrlList;
 import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * 章节实体类，主要保存下载状态
  * Created by wei on 2016/8/23.
  */
-@Table(name = "download")
-public class ComicCapture {
+@Table(name = "comic_capture")
+public class ComicCapture implements Serializable {
     @Column(name = "id", isId = true)
     private int id; //id
     @Column(name = "capture_name")
@@ -22,10 +23,10 @@ public class ComicCapture {
     private int downloadStatus; //下载状态
     @Column(name = "page_count")
     private int pageCount; //章节的页数
-    @Column(name = "download_progress")
-    private int downloadProgress; //下载完成的页数
     @Column(name = "comic_title")
     private String comicTitle; //漫画名
+    @Column(name = "comic_url")
+    private String comicUrl; //漫画URL
 
     private ArrayList<String> picList;
 
@@ -50,6 +51,14 @@ public class ComicCapture {
         this.comicTitle = comicTitle;
         this.captureName = captureName;
         this.captureUrl = captureUrl;
+    }
+
+    public String getComicUrl() {
+        return comicUrl;
+    }
+
+    public void setComicUrl(String comicUrl) {
+        this.comicUrl = comicUrl;
     }
 
     public int getId() {
@@ -92,14 +101,6 @@ public class ComicCapture {
         this.pageCount = pageCount;
     }
 
-    public int getDownloadProgress() {
-        return downloadProgress;
-    }
-
-    public void setDownloadProgress(int downloadProgress) {
-        this.downloadProgress = downloadProgress;
-    }
-
     public String getComicTitle() {
         return comicTitle;
     }
@@ -116,7 +117,6 @@ public class ComicCapture {
                 ", captureUrl='" + captureUrl + '\'' +
                 ", downloadStatus=" + downloadStatus +
                 ", pageCount=" + pageCount +
-                ", downloadProgress=" + downloadProgress +
                 ", comicTitle='" + comicTitle + '\'' +
                 '}';
     }

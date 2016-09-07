@@ -11,10 +11,26 @@ import org.xutils.x;
  */
 public class HHApplication extends Application {
 
-    private DbManager.DaoConfig daoConfig;
 
     public DbManager.DaoConfig getDaoConfig() {
-        return this.daoConfig;
+        //初始化数据库
+        DbManager.DaoConfig daoConfig = new DbManager.DaoConfig()
+                .setDbName("comic_db")
+                .setDbVersion(1)
+                .setDbOpenListener(new DbManager.DbOpenListener() {
+                    @Override
+                    public void onDbOpened(DbManager db) {
+                        // 开启WAL, 对写入加速提升巨大
+                        db.getDatabase().enableWriteAheadLogging();
+                    }
+                })
+                .setDbUpgradeListener(new DbManager.DbUpgradeListener() {
+                    @Override
+                    public void onUpgrade(DbManager db, int oldVersion, int newVersion) {
+                        db.getDatabase().enableWriteAheadLogging();
+                    }
+                });
+        return daoConfig;
     }
 
     @Override
@@ -24,15 +40,5 @@ public class HHApplication extends Application {
         x.Ext.init(this);
         //开启debug模式
         x.Ext.setDebug(true);
-        //初始化数据库
-        daoConfig = new DbManager.DaoConfig()
-                .setDbName("comic_db")
-                .setDbVersion(1)
-                .setDbUpgradeListener(new DbManager.DbUpgradeListener() {
-                    @Override
-                    public void onUpgrade(DbManager db, int oldVersion, int newVersion) {
-
-                    }
-                });
     }
 }

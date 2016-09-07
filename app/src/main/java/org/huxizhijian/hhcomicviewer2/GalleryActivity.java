@@ -17,6 +17,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -38,6 +39,7 @@ import java.util.ArrayList;
 
 public class GalleryActivity extends Activity implements View.OnClickListener {
 
+    //comic信息
     private ComicCapture comicCapture;
     private ArrayList<String> picList;
     private Comic comic;
@@ -46,6 +48,7 @@ public class GalleryActivity extends Activity implements View.OnClickListener {
     private ViewPager mViewPager;
     private ViewPagerAdapter mViewPagerAdapter;
     private ZoomImageView[] mImageViews;
+    private ProgressBar mProgressBar;
 
     //菜单及其上的控件
     private RelativeLayout mMenu;
@@ -81,24 +84,35 @@ public class GalleryActivity extends Activity implements View.OnClickListener {
     }
 
     private void getWebContent() {
-        RequestParams params = new RequestParams(Constants.URL_HHCOMIC + comic.getCaptureUrl()[capturePosition]);
+        mViewPager.setVisibility(View.GONE);
+        mProgressBar.setVisibility(View.VISIBLE);
+        RequestParams params = new RequestParams(Constants.HHCOMIC_URL + comic.getCaptureUrl()[capturePosition]);
         x.http().get(params, new Callback.CommonCallback<byte[]>() {
             @Override
             public void onSuccess(byte[] result) {
                 try {
                     final String content = new String(result, "gb2312");
-                    comicCapture = new ComicCapture(Constants.URL_HHCOMIC + comic.getCaptureUrl()[capturePosition], content);
+                    comicCapture = new ComicCapture(Constants.HHCOMIC_URL + comic.getCaptureUrl()[capturePosition], content);
                     picList = comicCapture.getPicList();
                     //初始化控件数值
                     mSeekBar.setMax(picList.size() - 1);
-                    mSeekBar.setProgress(mViewPager.getCurrentItem());
-                    mTv_progress.setText(mViewPager.getCurrentItem() + 1 + "/" + picList.size());
                     mTv_name.setText(comic.getCaptureName()[capturePosition]);
                     mImageViews = new ZoomImageView[picList.size()];
                     mViewPagerAdapter = new ViewPagerAdapter();
                     //设置与读取3页的内容，默认数字为1
                     mViewPager.setOffscreenPageLimit(3);
                     mViewPager.setAdapter(mViewPagerAdapter);
+                    //将progressbar设置为不可见
+                    mProgressBar.setVisibility(View.GONE);
+                    //将ViewPager设置为可见
+                    mViewPager.setVisibility(View.VISIBLE);
+                    if (comic.getReadCapture() == capturePosition) {
+                        //设置读到的页数
+                        mViewPager.setCurrentItem(comic.getReadPage());
+                    }
+                    //初始化页数
+                    mSeekBar.setProgress(mViewPager.getCurrentItem());
+                    mTv_progress.setText(mViewPager.getCurrentItem() + 1 + "/" + picList.size());
                     mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                         @Override
                         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -122,6 +136,9 @@ public class GalleryActivity extends Activity implements View.OnClickListener {
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
                 Log.e("getWebContent", "onError: " + ex.toString());
+                if (BaseUtils.getAPNType(GalleryActivity.this) == BaseUtils.NONEWTWORK) {
+                    Toast.makeText(GalleryActivity.this, "没有网络！", Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
@@ -168,6 +185,7 @@ public class GalleryActivity extends Activity implements View.OnClickListener {
 
     private void initViewPager() {
         mViewPager = (ViewPager) findViewById(R.id.viewPager_gallery);
+        mProgressBar = (ProgressBar) findViewById(R.id.pg_loading_gallery);
     }
 
     @Override
@@ -183,6 +201,8 @@ public class GalleryActivity extends Activity implements View.OnClickListener {
     protected void onPause() {
         super.onPause();
         unregisterReceiver(batteryBroadcastReceiver);
+        comic.setReadCapture(capturePosition);
+        comic.setReadPage(mViewPager.getCurrentItem());
     }
 
     @Override
@@ -297,6 +317,7 @@ public class GalleryActivity extends Activity implements View.OnClickListener {
                     .load(picList.get(position))
                     .crossFade()
                     .fitCenter()
+                    .dontAnimate()
                     .into(imageView);
             return imageView;
         }
@@ -326,7 +347,12 @@ public class GalleryActivity extends Activity implements View.OnClickListener {
             animation.start();
             isMenuOpen = false;
         } else {
-            super.onBackPressed();
+            comic.setReadCapture(capturePosition);
+            comic.setReadPage(mViewPager.getCurrentItem());
+            Intent intent = new Intent();
+            intent.putExtra("comic", comic);
+            setResult(0, intent);
+            finish();
         }
     }
 

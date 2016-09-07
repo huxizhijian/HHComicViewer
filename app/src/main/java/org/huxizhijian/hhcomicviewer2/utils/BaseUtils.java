@@ -1,13 +1,16 @@
 package org.huxizhijian.hhcomicviewer2.utils;
 
 import android.app.ActionBar;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -106,6 +109,16 @@ public class BaseUtils {
         if (actionBar != null) {
 //            System.out.println("action bar != null");
             actionBar.setBackgroundDrawable(ld);
+        }
+    }
+
+    public static void hideInputMethod(View view, Context context) {
+        if (context instanceof Activity) {
+            InputMethodManager manager = (InputMethodManager) context
+                    .getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (manager.isActive()) {
+                manager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+            }
         }
     }
 }

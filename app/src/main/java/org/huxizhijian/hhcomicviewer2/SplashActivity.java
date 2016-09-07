@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 
 /**
- * 闪屏界面
+ * 闪屏界面，初始化数据
  */
 public class SplashActivity extends Activity {
 
@@ -20,8 +20,10 @@ public class SplashActivity extends Activity {
         ImageView imageView_splash = (ImageView) findViewById(R.id.imageView_splash);
         Glide.with(this)
                 .load(R.drawable.splash_page)
+                .dontAnimate()
                 .centerCrop()
                 .into(imageView_splash);
+
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
@@ -29,6 +31,6 @@ public class SplashActivity extends Activity {
                 startActivity(new Intent(SplashActivity.this, MainActivity.class));
                 SplashActivity.this.finish();
             }
-        }, 2500);
+        }, 3000);
     }
 }

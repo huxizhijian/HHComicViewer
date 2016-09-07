@@ -3,4 +3,9 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="main_color">#ffff8c00</color>
+    <color name="shadow_main_color">#66ff8c00</color>
+
+    <!-- shadow -->
+    <color name="shadow_light">#38000000</color>
 </resources>

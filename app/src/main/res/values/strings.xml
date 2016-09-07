@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">汗汗漫画阅读器</string>
+    <string name="string_prev_btn_gallery">上一卷</string>
+    <string name="string_next_btn_gallery">下一卷</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="search_hint_content">搜索…</string>
+    <string name="loading_search">正在努力获取分类列表中…</string>
+    <string name="comic_result_list">结果列表</string>
+    <string name="loading_search_result">获取漫画列表中…</string>
+    <string name="comic_title">漫画名</string>
+    <string name="desc_capture">情况简介</string>
 </resources>

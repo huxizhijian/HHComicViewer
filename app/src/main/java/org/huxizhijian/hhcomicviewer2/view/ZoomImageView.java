@@ -1,6 +1,5 @@
 package org.huxizhijian.hhcomicviewer2.view;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Matrix;
 import android.graphics.RectF;
@@ -8,9 +7,9 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
-import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.ScaleGestureDetector.OnScaleGestureListener;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -191,7 +190,6 @@ public class ZoomImageView extends ImageView implements OnScaleGestureListener,
         }
     }
 
-    @SuppressLint("NewApi")
     @Override
     public boolean onScale(ScaleGestureDetector detector) {
         float scale = getScale();
@@ -407,38 +405,38 @@ public class ZoomImageView extends ImageView implements OnScaleGestureListener,
     @Override
     public void onGlobalLayout() {
         if (once) {
-            Drawable d = getDrawable();
-            if (d == null)
-                return;
-            Log.e(TAG, d.getIntrinsicWidth() + " , " + d.getIntrinsicHeight());
-            int width = getWidth();
-            int height = getHeight();
-            // 拿到图片的宽和高
-            int dw = d.getIntrinsicWidth();
-            int dh = d.getIntrinsicHeight();
-            float scale = 1.0f;
-            // 如果图片的宽或者高大于屏幕，则缩放至屏幕的宽或者高
-            if (dw > width && dh <= height) {
-                scale = width * 1.0f / dw;
-            }
-            if (dh > height && dw <= width) {
-                scale = height * 1.0f / dh;
-            }
-            // 如果宽和高都大于屏幕，则让其按按比例适应屏幕大小
-            if (dw > width && dh > height) {
-                scale = Math.min(width * 1.0f / dw, height * 1.0f / dh);
-            }
-            initScale = scale;
-
-            Log.e(TAG, "initScale = " + initScale);
-            mScaleMatrix.postTranslate((width - dw) / 2, (height - dh) / 2);
-            mScaleMatrix.postScale(scale, scale, getWidth() / 2,
-                    getHeight() / 2);
-            // 图片移动至屏幕中心
-            setImageMatrix(mScaleMatrix);
-            once = false;
+        System.out.println("onGlobalLayout:" + this.toString());
+        Drawable d = getDrawable();
+        if (d == null)
+            return;
+        Log.e(TAG, d.getIntrinsicWidth() + " , " + d.getIntrinsicHeight());
+        int width = getWidth();
+        int height = getHeight();
+        // 拿到图片的宽和高
+        int dw = d.getIntrinsicWidth();
+        int dh = d.getIntrinsicHeight();
+        float scale = 1.0f;
+        // 如果图片的宽或者高大于屏幕，则缩放至屏幕的宽或者高
+        if (dw > width && dh <= height) {
+            scale = width * 1.0f / dw;
         }
+        if (dh > height && dw <= width) {
+            scale = height * 1.0f / dh;
+        }
+        // 如果宽和高都大于屏幕，则让其按按比例适应屏幕大小
+        if (dw > width && dh > height) {
+            scale = Math.min(width * 1.0f / dw, height * 1.0f / dh);
+        }
+        initScale = scale;
 
+        Log.e(TAG, "initScale = " + initScale);
+        mScaleMatrix.postTranslate((width - dw) / 2, (height - dh) / 2);
+        mScaleMatrix.postScale(scale, scale, getWidth() / 2,
+                getHeight() / 2);
+        // 图片移动至屏幕中心
+        setImageMatrix(mScaleMatrix);
+        once = false;
+        }
     }
 
     /**

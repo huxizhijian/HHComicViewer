@@ -20,13 +20,14 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:24.2.0'
-    compile 'com.android.support:appcompat-v7:24.2.0'
-    compile 'junit:junit:4.12'
-    compile 'com.android.support:recyclerview-v7:24.2.0'
     compile files('libs/glide-3.7.0.jar')
     compile files('libs/okhttp-3.2.0.jar')
     compile files('libs/okio-1.6.0.jar')
     compile files('libs/jsoup-1.9.2.jar')
-    compile files('libs/xUtils-2.6.14.jar')
+    compile 'com.android.support:support-v4:24.2.0'
+    compile 'com.android.support:appcompat-v7:24.2.0'
+    compile 'junit:junit:4.12'
+    compile 'com.android.support:recyclerview-v7:24.2.0'
+    compile 'org.xutils:xutils:3.3.36'
+    compile files('libs/picasso-2.5.2.jar')
 }
