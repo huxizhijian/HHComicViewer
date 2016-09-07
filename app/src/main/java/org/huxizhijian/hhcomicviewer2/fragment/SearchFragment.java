@@ -99,6 +99,10 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
                 @Override
                 public void onError(Throwable ex, boolean isOnCallback) {
                     Log.e("getWebContent", "onError: " + ex.toString());
+                    if (BaseUtils.getAPNType(getActivity()) == BaseUtils.NONEWTWORK) {
+                        Toast.makeText(getActivity(), "没有网络!", Toast.LENGTH_SHORT).show();
+                    }
+                    mLoadingLayout.setVisibility(View.GONE);
                 }
 
                 @Override

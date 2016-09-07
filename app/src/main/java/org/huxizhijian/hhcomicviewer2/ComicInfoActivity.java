@@ -141,6 +141,7 @@ public class ComicInfoActivity extends Activity implements OnClickListener {
                     public void onError(Throwable ex, boolean isOnCallback) {
                         System.out.println("onError: " + ex.toString());
                         if (BaseUtils.getAPNType(ComicInfoActivity.this) == BaseUtils.NONEWTWORK) {
+                            Toast.makeText(ComicInfoActivity.this, "没有网络！", Toast.LENGTH_SHORT).show();
                             if (comic != null && comic.getCaptureName() != null) {
                                 mTv_title.setText(comic.getTitle());
                                 mTv_author.setText(comic.getAuthor());
@@ -174,7 +175,7 @@ public class ComicInfoActivity extends Activity implements OnClickListener {
                                 mRecyclerView.setVisibility(View.VISIBLE);
                             }
                         } else {
-                            Toast.makeText(ComicInfoActivity.this, "访问网络出错！", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ComicInfoActivity.this, "出错！", Toast.LENGTH_SHORT).show();
                         }
                     }
 
