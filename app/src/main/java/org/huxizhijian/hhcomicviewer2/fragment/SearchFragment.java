@@ -1,34 +1,30 @@
 package org.huxizhijian.hhcomicviewer2.fragment;
 
+import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import org.huxizhijian.hhcomicviewer2.ComicResultListActivity;
 import org.huxizhijian.hhcomicviewer2.R;
+import org.huxizhijian.hhcomicviewer2.activities.ComicResultListActivity;
 import org.huxizhijian.hhcomicviewer2.adapter.VolRecyclerViewAdapter;
 import org.huxizhijian.hhcomicviewer2.utils.BaseUtils;
 import org.huxizhijian.hhcomicviewer2.utils.Constants;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.xutils.common.Callback;
-import org.xutils.http.RequestParams;
-import org.xutils.x;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -74,51 +70,21 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
             initRecyclerView();
         } else {
             mLoadingLayout.setVisibility(View.VISIBLE);
-            RequestParams params = new RequestParams(Constants.HHCOMIC_URL);
-            x.http().get(params, new Callback.CommonCallback<byte[]>() {
-                @Override
-                public void onSuccess(byte[] result) {
-                    try {
-                        String content = new String(result, "gb2312");
-                        Document doc = Jsoup.parse(content);
-                        Element menu = doc.select("div[id=menu]").first();
-                        Elements classifies = menu.select("a[class=linkb]");
-                        mClassifies = new String[classifies.size()];
-                        mLinks = new String[classifies.size()];
-                        for (int i = 0; i < classifies.size(); i++) {
-                            mClassifies[i] = classifies.get(i).text();
-                            mLinks[i] = classifies.get(i).attr("href");
-                        }
-                        //加载数据到recycler_view里面
-                        initRecyclerView();
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void onError(Throwable ex, boolean isOnCallback) {
-                    Log.e("getWebContent", "onError: " + ex.toString());
-                    if (BaseUtils.getAPNType(getActivity()) == BaseUtils.NONEWTWORK) {
-                        Toast.makeText(getActivity(), "没有网络!", Toast.LENGTH_SHORT).show();
-                    }
-                    mLoadingLayout.setVisibility(View.GONE);
-                }
-
-                @Override
-                public void onCancelled(CancelledException cex) {
-                    Log.e("getWebContent", "onCancelled: " + cex.toString());
-                }
-
-                @Override
-                public void onFinished() {
-
-                }
-            });
+            Document doc = Jsoup.parse(Constants.CLASSIFIES_CONTENT);
+            Elements classifies = doc.select("a[class=linkb]");
+            mClassifies = new String[classifies.size()];
+            mLinks = new String[classifies.size()];
+            for (int i = 0; i < classifies.size(); i++) {
+                mClassifies[i] = classifies.get(i).text();
+                mLinks[i] = classifies.get(i).attr("href");
+            }
+            //加载数据到recycler_view里面
+            initRecyclerView();
         }
     }
 
     //将数据加载到recycler_view中
+
     private void initRecyclerView() {
         mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
         mAdapter = new VolRecyclerViewAdapter(getActivity(), mClassifies);
@@ -127,10 +93,8 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
             public void onItemClick(View view, int position) {
                 //开启分类
                 Intent intent = new Intent(getActivity(), ComicResultListActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("action", Constants.ACTION_CLASSIFIES);
-                bundle.putString("url", Constants.HHCOMIC_URL + mLinks[position]);
-                intent.putExtras(bundle);
+                intent.setAction(Constants.ACTION_CLASSIFIES);
+                intent.putExtra("url", Constants.HHCOMIC_URL + mLinks[position]);
                 startActivity(intent);
             }
 
@@ -147,6 +111,25 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
     private void initEvent() {
         mSearchShowBtn.setOnClickListener(this);
         mSearchBtn.setOnClickListener(this);
+        mEt_key.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    String key = mEt_key.getText().toString();
+                    if (key.equals("")) {
+                        Toast.makeText(getActivity(), "搜索内容不能为空", Toast.LENGTH_SHORT).show();
+                    }
+                    BaseUtils.hideInputMethod(mEt_key, getActivity());
+                    //进行搜索操作
+                    Intent intent = new Intent(getActivity(), ComicResultListActivity.class);
+                    intent.setAction(Intent.ACTION_SEARCH);
+                    intent.putExtra(SearchManager.QUERY, key);
+                    startActivity(intent);
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     private void initView(View view) {
@@ -174,17 +157,8 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
                 BaseUtils.hideInputMethod(mEt_key, getActivity());
                 //进行搜索操作
                 Intent intent = new Intent(getActivity(), ComicResultListActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("action", Constants.ACTION_SEARCH);
-                String getKey = null;
-                try {
-                    getKey = "?key=" + URLEncoder.encode(key, "GB2312");
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-                getKey += "&button=%CB%D1%CB%F7%C2%FE%BB%AD";
-                bundle.putString("url", Constants.SEARCH_URL + getKey);
-                intent.putExtras(bundle);
+                intent.setAction(Intent.ACTION_SEARCH);
+                intent.putExtra(SearchManager.QUERY, key);
                 startActivity(intent);
                 break;
         }

@@ -8,10 +8,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+import com.squareup.picasso.Picasso;
 
 import org.huxizhijian.hhcomicviewer2.R;
-import org.huxizhijian.hhcomicviewer2.vo.Comic;
+import org.huxizhijian.hhcomicviewer2.enities.Comic;
 
 import java.util.List;
 
@@ -41,13 +41,12 @@ public class StaggeredComicAdapter extends RecyclerView.Adapter<StaggeredComicAd
     @Override
     public void onBindViewHolder(StaggeredViewHolder holder, int position) {
         holder.tv.setText(mComicList.get(position).getTitle());
-        Glide.with(mContext)
+        Picasso.with(mContext)
                 .load(mComicList.get(position).getThumbnailUrl())
-                .fitCenter()
+                .fit()
                 .placeholder(R.mipmap.blank)
                 .error(R.mipmap.blank)
                 .into(holder.iv);
-
         setUpItemEvent(holder);
     }
 
@@ -89,6 +88,11 @@ public class StaggeredComicAdapter extends RecyclerView.Adapter<StaggeredComicAd
 
     public void setComicList(List<Comic> comicList) {
         this.mComicList = comicList;
+    }
+
+    public void removeItem(int position) {
+        mComicList.remove(position);
+        notifyItemRemoved(position);
     }
 
     class StaggeredViewHolder extends RecyclerView.ViewHolder {

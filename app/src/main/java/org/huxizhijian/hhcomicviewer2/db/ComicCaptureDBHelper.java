@@ -4,9 +4,9 @@ import android.content.Context;
 
 import org.huxizhijian.hhcomicviewer2.app.HHApplication;
 import org.huxizhijian.hhcomicviewer2.utils.Constants;
-import org.huxizhijian.hhcomicviewer2.vo.Comic;
-import org.huxizhijian.hhcomicviewer2.vo.ComicCapture;
-import org.huxizhijian.hhcomicviewer2.vo.ThreadInfo;
+import org.huxizhijian.hhcomicviewer2.enities.Comic;
+import org.huxizhijian.hhcomicviewer2.enities.ComicCapture;
+import org.huxizhijian.hhcomicviewer2.enities.ThreadInfo;
 import org.xutils.DbManager;
 import org.xutils.db.sqlite.WhereBuilder;
 import org.xutils.ex.DbException;

@@ -1,4 +1,4 @@
-package org.huxizhijian.hhcomicviewer2.vo;
+package org.huxizhijian.hhcomicviewer2.enities;
 
 import org.huxizhijian.hhcomicviewer2.utils.ParsePicUrlList;
 import org.xutils.db.annotation.Column;

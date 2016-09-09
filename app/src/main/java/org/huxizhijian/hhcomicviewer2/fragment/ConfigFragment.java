@@ -19,7 +19,6 @@ import org.huxizhijian.hhcomicviewer2.R;
 public class ConfigFragment extends Fragment {
 
     public ConfigFragment() {
-        // Required empty public constructor
     }
 
 
@@ -33,9 +32,12 @@ public class ConfigFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
                     case 0:
-                        //设置
+                        //打开设置界面
                         break;
                     case 1:
+                        //打开下载列表
+                        break;
+                    case 2:
                         //清除在线阅读缓存
                         new AsyncTask<Context, Void, Void>() {
                             @Override
@@ -49,7 +51,7 @@ public class ConfigFragment extends Fragment {
                         }.execute(getActivity());
                         Toast.makeText(getActivity(), "清除缓存成功", Toast.LENGTH_SHORT).show();
                         break;
-                    case 2:
+                    case 3:
                         //关于
                         break;
                 }

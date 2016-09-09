@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="4dp"
-    tools:context="org.huxizhijian.hhcomicviewer2.ComicResultListActivity">
+    tools:context=".activities.ComicResultListActivity">
 
     <LinearLayout
         android:id="@+id/loading_layout_search_result"

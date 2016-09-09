@@ -1,12 +1,15 @@
-package org.huxizhijian.hhcomicviewer2;
+package org.huxizhijian.hhcomicviewer2.activities;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -14,20 +17,23 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
+import com.flyco.animation.FadeExit.FadeExit;
+import com.flyco.animation.SlideEnter.SlideTopEnter;
+import com.flyco.dialog.widget.popup.BubblePopup;
+import com.squareup.picasso.Picasso;
 
+import org.huxizhijian.hhcomicviewer2.R;
 import org.huxizhijian.hhcomicviewer2.adapter.VolRecyclerViewAdapter;
 import org.huxizhijian.hhcomicviewer2.db.ComicCaptureDBHelper;
 import org.huxizhijian.hhcomicviewer2.db.ComicDBHelper;
+import org.huxizhijian.hhcomicviewer2.enities.Comic;
 import org.huxizhijian.hhcomicviewer2.utils.BaseUtils;
 import org.huxizhijian.hhcomicviewer2.utils.Constants;
-import org.huxizhijian.hhcomicviewer2.vo.Comic;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 
 public class ComicInfoActivity extends Activity implements OnClickListener {
 
@@ -74,6 +80,7 @@ public class ComicInfoActivity extends Activity implements OnClickListener {
 
         //注册单击事件
         mTv_author.setOnClickListener(this);
+        mTv_details.setOnClickListener(this);
         btn_mark.setOnClickListener(this);
         btn_read.setOnClickListener(this);
         btn_download.setOnClickListener(this);
@@ -99,23 +106,24 @@ public class ComicInfoActivity extends Activity implements OnClickListener {
                             final String content = new String(result, "gb2312");
                             if (comic == null) {
                                 comic = new Comic(url, content);
+                                mVolAdapter = new VolRecyclerViewAdapter(ComicInfoActivity.this, comic.getCaptureName());
                             } else {
                                 comic.checkUpdate(content);
+                                mVolAdapter = new VolRecyclerViewAdapter(ComicInfoActivity.this,
+                                        comic.getCaptureName(), comic.getReadCapture());
                             }
                             mTv_title.setText(comic.getTitle());
                             mTv_author.setText(comic.getAuthor());
                             mTv_details.setText(comic.getDescription());
-                            Glide.with(ComicInfoActivity.this)
+                            Picasso.with(ComicInfoActivity.this)
                                     .load(comic.getThumbnailUrl())
                                     .placeholder(R.mipmap.blank)
                                     .error(R.mipmap.blank)
-                                    .crossFade()
-                                    .fitCenter()
+                                    .fit()
                                     .into(mImageView);
                             //初始化RecyclerView
                             mRecyclerView.setLayoutManager(new GridLayoutManager(ComicInfoActivity.this, 4));
                             mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-                            mVolAdapter = new VolRecyclerViewAdapter(ComicInfoActivity.this, comic.getCaptureName());
                             mVolAdapter.setOnItemClickListener(new VolRecyclerViewAdapter.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(View view, int position) {
@@ -127,7 +135,6 @@ public class ComicInfoActivity extends Activity implements OnClickListener {
 
                                 @Override
                                 public void onItemLongClick(View view, int position) {
-
                                 }
                             });
                             mRecyclerView.setAdapter(mVolAdapter);
@@ -139,19 +146,19 @@ public class ComicInfoActivity extends Activity implements OnClickListener {
 
                     @Override
                     public void onError(Throwable ex, boolean isOnCallback) {
-                        System.out.println("onError: " + ex.toString());
+                        ex.printStackTrace();
                         if (BaseUtils.getAPNType(ComicInfoActivity.this) == BaseUtils.NONEWTWORK) {
-                            Toast.makeText(ComicInfoActivity.this, "没有网络！", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ComicInfoActivity.this, Constants.NO_NETWORK, Toast.LENGTH_SHORT).show();
+                            comic = comicDBHelper.findByUrl(url);
                             if (comic != null && comic.getCaptureName() != null) {
                                 mTv_title.setText(comic.getTitle());
                                 mTv_author.setText(comic.getAuthor());
                                 mTv_details.setText(comic.getDescription());
-                                Glide.with(ComicInfoActivity.this)
+                                Picasso.with(ComicInfoActivity.this)
                                         .load(comic.getThumbnailUrl())
                                         .placeholder(R.mipmap.blank)
                                         .error(R.mipmap.blank)
-                                        .crossFade()
-                                        .fitCenter()
+                                        .fit()
                                         .into(mImageView);
                                 //初始化RecyclerView
                                 mRecyclerView.setLayoutManager(new GridLayoutManager(ComicInfoActivity.this, 4));
@@ -168,7 +175,6 @@ public class ComicInfoActivity extends Activity implements OnClickListener {
 
                                     @Override
                                     public void onItemLongClick(View view, int position) {
-
                                     }
                                 });
                                 mRecyclerView.setAdapter(mVolAdapter);
@@ -181,7 +187,7 @@ public class ComicInfoActivity extends Activity implements OnClickListener {
 
                     @Override
                     public void onCancelled(CancelledException cex) {
-                        System.out.println("onCancel: " + cex.toString());
+                        cex.printStackTrace();
                     }
 
                     @Override
@@ -196,7 +202,20 @@ public class ComicInfoActivity extends Activity implements OnClickListener {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         comic = (Comic) data.getSerializableExtra("comic");
         comic.setLastReadTime(System.currentTimeMillis());
+        if (mVolAdapter != null) {
+            mVolAdapter.setReadCapture(comic.getReadCapture());
+        }
     }
+
+    @Override
+    public boolean onMenuItemSelected(int featureId, MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onMenuItemSelected(featureId, item);
+    }
+
 
     @Override
     public void onClick(View view) {
@@ -237,18 +256,21 @@ public class ComicInfoActivity extends Activity implements OnClickListener {
             case R.id.textView_author_comic_info:
                 //搜索同一作者的作品
                 intent = new Intent(this, ComicResultListActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("action", Constants.ACTION_SEARCH);
-                String getKey = null;
-                try {
-                    getKey = "?key=" + URLEncoder.encode(comic.getAuthor(), "GB2312");
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-                getKey += "&button=%CB%D1%CB%F7%C2%FE%BB%AD";
-                bundle.putString("url", Constants.SEARCH_URL + getKey);
-                intent.putExtras(bundle);
+                intent.setAction(Intent.ACTION_SEARCH);
+                intent.putExtra(SearchManager.QUERY, comic.getAuthor());
                 startActivity(intent);
+                break;
+            case R.id.textView_details_comic_info:
+                View pop_layout = View.inflate(this, R.layout.pop_bubble_descript, null);
+                TextView textView = (TextView) pop_layout.findViewById(R.id.textView_pop_bubble);
+                textView.setText(comic.getDescription());
+                new BubblePopup(this, pop_layout)
+                        .anchorView(mTv_details)
+                        .gravity(Gravity.BOTTOM)
+                        .bubbleColor(Constants.COLOR_BLACK)
+                        .showAnim(new SlideTopEnter())
+                        .dismissAnim(new FadeExit())
+                        .show();
                 break;
             default:
                 break;
@@ -258,7 +280,7 @@ public class ComicInfoActivity extends Activity implements OnClickListener {
     @Override
     protected void onPause() {
         super.onPause();
-        if (comic.getLastReadTime() != 0) {
+        if (comic != null && comic.getLastReadTime() != 0) {
             comic.setLastReadTime(System.currentTimeMillis());
             if (comicDBHelper.findByUrl(comic.getComicUrl()) != null) {
                 comicDBHelper.update(comic);

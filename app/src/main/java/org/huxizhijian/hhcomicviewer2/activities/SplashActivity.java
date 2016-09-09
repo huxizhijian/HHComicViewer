@@ -1,4 +1,4 @@
-package org.huxizhijian.hhcomicviewer2;
+package org.huxizhijian.hhcomicviewer2.activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -7,6 +7,8 @@ import android.os.Handler;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+
+import org.huxizhijian.hhcomicviewer2.R;
 
 /**
  * 闪屏界面，初始化数据

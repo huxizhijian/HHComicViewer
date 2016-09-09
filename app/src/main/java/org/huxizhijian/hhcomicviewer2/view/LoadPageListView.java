@@ -21,6 +21,7 @@ public class LoadPageListView extends ListView implements AbsListView.OnScrollLi
     private int lastVisibleItem;//最后一个可见的Item
     private boolean isLoading; //是否正在加载
     private ILoaderListener loaderListener;
+    private LayoutInflater mInflater;
 
     public void setLoaderListener(ILoaderListener loaderListener) {
         this.loaderListener = loaderListener;
@@ -45,12 +46,21 @@ public class LoadPageListView extends ListView implements AbsListView.OnScrollLi
      * 初始化界面，添加底部布局文件到ListView
      */
     public void initView(Context context) {
-        LayoutInflater inflater = LayoutInflater.from(context);
-        footer = inflater.inflate(R.layout.foot_layout, null);
-        this.setOnScrollListener(this);
-        //设置底部布局
-        footer.findViewById(R.id.loader_layout).setVisibility(GONE);
-        this.addFooterView(footer);
+        mInflater = LayoutInflater.from(context);
+    }
+
+    public void addFootView(boolean needFootView) {
+        if (needFootView) {
+            footer = mInflater.inflate(R.layout.foot_layout, null);
+            this.setOnScrollListener(this);
+            //设置底部布局
+            footer.findViewById(R.id.loader_layout).setVisibility(GONE);
+            this.addFooterView(footer);
+        } else {
+            if (footer != null) {
+                this.removeFooterView(footer);
+            }
+        }
     }
 
     @Override

@@ -2,6 +2,7 @@
 <resources>
     <array name="list_more_array">
         <item>设置</item>
+        <item>下载列表</item>
         <item>清除在线阅读缓存</item>
         <item>关于</item>
     </array>

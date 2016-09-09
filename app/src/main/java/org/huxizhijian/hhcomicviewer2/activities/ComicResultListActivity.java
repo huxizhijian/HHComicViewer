@@ -1,7 +1,8 @@
-package org.huxizhijian.hhcomicviewer2;
+package org.huxizhijian.hhcomicviewer2.activities;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,14 +14,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
+import com.squareup.picasso.Picasso;
 
+import org.huxizhijian.hhcomicviewer2.R;
 import org.huxizhijian.hhcomicviewer2.adapter.CommonAdapter;
+import org.huxizhijian.hhcomicviewer2.enities.Comic;
 import org.huxizhijian.hhcomicviewer2.utils.BaseUtils;
 import org.huxizhijian.hhcomicviewer2.utils.Constants;
 import org.huxizhijian.hhcomicviewer2.utils.ViewHolder;
 import org.huxizhijian.hhcomicviewer2.view.LoadPageListView;
-import org.huxizhijian.hhcomicviewer2.vo.Comic;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -30,6 +32,7 @@ import org.xutils.http.RequestParams;
 import org.xutils.x;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,15 +53,34 @@ public class ComicResultListActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comic_result_list);
         initView();
-        Bundle bundle = getIntent().getExtras();
-        String action = bundle.getString("action", Constants.ACTION_CLASSIFIES);
-        if (action.equals(Constants.ACTION_SEARCH)) {
+        Intent intent = getIntent();
+        doAction(intent);
+
+    }
+
+    private void doAction(Intent intent) {
+        if (intent.getAction().equals(Intent.ACTION_SEARCH)) {
             isSearch = true;
-        } else if (action.equals(Constants.ACTION_CLASSIFIES)) {
+            String key = intent.getStringExtra(SearchManager.QUERY);
+            String getKey = null;
+            try {
+                getKey = "?key=" + URLEncoder.encode(key, "GB2312");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            getKey += "&button=%CB%D1%CB%F7%C2%FE%BB%AD";
+            mUrl = Constants.SEARCH_URL + getKey;
+        } else if (intent.getAction().equals(Constants.ACTION_CLASSIFIES)) {
             isSearch = false;
+            mUrl = intent.getStringExtra("url");
         }
-        mUrl = bundle.getString("url", Constants.HHCOMIC_URL + "hhlist/1/");
         showComicList();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        doAction(intent);
     }
 
     @Override
@@ -107,7 +129,7 @@ public class ComicResultListActivity extends Activity {
                             comic.setTitle(comicSrc.text());
                             Element imgUrl = comicUrls.get(i).select("img").first();
                             comic.setThumbnailUrl(imgUrl.attr("src"));
-                            Elements desc = comicUrls.get(i).select("br");
+                            Elements desc = comicUrls.get(i).getElementsByTag("br");
                             comic.setDescription(desc.get(2).text());
                             mComicList.add(comic);
                         }
@@ -116,6 +138,7 @@ public class ComicResultListActivity extends Activity {
                     //ListView设置
                     mAdapter = new ListViewAdapter(ComicResultListActivity.this, mComicList, R.layout.item_list_view);
                     if (!isSearch) {
+                        mListView.addFootView(true);
                         mListView.setLoaderListener(new LoadPageListView.ILoaderListener() {
                             @Override
                             public void onLoad() {
@@ -128,6 +151,8 @@ public class ComicResultListActivity extends Activity {
                                 }
                             }
                         });
+                    } else {
+                        mListView.addFootView(false);
                     }
                     mListView.setDividerHeight(4);
                     mListView.setAdapter(mAdapter);
@@ -152,6 +177,9 @@ public class ComicResultListActivity extends Activity {
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
                 Log.e("init ", "onError: ", ex);
+                if (BaseUtils.getAPNType(ComicResultListActivity.this) == BaseUtils.NONEWTWORK) {
+                    Toast.makeText(ComicResultListActivity.this, Constants.NO_NETWORK, Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
@@ -185,6 +213,9 @@ public class ComicResultListActivity extends Activity {
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
+                if (BaseUtils.getAPNType(ComicResultListActivity.this) == BaseUtils.NONEWTWORK) {
+                    Toast.makeText(ComicResultListActivity.this, Constants.NO_NETWORK, Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
@@ -238,8 +269,9 @@ public class ComicResultListActivity extends Activity {
             vh.setText(R.id.tv_title_item, comic.getTitle());
             vh.setText(R.id.tv_description_item, comic.getDescription());
             ImageView imageView = vh.getView(R.id.imageView_item);
-            Glide.with(ComicResultListActivity.this)
+            Picasso.with(ComicResultListActivity.this)
                     .load(comic.getThumbnailUrl())
+                    .fit()
                     .placeholder(R.mipmap.blank)
                     .error(R.mipmap.blank)
                     .into(imageView);

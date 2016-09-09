@@ -12,14 +12,14 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 
-import com.bumptech.glide.Glide;
+import com.squareup.picasso.Picasso;
 
-import org.huxizhijian.hhcomicviewer2.ComicInfoActivity;
+import org.huxizhijian.hhcomicviewer2.activities.ComicInfoActivity;
 import org.huxizhijian.hhcomicviewer2.R;
 import org.huxizhijian.hhcomicviewer2.adapter.CommonAdapter;
 import org.huxizhijian.hhcomicviewer2.db.ComicDBHelper;
 import org.huxizhijian.hhcomicviewer2.utils.ViewHolder;
-import org.huxizhijian.hhcomicviewer2.vo.Comic;
+import org.huxizhijian.hhcomicviewer2.enities.Comic;
 
 import java.util.List;
 
@@ -49,7 +49,7 @@ public class HistoryFragment extends Fragment {
         if (mComics == null) return;
         mAdapter = new HistoryListViewAdapter(getActivity(), mComics, R.layout.item_list_view);
         mListView.setAdapter(mAdapter);
-        mListView.setDividerHeight(4);
+        mListView.setDividerHeight(8);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
@@ -73,6 +73,16 @@ public class HistoryFragment extends Fragment {
         }
     }
 
+    public void refreshData() {
+        if (mAdapter != null) {
+            mComics = mComicDBHelper.findAll();
+            if (mComics != null) {
+                mAdapter.setDatas(mComics);
+                mAdapter.notifyDataSetChanged();
+            }
+        }
+    }
+
     //自定义adapter
     class HistoryListViewAdapter extends CommonAdapter<Comic> {
 
@@ -84,10 +94,12 @@ public class HistoryFragment extends Fragment {
         public void convert(ViewHolder vh, Comic comic) {
             vh.setText(R.id.tv_title_item, comic.getTitle());
             vh.setText(R.id.tv_description_item, "作者：" + comic.getAuthor());
-            vh.setText(R.id.tv_read_info_item, "上次看到第" + comic.getReadCapture() + "话，第" + comic.getReadPage() + "页");
+            vh.setText(R.id.tv_read_info_item, "上次看到第" + (comic.getReadCapture() + 1) + "集，" +
+                    "第" + (comic.getReadPage() + 1) + "页");
             ImageView imageView = vh.getView(R.id.imageView_item);
-            Glide.with(getActivity())
+            Picasso.with(getActivity())
                     .load(comic.getThumbnailUrl())
+                    .fit()
                     .placeholder(R.mipmap.blank)
                     .error(R.mipmap.blank)
                     .into(imageView);

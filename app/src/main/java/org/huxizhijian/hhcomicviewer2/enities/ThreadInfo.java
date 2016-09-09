@@ -1,4 +1,4 @@
-package org.huxizhijian.hhcomicviewer2.vo;
+package org.huxizhijian.hhcomicviewer2.enities;
 
 import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;

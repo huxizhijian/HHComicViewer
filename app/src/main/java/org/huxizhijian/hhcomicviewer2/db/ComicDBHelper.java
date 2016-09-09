@@ -3,7 +3,7 @@ package org.huxizhijian.hhcomicviewer2.db;
 import android.content.Context;
 
 import org.huxizhijian.hhcomicviewer2.app.HHApplication;
-import org.huxizhijian.hhcomicviewer2.vo.Comic;
+import org.huxizhijian.hhcomicviewer2.enities.Comic;
 import org.xutils.DbManager;
 import org.xutils.ex.DbException;
 import org.xutils.x;
@@ -26,7 +26,7 @@ public class ComicDBHelper {
     public List<Comic> findMarkedComics() {
         List<Comic> markedComics = null;
         try {
-            markedComics = db.selector(Comic.class).where("is_mark", "=", true).orderBy("last_read_time").findAll();
+            markedComics = db.selector(Comic.class).where("is_mark", "=", true).orderBy("last_read_time", true).findAll();
         } catch (DbException e) {
             e.printStackTrace();
         }

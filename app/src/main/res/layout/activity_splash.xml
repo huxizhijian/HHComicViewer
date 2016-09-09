@@ -6,5 +6,5 @@
     android:id="@+id/imageView_splash"
     android:background="#FFFF8500"
     android:scaleType="centerCrop"
-    tools:context="org.huxizhijian.hhcomicviewer2.SplashActivity">
+    tools:context=".activities.SplashActivity">
 </ImageView>

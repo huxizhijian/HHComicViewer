@@ -1,4 +1,4 @@
-package org.huxizhijian.hhcomicviewer2;
+package org.huxizhijian.hhcomicviewer2.activities;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -25,11 +25,12 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
+import org.huxizhijian.hhcomicviewer2.R;
 import org.huxizhijian.hhcomicviewer2.utils.BaseUtils;
 import org.huxizhijian.hhcomicviewer2.utils.Constants;
 import org.huxizhijian.hhcomicviewer2.view.ZoomImageView;
-import org.huxizhijian.hhcomicviewer2.vo.Comic;
-import org.huxizhijian.hhcomicviewer2.vo.ComicCapture;
+import org.huxizhijian.hhcomicviewer2.enities.Comic;
+import org.huxizhijian.hhcomicviewer2.enities.ComicCapture;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
@@ -137,7 +138,7 @@ public class GalleryActivity extends Activity implements View.OnClickListener {
             public void onError(Throwable ex, boolean isOnCallback) {
                 Log.e("getWebContent", "onError: " + ex.toString());
                 if (BaseUtils.getAPNType(GalleryActivity.this) == BaseUtils.NONEWTWORK) {
-                    Toast.makeText(GalleryActivity.this, "没有网络！", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GalleryActivity.this, Constants.NO_NETWORK, Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -255,7 +256,7 @@ public class GalleryActivity extends Activity implements View.OnClickListener {
             return picList.size();
         }
 
-        private ZoomImageView getImageView(int position) {
+        private ZoomImageView getImageView(final int position) {
             final ZoomImageView imageView = new ZoomImageView(GalleryActivity.this);
             imageView.setOnCenterTapListener(new ZoomImageView.OnCenterTapListener() {
                 @Override
@@ -313,11 +314,27 @@ public class GalleryActivity extends Activity implements View.OnClickListener {
                     return isMenuOpen;
                 }
             });
+            imageView.setOnLeftOrRightTapListener(new ZoomImageView.OnLeftOrRightTapListener() {
+                @Override
+                public void leftTap() {
+                    if (position - 1 >= 0) {
+                        mViewPager.setCurrentItem(position - 1);
+                    }
+                }
+
+                @Override
+                public void rightTap() {
+                    if (position + 1 < comicCapture.getPageCount()) {
+                        mViewPager.setCurrentItem(position + 1);
+                    }
+                }
+            });
             Glide.with(GalleryActivity.this)
                     .load(picList.get(position))
                     .crossFade()
                     .fitCenter()
                     .dontAnimate()
+                    .skipMemoryCache(true) //跳过内存缓存
                     .into(imageView);
             return imageView;
         }

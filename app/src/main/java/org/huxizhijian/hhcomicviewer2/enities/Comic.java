@@ -1,4 +1,4 @@
-package org.huxizhijian.hhcomicviewer2.vo;
+package org.huxizhijian.hhcomicviewer2.enities;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -86,7 +86,8 @@ public class Comic implements Serializable, Comparable {
         this.title = doc.title().split(",")[0];
         Element meta = doc.select("meta[name=Keywords]").first();
         String authorSrc = meta.attr("content").split(",")[2];
-        this.author = authorSrc.substring(0, authorSrc.length() - (title.length() + 5)).split("：")[1];
+//        this.author = authorSrc.substring(0, authorSrc.length() - (title.length() + 5)).split("：")[1];
+        this.author = authorSrc.split(" ")[0].split("：")[1];
         Element src = doc.select("div[class=2replh]").first();
         String src1 = src.text();
         String src2 = src1.split(",")[1];

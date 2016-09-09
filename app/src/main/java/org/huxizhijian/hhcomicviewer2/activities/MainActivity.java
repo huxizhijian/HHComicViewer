@@ -1,13 +1,19 @@
-package org.huxizhijian.hhcomicviewer2;
+package org.huxizhijian.hhcomicviewer2.activities;
 
 
+import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
+import org.huxizhijian.hhcomicviewer2.R;
 import org.huxizhijian.hhcomicviewer2.fragment.ConfigFragment;
 import org.huxizhijian.hhcomicviewer2.fragment.HistoryFragment;
 import org.huxizhijian.hhcomicviewer2.fragment.MarkedFragment;
@@ -25,6 +31,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private FragmentPagerAdapter mAdapter;
     private List<Fragment> mTags = new ArrayList<>();
     private List<ChangeColorIconWithText> mTabIndicator = new ArrayList<>();
+    private long mLastBackPressedTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +86,31 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         mTabIndicator.add(config);
 
         marked.setIconAlpha(1.0f);
-        BaseUtils.initActionBar(getActionBar(), Constants.THEME_COLOR);
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayShowHomeEnabled(false);
+            BaseUtils.initActionBar(actionBar, Constants.THEME_COLOR);
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_popup_sync:
+                //刷新数据
+                ((MarkedFragment) mTags.get(0)).refreshData();
+                ((HistoryFragment) mTags.get(1)).refreshData();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
@@ -104,6 +135,16 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 mTabIndicator.get(3).setIconAlpha(1.0f);
                 mViewPager.setCurrentItem(3, false);
                 break;
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (System.currentTimeMillis() - mLastBackPressedTime <= 2000) {
+            super.onBackPressed();
+        } else {
+            mLastBackPressedTime = System.currentTimeMillis();
+            Toast.makeText(MainActivity.this, "再按一次退出", Toast.LENGTH_SHORT).show();
         }
     }
 

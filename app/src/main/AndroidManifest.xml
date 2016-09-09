@@ -19,10 +19,11 @@
             android:value="GlideModule" />
 
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.MainActivity"
+            android:label="@string/app_name_short"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".SplashActivity"
+            android:name=".activities.SplashActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Wallpaper.NoTitleBar.Fullscreen">
             <intent-filter>
@@ -32,13 +33,22 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".GalleryActivity"
+            android:name=".activities.GalleryActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.DeviceDefault.NoActionBar.Fullscreen" />
-        <activity android:name=".ComicInfoActivity" />
+        <activity android:name=".activities.ComicInfoActivity" />
+
         <activity
-            android:name=".ComicResultListActivity"
-            android:label="@string/comic_result_list" />
+            android:name=".activities.ComicResultListActivity"
+            android:label="@string/comic_result_list"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+        </activity>
 
         <service android:name=".service.DownloadService" />
     </application>

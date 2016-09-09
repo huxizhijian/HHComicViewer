@@ -18,10 +18,19 @@ public class VolRecyclerViewAdapter extends RecyclerView.Adapter<VolRecyclerView
     private String[] mVolName;
     private LayoutInflater mInflater;
     private OnItemClickListener mOnItemClickListener;
+    private int mCapturePosition = 0;
+    private boolean mIsReaded = false;
 
     public VolRecyclerViewAdapter(Context context, String[] volName) {
         this.mVolName = volName;
         this.mInflater = LayoutInflater.from(context);
+    }
+
+    public VolRecyclerViewAdapter(Context context, String[] volName, int capturePosition) {
+        this.mVolName = volName;
+        this.mInflater = LayoutInflater.from(context);
+        this.mCapturePosition = capturePosition;
+        this.mIsReaded = true;
     }
 
     @Override
@@ -33,6 +42,11 @@ public class VolRecyclerViewAdapter extends RecyclerView.Adapter<VolRecyclerView
     @Override
     public void onBindViewHolder(VolViewHolder holder, int position) {
         holder.tv.setText(mVolName[position]);
+        if (mIsReaded && position == mCapturePosition) {
+            holder.itemView.setBackgroundResource(R.drawable.bg_item_vol_pressed);
+        } else {
+            holder.itemView.setBackgroundResource(R.drawable.bg_item_vol);
+        }
         setUpItemEvent(holder);
     }
 
@@ -69,6 +83,14 @@ public class VolRecyclerViewAdapter extends RecyclerView.Adapter<VolRecyclerView
     @Override
     public int getItemCount() {
         return mVolName.length;
+    }
+
+    public void setReadCapture(int capturePosition) {
+        int prePosition = this.mCapturePosition;
+        this.mCapturePosition = capturePosition;
+        mIsReaded = true;
+        notifyItemChanged(prePosition);
+        notifyItemChanged(mCapturePosition);
     }
 
     class VolViewHolder extends RecyclerView.ViewHolder {

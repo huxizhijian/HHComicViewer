@@ -61,6 +61,7 @@ public class ZoomImageView extends ImageView implements OnScaleGestureListener,
     private boolean isCheckLeftAndRight = true;
 
     private OnCenterTapListener onCenterTapListener;
+    private OnLeftOrRightTapListener onLeftOrRightTapListener;
 
     public ZoomImageView(Context context) {
         this(context, null);
@@ -76,7 +77,8 @@ public class ZoomImageView extends ImageView implements OnScaleGestureListener,
                     public boolean onSingleTapConfirmed(MotionEvent event) {
                         //单击屏幕中心开启菜单功能
                         //如果没有设置listener则直接略过
-                        if (onCenterTapListener == null) return false;
+                        if (onCenterTapListener == null && onLeftOrRightTapListener == null)
+                            return false;
 
                         float x_up, y_up;
                         x_up = event.getX();
@@ -86,14 +88,21 @@ public class ZoomImageView extends ImageView implements OnScaleGestureListener,
                             return true;
                         }
                         if (event.getPointerCount() == 1) {
-                            if ((x_up > (getWidth() / 3)) && (x_up < (getWidth() / 3 * 2))) {
-                                if ((y_up > (getHeight() / 3)) && (y_up < (getHeight() / 3 * 2))) {
-                                    //当短按屏幕中心时，开启menu
+                            if (onCenterTapListener != null &&
+                                    (x_up > (getWidth() / 3)) && (x_up < (getWidth() / 3 * 2))) {
+                                if ((y_up > (getHeight() / 3))) {
+                                    //当短按屏幕中心下方时，开启menu
                                     if (!onCenterTapListener.isOpen()) {
                                         onCenterTapListener.openMenu();
                                         return true;
                                     }
                                 }
+                            } else if (onLeftOrRightTapListener != null && x_up < (getWidth() / 3)) {
+                                //当短按屏幕左边时，显示前一页
+                                onLeftOrRightTapListener.leftTap();
+                            } else if (onLeftOrRightTapListener != null && x_up > (getWidth() / 3 * 2)) {
+                                //当短按屏幕右边时，显示后一页
+                                onLeftOrRightTapListener.rightTap();
                             }
                         }
                         return false;
@@ -405,37 +414,37 @@ public class ZoomImageView extends ImageView implements OnScaleGestureListener,
     @Override
     public void onGlobalLayout() {
         if (once) {
-        System.out.println("onGlobalLayout:" + this.toString());
-        Drawable d = getDrawable();
-        if (d == null)
-            return;
-        Log.e(TAG, d.getIntrinsicWidth() + " , " + d.getIntrinsicHeight());
-        int width = getWidth();
-        int height = getHeight();
-        // 拿到图片的宽和高
-        int dw = d.getIntrinsicWidth();
-        int dh = d.getIntrinsicHeight();
-        float scale = 1.0f;
-        // 如果图片的宽或者高大于屏幕，则缩放至屏幕的宽或者高
-        if (dw > width && dh <= height) {
-            scale = width * 1.0f / dw;
-        }
-        if (dh > height && dw <= width) {
-            scale = height * 1.0f / dh;
-        }
-        // 如果宽和高都大于屏幕，则让其按按比例适应屏幕大小
-        if (dw > width && dh > height) {
-            scale = Math.min(width * 1.0f / dw, height * 1.0f / dh);
-        }
-        initScale = scale;
+            System.out.println("onGlobalLayout:" + this.toString());
+            Drawable d = getDrawable();
+            if (d == null)
+                return;
+            Log.e(TAG, d.getIntrinsicWidth() + " , " + d.getIntrinsicHeight());
+            int width = getWidth();
+            int height = getHeight();
+            // 拿到图片的宽和高
+            int dw = d.getIntrinsicWidth();
+            int dh = d.getIntrinsicHeight();
+            float scale = 1.0f;
+            // 如果图片的宽或者高大于屏幕，则缩放至屏幕的宽或者高
+            if (dw > width && dh <= height) {
+                scale = width * 1.0f / dw;
+            }
+            if (dh > height && dw <= width) {
+                scale = height * 1.0f / dh;
+            }
+            // 如果宽和高都大于屏幕，则让其按按比例适应屏幕大小
+            if (dw > width && dh > height) {
+                scale = Math.min(width * 1.0f / dw, height * 1.0f / dh);
+            }
+            initScale = scale;
 
-        Log.e(TAG, "initScale = " + initScale);
-        mScaleMatrix.postTranslate((width - dw) / 2, (height - dh) / 2);
-        mScaleMatrix.postScale(scale, scale, getWidth() / 2,
-                getHeight() / 2);
-        // 图片移动至屏幕中心
-        setImageMatrix(mScaleMatrix);
-        once = false;
+            Log.e(TAG, "initScale = " + initScale);
+            mScaleMatrix.postTranslate((width - dw) / 2, (height - dh) / 2);
+            mScaleMatrix.postScale(scale, scale, getWidth() / 2,
+                    getHeight() / 2);
+            // 图片移动至屏幕中心
+            setImageMatrix(mScaleMatrix);
+            once = false;
         }
     }
 
@@ -475,11 +484,21 @@ public class ZoomImageView extends ImageView implements OnScaleGestureListener,
         this.onCenterTapListener = onCenterTapListner;
     }
 
+    public void setOnLeftOrRightTapListener(OnLeftOrRightTapListener leftOrRightTapListener) {
+        this.onLeftOrRightTapListener = leftOrRightTapListener;
+    }
+
     public interface OnCenterTapListener {
         void openMenu();
 
         void closeMenu();
 
         boolean isOpen();
+    }
+
+    public interface OnLeftOrRightTapListener {
+        void leftTap();
+
+        void rightTap();
     }
 }

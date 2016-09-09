@@ -88,6 +88,7 @@ public class ChangeColorIconWithText extends View {
         mTextPaint.setTextSize(mTextSize);
         mTextPaint.setColor(0xff555555);
         mTextPaint.getTextBounds(mText, 0, mText.length(), mTextBound);
+        mTextPaint.setAntiAlias(true); //抗锯齿
     }
 
     @Override
