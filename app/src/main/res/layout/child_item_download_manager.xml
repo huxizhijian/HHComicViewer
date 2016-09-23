@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:descendantFocusability="blocksDescendants"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:padding="4dp">
+
+    <CheckBox
+        android:id="@+id/checkbox_child_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/textView_capture_name_download_manager"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:text="@string/capture_name"/>
+
+        <TextView
+            android:id="@+id/textView_progress_download_manager"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/progress_bar_download_manager"
+            android:layout_alignEnd="@+id/progress_bar_download_manager"
+            android:layout_alignRight="@+id/progress_bar_download_manager"/>
+
+        <org.huxizhijian.hhcomicviewer2.view.HorizontalProgressBarWithProgress
+            android:id="@+id/progress_bar_download_manager"
+            android:layout_width="match_parent"
+            android:layout_height="16dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/textView_capture_name_download_manager"
+            app:progress_reach_color="@color/main_color"
+            app:progress_reach_height="4dp"
+            app:progress_text_color="@color/main_color"
+            app:progress_unreach_color="@color/colorPrimary"
+            app:progress_unreach_height="2dp"/>
+    </RelativeLayout>
+
+
+    <ImageView
+        android:id="@+id/imageView_download_manager"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:src="@mipmap/ic_media_play"/>
+
+</LinearLayout>

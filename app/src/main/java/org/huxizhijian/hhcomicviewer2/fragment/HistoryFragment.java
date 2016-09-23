@@ -12,14 +12,14 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
 
-import org.huxizhijian.hhcomicviewer2.activities.ComicInfoActivity;
 import org.huxizhijian.hhcomicviewer2.R;
+import org.huxizhijian.hhcomicviewer2.activities.ComicInfoActivity;
 import org.huxizhijian.hhcomicviewer2.adapter.CommonAdapter;
 import org.huxizhijian.hhcomicviewer2.db.ComicDBHelper;
-import org.huxizhijian.hhcomicviewer2.utils.ViewHolder;
 import org.huxizhijian.hhcomicviewer2.enities.Comic;
+import org.huxizhijian.hhcomicviewer2.utils.ViewHolder;
 
 import java.util.List;
 
@@ -97,9 +97,9 @@ public class HistoryFragment extends Fragment {
             vh.setText(R.id.tv_read_info_item, "上次看到第" + (comic.getReadCapture() + 1) + "集，" +
                     "第" + (comic.getReadPage() + 1) + "页");
             ImageView imageView = vh.getView(R.id.imageView_item);
-            Picasso.with(getActivity())
+            Glide.with(getActivity())
                     .load(comic.getThumbnailUrl())
-                    .fit()
+                    .fitCenter()
                     .placeholder(R.mipmap.blank)
                     .error(R.mipmap.blank)
                     .into(imageView);

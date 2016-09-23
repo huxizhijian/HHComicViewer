@@ -1,6 +1,7 @@
 package org.huxizhijian.hhcomicviewer2.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 
 import org.huxizhijian.hhcomicviewer2.R;
+import org.huxizhijian.hhcomicviewer2.activities.DownloadManagerActivity;
 
 
 public class ConfigFragment extends Fragment {
@@ -36,6 +38,8 @@ public class ConfigFragment extends Fragment {
                         break;
                     case 1:
                         //打开下载列表
+                        Intent intent = new Intent(getActivity(), DownloadManagerActivity.class);
+                        startActivity(intent);
                         break;
                     case 2:
                         //清除在线阅读缓存

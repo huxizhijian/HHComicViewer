@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
 
 import org.huxizhijian.hhcomicviewer2.R;
 import org.huxizhijian.hhcomicviewer2.adapter.CommonAdapter;
@@ -44,7 +44,7 @@ public class ComicResultListActivity extends Activity {
     private String mUrl;
     private int mPosition;
     private int mPageSize;
-    private boolean isSearch;
+    private boolean mIsSearch;
 
     private ArrayList<Comic> mComicList;
 
@@ -60,8 +60,9 @@ public class ComicResultListActivity extends Activity {
 
     private void doAction(Intent intent) {
         if (intent.getAction().equals(Intent.ACTION_SEARCH)) {
-            isSearch = true;
+            mIsSearch = true;
             String key = intent.getStringExtra(SearchManager.QUERY);
+            setTitle("搜索结果 - " + "\"" + key + "\"");
             String getKey = null;
             try {
                 getKey = "?key=" + URLEncoder.encode(key, "GB2312");
@@ -71,7 +72,9 @@ public class ComicResultListActivity extends Activity {
             getKey += "&button=%CB%D1%CB%F7%C2%FE%BB%AD";
             mUrl = Constants.SEARCH_URL + getKey;
         } else if (intent.getAction().equals(Constants.ACTION_CLASSIFIES)) {
-            isSearch = false;
+            mIsSearch = false;
+            String classified = intent.getStringExtra("classified");
+            setTitle("分类 - " + classified);
             mUrl = intent.getStringExtra("url");
         }
         showComicList();
@@ -102,7 +105,7 @@ public class ComicResultListActivity extends Activity {
                     Document doc = Jsoup.parse(content);
                     mComicList = new ArrayList<>();
                     //数据加载
-                    if (!isSearch) {
+                    if (!mIsSearch) {
                         //非搜索
                         //page信息查找
                         Element pageInfo = doc.select("div[class=replz]").first();
@@ -137,7 +140,7 @@ public class ComicResultListActivity extends Activity {
 
                     //ListView设置
                     mAdapter = new ListViewAdapter(ComicResultListActivity.this, mComicList, R.layout.item_list_view);
-                    if (!isSearch) {
+                    if (!mIsSearch) {
                         mListView.addFootView(true);
                         mListView.setLoaderListener(new LoadPageListView.ILoaderListener() {
                             @Override
@@ -269,11 +272,12 @@ public class ComicResultListActivity extends Activity {
             vh.setText(R.id.tv_title_item, comic.getTitle());
             vh.setText(R.id.tv_description_item, comic.getDescription());
             ImageView imageView = vh.getView(R.id.imageView_item);
-            Picasso.with(ComicResultListActivity.this)
+            Glide.with(ComicResultListActivity.this)
                     .load(comic.getThumbnailUrl())
-                    .fit()
+                    .fitCenter()
                     .placeholder(R.mipmap.blank)
                     .error(R.mipmap.blank)
+                    .crossFade()
                     .into(imageView);
         }
     }

@@ -23,12 +23,11 @@ import java.util.Map;
  */
 public class ComicCaptureDBHelper {
 
-    private static ComicCaptureDBHelper dbHelper;
-    private static DbManager db;
-    private static HHApplication application;
+    private static ComicCaptureDBHelper sDbHelper;
+    private static DbManager sDb;
 
     private ComicCaptureDBHelper(Context context) {
-        db = x.getDb(((HHApplication) context.getApplicationContext()).getDaoConfig());
+        sDb = x.getDb(((HHApplication) context.getApplicationContext()).getDaoConfig());
     }
 
     public Map<String, List<ComicCapture>> findDownloadCaptureMap(List<Comic> downloadedComics) {
@@ -44,7 +43,7 @@ public class ComicCaptureDBHelper {
     public List<ComicCapture> findUnFinishedCaptures() {
         List<ComicCapture> unFinishedCaptures = null;
         try {
-            unFinishedCaptures = db.selector(ComicCapture.class)
+            unFinishedCaptures = sDb.selector(ComicCapture.class)
                     .where("download_status", "!=", Constants.DOWNLOAD_FINISHED).findAll();
         } catch (DbException e) {
             e.printStackTrace();
@@ -52,18 +51,28 @@ public class ComicCaptureDBHelper {
         return unFinishedCaptures;
     }
 
+    public ComicCapture findByCaptureUrl(String captureUrl) {
+        ComicCapture capture = null;
+        try {
+            capture = sDb.selector(ComicCapture.class).where("capture_url", "=", captureUrl).findFirst();
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+        return capture;
+    }
+
     public static ComicCaptureDBHelper getInstance(Context context) {
-        if (dbHelper == null) {
-            dbHelper = new ComicCaptureDBHelper(context);
-            return dbHelper;
+        if (sDbHelper == null) {
+            sDbHelper = new ComicCaptureDBHelper(context);
+            return sDbHelper;
         } else {
-            return dbHelper;
+            return sDbHelper;
         }
     }
 
     public synchronized void add(ComicCapture comicCapture) {
         try {
-            db.save(comicCapture);
+            sDb.save(comicCapture);
         } catch (DbException e) {
             e.printStackTrace();
         }
@@ -72,7 +81,7 @@ public class ComicCaptureDBHelper {
     public synchronized void delete(ComicCapture comicCapture) {
         WhereBuilder builder = WhereBuilder.b("capture_url", "=", comicCapture.getCaptureUrl());
         try {
-            db.delete(ComicCapture.class, builder);
+            sDb.delete(ComicCapture.class, builder);
         } catch (DbException e) {
             e.printStackTrace();
         }
@@ -80,8 +89,15 @@ public class ComicCaptureDBHelper {
 
     public synchronized void update(ComicCapture comicCapture) {
         try {
-            db.update(comicCapture, "capture_name", "download_status"
-                    , "page_count", "comic_title", "comic_url");
+            sDb.update(comicCapture);
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public synchronized void updateProgress(ComicCapture comicCapture){
+        try {
+            sDb.update(comicCapture,"download_position");
         } catch (DbException e) {
             e.printStackTrace();
         }
@@ -90,16 +106,16 @@ public class ComicCaptureDBHelper {
     public synchronized void deleteComicCaptureOneComic(String comicUrl) {
         WhereBuilder builder = WhereBuilder.b("comic_url", "=", comicUrl);
         try {
-            db.delete(ThreadInfo.class, builder);
+            sDb.delete(ThreadInfo.class, builder);
         } catch (DbException e) {
             e.printStackTrace();
         }
     }
 
-    private List<ComicCapture> findByComicUrl(String comicUrl) {
+    public List<ComicCapture> findByComicUrl(String comicUrl) {
         List<ComicCapture> comicCaptures = null;
         try {
-            comicCaptures = db.selector(ComicCapture.class).where("comic_url", "=", comicUrl).findAll();
+            comicCaptures = sDb.selector(ComicCapture.class).where("comic_url", "=", comicUrl).findAll();
         } catch (DbException e) {
             e.printStackTrace();
         }
@@ -110,7 +126,7 @@ public class ComicCaptureDBHelper {
     public List<ComicCapture> findAll() {
         List<ComicCapture> comicCaptures = new ArrayList<>();
         try {
-            comicCaptures = db.findAll(ComicCapture.class);
+            comicCaptures = sDb.findAll(ComicCapture.class);
         } catch (DbException e) {
             e.printStackTrace();
         }

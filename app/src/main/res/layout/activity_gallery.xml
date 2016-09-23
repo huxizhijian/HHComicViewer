@@ -1,15 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#111111"
     tools:context=".activities.GalleryActivity">
 
+    <TextView
+        android:id="@+id/tv_position_gallery"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textColor="#6b6b6b"
+        android:textSize="140sp"/>
+
     <android.support.v4.view.ViewPager
         android:id="@+id/viewPager_gallery"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"/>
+
+    <ProgressBar
+        android:id="@+id/pg_loading_gallery"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"/>
 
     <RelativeLayout
         android:id="@+id/menu_gallery"
@@ -28,7 +43,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/tv_name_gallery"
-            android:thumb="@drawable/seekbar_thumb" />
+            android:thumb="@drawable/seekbar_thumb"/>
 
         <TextView
             android:id="@+id/tv_name_gallery"
@@ -38,76 +53,72 @@
             android:layout_centerHorizontal="true"
             android:layout_margin="8dp"
             android:textColor="#bebebe"
-            android:textSize="18sp" />
+            android:textSize="18sp"/>
 
 
-        <Button
+        <ImageButton
             android:id="@+id/btn_next_gallery"
-            style="@style/Widget.AppCompat.Button.Borderless.Colored"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="64dp"
+            android:layout_height="32dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_below="@+id/seekBar_gallery"
-            android:layout_marginBottom="4dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginTop="4dp"
+            android:layout_margin="10dp"
             android:background="@drawable/bg_btn"
             android:gravity="center"
-            android:text="@string/string_next_btn_gallery"
-            android:textColor="#000000" />
+            android:src="@mipmap/next"/>
 
-        <Button
+        <ImageButton
             android:id="@+id/btn_prev_gallery"
-            style="@style/Widget.AppCompat.Button.Borderless.Colored"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="48dp"
+            android:layout_height="24dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/seekBar_gallery"
-            android:layout_marginBottom="4dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginTop="4dp"
+            android:layout_margin="10dp"
             android:background="@drawable/bg_btn"
             android:gravity="center"
-            android:text="@string/string_prev_btn_gallery"
-            android:textColor="#000000" />
+            android:src="@mipmap/prev"/>
+
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/tv_progress_gallery"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal|top"
-        android:layout_margin="8dp"
-        android:textColor="#acacac"
-        android:textSize="16sp" />
+        android:layout_gravity="top"
+        android:padding="8dp">
 
-    <TextView
-        android:id="@+id/tv_time_gallery"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="left|top"
-        android:layout_margin="8dp"
-        android:textColor="#acacac"
-        android:textSize="16sp" />
+        <TextView
+            android:id="@+id/tv_progress_gallery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:textColor="#acacac"
+            android:textSize="16sp"/>
 
-    <ImageView
-        android:id="@+id/iv_battery_gallery"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right|top"
-        android:layout_margin="8dp"
-        android:adjustViewBounds="true"
-        android:maxHeight="16dp"
-        android:src="@mipmap/battery_100" />
+        <TextView
+            android:id="@+id/tv_time_gallery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_gravity="center"
+            android:textColor="#acacac"
+            android:textSize="16sp"/>
 
-    <ProgressBar
-        android:id="@+id/pg_loading_gallery"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center" />
+        <ImageView
+            android:id="@+id/iv_battery_gallery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="4dp"
+            android:adjustViewBounds="true"
+            android:maxHeight="14dp"
+            android:maxWidth="32dp"
+            android:src="@mipmap/battery_100"/>
+
+    </RelativeLayout>
 
 </FrameLayout>

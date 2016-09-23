@@ -9,6 +9,7 @@ import org.xutils.db.annotation.Table;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 保存于数据库的实体Comic类
@@ -41,39 +42,53 @@ public class Comic implements Serializable, Comparable {
     @Column(name = "capture_count")
     private int captureCount; //章节总数
     @Column(name = "capture_name_list")
-    private String captureNameList; //为了更好的离线观看，将以字符串的方式记录章节名称
+    private String captureNameList = ""; //为了更好的离线观看，将以字符串的方式记录章节名称
+    @Column(name = "capture_url_list")
+    private String captureUrlList = ""; //同上，这是章节url
     @Column(name = "is_update")
     private boolean isUpdate = false; //是否有更新(章节数变化)
 
     //无法保存在数据库里，如果isDownload为true将会创建数个实体类保存在download表里
-    private String[] captureName; //章节名
-    private String[] captureUrl; //章节url
+    private List<String> captureName; //章节名
+    private List<String> captureUrl; //章节url
     private ArrayList<ComicCapture> comicCaptures; //如果下载，则初始化该字段
 
-    //离线时解析出章节名
-    public String[] getCaptureNameInString() {
-        return captureNameList.split(":");
+    //离线时解析出章节名，章节url
+    public void initCaptureNameAndList() {
+        if (captureNameList == null || captureUrlList == null ||
+                captureNameList.equals("") || captureUrlList.equals("")) return;
+        String[] names = captureNameList.split("@");
+        String[] urls = captureUrlList.split("@");
+        List<String> captureName = new ArrayList<>();
+        List<String> captureUrl = new ArrayList<>();
+        for (int i = 0; i < names.length; i++) {
+            captureName.add(names[i]);
+            captureUrl.add(urls[i]);
+        }
+        this.captureName = captureName;
+        this.captureUrl = captureUrl;
     }
 
     //存储章节名
     public void saveCaptureNameList() {
         if (captureName == null) return;
         StringBuilder nameList = new StringBuilder();
-        String splitString = ":";
+        String splitString = "@";
         for (String splitCaptureName : captureName) {
             nameList.append(splitCaptureName).append(splitString);
         }
         this.captureNameList = nameList.toString();
     }
 
-    public ArrayList<ComicCapture> initDownloadList() {
-        this.comicCaptures = new ArrayList<>();
-        ComicCapture capture = null;
-        for (int i = 0; i < captureName.length; i++) {
-            capture = new ComicCapture(title, captureName[i], captureUrl[i]);
-            this.comicCaptures.add(capture);
+    //存储章节url
+    public void saveCaptureUrlList() {
+        if (captureUrl == null) return;
+        StringBuilder nameList = new StringBuilder();
+        String splitString = "@";
+        for (String splitCaptureName : captureUrl) {
+            nameList.append(splitCaptureName).append(splitString);
         }
-        return this.comicCaptures;
+        this.captureUrlList = nameList.toString();
     }
 
     public Comic() {
@@ -85,9 +100,7 @@ public class Comic implements Serializable, Comparable {
         Document doc = Jsoup.parse(content);
         this.title = doc.title().split(",")[0];
         Element meta = doc.select("meta[name=Keywords]").first();
-        String authorSrc = meta.attr("content").split(",")[2];
-//        this.author = authorSrc.substring(0, authorSrc.length() - (title.length() + 5)).split("：")[1];
-        this.author = authorSrc.split(" ")[0].split("：")[1];
+        this.author = meta.attr("content").split("：")[1].split(" ")[0];
         Element src = doc.select("div[class=2replh]").first();
         String src1 = src.text();
         String src2 = src1.split(",")[1];
@@ -97,13 +110,21 @@ public class Comic implements Serializable, Comparable {
         this.thumbnailUrl = imgSrc.attr("src");
         Element volSrc = doc.select("div[class=vol]").first();
         Elements vols = volSrc.select("a[target=_blank]");
-        this.captureName = new String[vols.size()];
-        this.captureUrl = new String[vols.size()];
+        this.captureName = new ArrayList<>();
+        this.captureUrl = new ArrayList<>();
         for (int i = 0; i < vols.size(); i++) {
-            this.captureName[i] = vols.get(vols.size() - i - 1).text();
-            this.captureUrl[i] = vols.get(vols.size() - i - 1).attr("href");
+            this.captureName.add(vols.get(vols.size() - i - 1).text());
+            this.captureUrl.add(vols.get(vols.size() - i - 1).attr("href"));
         }
-        this.captureCount = captureName.length;
+        this.captureCount = captureName.size();
+    }
+
+    public String getCaptureUrlList() {
+        return captureUrlList;
+    }
+
+    public void setCaptureUrlList(String captureUrlList) {
+        this.captureUrlList = captureUrlList;
     }
 
     public boolean checkUpdate(String content) {
@@ -111,16 +132,16 @@ public class Comic implements Serializable, Comparable {
         Document doc = Jsoup.parse(content);
         Element volSrc = doc.select("div[class=vol]").first();
         Elements vols = volSrc.select("a[target=_blank]");
-        this.captureName = new String[vols.size()];
-        this.captureUrl = new String[vols.size()];
+        this.captureName = new ArrayList<>();
+        this.captureUrl = new ArrayList<>();
         for (int i = 0; i < vols.size(); i++) {
-            this.captureName[i] = vols.get(vols.size() - i - 1).text();
-            this.captureUrl[i] = vols.get(vols.size() - i - 1).attr("href");
+            this.captureName.add(vols.get(vols.size() - i - 1).text());
+            this.captureUrl.add(vols.get(vols.size() - i - 1).attr("href"));
         }
-        if (this.captureCount != this.captureName.length) {
+        if (this.captureCount != this.captureName.size()) {
             this.isUpdate = true;
         }
-        this.captureCount = this.captureName.length;
+        this.captureCount = this.captureName.size();
         return isUpdate;
     }
 
@@ -222,19 +243,19 @@ public class Comic implements Serializable, Comparable {
         isDownload = download;
     }
 
-    public String[] getCaptureName() {
+    public List<String> getCaptureName() {
         return captureName;
     }
 
-    public void setCaptureName(String[] captureName) {
+    public void setCaptureName(List<String> captureName) {
         this.captureName = captureName;
     }
 
-    public String[] getCaptureUrl() {
+    public List<String> getCaptureUrl() {
         return captureUrl;
     }
 
-    public void setCaptureUrl(String[] captureUrl) {
+    public void setCaptureUrl(List<String> captureUrl) {
         this.captureUrl = captureUrl;
     }
 

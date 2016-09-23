@@ -4,9 +4,9 @@
 
     <item
         android:id="@+id/menu_popup_sync"
-        android:icon="@mipmap/ic_popup_sync_1"
+        android:icon="@mipmap/ic_perm_group_sync_settings"
         android:title="@string/menu_popup_sync"
-        huxi:showAsAction="ifRoom|collapseActionView" />
+        huxi:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/menu_download_list"

@@ -9,28 +9,38 @@ import android.widget.TextView;
 
 import org.huxizhijian.hhcomicviewer2.R;
 
+import java.util.List;
+
 /**
  * 对应显示vol列表的适配器
  * Created by wei on 2016/8/25.
  */
 public class VolRecyclerViewAdapter extends RecyclerView.Adapter<VolRecyclerViewAdapter.VolViewHolder> {
 
-    private String[] mVolName;
+    private List<String> mVolName;
     private LayoutInflater mInflater;
     private OnItemClickListener mOnItemClickListener;
     private int mCapturePosition = 0;
     private boolean mIsReaded = false;
+    private List<String> mComicCaptureList;  //下载好的章节
 
-    public VolRecyclerViewAdapter(Context context, String[] volName) {
+    public VolRecyclerViewAdapter(Context context, List<String> volName) {
         this.mVolName = volName;
         this.mInflater = LayoutInflater.from(context);
     }
 
-    public VolRecyclerViewAdapter(Context context, String[] volName, int capturePosition) {
+    public VolRecyclerViewAdapter(Context context, List<String> volName, List<String> comicCaptures) {
+        this.mVolName = volName;
+        this.mInflater = LayoutInflater.from(context);
+        this.mComicCaptureList = comicCaptures;
+    }
+
+    public VolRecyclerViewAdapter(Context context, List<String> volName, int capturePosition, List<String> comicCaptures) {
         this.mVolName = volName;
         this.mInflater = LayoutInflater.from(context);
         this.mCapturePosition = capturePosition;
         this.mIsReaded = true;
+        this.mComicCaptureList = comicCaptures;
     }
 
     @Override
@@ -41,11 +51,22 @@ public class VolRecyclerViewAdapter extends RecyclerView.Adapter<VolRecyclerView
 
     @Override
     public void onBindViewHolder(VolViewHolder holder, int position) {
-        holder.tv.setText(mVolName[position]);
+        holder.tv.setText(mVolName.get(position));
         if (mIsReaded && position == mCapturePosition) {
+            //标记上次阅读的章节
             holder.itemView.setBackgroundResource(R.drawable.bg_item_vol_pressed);
         } else {
-            holder.itemView.setBackgroundResource(R.drawable.bg_item_vol);
+            if (mComicCaptureList != null) {
+                //标记下载好的章节
+                if (mComicCaptureList.contains(mVolName.get(position))) {
+                    //进行标记
+                    holder.itemView.setBackgroundResource(R.drawable.bg_item_vol_downloaded);
+                } else {
+                    holder.itemView.setBackgroundResource(R.drawable.bg_item_vol);
+                }
+            } else {
+                holder.itemView.setBackgroundResource(R.drawable.bg_item_vol);
+            }
         }
         setUpItemEvent(holder);
     }
@@ -82,7 +103,7 @@ public class VolRecyclerViewAdapter extends RecyclerView.Adapter<VolRecyclerView
 
     @Override
     public int getItemCount() {
-        return mVolName.length;
+        return mVolName.size();
     }
 
     public void setReadCapture(int capturePosition) {

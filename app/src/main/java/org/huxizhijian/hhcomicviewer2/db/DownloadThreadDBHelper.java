@@ -19,25 +19,26 @@ import java.util.List;
  * Created by wei on 2016/9/5.
  */
 public class DownloadThreadDBHelper {
-    private static DownloadThreadDBHelper dbHelper;
-    private DbManager db;
+
+    private static DownloadThreadDBHelper sDbHelper;
+    private static DbManager sDb;
 
     private DownloadThreadDBHelper(Context context) {
-        db = x.getDb(((HHApplication) context.getApplicationContext()).getDaoConfig());
+        sDb = x.getDb(((HHApplication) context.getApplicationContext()).getDaoConfig());
     }
 
     public static DownloadThreadDBHelper getInstance(Context context) {
-        if (dbHelper == null) {
-            dbHelper = new DownloadThreadDBHelper(context);
-            return dbHelper;
+        if (sDbHelper == null) {
+            sDbHelper = new DownloadThreadDBHelper(context);
+            return sDbHelper;
         } else {
-            return dbHelper;
+            return sDbHelper;
         }
     }
 
     public synchronized void add(ThreadInfo threadInfo) {
         try {
-            db.save(threadInfo);
+            sDb.save(threadInfo);
         } catch (DbException e) {
             e.printStackTrace();
         }
@@ -45,8 +46,7 @@ public class DownloadThreadDBHelper {
 
     public synchronized void update(ThreadInfo threadInfo) {
         try {
-            db.update(threadInfo, "id", "thread_position", "thread_count", "download_position"
-                    , "length", "finished", "comic_capture_url");
+            sDb.update(threadInfo);
         } catch (DbException e) {
             e.printStackTrace();
         }
@@ -55,7 +55,7 @@ public class DownloadThreadDBHelper {
     public synchronized void deleteAllCaptureThread(String comicCaptureUrl) {
         WhereBuilder builder = WhereBuilder.b("comic_capture_url", "=", comicCaptureUrl);
         try {
-            db.delete(ThreadInfo.class, builder);
+            sDb.delete(ThreadInfo.class, builder);
         } catch (DbException e) {
             e.printStackTrace();
         }
@@ -65,7 +65,8 @@ public class DownloadThreadDBHelper {
         List<ThreadInfo> threadInfos = new ArrayList<>();
         ThreadInfo threadInfo;
         try {
-            List<DbModel> dbModels = db.findDbModelAll(new SqlInfo("select * from thread where capture_url = " + captureUrl));
+            List<DbModel> dbModels = sDb.findDbModelAll(new SqlInfo("select * from thread_info where comic_capture_url = " +
+                    "'" + captureUrl + "'"));
             for (DbModel dbModel : dbModels) {
                 threadInfo = new ThreadInfo();
                 threadInfo.setId(dbModel.getInt("id"));
@@ -79,6 +80,7 @@ public class DownloadThreadDBHelper {
             }
         } catch (DbException e) {
             e.printStackTrace();
+            return null;
         }
         return threadInfos;
     }
@@ -86,9 +88,10 @@ public class DownloadThreadDBHelper {
     public List<ThreadInfo> findAll() {
         List<ThreadInfo> threadInfos = new ArrayList<>();
         try {
-            db.findAll(ThreadInfo.class);
+            sDb.findAll(ThreadInfo.class);
         } catch (DbException e) {
             e.printStackTrace();
+            return null;
         }
         return threadInfos;
     }

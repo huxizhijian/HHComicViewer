@@ -2,13 +2,13 @@ package org.huxizhijian.hhcomicviewer2.activities;
 
 
 import android.app.ActionBar;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -18,6 +18,7 @@ import org.huxizhijian.hhcomicviewer2.fragment.ConfigFragment;
 import org.huxizhijian.hhcomicviewer2.fragment.HistoryFragment;
 import org.huxizhijian.hhcomicviewer2.fragment.MarkedFragment;
 import org.huxizhijian.hhcomicviewer2.fragment.SearchFragment;
+import org.huxizhijian.hhcomicviewer2.service.DownloadService;
 import org.huxizhijian.hhcomicviewer2.utils.BaseUtils;
 import org.huxizhijian.hhcomicviewer2.utils.Constants;
 import org.huxizhijian.hhcomicviewer2.view.ChangeColorIconWithText;
@@ -95,9 +96,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main, menu);
-        return super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
     }
 
     @Override
@@ -107,6 +107,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 //刷新数据
                 ((MarkedFragment) mTags.get(0)).refreshData();
                 ((HistoryFragment) mTags.get(1)).refreshData();
+                return true;
+            case R.id.menu_download_list:
+                Intent intent = new Intent(this, DownloadManagerActivity.class);
+                startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -171,5 +175,14 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     @Override
     public void onPageScrollStateChanged(int state) {
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //DownloadService自行检查是否要退出
+        Intent intent = new Intent(this, DownloadService.class);
+        intent.setAction(DownloadService.ACTION_CHECK_MISSION);
+        startService(intent);
     }
 }

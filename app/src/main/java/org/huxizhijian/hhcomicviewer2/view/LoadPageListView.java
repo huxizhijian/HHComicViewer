@@ -15,16 +15,15 @@ import org.huxizhijian.hhcomicviewer2.R;
  */
 public class LoadPageListView extends ListView implements AbsListView.OnScrollListener {
 
-    private View footer;
-
-    private int totalItemCount; //总的数量
-    private int lastVisibleItem;//最后一个可见的Item
-    private boolean isLoading; //是否正在加载
-    private ILoaderListener loaderListener;
+    private View mFooter;
+    private int mTotalItemCount; //总的数量
+    private int mLastVisibleItem;//最后一个可见的Item
+    private boolean mIsLoading; //是否正在加载
+    private ILoaderListener mLoaderListener;
     private LayoutInflater mInflater;
 
     public void setLoaderListener(ILoaderListener loaderListener) {
-        this.loaderListener = loaderListener;
+        this.mLoaderListener = loaderListener;
     }
 
     public LoadPageListView(Context context) {
@@ -51,14 +50,14 @@ public class LoadPageListView extends ListView implements AbsListView.OnScrollLi
 
     public void addFootView(boolean needFootView) {
         if (needFootView) {
-            footer = mInflater.inflate(R.layout.foot_layout, null);
+            mFooter = mInflater.inflate(R.layout.foot_layout, null);
             this.setOnScrollListener(this);
             //设置底部布局
-            footer.findViewById(R.id.loader_layout).setVisibility(GONE);
-            this.addFooterView(footer);
+            mFooter.findViewById(R.id.loader_layout).setVisibility(GONE);
+            this.addFooterView(mFooter);
         } else {
-            if (footer != null) {
-                this.removeFooterView(footer);
+            if (mFooter != null) {
+                this.removeFooterView(mFooter);
             }
         }
     }
@@ -66,14 +65,14 @@ public class LoadPageListView extends ListView implements AbsListView.OnScrollLi
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
         //判断是否最后一个，并且滚动状态为滚动停止
-        if (totalItemCount == lastVisibleItem
+        if (mTotalItemCount == mLastVisibleItem
                 && scrollState == SCROLL_STATE_IDLE) {
-            if (!isLoading) {
-                footer.findViewById(R.id.loader_layout).setVisibility(VISIBLE);
-                isLoading = true;
+            if (!mIsLoading) {
+                mFooter.findViewById(R.id.loader_layout).setVisibility(VISIBLE);
+                mIsLoading = true;
                 //加载更多
-                if (loaderListener != null) {
-                    loaderListener.onLoad();
+                if (mLoaderListener != null) {
+                    mLoaderListener.onLoad();
                 }
             }
         }
@@ -81,15 +80,15 @@ public class LoadPageListView extends ListView implements AbsListView.OnScrollLi
 
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-        this.lastVisibleItem = firstVisibleItem + visibleItemCount;
-        if (this.totalItemCount != totalItemCount) {
-            this.totalItemCount = totalItemCount;
+        this.mLastVisibleItem = firstVisibleItem + visibleItemCount;
+        if (this.mTotalItemCount != totalItemCount) {
+            this.mTotalItemCount = totalItemCount;
         }
     }
 
     public void loadComplete() {
-        isLoading = false;
-        footer.findViewById(R.id.loader_layout).setVisibility(GONE);
+        mIsLoading = false;
+        mFooter.findViewById(R.id.loader_layout).setVisibility(GONE);
     }
 
     //加载更多数据的回调接口

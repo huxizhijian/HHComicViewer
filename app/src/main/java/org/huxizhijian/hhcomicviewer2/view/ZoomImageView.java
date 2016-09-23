@@ -448,6 +448,16 @@ public class ZoomImageView extends ImageView implements OnScaleGestureListener,
         }
     }
 
+    //使其缩放到合适大小并居中
+    public void setImageInCenter() {
+        if (getScale() > initScale) {
+            mScaleMatrix.postScale(initScale / getScale(), initScale / getScale(), getWidth() / 2,
+                    getHeight() / 2);
+            checkBorderAndCenterWhenScale();
+            setImageMatrix(mScaleMatrix);
+        }
+    }
+
     /**
      * 移动时，进行边界判断，主要判断宽或高大于屏幕的
      */

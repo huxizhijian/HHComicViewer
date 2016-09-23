@@ -27,7 +27,7 @@
             android:padding="5dp"
             huxi:color="@color/main_color"
             huxi:icon="@mipmap/ic_menu_star"
-            huxi:text="收藏"
+            huxi:text="@string/tab_mark"
             huxi:text_size="12sp" />
 
         <org.huxizhijian.hhcomicviewer2.view.ChangeColorIconWithText
@@ -38,7 +38,7 @@
             android:padding="5dp"
             huxi:color="@color/main_color"
             huxi:icon="@mipmap/ic_menu_recent_history"
-            huxi:text="浏览"
+            huxi:text="@string/tab_history"
             huxi:text_size="12sp" />
 
         <org.huxizhijian.hhcomicviewer2.view.ChangeColorIconWithText
@@ -49,7 +49,7 @@
             android:padding="5dp"
             huxi:color="@color/main_color"
             huxi:icon="@mipmap/ic_menu_search"
-            huxi:text="搜索"
+            huxi:text="@string/tab_search"
             huxi:text_size="12sp" />
 
         <org.huxizhijian.hhcomicviewer2.view.ChangeColorIconWithText
@@ -60,7 +60,7 @@
             android:padding="5dp"
             huxi:color="@color/main_color"
             huxi:icon="@mipmap/ic_menu_preferences"
-            huxi:text="设置"
+            huxi:text="@string/tab_config"
             huxi:text_size="12sp" />
 
     </LinearLayout>

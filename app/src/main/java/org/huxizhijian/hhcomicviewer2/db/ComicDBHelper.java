@@ -16,17 +16,17 @@ import java.util.List;
  */
 public class ComicDBHelper {
 
-    private static ComicDBHelper comicDbHelper;
-    private static DbManager db;
+    private static ComicDBHelper sComicDbHelper;
+    private static DbManager sDb;
 
     private ComicDBHelper(Context context) {
-        db = x.getDb(((HHApplication) context.getApplicationContext()).getDaoConfig());
+        sDb = x.getDb(((HHApplication) context.getApplicationContext()).getDaoConfig());
     }
 
     public List<Comic> findMarkedComics() {
         List<Comic> markedComics = null;
         try {
-            markedComics = db.selector(Comic.class).where("is_mark", "=", true).orderBy("last_read_time", true).findAll();
+            markedComics = sDb.selector(Comic.class).where("is_mark", "=", true).orderBy("last_read_time", true).findAll();
         } catch (DbException e) {
             e.printStackTrace();
         }
@@ -36,7 +36,7 @@ public class ComicDBHelper {
     public List<Comic> findDownloadedComics() {
         List<Comic> downloadedComics = null;
         try {
-            downloadedComics = db.selector(Comic.class).where("is_download", "=", true).findAll();
+            downloadedComics = sDb.selector(Comic.class).where("is_download", "=", true).findAll();
         } catch (DbException e) {
             e.printStackTrace();
         }
@@ -45,8 +45,19 @@ public class ComicDBHelper {
 
     public synchronized void add(Comic comic) {
         try {
-            comic.saveCaptureNameList();
-            db.save(comic);
+            if (comic.isMark() || comic.isDownload()) {
+                if (comic.getCaptureNameList() == null || comic.getCaptureNameList().equals("")) {
+                    comic.saveCaptureNameList();
+                }
+                if (comic.getCaptureUrlList() == null || comic.getCaptureUrlList().equals("")) {
+                    comic.saveCaptureUrlList();
+                }
+            }
+            if (comic.isUpdate()) {
+                comic.saveCaptureNameList();
+                comic.saveCaptureUrlList();
+            }
+            sDb.save(comic);
         } catch (DbException e) {
             e.printStackTrace();
         }
@@ -54,9 +65,20 @@ public class ComicDBHelper {
 
     public synchronized void update(Comic comic) {
         try {
-            comic.saveCaptureNameList();
-            db.update(comic, "title", "author", "description", "is_mark", "is_download",
-                    "read_capture", "read_page", "last_read_time", "capture_count", "capture_name_list", "is_update");
+            if (comic.isMark() || comic.isDownload()) {
+                if (comic.getCaptureNameList() == null || comic.getCaptureNameList().equals("")) {
+                    comic.saveCaptureNameList();
+                }
+                if (comic.getCaptureUrlList() == null || comic.getCaptureUrlList().equals("")) {
+                    comic.saveCaptureUrlList();
+                }
+            }
+            if (comic.isUpdate()) {
+                comic.saveCaptureNameList();
+                comic.saveCaptureUrlList();
+                comic.setUpdate(false);
+            }
+            sDb.update(comic);
         } catch (DbException e) {
             e.printStackTrace();
         }
@@ -65,7 +87,9 @@ public class ComicDBHelper {
     public Comic findByUrl(String url) {
         Comic comic = findByUrlInTable(url);
         if (comic != null) {
-            comic.getCaptureNameInString();
+            if (comic.isMark() || comic.isDownload()) {
+                comic.initCaptureNameAndList();
+            }
         }
         return comic;
     }
@@ -74,7 +98,7 @@ public class ComicDBHelper {
     private Comic findByUrlInTable(String comicUrl) {
         Comic comic = null;
         try {
-            comic = db.selector(Comic.class).where("comic_url", "=", comicUrl).findFirst();
+            comic = sDb.selector(Comic.class).where("comic_url", "=", comicUrl).findFirst();
         } catch (DbException e) {
             e.printStackTrace();
         }
@@ -83,18 +107,18 @@ public class ComicDBHelper {
 
     //单例模式
     public static ComicDBHelper getInstance(Context context) {
-        if (comicDbHelper == null) {
-            comicDbHelper = new ComicDBHelper(context);
-            return comicDbHelper;
+        if (sComicDbHelper == null) {
+            sComicDbHelper = new ComicDBHelper(context);
+            return sComicDbHelper;
         } else {
-            return comicDbHelper;
+            return sComicDbHelper;
         }
     }
 
     public List<Comic> findAll() {
         List<Comic> comics = null;
         try {
-            comics = db.selector(Comic.class).orderBy("last_read_time", true).limit(100).findAll();
+            comics = sDb.selector(Comic.class).orderBy("last_read_time", true).limit(100).findAll();
         } catch (DbException e) {
             e.printStackTrace();
         }

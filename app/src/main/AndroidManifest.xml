@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.huxizhijian.hhcomicviewer2">
+          package="org.huxizhijian.hhcomicviewer2">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.BATTERY_STATS" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.BATTERY_STATS"/>
 
     <application
         android:name=".app.HHApplication"
@@ -16,41 +16,48 @@
         android:theme="@android:style/Theme.Holo.Light">
         <meta-data
             android:name="org.huxizhijian.hhcomicviewer2.glide.GlideConfiguration"
-            android:value="GlideModule" />
+            android:value="GlideModule"/>
 
         <activity
             android:name=".activities.MainActivity"
             android:label="@string/app_name_short"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activities.SplashActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Wallpaper.NoTitleBar.Fullscreen">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity
             android:name=".activities.GalleryActivity"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.DeviceDefault.NoActionBar.Fullscreen" />
-        <activity android:name=".activities.ComicInfoActivity" />
-
+            android:theme="@android:style/Theme.DeviceDefault.NoActionBar.Fullscreen"/>
+        <activity android:name=".activities.ComicInfoActivity"/>
         <activity
             android:name=".activities.ComicResultListActivity"
             android:label="@string/comic_result_list"
             android:launchMode="singleTop">
             <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
+                <action android:name="android.intent.action.SEARCH"/>
             </intent-filter>
+
             <meta-data
                 android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
+                android:resource="@xml/searchable"/>
         </activity>
 
-        <service android:name=".service.DownloadService" />
+        <service
+            android:name=".service.DownloadService"
+            android:enabled="true"
+            android:exported="false"/>
+
+        <activity
+            android:name=".activities.DownloadManagerActivity"
+            android:launchMode="singleTop"/>
     </application>
 
 </manifest>

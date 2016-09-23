@@ -1,0 +1,52 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff">
+
+
+    <ImageView
+        android:id="@+id/image_cancel_ds_fragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:adjustViewBounds="true"
+        android:clickable="true"
+        android:contentDescription="@string/cancel"
+        android:focusable="true"
+        android:maxWidth="40dp"
+        android:src="@android:drawable/ic_menu_close_clear_cancel" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view_download_selector"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/button_start_download_ds_fragment"
+        android:layout_alignEnd="@+id/image_cancel_ds_fragment"
+        android:layout_alignRight="@+id/image_cancel_ds_fragment"
+        android:layout_below="@+id/image_cancel_ds_fragment"
+        android:clickable="true">
+
+    </android.support.v7.widget.RecyclerView>
+
+
+    <Button
+        android:id="@+id/button_start_download_ds_fragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:text="@string/start_download" />
+
+    <Button
+        android:id="@+id/button_select_all_ds_fragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/button_start_download_ds_fragment"
+        android:layout_toStartOf="@+id/button_start_download_ds_fragment"
+        android:text="@string/all_select" />
+
+</RelativeLayout>

@@ -1,10 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ImageView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/imageView_splash"
-    android:background="#FFFF8500"
-    android:scaleType="centerCrop"
-    tools:context=".activities.SplashActivity">
-</ImageView>
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/imageView_splash"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FFFF8500"
+        android:scaleType="centerCrop"
+        android:src="@drawable/splash_page" />
+
+    <TextView
+        android:id="@+id/textView_splash"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/textView_splash"
+        android:layout_centerHorizontal="true"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        android:layout_marginBottom="14dp"
+        android:text="@string/author_name" />
+
+</RelativeLayout>
+

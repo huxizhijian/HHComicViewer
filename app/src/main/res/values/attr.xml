@@ -4,6 +4,23 @@
     <attr name="color" format="color" />
     <attr name="text" format="string" />
     <attr name="text_size" format="dimension" />
+    <attr name="progress_unreach_color" format="color" />
+    <attr name="progress_unreach_height" format="dimension" />
+    <attr name="progress_reach_color" format="color" />
+    <attr name="progress_reach_height" format="dimension" />
+    <attr name="progress_text_color" format="color" />
+    <attr name="progress_text_size" format="dimension" />
+    <attr name="progress_text_offset" format="dimension" />
+
+    <declare-styleable name="HorizontalProgressBarWithProgress">
+        <attr name="progress_unreach_color" />
+        <attr name="progress_unreach_height" />
+        <attr name="progress_reach_color" />
+        <attr name="progress_reach_height" />
+        <attr name="progress_text_color" />
+        <attr name="progress_text_size" />
+        <attr name="progress_text_offset" />
+    </declare-styleable>
 
     <declare-styleable name="ChangeColorIconWithText">
         <attr name="icon" />

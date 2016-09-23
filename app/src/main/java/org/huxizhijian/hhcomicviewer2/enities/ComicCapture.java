@@ -21,6 +21,8 @@ public class ComicCapture implements Serializable {
     private String captureUrl; //章节的url
     @Column(name = "download_status")
     private int downloadStatus; //下载状态
+    @Column(name = "download_position")
+    private int downloadPosition; //下载完成的页数
     @Column(name = "page_count")
     private int pageCount; //章节的页数
     @Column(name = "comic_title")
@@ -47,10 +49,25 @@ public class ComicCapture implements Serializable {
         this.pageCount = picList.size();
     }
 
-    public ComicCapture(String comicTitle, String captureName, String captureUrl) {
+    public ComicCapture(String comicTitle, String captureName, String captureUrl, String comicUrl) {
         this.comicTitle = comicTitle;
         this.captureName = captureName;
         this.captureUrl = captureUrl;
+        this.comicUrl = comicUrl;
+        this.downloadPosition = 0;
+    }
+
+    public void updatePicList(String url, String content) {
+        this.picList = ParsePicUrlList.scanPicInPage(url, content);
+        this.pageCount = this.picList.size();
+    }
+
+    public int getDownloadPosition() {
+        return downloadPosition;
+    }
+
+    public void setDownloadPosition(int downloadPosition) {
+        this.downloadPosition = downloadPosition;
     }
 
     public String getComicUrl() {

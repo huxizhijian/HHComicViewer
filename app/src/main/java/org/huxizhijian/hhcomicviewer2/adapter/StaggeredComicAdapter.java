@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
 
 import org.huxizhijian.hhcomicviewer2.R;
 import org.huxizhijian.hhcomicviewer2.enities.Comic;
@@ -41,9 +41,9 @@ public class StaggeredComicAdapter extends RecyclerView.Adapter<StaggeredComicAd
     @Override
     public void onBindViewHolder(StaggeredViewHolder holder, int position) {
         holder.tv.setText(mComicList.get(position).getTitle());
-        Picasso.with(mContext)
+        Glide.with(mContext)
                 .load(mComicList.get(position).getThumbnailUrl())
-                .fit()
+                .fitCenter()
                 .placeholder(R.mipmap.blank)
                 .error(R.mipmap.blank)
                 .into(holder.iv);

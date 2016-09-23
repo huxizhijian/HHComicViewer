@@ -26,6 +26,9 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * A simple {@link Fragment} subclass.
  * 搜索功能，分类展示
@@ -37,7 +40,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
     private ImageButton mSearchBtn;
     private RecyclerView mRecyclerView;
     private VolRecyclerViewAdapter mAdapter;
-    private String[] mClassifies, mLinks;
+    private List<String> mClassifies, mLinks;
 
     public SearchFragment() {
     }
@@ -55,15 +58,15 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putStringArray("classifies", mClassifies);
-        outState.putStringArray("links", mLinks);
+        outState.putStringArrayList("classifies", (ArrayList<String>) mClassifies);
+        outState.putStringArrayList("links", (ArrayList<String>) mLinks);
         super.onSaveInstanceState(outState);
     }
 
     private void initData(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
-            mClassifies = savedInstanceState.getStringArray("classifies");
-            mLinks = savedInstanceState.getStringArray("links");
+            mClassifies = savedInstanceState.getStringArrayList("classifies");
+            mLinks = savedInstanceState.getStringArrayList("links");
         }
         if (mClassifies != null && mLinks != null) {
 //            System.out.println("restore");
@@ -72,11 +75,11 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
             mLoadingLayout.setVisibility(View.VISIBLE);
             Document doc = Jsoup.parse(Constants.CLASSIFIES_CONTENT);
             Elements classifies = doc.select("a[class=linkb]");
-            mClassifies = new String[classifies.size()];
-            mLinks = new String[classifies.size()];
+            mClassifies = new ArrayList<>();
+            mLinks = new ArrayList<>();
             for (int i = 0; i < classifies.size(); i++) {
-                mClassifies[i] = classifies.get(i).text();
-                mLinks[i] = classifies.get(i).attr("href");
+                mClassifies.add(classifies.get(i).text());
+                mLinks.add(classifies.get(i).attr("href"));
             }
             //加载数据到recycler_view里面
             initRecyclerView();
@@ -94,7 +97,8 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
                 //开启分类
                 Intent intent = new Intent(getActivity(), ComicResultListActivity.class);
                 intent.setAction(Constants.ACTION_CLASSIFIES);
-                intent.putExtra("url", Constants.HHCOMIC_URL + mLinks[position]);
+                intent.putExtra("classified", mClassifies.get(position));
+                intent.putExtra("url", Constants.HHCOMIC_URL + mLinks.get(position));
                 startActivity(intent);
             }
 
