@@ -256,6 +256,7 @@ public class GalleryActivity extends Activity implements View.OnClickListener {
                     mCapturePosition--;
                     mComic.setReadCapture(mCapturePosition);
                     mComic.setReadPage(0);
+                    mViewPager.setCurrentItem(0);
                     getWebContent();
                 } else {
                     Toast.makeText(GalleryActivity.this, "当前是第一话", Toast.LENGTH_SHORT).show();
@@ -266,6 +267,7 @@ public class GalleryActivity extends Activity implements View.OnClickListener {
                     mCapturePosition++;
                     mComic.setReadCapture(mCapturePosition);
                     mComic.setReadPage(0);
+                    mViewPager.setCurrentItem(0);
                     getWebContent();
                 } else {
                     Toast.makeText(GalleryActivity.this, "当前是最后一话", Toast.LENGTH_SHORT).show();
@@ -302,7 +304,7 @@ public class GalleryActivity extends Activity implements View.OnClickListener {
                                 Object object) {
             ZoomImageView imageView = (ZoomImageView) object;
             //设置缩放将图片居中缩放
-            imageView.setImageInCenter();
+//            imageView.setImageInCenter();
             //回收图片
             imageView.setImageDrawable(null);
             imageView.setImageBitmap(null);

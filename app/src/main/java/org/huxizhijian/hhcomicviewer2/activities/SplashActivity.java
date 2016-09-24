@@ -16,12 +16,6 @@ public class SplashActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        /*ImageView imageView_splash = (ImageView) findViewById(R.id.imageView_splash);
-        Glide.with(this)
-                .load(R.drawable.splash_page)
-                .dontAnimate()
-                .centerCrop()
-                .into(imageView_splash);*/
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override

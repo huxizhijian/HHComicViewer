@@ -4,6 +4,8 @@ import android.app.ActionBar;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -41,6 +43,7 @@ import org.xutils.x;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ComicInfoActivity extends FragmentActivity implements OnClickListener, DownloadSelectorFragment.SelectorDataBinder {
@@ -49,6 +52,7 @@ public class ComicInfoActivity extends FragmentActivity implements OnClickListen
     public static final String ACTION_HISTORY = "ACTION_HISTORY";
     public static final String ACTION_SEARCH = "ACTION_SEARCH";
 
+    //控件及适配器
     private TextView mTv_author, mTv_title, mTv_details;
     private ImageView mImageView;
     private RecyclerView mRecyclerView;
@@ -56,13 +60,32 @@ public class ComicInfoActivity extends FragmentActivity implements OnClickListen
     private ScrollView mScrollView;
     private ProgressBar mProgressBar;
 
+    //数据操作
     private ComicDBHelper mComicDBHelper;
     private ComicCaptureDBHelper mComicCaptureDBHelper;
+
+    //数据
     private List<ComicCapture> mDownloadedComicCaptures; //开始下载的章节列表
     private List<String> mFinishedComicCaptures; //下载完成的章节名列表
     private Comic mComic;
+
+    //下载选择页fragment
     private FragmentTransaction mFt;
     private DownloadSelectorFragment mDsFragment;
+
+    //Handler，用于开启下载任务
+    Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            if (msg.what == Constants.MSG_DOWNLOAD) {
+                ComicCapture capture = (ComicCapture) msg.obj;
+                Intent intent = new Intent(ComicInfoActivity.this, DownloadService.class);
+                intent.setAction(DownloadService.ACTION_START);
+                intent.putExtra("comicCapture", capture);
+                startService(intent);
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -381,7 +404,7 @@ public class ComicInfoActivity extends FragmentActivity implements OnClickListen
 
     @Override
     public void sendSelectedCaptures(List<String> selectedCaptures) {
-        //开始下载
+
         //更新漫画的数据库资料
         Comic findComic = mComicDBHelper.findByUrl(mComic.getComicUrl());
         //设置下载标记为true
@@ -399,17 +422,27 @@ public class ComicInfoActivity extends FragmentActivity implements OnClickListen
             Toast.makeText(ComicInfoActivity.this, "还没有加载完成，请耐心等待~", Toast.LENGTH_SHORT).show();
             return;
         }
+
+        //开始下载
         if (selectedCaptures.size() != 0) {
             int position = -1;
+            List<Integer> positionList = new ArrayList<>();
             ComicCapture capture = null;
             for (String volName : selectedCaptures) {
                 position = mComic.getCaptureName().indexOf(volName);
+                positionList.add(position);
+            }
+            //将下载任务排序
+            Collections.sort(positionList);
+            for (int i = 0; i < positionList.size(); i++) {
+                position = positionList.get(i);
                 capture = new ComicCapture(mComic.getTitle(), mComic.getCaptureName().get(position),
                         mComic.getCaptureUrl().get(position), mComic.getComicUrl());
-                Intent intent = new Intent(this, DownloadService.class);
-                intent.setAction(DownloadService.ACTION_START);
-                intent.putExtra("comicCapture", capture);
-                startService(intent);
+                Message msg = new Message();
+                msg.what = Constants.MSG_DOWNLOAD;
+                msg.obj = capture;
+                //将任务按照顺序加入队伍，时间间隔1000ms
+                mHandler.sendMessageDelayed(msg, 1000 * i);
             }
         }
     }

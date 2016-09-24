@@ -25,6 +25,7 @@
             android:id="@+id/textView_comic_title_download_manager"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="4dp"
             android:text="@string/comic_title"
             android:textSize="18sp"/>
     </LinearLayout>

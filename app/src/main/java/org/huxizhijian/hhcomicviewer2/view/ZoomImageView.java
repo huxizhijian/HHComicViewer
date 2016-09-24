@@ -1,6 +1,7 @@
 package org.huxizhijian.hhcomicviewer2.view;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
@@ -115,7 +116,7 @@ public class ZoomImageView extends ImageView implements OnScaleGestureListener,
 
                         float x = e.getX();
                         float y = e.getY();
-                        Log.e("DoubleTap", getScale() + " , " + initScale);
+                        Log.i("DoubleTap", getScale() + " , " + initScale);
                         if (getScale() < SCALE_MID) {
                             ZoomImageView.this.postDelayed(
                                     new AutoScaleRunnable(SCALE_MID, x, y), 16);
@@ -269,7 +270,7 @@ public class ZoomImageView extends ImageView implements OnScaleGestureListener,
         if (rect.height() < height) {
             deltaY = height * 0.5f - rect.bottom + 0.5f * rect.height();
         }
-        Log.e(TAG, "deltaX = " + deltaX + " , deltaY = " + deltaY);
+        Log.i(TAG, "deltaX = " + deltaX + " , deltaY = " + deltaY);
 
         mScaleMatrix.postTranslate(deltaX, deltaY);
 
@@ -414,38 +415,43 @@ public class ZoomImageView extends ImageView implements OnScaleGestureListener,
     @Override
     public void onGlobalLayout() {
         if (once) {
-            System.out.println("onGlobalLayout:" + this.toString());
-            Drawable d = getDrawable();
-            if (d == null)
-                return;
-            Log.e(TAG, d.getIntrinsicWidth() + " , " + d.getIntrinsicHeight());
-            int width = getWidth();
-            int height = getHeight();
-            // 拿到图片的宽和高
-            int dw = d.getIntrinsicWidth();
-            int dh = d.getIntrinsicHeight();
-            float scale = 1.0f;
-            // 如果图片的宽或者高大于屏幕，则缩放至屏幕的宽或者高
-            if (dw > width && dh <= height) {
-                scale = width * 1.0f / dw;
-            }
-            if (dh > height && dw <= width) {
-                scale = height * 1.0f / dh;
-            }
-            // 如果宽和高都大于屏幕，则让其按按比例适应屏幕大小
-            if (dw > width && dh > height) {
-                scale = Math.min(width * 1.0f / dw, height * 1.0f / dh);
-            }
-            initScale = scale;
-
-            Log.e(TAG, "initScale = " + initScale);
-            mScaleMatrix.postTranslate((width - dw) / 2, (height - dh) / 2);
-            mScaleMatrix.postScale(scale, scale, getWidth() / 2,
-                    getHeight() / 2);
-            // 图片移动至屏幕中心
-            setImageMatrix(mScaleMatrix);
+//            initImage();
+            initScale = 1.0f;
             once = false;
         }
+    }
+
+    private void initImage() {
+        System.out.println("initImage:" + this.toString());
+        Drawable d = getDrawable();
+        if (d == null)
+            return;
+        Log.i(TAG, d.getIntrinsicWidth() + " , " + d.getIntrinsicHeight());
+        int width = getWidth();
+        int height = getHeight();
+        // 拿到图片的宽和高
+        int dw = d.getIntrinsicWidth();
+        int dh = d.getIntrinsicHeight();
+        float scale = 1.0f;
+        // 如果图片的宽或者高大于屏幕，则缩放至屏幕的宽或者高
+        if (dw > width && dh <= height) {
+            scale = width * 1.0f / dw;
+        }
+        if (dh > height && dw <= width) {
+            scale = height * 1.0f / dh;
+        }
+        // 如果宽和高都大于屏幕，则让其按按比例适应屏幕大小
+        if (dw > width && dh > height) {
+            scale = Math.min(width * 1.0f / dw, height * 1.0f / dh);
+        }
+        initScale = scale;
+
+        Log.i(TAG, "initScale = " + initScale);
+        mScaleMatrix.postTranslate((width - dw) / 2, (height - dh) / 2);
+        mScaleMatrix.postScale(scale, scale, getWidth() / 2,
+                getHeight() / 2);
+        // 图片移动至屏幕中心
+        setImageMatrix(mScaleMatrix);
     }
 
     //使其缩放到合适大小并居中
@@ -453,9 +459,21 @@ public class ZoomImageView extends ImageView implements OnScaleGestureListener,
         if (getScale() > initScale) {
             mScaleMatrix.postScale(initScale / getScale(), initScale / getScale(), getWidth() / 2,
                     getHeight() / 2);
-            checkBorderAndCenterWhenScale();
-            setImageMatrix(mScaleMatrix);
         }
+        checkBorderAndCenterWhenScale();
+        setImageMatrix(mScaleMatrix);
+    }
+
+    @Override
+    public void setImageDrawable(Drawable drawable) {
+        super.setImageDrawable(drawable);
+        setImageInCenter();
+    }
+
+    @Override
+    public void setImageBitmap(Bitmap bm) {
+        super.setImageBitmap(bm);
+        setImageInCenter();
     }
 
     /**

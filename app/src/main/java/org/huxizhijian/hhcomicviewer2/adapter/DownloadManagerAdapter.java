@@ -127,6 +127,10 @@ public class DownloadManagerAdapter extends BaseExpandableListAdapter {
         } else {
             groupHolder = (GroupHolder) convertView.getTag();
         }
+        if (groupPosition >= mDownloadedCaptureList.size()) {
+            groupHolder.tv_comic_title.setText("");
+            return convertView;
+        }
         groupHolder.tv_comic_title.setText(mDownloadedComicList.get(groupPosition).getTitle());
         //如果是EditMode，显示CheckBox
         if (mIsEditMode) {
@@ -146,14 +150,25 @@ public class DownloadManagerAdapter extends BaseExpandableListAdapter {
                             mOnNotifyDataSetChanged.onNotify();
                         }
                     } else {
-                        //全部子view不选中
+                        boolean childViewAllChecked = true;
+                        //判断是否全部子view为选中
                         for (int i = 0; i < mIsCheckedChild[groupPosition].length; i++) {
-                            mIsCheckedChild[groupPosition][i] = false;
+                            if (!mIsCheckedChild[groupPosition][i]) {
+                                //有一个不选中，即为false
+                                childViewAllChecked = false;
+                            }
                         }
-                        notifyDataSetChanged();
-                        //刷新子view视图
-                        if (mOnNotifyDataSetChanged != null) {
-                            mOnNotifyDataSetChanged.onNotify();
+                        //如果子view全都被选中
+                        if (childViewAllChecked) {
+                            //将全部子view设为不选中
+                            for (int i = 0; i < mIsCheckedChild[groupPosition].length; i++) {
+                                mIsCheckedChild[groupPosition][i] = false;
+                            }
+                            notifyDataSetChanged();
+                            //刷新子view视图
+                            if (mOnNotifyDataSetChanged != null) {
+                                mOnNotifyDataSetChanged.onNotify();
+                            }
                         }
                     }
                 }
@@ -280,6 +295,25 @@ public class DownloadManagerAdapter extends BaseExpandableListAdapter {
                             }
                         }
                     }
+                    if (isChecked) {
+                        //如果子view都选中，本组groupView的checkBox设为true
+                        boolean childViewAllChecked = true;
+                        //判断是否全部子view为选中
+                        for (int i = 0; i < mIsCheckedChild[groupPosition].length; i++) {
+                            if (!mIsCheckedChild[groupPosition][i]) {
+                                //有一个不选中，即为false
+                                childViewAllChecked = false;
+                            }
+                        }
+
+                        if (childViewAllChecked) {
+                            mIsCheckedGroup[groupPosition] = true;
+                            notifyDataSetChanged();
+                            if (mOnNotifyDataSetChanged != null) {
+                                mOnNotifyDataSetChanged.onNotify();
+                            }
+                        }
+                    }
                 }
             });
             childHolder.cb.setChecked(mIsCheckedChild[groupPosition][childPosition]);
@@ -311,20 +345,35 @@ public class DownloadManagerAdapter extends BaseExpandableListAdapter {
         return this.mIsEditMode;
     }
 
+    //打开编辑模式
     public void openEditMode() {
         this.mIsEditMode = true;
+        //刷新界面
         notifyDataSetChanged();
         if (mOnNotifyDataSetChanged != null) {
             mOnNotifyDataSetChanged.onNotify();
         }
     }
 
+    //关闭编辑模式
     public void closeEditMode() {
         this.mIsEditMode = false;
+        //将全部checkBox值设为false
+        for (int i = 0; i < mIsCheckedGroup.length; i++) {
+            mIsCheckedGroup[i] = false;
+            for (int j = 0; j < mIsCheckedChild[i].length; j++) {
+                mIsCheckedChild[i][j] = false;
+            }
+        }
+        //刷新界面
         notifyDataSetChanged();
         if (mOnNotifyDataSetChanged != null) {
             mOnNotifyDataSetChanged.onNotify();
         }
+    }
+
+    public void setEditMode(boolean editMode) {
+        mIsEditMode = editMode;
     }
 
     public List<ComicCapture> getSelectedCaptures() {
@@ -345,6 +394,39 @@ public class DownloadManagerAdapter extends BaseExpandableListAdapter {
             return null;
         }
         return selectedCapture;
+    }
+
+    public void delete() {
+        //删除并刷新界面
+        for (int i = 0; i < mIsCheckedGroup.length; i++) {
+            if (mIsCheckedGroup[i]) {
+                //如果父view的checked为true，将该父控件下的所有子控件删除
+                mDownloadedCaptureList.get(mDownloadedComicList.get(i).getComicUrl()).clear();
+            } else {
+                //单个子控件删除
+                for (int j = 0; j < mIsCheckedChild[i].length; j++) {
+                    if (mIsCheckedChild[i][j]) {
+                        ComicCapture comicCapture =
+                                mDownloadedCaptureList.get(mDownloadedComicList.get(i).getComicUrl()).get(j);
+                        mDownloadedCaptureList.get(mDownloadedComicList.get(i).getComicUrl()).remove(comicCapture);
+                    }
+                }
+            }
+        }
+        resetCheckStatus();
+        //刷新界面
+        notifyDataSetChanged();
+        if (mOnNotifyDataSetChanged != null) {
+            mOnNotifyDataSetChanged.onNotify();
+        }
+    }
+
+    public void resetCheckStatus() {
+        mIsCheckedGroup = new boolean[mDownloadedComicList.size()];
+        mIsCheckedChild = new boolean[mDownloadedComicList.size()][];
+        for (int i = 0; i < mDownloadedComicList.size(); i++) {
+            mIsCheckedChild[i] = new boolean[mDownloadedCaptureList.get(mDownloadedComicList.get(i).getComicUrl()).size()];
+        }
     }
 
     public interface OnNotifyDataSetChanged {

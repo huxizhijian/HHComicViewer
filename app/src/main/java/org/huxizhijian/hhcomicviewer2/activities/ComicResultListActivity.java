@@ -38,15 +38,18 @@ import java.util.List;
 
 public class ComicResultListActivity extends Activity {
 
+    //控件及适配器
     private LinearLayout mLoadingLayout;
     private LoadPageListView mListView;
     private ListViewAdapter mAdapter;
-    private String mUrl;
-    private int mPosition;
-    private int mPageSize;
-    private boolean mIsSearch;
 
-    private ArrayList<Comic> mComicList;
+    //数据
+    private String mUrl; //url
+    private int mPosition; //非搜索操作时，当前页
+    private int mPageSize; //非搜索操作时，最大页数
+    private boolean mIsSearch; //是否为搜索操作
+
+    private ArrayList<Comic> mComicList; //解析出来的comic数据，不能直接保存到数据库
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

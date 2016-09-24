@@ -13,6 +13,7 @@ import org.xutils.ex.DbException;
 import org.xutils.x;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -95,9 +96,9 @@ public class ComicCaptureDBHelper {
         }
     }
 
-    public synchronized void updateProgress(ComicCapture comicCapture){
+    public synchronized void updateProgress(ComicCapture comicCapture) {
         try {
-            sDb.update(comicCapture,"download_position");
+            sDb.update(comicCapture, "download_position");
         } catch (DbException e) {
             e.printStackTrace();
         }
@@ -116,6 +117,9 @@ public class ComicCaptureDBHelper {
         List<ComicCapture> comicCaptures = null;
         try {
             comicCaptures = sDb.selector(ComicCapture.class).where("comic_url", "=", comicUrl).findAll();
+            if (comicCaptures != null) {
+                Collections.sort(comicCaptures);
+            }
         } catch (DbException e) {
             e.printStackTrace();
         }

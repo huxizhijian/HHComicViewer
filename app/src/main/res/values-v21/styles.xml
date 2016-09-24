@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AppTheme" parent="android:Theme.Holo.Light">
+
+        <item name="android:colorPrimary">@color/main_color</item>
+        <item name="android:colorPrimaryDark">@color/holo_light_primary_dark</item>
+        <item name="android:windowBackground">@android:color/background_light</item>
+        <item name="android:colorBackground">@android:color/background_light</item>
+        <item name="android:textColorPrimaryInverse">@android:color/background_light</item>
+    </style>
+</resources>

@@ -16,6 +16,7 @@ public class Constants {
     public static final String SEARCH_URL = "http://ssooff.com/"; //搜索网站
     public static final String ACTION_CLASSIFIES = "action_classifies"; //标记为获取分类列表行
     public static final String NO_NETWORK = "没有网络!";
+    public static final int FINISHED_NOTIFICATION_ID = 0x1024;
 
     public static final String DEFAULT_DOWNLOAD_PATH = Environment.getExternalStorageDirectory().getPath() + "/HHComic";
 
@@ -32,4 +33,5 @@ public class Constants {
     public static final int DOWNLOAD_FINISHED = 0x3;
     public static final int DOWNLOAD_PAUSE = 0x4;
     public static final int DOWNLOAD_ERROR = 0x5;
+    public static final int MSG_DOWNLOAD = 0x6;
 }

@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:descendantFocusability="blocksDescendants"
+    android:gravity="bottom"
     android:orientation="vertical"
     android:paddingLeft="8dp"
     android:paddingRight="8dp"
@@ -18,12 +19,12 @@
 
     <TextView
         android:id="@+id/textView_storage_space"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"/>
+        android:gravity="left"/>
 
     <LinearLayout
+        android:id="@+id/ll_download_manager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:divider="@drawable/divider_linear_layout"
@@ -50,4 +51,6 @@
             android:text="@string/all_start"/>
 
     </LinearLayout>
+
+
 </LinearLayout>

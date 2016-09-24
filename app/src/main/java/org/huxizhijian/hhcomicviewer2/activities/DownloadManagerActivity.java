@@ -2,11 +2,13 @@ package org.huxizhijian.hhcomicviewer2.activities;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -56,6 +58,61 @@ public class DownloadManagerActivity extends Activity implements View.OnClickLis
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.download_manager, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onMenuItemSelected(int featureId, MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        switch (item.getItemId()) {
+            case R.id.menu_manager_sync:
+                //重置界面（较为耗费资源）
+                mAdapter = null;
+                mExpandableListView.setVisibility(View.GONE);
+                mDownloadedComicList = mComicDBHelper.findDownloadedComics();
+                if (mDownloadedComicList != null && mDownloadedComicList.size() != 0) {
+                    mDownloadedCaptureList = mComicCaptureDBHelper.findDownloadCaptureMap(mDownloadedComicList);
+                    mAdapter = new DownloadManagerAdapter(this, mDownloadedComicList, mDownloadedCaptureList);
+                    mComicUrlList = new ArrayList<>();
+                    for (Comic comic : mDownloadedComicList) {
+                        mComicUrlList.add(comic.getComicUrl());
+                    }
+                    mAdapter.setOnNotifyDataSetChanged(new DownloadManagerAdapter.OnNotifyDataSetChanged() {
+                        @Override
+                        public void onNotify() {
+                            for (int i = 0; i < mDownloadedComicList.size(); i++) {
+                                mExpandableListView.collapseGroup(i);
+                                mExpandableListView.expandGroup(i);
+                            }
+                        }
+                    });
+                    mExpandableListView.setAdapter(mAdapter);
+                    mExpandableListView.setVisibility(View.VISIBLE);
+                }
+                return true;
+            case R.id.menu_all_stop:
+                //强制停止所有任务，没有反应时用
+                if (mDownloadManager.hasMission()) {
+                    Intent intent = new Intent(this, DownloadService.class);
+                    intent.setAction(DownloadService.ACTION_ALL_STOP);
+                    stopService(intent);
+                    //取消所有通知
+                    NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                    manager.cancelAll();
+                }
+                return true;
+            default:
+                break;
+        }
+        return super.onMenuItemSelected(featureId, item);
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         //注册广播监听
@@ -72,14 +129,6 @@ public class DownloadManagerActivity extends Activity implements View.OnClickLis
         unregisterReceiver(mReceiver);
     }
 
-    @Override
-    public boolean onMenuItemSelected(int featureId, MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-            return true;
-        }
-        return super.onMenuItemSelected(featureId, item);
-    }
 
     private void initView() {
         mExpandableListView = (ExpandableListView) findViewById(R.id.elv_download_manager);
@@ -169,6 +218,7 @@ public class DownloadManagerActivity extends Activity implements View.OnClickLis
                 if (mAdapter.isEditMode()) {
                     List<ComicCapture> selectedCaptureList = mAdapter.getSelectedCaptures();
                     if (selectedCaptureList != null) {
+                        mAdapter.delete();
                         for (ComicCapture capture : selectedCaptureList) {
                             Intent intent = new Intent(this, DownloadService.class);
                             intent.setAction(DownloadService.ACTION_DELETE);
@@ -176,16 +226,14 @@ public class DownloadManagerActivity extends Activity implements View.OnClickLis
                             startService(intent);
                         }
                     }
-                    mAdapter.closeEditMode();
                 }
-                mBtn_delete.setVisibility(View.GONE);
                 break;
         }
     }
 
     @Override
     public void onBackPressed() {
-        if (mAdapter.isEditMode()) {
+        if (mAdapter != null && mAdapter.isEditMode()) {
             mBtn_delete.setVisibility(View.GONE);
             mBtn_manager.setText("管理");
             mAdapter.closeEditMode();
@@ -207,40 +255,24 @@ public class DownloadManagerActivity extends Activity implements View.OnClickLis
 
             ComicCapture comicCapture = (ComicCapture) intent.getSerializableExtra("comicCapture");
 
-            if (comicCapture == null) {
-                //表示capture已经被删除了
-                mDownloadedComicList = mComicDBHelper.findDownloadedComics();
-                if (mDownloadedComicList != null && mDownloadedComicList.size() != 0) {
-                    mDownloadedCaptureList = mComicCaptureDBHelper.findDownloadCaptureMap(mDownloadedComicList);
-                    mAdapter.setDownloadedComicList(mDownloadedComicList);
-                    mAdapter.setDownloadedCaptureList(mDownloadedCaptureList);
-                    mAdapter.notifyDataSetChanged();
-                    for (int i = 0; i < mDownloadedComicList.size(); i++) {
-                        mExpandableListView.collapseGroup(i);
-                        mExpandableListView.expandGroup(i);
-                    }
-                } else {
-                    mAdapter = null;
-                    mExpandableListView.setVisibility(View.GONE);
-                }
-                return;
-            }
-
-            //控制刷新间隔不少于400ms，如果不是正在下载，还是要刷新状态
+            /*//控制刷新间隔不少于400ms，如果不是正在下载，还是要刷新状态
             if (System.currentTimeMillis() - mLastUpdateTime < 400 &&
-                    comicCapture.getDownloadStatus() == Constants.DOWNLOAD_DOWNLOADING) return;
+                    comicCapture.getDownloadStatus() == Constants.DOWNLOAD_DOWNLOADING) return;*/
 
             int groupPosition = mComicUrlList.indexOf(comicCapture.getComicUrl());
             List<ComicCapture> captureList = mDownloadedCaptureList.get(comicCapture.getComicUrl());
             if (captureList == null) return;
-            //遍历每一个capture，替换改变的capture
-            for (int i = 0; i < captureList.size(); i++) {
-                if (comicCapture.getCaptureUrl().equals(captureList.get(i).getCaptureUrl())) {
-                    captureList.set(i, comicCapture);
-                    break;
-                }
+            //替换list
+            if (captureList.contains(comicCapture)) {
+                //如果存在，直接替换
+                captureList.set(captureList.indexOf(comicCapture), comicCapture);
+            } else {
+                //没有找到符合的capture，说明这是新的任务，将其加入队列
+                captureList.add(comicCapture);
             }
+
             mAdapter.setDownloadedCaptureList(mDownloadedCaptureList);
+            mAdapter.resetCheckStatus();
             mAdapter.notifyDataSetChanged();
             mExpandableListView.collapseGroup(groupPosition);
             mExpandableListView.expandGroup(groupPosition);

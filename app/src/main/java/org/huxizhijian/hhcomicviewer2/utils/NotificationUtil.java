@@ -11,6 +11,7 @@ import org.huxizhijian.hhcomicviewer2.R;
 import org.huxizhijian.hhcomicviewer2.activities.DownloadManagerActivity;
 import org.huxizhijian.hhcomicviewer2.enities.ComicCapture;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,7 +43,7 @@ public class NotificationUtil {
             //创建通知对象
             Notification notification = new Notification();
             //设置滚动文字
-            notification.tickerText = comicCapture.getCaptureName() + "正在下载";
+            notification.tickerText = comicCapture.getCaptureName() + " 正在下载";
             //设置通知显示的时间
             notification.when = System.currentTimeMillis();
             //设置图标
@@ -75,6 +76,16 @@ public class NotificationUtil {
         mNotifications.remove(id);
     }
 
+    public void cancelAll() {
+        //取消所有通知
+        Collection keys = mNotifications.keySet();
+        for (Object key : keys) {
+            Integer id = (Integer) key;
+            mNotificationManager.cancel(id);
+            mNotifications.remove(id);
+        }
+    }
+
     /**
      * 通知漫画下载完毕
      *
@@ -84,10 +95,10 @@ public class NotificationUtil {
         Notification.Builder builder = new Notification.Builder(mContext);
         //小图标及滑动文字
         builder.setSmallIcon(R.mipmap.ic_launcher);
-        builder.setTicker(comicCapture.getCaptureName() + "下载完毕");
+        builder.setTicker(comicCapture.getCaptureName() + " 下载完毕");
         //设置通知消息
         CharSequence contentTitle = comicCapture.getComicTitle(); // 通知栏标题
-        CharSequence contentText = comicCapture.getCaptureName() + " - 下载完毕"; // 通知栏内容
+        CharSequence contentText = comicCapture.getCaptureName() + " 等章节 - 下载完毕"; // 通知栏内容
         //设置点击通知栏之后的操作
         Intent intent = new Intent(mContext, DownloadManagerActivity.class);
         //封装到PendingIntent中
@@ -100,7 +111,7 @@ public class NotificationUtil {
         builder.setAutoCancel(true);
         Notification notification = builder.getNotification();
         //发出通知
-        mNotificationManager.notify(comicCapture.getId(), notification);
+        mNotificationManager.notify(Constants.FINISHED_NOTIFICATION_ID, notification);
     }
 
     /**
@@ -116,7 +127,7 @@ public class NotificationUtil {
             int progress = (int) ((float) downloadPosition / (float) pageCount * 100f);
             notification.contentView.setProgressBar(R.id.progress_bar_notification, 100, progress, false);
             //修改下载数字
-            notification.contentView.setTextViewText(R.id.textView_notification_progress, downloadPosition + 1 + "/" + pageCount);
+            notification.contentView.setTextViewText(R.id.textView_notification_progress, downloadPosition + "/" + pageCount);
             mNotificationManager.notify(id, notification);
         }
     }

@@ -3,28 +3,16 @@
       xmlns:huxi="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/menu_popup_sync"
+        android:id="@+id/menu_manager_sync"
         android:icon="@mipmap/ic_perm_group_sync_settings"
         android:orderInCategory="0"
         android:title="@string/menu_popup_sync"
         huxi:showAsAction="ifRoom|collapseActionView"/>
 
     <item
-        android:id="@+id/menu_download_list"
+        android:id="@+id/menu_all_stop"
         android:orderInCategory="1"
-        android:title="@string/menu_download_list"
-        huxi:showAsAction="never"/>
-
-    <item
-        android:id="@+id/menu_config"
-        android:orderInCategory="2"
-        android:title="@string/menu_config"
-        huxi:showAsAction="never"/>
-
-    <item
-        android:id="@+id/menu_exit"
-        android:orderInCategory="3"
-        android:title="@string/menu_exit"
+        android:title="@string/menu_all_stop"
         huxi:showAsAction="never"/>
 
 </menu>

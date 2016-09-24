@@ -28,11 +28,14 @@ import java.util.List;
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener, ViewPager.OnPageChangeListener {
 
+    //控件及适配器
     private ViewPager mViewPager;
     private FragmentPagerAdapter mAdapter;
-    private List<Fragment> mTags = new ArrayList<>();
-    private List<ChangeColorIconWithText> mTabIndicator = new ArrayList<>();
-    private long mLastBackPressedTime = 0;
+
+    //数据
+    private List<Fragment> mTags = new ArrayList<>(); //各tab的fragment
+    private List<ChangeColorIconWithText> mTabIndicator = new ArrayList<>();  //viewPager指示器
+    private long mLastBackPressedTime = 0; //用于用户不误操作退出键
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

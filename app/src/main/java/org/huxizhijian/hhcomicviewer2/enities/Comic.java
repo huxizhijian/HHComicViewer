@@ -302,8 +302,18 @@ public class Comic implements Serializable, Comparable {
     }
 
     @Override
+    public boolean equals(Object obj) {
+        Comic comicOther = (Comic) obj;
+        return this.comicUrl.equals(comicOther.getComicUrl());
+    }
+
+    @Override
     public int compareTo(Object o) {
         Comic comicOther = (Comic) o;
+        if (this.comicUrl.equals(comicOther.getComicUrl())) {
+            //同一个comic
+            return 0;
+        }
         if (this.getLastReadTime() > comicOther.getLastReadTime()) {
             return 1;
         } else {

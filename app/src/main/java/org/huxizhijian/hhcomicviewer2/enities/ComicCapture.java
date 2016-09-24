@@ -1,5 +1,7 @@
 package org.huxizhijian.hhcomicviewer2.enities;
 
+import android.support.annotation.NonNull;
+
 import org.huxizhijian.hhcomicviewer2.utils.ParsePicUrlList;
 import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;
@@ -12,7 +14,7 @@ import java.util.ArrayList;
  * Created by wei on 2016/8/23.
  */
 @Table(name = "comic_capture")
-public class ComicCapture implements Serializable {
+public class ComicCapture implements Serializable, Comparable {
     @Column(name = "id", isId = true)
     private int id; //id
     @Column(name = "capture_name")
@@ -136,5 +138,17 @@ public class ComicCapture implements Serializable {
                 ", pageCount=" + pageCount +
                 ", comicTitle='" + comicTitle + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        ComicCapture compareCapture = (ComicCapture) obj;
+        return this.captureUrl.equals(compareCapture.getCaptureUrl());
+    }
+
+    @Override
+    public int compareTo(@NonNull Object o) {
+        ComicCapture compareCapture = (ComicCapture) o;
+        return this.captureUrl.compareTo(compareCapture.getCaptureUrl());
     }
 }

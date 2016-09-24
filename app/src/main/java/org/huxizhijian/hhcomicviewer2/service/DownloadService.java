@@ -62,8 +62,13 @@ public class DownloadService extends Service implements DownloadManager.OnMissio
                 InitComicCapture init = new InitComicCapture(comicCapture, new CallBack() {
                     @Override
                     public void onFinished(ComicCapture comicCapture) {
-                        mDownloadManager.startDownload(comicCapture);
                         mComicCaptureDBHelper.update(comicCapture);
+                        mDownloadManager.startDownload(comicCapture);
+                        //发送广播
+                        Intent intentBroadcast = new Intent();
+                        intentBroadcast.setAction(DownloadService.ACTION_RECEIVER);
+                        intentBroadcast.putExtra("comicCapture", comicCapture);
+                        sendBroadcast(intentBroadcast);
                     }
                 });
                 DownloadManager.sExecutorService.execute(init);
@@ -71,13 +76,16 @@ public class DownloadService extends Service implements DownloadManager.OnMissio
         } else if (intent.getAction().equals(ACTION_START_RANGE)) {
             //继续下载
             ComicCapture comicCapture = (ComicCapture) intent.getSerializableExtra("comicCapture");
-            InitComicCapture init = new InitComicCapture(comicCapture, new CallBack() {
-                @Override
-                public void onFinished(ComicCapture comicCapture) {
-                    mDownloadManager.startDownload(comicCapture);
-                }
-            });
-            DownloadManager.sExecutorService.execute(init);
+            comicCapture = mComicCaptureDBHelper.findByCaptureUrl(comicCapture.getCaptureUrl());
+            if (comicCapture.getDownloadStatus() != Constants.DOWNLOAD_FINISHED) {
+                InitComicCapture init = new InitComicCapture(comicCapture, new CallBack() {
+                    @Override
+                    public void onFinished(ComicCapture comicCapture) {
+                        mDownloadManager.startDownload(comicCapture);
+                    }
+                });
+                DownloadManager.sExecutorService.execute(init);
+            }
         } else if (intent.getAction().equals(ACTION_STOP)) {
             //暂停下载
             ComicCapture comicCapture = (ComicCapture) intent.getSerializableExtra("comicCapture");
