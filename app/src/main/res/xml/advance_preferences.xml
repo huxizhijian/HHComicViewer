@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <Preference
+        android:key="export_database"
+        android:summary="将当前漫画的收藏、阅读及下载的信息导出到其他地方，即使卸载了程序也不会消失"
+        android:title="导出数据"/>
+
+    <Preference
+        android:key="import_database"
+        android:summary="恢复导出的漫画收藏、阅读及下载信息"
+        android:title="导入数据"/>
+
+    <Preference
+        android:key="update_parse_setting"
+        android:summary="当解析漫画总出错时可以试试"
+        android:title="更新解析配置"/>
+
+    <Preference
+        android:key="open_download_setting"
+        android:summary="打开下载设置"
+        android:title="下载设置"/>
+
+</PreferenceScreen>

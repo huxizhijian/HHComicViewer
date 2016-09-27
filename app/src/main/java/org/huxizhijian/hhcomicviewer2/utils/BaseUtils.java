@@ -92,6 +92,37 @@ public class BaseUtils {
         return dirFile.delete();
     }
 
+    public static boolean deleteDirectoryParent(String filePath) {
+        boolean flag = false;
+        //如果filePath不以文件分隔符结尾，自动添加文件分隔符
+        if (!filePath.endsWith(File.separator)) {
+            filePath = filePath + File.separator;
+        }
+
+        File parentPath = new File(filePath).getParentFile();
+
+        if (!parentPath.exists() || !parentPath.isDirectory()) {
+            return false;
+        }
+        flag = true;
+        File[] files = parentPath.listFiles();
+        //遍历删除文件夹下的所有文件(包括子目录)
+        for (File file : files) {
+            if (file.isFile()) {
+                //删除子文件
+                flag = deleteFile(file.getAbsolutePath());
+                if (!flag) break;
+            } else {
+                //删除子目录
+                flag = deleteDirectory(file.getAbsolutePath());
+                if (!flag) break;
+            }
+        }
+        if (!flag) return false;
+        //删除当前空目录
+        return parentPath.delete();
+    }
+
     public static int getwidthPixels(Context context) {
         WindowManager wm = (WindowManager) context
                 .getSystemService(Context.WINDOW_SERVICE);

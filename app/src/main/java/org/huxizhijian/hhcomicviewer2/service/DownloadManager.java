@@ -2,6 +2,8 @@ package org.huxizhijian.hhcomicviewer2.service;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -59,6 +61,20 @@ public class DownloadManager {
         mComicCaptureLinkedList = new LinkedList<>();
         this.mContext = context;
         this.mNotificationUtil = new NotificationUtil(context);
+        //加载用户设置
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+        String threadCount = sharedPreferences.getString("download_thread_count", "3_thread");
+        switch (threadCount) {
+            case "1_thread":
+                mThreadCount = 1;
+                break;
+            case "3_thread":
+                mThreadCount = 3;
+                break;
+            case "5_thread":
+                mThreadCount = 5;
+                break;
+        }
     }
 
     public static DownloadManager getInstance(Context context) {
@@ -103,7 +119,7 @@ public class DownloadManager {
         }
 
         //如果存在下载文件，则删除
-        BaseUtils.deleteDirectory(BaseUtils.getDownloadPath(comicCapture));
+        BaseUtils.deleteDirectory(comicCapture.getSavePath());
 
         //删除漫画的数据库信息
         mComicCaptureDBHelper.delete(comicCapture);
@@ -117,7 +133,7 @@ public class DownloadManager {
             comic.setDownload(false);
             comicDBHelper.update(comic);
             //删除上级目录
-            BaseUtils.deleteDirectory(BaseUtils.getDownloadPathRoot(comic));
+            BaseUtils.deleteDirectoryParent(comicCapture.getSavePath());
         }
     }
 
@@ -200,7 +216,7 @@ public class DownloadManager {
         }
         mNotificationUtil.showNotification(mComicCapture);
         //向activity发送广播通知下载任务开始
-        Intent intent = new Intent(DownloadService.ACTION_RECEIVER);
+        Intent intent = new Intent(DownloadManagerService.ACTION_RECEIVER);
         intent.putExtra("comicCapture", mComicCapture);
         mContext.sendBroadcast(intent);
     }
@@ -260,7 +276,7 @@ public class DownloadManager {
             mDownloadPosition = 0;
             mComicCaptureDBHelper.update(mComicCapture);
             //向activity发送广播通知下载任务暂停
-            Intent intent = new Intent(DownloadService.ACTION_RECEIVER);
+            Intent intent = new Intent(DownloadManagerService.ACTION_RECEIVER);
             intent.putExtra("comicCapture", mComicCapture);
             mContext.sendBroadcast(intent);
             mNotificationUtil.cancelNotification(mComicCapture.getId());
@@ -314,7 +330,7 @@ public class DownloadManager {
             //初始化下载页数
             mDownloadPosition += mThreadInfo.getDownloadPosition();
             //如果文件夹不存在，创建写入文件夹
-            File filePath = new File(BaseUtils.getDownloadPath(mComicCapture));
+            File filePath = new File(mComicCapture.getSavePath());
             if (!filePath.exists()) {
                 Log.i(TAG, "run: make dir " + filePath.getAbsolutePath());
                 filePath.mkdirs();
@@ -328,7 +344,7 @@ public class DownloadManager {
                     //发送广播
                     mNotificationUtil.updateNotification(mComicCapture.getId(), mDownloadPosition, mComicCapture.getPageCount());
                     //向activity发送广播通知下载任务进行中
-                    Intent intent = new Intent(DownloadService.ACTION_RECEIVER);
+                    Intent intent = new Intent(DownloadManagerService.ACTION_RECEIVER);
                     intent.putExtra("comicCapture", mComicCapture);
                     mContext.sendBroadcast(intent);
                     url = new URL(mComicCapture.getPicList().get(mThreadInfo.getThreadPosition() *
@@ -430,7 +446,7 @@ public class DownloadManager {
                 //取消正在下载通知
                 mNotificationUtil.cancelNotification(mComicCapture.getId());
                 //向activity发送广播通知
-                Intent intent = new Intent(DownloadService.ACTION_RECEIVER);
+                Intent intent = new Intent(DownloadManagerService.ACTION_RECEIVER);
                 intent.putExtra("comicCapture", mComicCapture);
                 mContext.sendBroadcast(intent);
                 mComicCaptureDBHelper.update(mComicCapture);
@@ -473,7 +489,7 @@ public class DownloadManager {
                 mComicCapture.setDownloadPosition(mComicCapture.getPageCount() - 1);
                 mComicCaptureDBHelper.update(mComicCapture);
                 //向activity发送广播通知下载任务结束
-                Intent intent = new Intent(DownloadService.ACTION_RECEIVER);
+                Intent intent = new Intent(DownloadManagerService.ACTION_RECEIVER);
                 intent.putExtra("comicCapture", mComicCapture);
                 mContext.sendBroadcast(intent);
                 Log.i(TAG, "checkAllThreadFinish: all finished " + mComicCapture.getCaptureName());

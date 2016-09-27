@@ -10,9 +10,16 @@
         huxi:showAsAction="ifRoom|collapseActionView"/>
 
     <item
-        android:id="@+id/menu_all_stop"
+        android:id="@+id/menu_download_setting"
         android:orderInCategory="1"
+        huxi:showAsAction="never"
+        android:title="@string/download_setting"/>
+
+    <item
+        android:id="@+id/menu_all_stop"
+        android:orderInCategory="2"
         android:title="@string/menu_all_stop"
         huxi:showAsAction="never"/>
+
 
 </menu>

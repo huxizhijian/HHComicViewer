@@ -1,6 +1,7 @@
 package org.huxizhijian.hhcomicviewer2.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 
 import org.huxizhijian.hhcomicviewer2.R;
 import org.huxizhijian.hhcomicviewer2.enities.Comic;
@@ -23,13 +26,13 @@ public class StaggeredComicAdapter extends RecyclerView.Adapter<StaggeredComicAd
 
     private List<Comic> mComicList;
     private OnItemClickListener mOnItemClickListener;
-    private Context mContext;
     private LayoutInflater mInflater;
+    private Context mContext;
 
     public StaggeredComicAdapter(Context context, List<Comic> comicList) {
-        this.mContext = context;
         this.mInflater = LayoutInflater.from(context);
         this.mComicList = comicList;
+        this.mContext = context;
     }
 
     @Override
@@ -39,14 +42,19 @@ public class StaggeredComicAdapter extends RecyclerView.Adapter<StaggeredComicAd
     }
 
     @Override
-    public void onBindViewHolder(StaggeredViewHolder holder, int position) {
-        holder.tv.setText(mComicList.get(position).getTitle());
+    public void onBindViewHolder(final StaggeredViewHolder holder, int position) {
+        holder.tv.setText(mComicList.get(holder.getLayoutPosition()).getTitle());
         Glide.with(mContext)
-                .load(mComicList.get(position).getThumbnailUrl())
-                .fitCenter()
+                .load(mComicList.get(holder.getLayoutPosition()).getThumbnailUrl())
+                .asBitmap()
                 .placeholder(R.mipmap.blank)
-                .error(R.mipmap.blank)
-                .into(holder.iv);
+                .dontAnimate()
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
+                        holder.iv.setImageBitmap(bitmap);
+                    }
+                });
         setUpItemEvent(holder);
     }
 

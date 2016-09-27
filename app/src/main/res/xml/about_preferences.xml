@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <Preference
+        android:key="author"
+        android:summary="@string/app_author_info"
+        android:title="作者"/>
+
+    <Preference
+        android:key="app_version"
+        android:summary="@string/app_version"
+        android:title="版本号"/>
+
+    <Preference
+        android:key="check_update"
+        android:title="检查更新"/>
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="update_alpha_version"
+        android:title="更新测试版"/>
+
+    <Preference
+        android:key="open_source"
+        android:title="开源许可"/>
+
+</PreferenceScreen>

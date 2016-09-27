@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -16,47 +17,92 @@ import com.bumptech.glide.Glide;
 
 import org.huxizhijian.hhcomicviewer2.R;
 import org.huxizhijian.hhcomicviewer2.activities.DownloadManagerActivity;
+import org.huxizhijian.hhcomicviewer2.activities.PreferenceActivity;
+import org.huxizhijian.hhcomicviewer2.adapter.CommonAdapter;
+import org.huxizhijian.hhcomicviewer2.utils.ViewHolder;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class ConfigFragment extends Fragment {
 
+    private List<Config> mConfigs;
+
     public ConfigFragment() {
     }
 
+    class Config {
+        Config(int iconResID, String text) {
+            this.iconResID = iconResID;
+            this.text = text;
+        }
+
+        int iconResID;
+        String text;
+    }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_conifg, container, false);
         ListView listView = (ListView) view.findViewById(R.id.listView_config);
+        initData();
+
+        listView.setAdapter(new CommonAdapter<Config>(getActivity(), mConfigs, R.layout.item_config_list) {
+            @Override
+            public void convert(ViewHolder vh, Config config) {
+                ((ImageView) vh.getView(R.id.imageView_config_fragment)).setImageResource(config.iconResID);
+                vh.setText(R.id.textView_config_fragment, config.text);
+            }
+        });
+        listView.setDividerHeight(2);
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = null;
                 switch (position) {
                     case 0:
-                        //打开设置界面
+                        //阅读
+                        intent = new Intent(getActivity(), PreferenceActivity.class);
+                        intent.setAction(PreferenceActivity.ACTION_READING);
+                        startActivity(intent);
                         break;
                     case 1:
                         //打开下载列表
-                        Intent intent = new Intent(getActivity(), DownloadManagerActivity.class);
+                        intent = new Intent(getActivity(), DownloadManagerActivity.class);
                         startActivity(intent);
                         break;
                     case 2:
+                        //高级
+                        intent = new Intent(getActivity(), PreferenceActivity.class);
+                        intent.setAction(PreferenceActivity.ACTION_ADVANCE);
+                        startActivity(intent);
+                        break;
+                    case 3:
+                        //历史
+                        intent = new Intent(getActivity(), PreferenceActivity.class);
+                        intent.setAction(PreferenceActivity.ACTION_HISTORY);
+                        startActivity(intent);
+                        break;
+                    case 4:
                         //清除在线阅读缓存
                         new AsyncTask<Context, Void, Void>() {
                             @Override
                             protected Void doInBackground(Context... params) {
                                 Context context = params[0];
-                                //File file = new File(context.getCacheDir().toString() + "/picasso-cache/");
-                                //Picasso.with(context).invalidate(file);
                                 Glide.get(context).clearDiskCache();
                                 return null;
                             }
                         }.execute(getActivity());
                         Toast.makeText(getActivity(), "清除缓存成功", Toast.LENGTH_SHORT).show();
                         break;
-                    case 3:
+                    case 5:
                         //关于
+                        intent = new Intent(getActivity(), PreferenceActivity.class);
+                        intent.setAction(PreferenceActivity.ACTION_ABOUT);
+                        startActivity(intent);
                         break;
                 }
             }
@@ -64,4 +110,20 @@ public class ConfigFragment extends Fragment {
         return view;
     }
 
+    private void initData() {
+        mConfigs = new ArrayList<>();
+        Config read = new Config(R.mipmap.read, "阅读");
+        Config download = new Config(R.mipmap.download, "下载");
+        Config advance = new Config(R.mipmap.advance, "高级");
+        Config history = new Config(R.mipmap.history, "历史");
+        Config clear = new Config(R.mipmap.delete, "清除在线阅读缓存");
+        Config about = new Config(R.mipmap.about, "关于");
+
+        mConfigs.add(read);
+        mConfigs.add(download);
+        mConfigs.add(advance);
+        mConfigs.add(history);
+        mConfigs.add(clear);
+        mConfigs.add(about);
+    }
 }

@@ -113,11 +113,10 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
-            android:layout_marginTop="4dp"
             android:adjustViewBounds="true"
-            android:maxHeight="14dp"
-            android:maxWidth="32dp"
-            android:src="@mipmap/battery_100"/>
+            android:maxHeight="48dp"
+            android:maxWidth="24dp"
+            android:src="@mipmap/battery_unknown"/>
 
     </RelativeLayout>
 

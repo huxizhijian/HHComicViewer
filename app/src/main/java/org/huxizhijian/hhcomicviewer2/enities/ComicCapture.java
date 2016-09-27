@@ -31,6 +31,8 @@ public class ComicCapture implements Serializable, Comparable {
     private String comicTitle; //漫画名
     @Column(name = "comic_url")
     private String comicUrl; //漫画URL
+    @Column(name = "save_path")
+    private String savePath; //保存目录
 
     private ArrayList<String> picList;
 
@@ -62,6 +64,14 @@ public class ComicCapture implements Serializable, Comparable {
     public void updatePicList(String url, String content) {
         this.picList = ParsePicUrlList.scanPicInPage(url, content);
         this.pageCount = this.picList.size();
+    }
+
+    public String getSavePath() {
+        return savePath;
+    }
+
+    public void setSavePath(String savePath) {
+        this.savePath = savePath;
     }
 
     public int getDownloadPosition() {

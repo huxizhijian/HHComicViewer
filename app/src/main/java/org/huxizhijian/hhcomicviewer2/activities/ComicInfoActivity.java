@@ -33,7 +33,7 @@ import org.huxizhijian.hhcomicviewer2.db.ComicDBHelper;
 import org.huxizhijian.hhcomicviewer2.enities.Comic;
 import org.huxizhijian.hhcomicviewer2.enities.ComicCapture;
 import org.huxizhijian.hhcomicviewer2.fragment.DownloadSelectorFragment;
-import org.huxizhijian.hhcomicviewer2.service.DownloadService;
+import org.huxizhijian.hhcomicviewer2.service.DownloadManagerService;
 import org.huxizhijian.hhcomicviewer2.utils.BaseUtils;
 import org.huxizhijian.hhcomicviewer2.utils.Constants;
 import org.huxizhijian.hhcomicviewer2.view.FullyGridLayoutManager;
@@ -79,8 +79,8 @@ public class ComicInfoActivity extends FragmentActivity implements OnClickListen
         public void handleMessage(Message msg) {
             if (msg.what == Constants.MSG_DOWNLOAD) {
                 ComicCapture capture = (ComicCapture) msg.obj;
-                Intent intent = new Intent(ComicInfoActivity.this, DownloadService.class);
-                intent.setAction(DownloadService.ACTION_START);
+                Intent intent = new Intent(ComicInfoActivity.this, DownloadManagerService.class);
+                intent.setAction(DownloadManagerService.ACTION_START);
                 intent.putExtra("comicCapture", capture);
                 startService(intent);
             }

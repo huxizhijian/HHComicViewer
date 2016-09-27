@@ -36,7 +36,6 @@ public class MarkedFragment extends Fragment {
     public MarkedFragment() {
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -50,6 +49,7 @@ public class MarkedFragment extends Fragment {
     private void initData() {
         mMarkedComics = mComicDBHelper.findMarkedComics();
         if (mMarkedComics == null) return;
+
         mAdapter = new StaggeredComicAdapter(getActivity(), mMarkedComics);
         mAdapter.setOnItemClickListener(new StaggeredComicAdapter.OnItemClickListener() {
             @Override
@@ -78,6 +78,7 @@ public class MarkedFragment extends Fragment {
             mMarkedComics = mComicDBHelper.findMarkedComics();
             if (mMarkedComics != null) {
                 mAdapter.setComicList(mMarkedComics);
+//                preloadBitmap();
                 mAdapter.notifyDataSetChanged();
             }
         }
@@ -95,7 +96,7 @@ public class MarkedFragment extends Fragment {
 
     private void showDialog(final int position) {
         //先new出一个监听器，设置好监听
-        DialogInterface.OnClickListener dialogOnclicListener = new DialogInterface.OnClickListener() {
+        DialogInterface.OnClickListener dialogOnClickListener = new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -118,8 +119,8 @@ public class MarkedFragment extends Fragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());  //先得到构造器
         builder.setTitle("删除"); //设置标题
         builder.setMessage("是否确认删除收藏?"); //设置内容
-        builder.setPositiveButton("确认", dialogOnclicListener);
-        builder.setNegativeButton("取消", dialogOnclicListener);
+        builder.setPositiveButton("确认", dialogOnClickListener);
+        builder.setNegativeButton("取消", dialogOnClickListener);
         builder.create().show();
     }
 }

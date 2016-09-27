@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <Preference
+        android:key="download_path"
+        android:summary="设置你的下载路径"
+        android:title="下载路径"/>
+
+    <ListPreference
+        android:defaultValue="3_thread"
+        android:entries="@array/download_thread_count_string"
+        android:entryValues="@array/download_thread_count"
+        android:key="download_thread_count"
+        android:summary="同时下载的页数"
+        android:title="下载线程数"/>
+
+    <Preference
+        android:key="clean_download_path"
+        android:summary="清理在漫画下载路径但是不在数据库中的漫画下载文件"
+        android:title="清理下载冗余"/>
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="default_open_all"
+        android:summary="开启下载列表时会默认打开所有一级目录"
+        android:title="默认打开下载漫画组"/>
+
+</PreferenceScreen>

@@ -24,44 +24,33 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:padding="5dp"
+            android:padding="7dp"
             huxi:color="@color/main_color"
             huxi:icon="@mipmap/ic_menu_star"
             huxi:text="@string/tab_mark"
-            huxi:text_size="12sp" />
-
-        <org.huxizhijian.hhcomicviewer2.view.ChangeColorIconWithText
-            android:id="@+id/indicator_history"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:padding="5dp"
-            huxi:color="@color/main_color"
-            huxi:icon="@mipmap/ic_menu_recent_history"
-            huxi:text="@string/tab_history"
-            huxi:text_size="12sp" />
+            huxi:text_size="11sp" />
 
         <org.huxizhijian.hhcomicviewer2.view.ChangeColorIconWithText
             android:id="@+id/indicator_search"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:padding="5dp"
+            android:padding="7dp"
             huxi:color="@color/main_color"
             huxi:icon="@mipmap/ic_menu_search"
             huxi:text="@string/tab_search"
-            huxi:text_size="12sp" />
+            huxi:text_size="11sp" />
 
         <org.huxizhijian.hhcomicviewer2.view.ChangeColorIconWithText
             android:id="@+id/indicator_config"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:padding="5dp"
+            android:padding="7dp"
             huxi:color="@color/main_color"
             huxi:icon="@mipmap/ic_menu_preferences"
             huxi:text="@string/tab_config"
-            huxi:text_size="12sp" />
+            huxi:text_size="11sp" />
 
     </LinearLayout>
 

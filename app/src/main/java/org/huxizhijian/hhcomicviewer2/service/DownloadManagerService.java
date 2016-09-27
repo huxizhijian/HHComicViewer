@@ -8,6 +8,7 @@ import android.util.Log;
 
 import org.huxizhijian.hhcomicviewer2.db.ComicCaptureDBHelper;
 import org.huxizhijian.hhcomicviewer2.enities.ComicCapture;
+import org.huxizhijian.hhcomicviewer2.utils.BaseUtils;
 import org.huxizhijian.hhcomicviewer2.utils.Constants;
 
 import java.io.BufferedReader;
@@ -17,7 +18,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 
-public class DownloadService extends Service implements DownloadManager.OnMissionFinishedListener {
+public class DownloadManagerService extends Service implements DownloadManager.OnMissionFinishedListener {
 
     private ComicCaptureDBHelper mComicCaptureDBHelper;
     private DownloadManager mDownloadManager;
@@ -31,7 +32,7 @@ public class DownloadService extends Service implements DownloadManager.OnMissio
     public static final String ACTION_RECEIVER = "ACTION_RECEIVER";
     public static final String ACTION_CHECK_MISSION = "ACTION_CHECK_MISSION";
 
-    public DownloadService() {
+    public DownloadManagerService() {
     }
 
     @Override
@@ -56,6 +57,8 @@ public class DownloadService extends Service implements DownloadManager.OnMissio
             comicCapture.setDownloadStatus(Constants.DOWNLOAD_INIT);
             //查看是否存在数据库中(是否未下载)
             if (mComicCaptureDBHelper.findByCaptureUrl(comicCapture.getCaptureUrl()) == null) {
+                //设置下载目录
+                comicCapture.setSavePath(BaseUtils.getDownloadPath(comicCapture));
                 mComicCaptureDBHelper.add(comicCapture);
                 //获取自动分配的ID
                 comicCapture = mComicCaptureDBHelper.findByCaptureUrl(comicCapture.getCaptureUrl());
@@ -66,7 +69,7 @@ public class DownloadService extends Service implements DownloadManager.OnMissio
                         mDownloadManager.startDownload(comicCapture);
                         //发送广播
                         Intent intentBroadcast = new Intent();
-                        intentBroadcast.setAction(DownloadService.ACTION_RECEIVER);
+                        intentBroadcast.setAction(DownloadManagerService.ACTION_RECEIVER);
                         intentBroadcast.putExtra("comicCapture", comicCapture);
                         sendBroadcast(intentBroadcast);
                     }
@@ -89,7 +92,7 @@ public class DownloadService extends Service implements DownloadManager.OnMissio
         } else if (intent.getAction().equals(ACTION_STOP)) {
             //暂停下载
             ComicCapture comicCapture = (ComicCapture) intent.getSerializableExtra("comicCapture");
-            Log.i("DownloadService", "onStartCommand: stop");
+            Log.i("DownloadManagerService", "onStartCommand: stop");
             mDownloadManager.setDownloadPause(comicCapture);
         } else if (intent.getAction().equals(ACTION_ALL_START)) {
             //全部开始下载
@@ -110,7 +113,7 @@ public class DownloadService extends Service implements DownloadManager.OnMissio
         } else if (intent.getAction().equals(ACTION_DELETE)) {
             //删除一个下载任务
             ComicCapture comicCapture = (ComicCapture) intent.getSerializableExtra("comicCapture");
-            Log.i("DownloadService", "onStartCommand: delete");
+            Log.i("DownloadManagerService", "onStartCommand: delete");
             mDownloadManager.deleteCapture(comicCapture);
         } else if (intent.getAction().equals(ACTION_CHECK_MISSION)) {
             //检查是否还有任务在下载，没有就退出

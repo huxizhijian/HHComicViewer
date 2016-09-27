@@ -19,7 +19,7 @@ import org.huxizhijian.hhcomicviewer2.activities.GalleryActivity;
 import org.huxizhijian.hhcomicviewer2.db.ComicDBHelper;
 import org.huxizhijian.hhcomicviewer2.enities.Comic;
 import org.huxizhijian.hhcomicviewer2.enities.ComicCapture;
-import org.huxizhijian.hhcomicviewer2.service.DownloadService;
+import org.huxizhijian.hhcomicviewer2.service.DownloadManagerService;
 import org.huxizhijian.hhcomicviewer2.utils.Constants;
 import org.huxizhijian.hhcomicviewer2.view.HorizontalProgressBarWithProgress;
 
@@ -327,16 +327,16 @@ public class DownloadManagerAdapter extends BaseExpandableListAdapter {
 
     private void pause(ComicCapture capture) {
         //暂停下载
-        Intent intent = new Intent(mContext, DownloadService.class);
-        intent.setAction(DownloadService.ACTION_STOP);
+        Intent intent = new Intent(mContext, DownloadManagerService.class);
+        intent.setAction(DownloadManagerService.ACTION_STOP);
         intent.putExtra("comicCapture", capture);
         mContext.startService(intent);
     }
 
     private void restart(ComicCapture capture) {
         //重新开始下载
-        Intent intent = new Intent(mContext, DownloadService.class);
-        intent.setAction(DownloadService.ACTION_START_RANGE);
+        Intent intent = new Intent(mContext, DownloadManagerService.class);
+        intent.setAction(DownloadManagerService.ACTION_START_RANGE);
         intent.putExtra("comicCapture", capture);
         mContext.startService(intent);
     }

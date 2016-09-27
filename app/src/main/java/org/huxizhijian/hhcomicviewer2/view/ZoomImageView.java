@@ -42,7 +42,7 @@ public class ZoomImageView extends ImageView implements OnScaleGestureListener,
      * 缩放的手势检测
      */
     private ScaleGestureDetector mScaleGestureDetector = null;
-    private final Matrix mScaleMatrix = new Matrix();
+    private Matrix mScaleMatrix = new Matrix();
 
     /**
      * 用于双击检测
@@ -456,11 +456,8 @@ public class ZoomImageView extends ImageView implements OnScaleGestureListener,
 
     //使其缩放到合适大小并居中
     public void setImageInCenter() {
-        if (getScale() > initScale) {
-            mScaleMatrix.postScale(initScale / getScale(), initScale / getScale(), getWidth() / 2,
-                    getHeight() / 2);
-        }
-        checkBorderAndCenterWhenScale();
+        mScaleMatrix = new Matrix();
+        initImage();
         setImageMatrix(mScaleMatrix);
     }
 

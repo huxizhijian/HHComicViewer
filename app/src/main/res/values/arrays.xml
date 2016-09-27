@@ -1,9 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <array name="list_more_array">
-        <item>设置</item>
-        <item>下载列表</item>
-        <item>清除在线阅读缓存</item>
-        <item>关于</item>
+
+    <array name="screen_rotate_string">
+        <item>跟随系统</item>
+        <item>横屏</item>
+        <item>竖屏</item>
     </array>
+
+    <array name="screen_rotate">
+        <item>none</item>
+        <item>landscape</item>
+        <item>portrait</item>
+    </array>
+
+    <array name="reading_direction_string">
+        <item>从左至右</item>
+        <item>从上至下</item>
+    </array>
+
+    <array name="reading_direction">
+        <item>view_pager</item>
+        <item>list_view</item>
+    </array>
+
+    <array name="download_thread_count_string">
+        <item>1线程</item>
+        <item>3线程</item>
+        <item>5线程</item>
+    </array>
+
+    <array name="download_thread_count">
+        <item>1_thread</item>
+        <item>3_thread</item>
+        <item>5_thread</item>
+    </array>
+
 </resources>

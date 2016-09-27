@@ -7,7 +7,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,7 +24,7 @@ import org.huxizhijian.hhcomicviewer2.db.ComicDBHelper;
 import org.huxizhijian.hhcomicviewer2.enities.Comic;
 import org.huxizhijian.hhcomicviewer2.enities.ComicCapture;
 import org.huxizhijian.hhcomicviewer2.service.DownloadManager;
-import org.huxizhijian.hhcomicviewer2.service.DownloadService;
+import org.huxizhijian.hhcomicviewer2.service.DownloadManagerService;
 import org.huxizhijian.hhcomicviewer2.utils.BaseUtils;
 import org.huxizhijian.hhcomicviewer2.utils.Constants;
 
@@ -98,13 +100,19 @@ public class DownloadManagerActivity extends Activity implements View.OnClickLis
             case R.id.menu_all_stop:
                 //强制停止所有任务，没有反应时用
                 if (mDownloadManager.hasMission()) {
-                    Intent intent = new Intent(this, DownloadService.class);
-                    intent.setAction(DownloadService.ACTION_ALL_STOP);
+                    Intent intent = new Intent(this, DownloadManagerService.class);
+                    intent.setAction(DownloadManagerService.ACTION_ALL_STOP);
                     stopService(intent);
                     //取消所有通知
                     NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                     manager.cancelAll();
                 }
+                return true;
+            case R.id.menu_download_setting:
+                //打开下载设置
+                Intent intent = new Intent(this, PreferenceActivity.class);
+                intent.setAction(PreferenceActivity.ACTION_DOWNLOAD);
+                startActivity(intent);
                 return true;
             default:
                 break;
@@ -118,7 +126,7 @@ public class DownloadManagerActivity extends Activity implements View.OnClickLis
         //注册广播监听
         mReceiver = new DownloadReceiver();
         IntentFilter filter = new IntentFilter();
-        filter.addAction(DownloadService.ACTION_RECEIVER);
+        filter.addAction(DownloadManagerService.ACTION_RECEIVER);
         registerReceiver(mReceiver, filter);
     }
 
@@ -171,6 +179,17 @@ public class DownloadManagerActivity extends Activity implements View.OnClickLis
                     }
                 }
             });
+
+            //加载用户设置
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+            if (sharedPreferences.getBoolean("default_open_all", false)) {
+                //一开始就打开所有一级目录
+                for (int i = 0; i < mDownloadedComicList.size(); i++) {
+                    mExpandableListView.expandGroup(i);
+                }
+            }
+
+            //设置按钮事件
             mBtn_all_control.setOnClickListener(this);
             mBtn_manager.setOnClickListener(this);
             mBtn_delete.setOnClickListener(this);
@@ -190,14 +209,14 @@ public class DownloadManagerActivity extends Activity implements View.OnClickLis
                 }
                 if (mDownloadManager.hasMission()) {
                     //全部暂停
-                    Intent intent = new Intent(this, DownloadService.class);
-                    intent.setAction(DownloadService.ACTION_ALL_STOP);
+                    Intent intent = new Intent(this, DownloadManagerService.class);
+                    intent.setAction(DownloadManagerService.ACTION_ALL_STOP);
                     startService(intent);
                     mBtn_all_control.setText("全部开始");
                 } else {
                     //全部开始
-                    Intent intent = new Intent(this, DownloadService.class);
-                    intent.setAction(DownloadService.ACTION_ALL_START);
+                    Intent intent = new Intent(this, DownloadManagerService.class);
+                    intent.setAction(DownloadManagerService.ACTION_ALL_START);
                     startService(intent);
                 }
                 break;
@@ -220,8 +239,8 @@ public class DownloadManagerActivity extends Activity implements View.OnClickLis
                     if (selectedCaptureList != null) {
                         mAdapter.delete();
                         for (ComicCapture capture : selectedCaptureList) {
-                            Intent intent = new Intent(this, DownloadService.class);
-                            intent.setAction(DownloadService.ACTION_DELETE);
+                            Intent intent = new Intent(this, DownloadManagerService.class);
+                            intent.setAction(DownloadManagerService.ACTION_DELETE);
                             intent.putExtra("comicCapture", capture);
                             startService(intent);
                         }

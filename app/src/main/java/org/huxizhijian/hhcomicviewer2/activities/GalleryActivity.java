@@ -5,15 +5,20 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.BatteryManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -27,7 +32,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 
 import org.huxizhijian.hhcomicviewer2.R;
 import org.huxizhijian.hhcomicviewer2.db.ComicCaptureDBHelper;
@@ -45,6 +51,7 @@ import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.LinkedList;
+
 
 public class GalleryActivity extends Activity implements View.OnClickListener {
 
@@ -86,6 +93,10 @@ public class GalleryActivity extends Activity implements View.OnClickListener {
             }
         }
     };
+
+    //用户设置
+    private boolean loadOnLineFullSizeImage = false; //在线阅读下载全尺寸图片
+    private boolean useVolButtonChangePage = false; //使用音量键翻页
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -166,7 +177,7 @@ public class GalleryActivity extends Activity implements View.OnClickListener {
         mProgressBar.setVisibility(View.GONE);
         if (mComic.getReadCapture() == mCapturePosition) {
             //设置读到的页数
-            mViewPager.setCurrentItem(mComic.getReadPage());
+            mViewPager.setCurrentItem(mComic.getReadPage(), false);
         }
         //初始化页数
         mSeekBar.setProgress(mViewPager.getCurrentItem());
@@ -203,10 +214,14 @@ public class GalleryActivity extends Activity implements View.OnClickListener {
         mIv_battery = (ImageView) findViewById(R.id.iv_battery_gallery);
         mTv_position = (TextView) findViewById(R.id.tv_position_gallery);
 
+        //用户设置
+        preferencesSet();
+
+
         mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int position, boolean b) {
-                mViewPager.setCurrentItem(position);
+                mViewPager.setCurrentItem(position, false);
                 mViewPager.clearAnimation();
             }
 
@@ -223,6 +238,46 @@ public class GalleryActivity extends Activity implements View.OnClickListener {
         mTv_time.setText(BaseUtils.getNowDate());
         //设置10秒后更新时间
         handler.sendEmptyMessageDelayed(UPDATE_TIME, 10000);
+    }
+
+    private void preferencesSet() {
+        //获取设置文件
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        //对于四个控件的显示设置
+        if (!sharedPreferences.getBoolean("time_visible", true)) {
+            //时间不显示
+            mTv_time.setVisibility(View.GONE);
+        }
+        if (!sharedPreferences.getBoolean("page_visible", true)) {
+            //正上方页码不显示
+            mTv_progress.setVisibility(View.GONE);
+        }
+        if (!sharedPreferences.getBoolean("charge_visible", true)) {
+            //电量不显示
+            mIv_battery.setVisibility(View.GONE);
+        }
+        if (!sharedPreferences.getBoolean("number_visible", false)) {
+            //正中央页码不显示
+            mTv_position.setVisibility(View.GONE);
+        }
+        if (sharedPreferences.getBoolean("keep_screen_on", false)) {
+            //设置屏幕常亮
+            mMenu.setKeepScreenOn(true);
+        }
+        loadOnLineFullSizeImage = sharedPreferences.getBoolean("reading_full_size_image", false);
+        useVolButtonChangePage = sharedPreferences.getBoolean("use_volume_key", false);
+        String rotate = sharedPreferences.getString("reading_screen_rotate", "none");
+        if (rotate.equals("portrait")) {
+            //设置屏幕方向为竖屏
+            if (getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            }
+        } else if (rotate.equals("landscape")) {
+            //设置屏幕方向为横屏
+            if (getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            }
+        }
     }
 
     private void initViewPager() {
@@ -256,7 +311,7 @@ public class GalleryActivity extends Activity implements View.OnClickListener {
                     mCapturePosition--;
                     mComic.setReadCapture(mCapturePosition);
                     mComic.setReadPage(0);
-                    mViewPager.setCurrentItem(0);
+                    mViewPager.setCurrentItem(0, false);
                     getWebContent();
                 } else {
                     Toast.makeText(GalleryActivity.this, "当前是第一话", Toast.LENGTH_SHORT).show();
@@ -267,7 +322,7 @@ public class GalleryActivity extends Activity implements View.OnClickListener {
                     mCapturePosition++;
                     mComic.setReadCapture(mCapturePosition);
                     mComic.setReadPage(0);
-                    mViewPager.setCurrentItem(0);
+                    mViewPager.setCurrentItem(0, false);
                     getWebContent();
                 } else {
                     Toast.makeText(GalleryActivity.this, "当前是最后一话", Toast.LENGTH_SHORT).show();
@@ -400,42 +455,65 @@ public class GalleryActivity extends Activity implements View.OnClickListener {
         }
     }
 
-    public void setImageViewRecycler(ZoomImageView imageView, final int position) {
+    public void setImageViewRecycler(final ZoomImageView imageView, final int position) {
         imageView.setOnLeftOrRightTapListener(new ZoomImageView.OnLeftOrRightTapListener() {
             @Override
             public void leftTap() {
                 if (position - 1 >= 0) {
-                    mViewPager.setCurrentItem(position - 1);
+                    mViewPager.setCurrentItem(position - 1, false);
                 }
             }
 
             @Override
             public void rightTap() {
                 if (position + 1 < mComicCapture.getPageCount()) {
-                    mViewPager.setCurrentItem(position + 1);
+                    mViewPager.setCurrentItem(position + 1, false);
                 }
             }
         });
+
         if (mIsDownloaded) {
-            File file = new File(BaseUtils.getDownloadPath(mComicCapture), BaseUtils.getPageName(position));
+            //如果是下载的章节
+            File file = new File(mComicCapture.getSavePath(), BaseUtils.getPageName(position));
             if (file.exists()) {
-                Glide.with(GalleryActivity.this)
+                Glide.with(this)
                         .load(file)
+                        .asBitmap()
                         .dontAnimate()
-                        .fitCenter()
-                        .diskCacheStrategy(DiskCacheStrategy.NONE) //跳过磁盘缓存
-                        .skipMemoryCache(true) //跳过内存缓存
-                        .into(imageView);
+                        .skipMemoryCache(true)
+                        .into(new SimpleTarget<Bitmap>() {
+                            @Override
+                            public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
+                                imageView.setImageBitmap(bitmap);
+                            }
+                        });
             } else {
                 Toast.makeText(GalleryActivity.this, "好像下载错误了~", Toast.LENGTH_SHORT).show();
             }
         } else {
-            Glide.with(GalleryActivity.this)
-                    .load(mPicList.get(position))
-                    .dontAnimate()
-                    .fitCenter()
-                    .skipMemoryCache(true) //跳过内存缓存
-                    .into(imageView);
+            //判断用户设置
+            if (loadOnLineFullSizeImage) {
+                //加载全尺寸
+                Glide.with(this)
+                        .load(mPicList.get(position))
+                        .asBitmap()
+                        .dontAnimate()
+                        .skipMemoryCache(true)
+                        .into(new SimpleTarget<Bitmap>() {
+                            @Override
+                            public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
+                                imageView.setImageBitmap(bitmap);
+                            }
+                        });
+            } else {
+                //图片尺寸匹配屏幕
+                Glide.with(GalleryActivity.this)
+                        .load(mPicList.get(position))
+                        .dontAnimate()
+                        .fitCenter()
+                        .skipMemoryCache(true) //跳过内存缓存
+                        .into(imageView);
+            }
         }
     }
 
@@ -472,6 +550,48 @@ public class GalleryActivity extends Activity implements View.OnClickListener {
         }
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (useVolButtonChangePage) {
+            //截取音量键事件
+            switch (keyCode) {
+                case KeyEvent.KEYCODE_VOLUME_UP:
+                    if (mViewPagerAdapter != null) {
+                        if (mViewPager.getCurrentItem() - 1 >= 0) {
+                            mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1, false);
+                        }
+                    }
+                    return true;
+                case KeyEvent.KEYCODE_VOLUME_DOWN:
+                    if (mViewPagerAdapter != null) {
+                        if (mViewPager.getCurrentItem() + 1 < mComicCapture.getPageCount()) {
+                            mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1, false);
+                        }
+                    }
+                    return true;
+            }
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (useVolButtonChangePage) {
+            //截取音量键事件
+            switch (keyCode) {
+                case KeyEvent.KEYCODE_VOLUME_UP:
+                    if (mViewPagerAdapter != null) {
+                        return true;
+                    }
+                case KeyEvent.KEYCODE_VOLUME_DOWN:
+                    if (mViewPagerAdapter != null) {
+                        return true;
+                    }
+            }
+        }
+        return super.onKeyUp(keyCode, event);
+    }
+
     public class BatteryBroadcastReceiver extends BroadcastReceiver {
 
         @Override
@@ -480,18 +600,75 @@ public class GalleryActivity extends Activity implements View.OnClickListener {
                     && mIv_battery != null) {
                 //得到系统当前电量
                 int level = intent.getIntExtra("level", 0);
+                int status = intent.getIntExtra("status", 0);
+                boolean chargingFlag = false;
+                switch (status) {
+                    case BatteryManager.BATTERY_STATUS_CHARGING:
+                        //充电中
+                        chargingFlag = true;
+                        break;
+                    case BatteryManager.BATTERY_STATUS_DISCHARGING:
+                        //放电中
+                        chargingFlag = false;
+                        break;
+                    case BatteryManager.BATTERY_STATUS_NOT_CHARGING:
+                        //未充电
+                        chargingFlag = false;
+                        break;
+                    case BatteryManager.BATTERY_STATUS_FULL:
+                        //电量满
+                        chargingFlag = false;
+                        mIv_battery.setImageResource(R.mipmap.battery_full);
+                        break;
+                }
                 if (level == 100) {
-                    mIv_battery.setImageResource(R.mipmap.battery_100);
-                } else if (level >= 75 && level < 100) {
-                    mIv_battery.setImageResource(R.mipmap.battery_75);
-                } else if (level >= 50 && level < 75) {
-                    mIv_battery.setImageResource(R.mipmap.battery_50);
-                } else if (level >= 25 && level < 50) {
-                    mIv_battery.setImageResource(R.mipmap.battery_25);
-                } else if (level >= 4 && level < 25) {
-                    mIv_battery.setImageResource(R.mipmap.battery_4);
-                } else if (level < 4) {
-                    mIv_battery.setImageResource(R.mipmap.bg_battery);
+                    if (chargingFlag) {
+                        mIv_battery.setImageResource(R.mipmap.battery_charging_full);
+                    } else {
+                        mIv_battery.setImageResource(R.mipmap.battery_full);
+                    }
+                } else if (level >= 90 && level < 100) {
+                    if (chargingFlag) {
+                        mIv_battery.setImageResource(R.mipmap.battery_charging_90);
+                    } else {
+                        mIv_battery.setImageResource(R.mipmap.battery_90);
+                    }
+                } else if (level >= 80 && level < 90) {
+                    if (chargingFlag) {
+                        mIv_battery.setImageResource(R.mipmap.battery_charging_80);
+                    } else {
+                        mIv_battery.setImageResource(R.mipmap.battery_80);
+                    }
+                } else if (level >= 60 && level < 80) {
+                    if (chargingFlag) {
+                        mIv_battery.setImageResource(R.mipmap.battery_charging_60);
+                    } else {
+                        mIv_battery.setImageResource(R.mipmap.battery_60);
+                    }
+                } else if (level >= 50 && level < 60) {
+                    if (chargingFlag) {
+                        mIv_battery.setImageResource(R.mipmap.battery_charging_50);
+                    } else {
+                        mIv_battery.setImageResource(R.mipmap.battery_50);
+                    }
+                } else if (level >= 30 && level < 50) {
+                    if (chargingFlag) {
+                        mIv_battery.setImageResource(R.mipmap.battery_charging_30);
+                    } else {
+                        mIv_battery.setImageResource(R.mipmap.battery_30);
+                    }
+                } else if (level >= 20 && level < 30) {
+                    if (chargingFlag) {
+                        mIv_battery.setImageResource(R.mipmap.battery_charging_20);
+                    } else {
+                        mIv_battery.setImageResource(R.mipmap.battery_20);
+                    }
+                } else if (level < 20) {
+                    if (chargingFlag) {
+                        mIv_battery.setImageResource(R.mipmap.battery_charging_20);
+                    } else {
+                        mIv_battery.setImageResource(R.mipmap.battery_alert);
+                    }
                 }
             }
         }
