@@ -16,6 +16,13 @@
         android:summary="当解析漫画总出错时可以试试"
         android:title="更新解析配置"/>
 
+    <ListPreference
+        android:defaultValue="160MB"
+        android:entries="@array/reading_cache_size"
+        android:entryValues="@array/reading_cache_size"
+        android:key="reading_cache_size"
+        android:title="阅读缓存大小"/>
+
     <Preference
         android:key="open_download_setting"
         android:summary="打开下载设置"

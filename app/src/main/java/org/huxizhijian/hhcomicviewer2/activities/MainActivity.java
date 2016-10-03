@@ -51,7 +51,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     private void checkFirstRun() {
         //检测是不是第一次运行
-        SharedPreferences sharedPreferences = getSharedPreferences("share", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
         boolean isFirstRun = sharedPreferences.getBoolean("isFirstRun", true);
         if (isFirstRun) {
             //第一次运行，使用manager的默认值
@@ -190,8 +190,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //DownloadService自行检查是否要退出
-        Intent intent = new Intent(getApplicationContext(), DownloadManagerService.class);
+        Intent intent = new Intent(this, DownloadManagerService.class);
         intent.setAction(DownloadManagerService.ACTION_CHECK_MISSION);
         startService(intent);
     }

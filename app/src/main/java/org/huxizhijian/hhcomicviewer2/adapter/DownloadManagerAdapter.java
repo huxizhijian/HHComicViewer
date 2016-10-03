@@ -15,10 +15,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.huxizhijian.hhcomicviewer2.R;
+import org.huxizhijian.hhcomicviewer2.activities.ComicInfoActivity;
+import org.huxizhijian.hhcomicviewer2.activities.DownloadManagerActivity;
 import org.huxizhijian.hhcomicviewer2.activities.GalleryActivity;
 import org.huxizhijian.hhcomicviewer2.db.ComicDBHelper;
 import org.huxizhijian.hhcomicviewer2.enities.Comic;
 import org.huxizhijian.hhcomicviewer2.enities.ComicCapture;
+import org.huxizhijian.hhcomicviewer2.service.DownloadManager;
 import org.huxizhijian.hhcomicviewer2.service.DownloadManagerService;
 import org.huxizhijian.hhcomicviewer2.utils.Constants;
 import org.huxizhijian.hhcomicviewer2.view.HorizontalProgressBarWithProgress;
@@ -34,6 +37,7 @@ import java.util.Map;
 public class DownloadManagerAdapter extends BaseExpandableListAdapter {
 
     private Context mContext;
+    private DownloadManagerActivity mManagerActivity;
     private List<Comic> mDownloadedComicList;
     private Map<String, List<ComicCapture>> mDownloadedCaptureList;
     private boolean mIsEditMode = false; //是否打开checkBox
@@ -42,14 +46,17 @@ public class DownloadManagerAdapter extends BaseExpandableListAdapter {
     private Bitmap mBitmapPlay;
     private Bitmap mBitmapPause;
     private OnNotifyDataSetChanged mOnNotifyDataSetChanged; //监听
+    private DownloadManager mDownloadManager;
 
     public DownloadManagerAdapter(Context context,
                                   List<Comic> downloadedComicList, Map<String, List<ComicCapture>> downloadedCaptureList) {
         this.mDownloadedComicList = downloadedComicList;
         this.mDownloadedCaptureList = downloadedCaptureList;
         this.mContext = context;
+        this.mManagerActivity = (DownloadManagerActivity) context;
         mBitmapPlay = BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_media_play);
         mBitmapPause = BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_media_pause);
+        mDownloadManager = DownloadManager.getInstance(mContext);
         initCheckedStatus();
     }
 
@@ -123,6 +130,7 @@ public class DownloadManagerAdapter extends BaseExpandableListAdapter {
             groupHolder = new GroupHolder();
             groupHolder.tv_comic_title = (TextView) convertView.findViewById(R.id.textView_comic_title_download_manager);
             groupHolder.cb = (CheckBox) convertView.findViewById(R.id.checkbox_group_item);
+            groupHolder.iv_comic_info = (ImageView) convertView.findViewById(R.id.imageView_jump_to_comic_info);
             convertView.setTag(groupHolder);
         } else {
             groupHolder = (GroupHolder) convertView.getTag();
@@ -132,6 +140,16 @@ public class DownloadManagerAdapter extends BaseExpandableListAdapter {
             return convertView;
         }
         groupHolder.tv_comic_title.setText(mDownloadedComicList.get(groupPosition).getTitle());
+        //跳转
+        groupHolder.iv_comic_info.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, ComicInfoActivity.class);
+                intent.setAction(ComicInfoActivity.ACTION_HISTORY);
+                intent.putExtra("url", mDownloadedComicList.get(groupPosition).getComicUrl());
+                mContext.startActivity(intent);
+            }
+        });
         //如果是EditMode，显示CheckBox
         if (mIsEditMode) {
             groupHolder.cb.setVisibility(View.VISIBLE);
@@ -198,51 +216,50 @@ public class DownloadManagerAdapter extends BaseExpandableListAdapter {
         }
 
         final ComicCapture capture = (ComicCapture) getChild(groupPosition, childPosition);
-        int downloadStatus = capture.getDownloadStatus();
+
         //设置控件信息
-        switch (downloadStatus) {
-            case Constants.DOWNLOAD_FINISHED:
-                childHolder.iv_btn.setImageBitmap(mBitmapPlay);
-                childHolder.tv_capture_name.setText(capture.getCaptureName() + " - 下载完毕");
-                childHolder.tv_download_progress.setText(capture.getDownloadPosition() + 1 + "/" + capture.getPageCount());
-                childHolder.pb.setProgress((int) (((float) (capture.getDownloadPosition() + 1) /
-                        (float) capture.getPageCount()) * 100f));
-                break;
-            case Constants.DOWNLOAD_PAUSE:
-                childHolder.iv_btn.setImageBitmap(mBitmapPlay);
-                childHolder.tv_capture_name.setText(capture.getCaptureName() + " - 下载暂停");
-                childHolder.tv_download_progress.setText(capture.getDownloadPosition() + "/" + capture.getPageCount());
-                childHolder.pb.setProgress((int) (((float) (capture.getDownloadPosition() + 1) /
-                        (float) capture.getPageCount()) * 100f));
-                break;
-            case Constants.DOWNLOAD_ERROR:
-                childHolder.iv_btn.setImageBitmap(mBitmapPlay);
-                childHolder.tv_capture_name.setText(capture.getCaptureName() + " - 下载错误");
-                childHolder.tv_download_progress.setText(capture.getDownloadPosition() + "/" + capture.getPageCount());
-                childHolder.pb.setProgress((int) (((float) (capture.getDownloadPosition() + 1) /
-                        (float) capture.getPageCount()) * 100f));
-                break;
-            case Constants.DOWNLOAD_DOWNLOADING:
-                childHolder.iv_btn.setImageBitmap(mBitmapPause);
-                childHolder.tv_capture_name.setText(capture.getCaptureName() + " - 正在下载");
-                childHolder.tv_download_progress.setText(capture.getDownloadPosition() + "/" + capture.getPageCount());
-                childHolder.pb.setProgress((int) (((float) (capture.getDownloadPosition() + 1) /
-                        (float) capture.getPageCount()) * 100f));
-                break;
-            case Constants.DOWNLOAD_INIT:
-                childHolder.iv_btn.setImageBitmap(mBitmapPause);
-                childHolder.tv_capture_name.setText(capture.getCaptureName() + " - 等待");
-                childHolder.tv_download_progress.setText(capture.getDownloadPosition() + "/" + capture.getPageCount());
-                childHolder.pb.setProgress((int) (((float) (capture.getDownloadPosition()) /
-                        (float) capture.getPageCount()) * 100f));
-                break;
-            case Constants.DOWNLOAD_START:
-                childHolder.iv_btn.setImageBitmap(mBitmapPause);
-                childHolder.tv_capture_name.setText(capture.getCaptureName() + " - 下载开始");
-                childHolder.tv_download_progress.setText(capture.getDownloadPosition() + "/" + capture.getPageCount());
-                childHolder.pb.setProgress((int) (((float) (capture.getDownloadPosition() + 1) /
-                        (float) capture.getPageCount()) * 100f));
-                break;
+        int downloadStatus = capture.getDownloadStatus();
+
+        childHolder.pb.setProgress((int) (((float) (capture.getDownloadPosition()) /
+                (float) capture.getPageCount()) * 100f));
+        childHolder.tv_download_progress.setText((capture.getDownloadPosition()) + "/" + capture.getPageCount());
+
+        if (mDownloadManager.hasMission() && mDownloadManager.isInQueue(capture)) {
+            childHolder.iv_btn.setImageBitmap(mBitmapPause);
+            childHolder.tv_capture_name.setText(capture.getCaptureName() + " - 队列中");
+            capture.setDownloadStatus(Constants.DOWNLOAD_IN_QUEUE);
+
+        } else {
+            switch (downloadStatus) {
+                case Constants.DOWNLOAD_FINISHED:
+                    childHolder.iv_btn.setImageBitmap(mBitmapPlay);
+                    childHolder.tv_capture_name.setText(capture.getCaptureName() + " - 下载完成");
+                    childHolder.pb.setProgress((int) (((float) (capture.getDownloadPosition() + 1) /
+                            (float) capture.getPageCount()) * 100f));
+                    childHolder.tv_download_progress.setText(((capture.getDownloadPosition()) + 1) +
+                            "/" + capture.getPageCount());
+                    break;
+                case Constants.DOWNLOAD_PAUSE:
+                    childHolder.iv_btn.setImageBitmap(mBitmapPlay);
+                    childHolder.tv_capture_name.setText(capture.getCaptureName() + " - 下载暂停");
+                    break;
+                case Constants.DOWNLOAD_ERROR:
+                    childHolder.iv_btn.setImageBitmap(mBitmapPlay);
+                    childHolder.tv_capture_name.setText(capture.getCaptureName() + " - 下载错误");
+                    break;
+                case Constants.DOWNLOAD_DOWNLOADING:
+                    childHolder.iv_btn.setImageBitmap(mBitmapPause);
+                    childHolder.tv_capture_name.setText(capture.getCaptureName() + " - 正在下载");
+                    break;
+                case Constants.DOWNLOAD_INIT:
+                    childHolder.iv_btn.setImageBitmap(mBitmapPlay);
+                    childHolder.tv_capture_name.setText(capture.getCaptureName() + " - 未开始");
+                    break;
+                case Constants.DOWNLOAD_START:
+                    childHolder.iv_btn.setImageBitmap(mBitmapPause);
+                    childHolder.tv_capture_name.setText(capture.getCaptureName() + " - 下载开始");
+                    break;
+            }
         }
 
         //设置onClickEvent
@@ -260,19 +277,34 @@ public class DownloadManagerAdapter extends BaseExpandableListAdapter {
                         mContext.startActivity(intent);
                         break;
                     case Constants.DOWNLOAD_PAUSE:
+                        if (mManagerActivity.isManagerBackGroundDoing()) return;
                         restart(capture);
+                        mManagerActivity.setManagerBackGroundDoing(true);
                         break;
                     case Constants.DOWNLOAD_ERROR:
+                        if (mManagerActivity.isManagerBackGroundDoing()) return;
                         restart(capture);
+                        mManagerActivity.setManagerBackGroundDoing(true);
                         break;
                     case Constants.DOWNLOAD_DOWNLOADING:
+                        if (mManagerActivity.isManagerBackGroundDoing()) return;
                         pause(capture);
+                        mManagerActivity.setManagerBackGroundDoing(true);
                         break;
                     case Constants.DOWNLOAD_INIT:
-                        pause(capture);
+                        if (mManagerActivity.isManagerBackGroundDoing()) return;
+                        restart(capture);
+                        mManagerActivity.setManagerBackGroundDoing(true);
                         break;
                     case Constants.DOWNLOAD_START:
+                        if (mManagerActivity.isManagerBackGroundDoing()) return;
                         pause(capture);
+                        mManagerActivity.setManagerBackGroundDoing(true);
+                        break;
+                    case Constants.DOWNLOAD_IN_QUEUE:
+                        if (mManagerActivity.isManagerBackGroundDoing()) return;
+                        pause(capture);
+                        mManagerActivity.setManagerBackGroundDoing(true);
                         break;
                 }
             }
@@ -474,6 +506,7 @@ public class DownloadManagerAdapter extends BaseExpandableListAdapter {
     private class GroupHolder {
         TextView tv_comic_title;
         CheckBox cb;
+        ImageView iv_comic_info;
     }
 
     private class ChildHolder {

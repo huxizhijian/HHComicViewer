@@ -4,5 +4,10 @@
     <style name="AppTheme" parent="android:Theme.Holo.Light">
     </style>
 
+    <style name="Animation.Popup" parent="@android:style/Animation">
+        <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
+        <item name="android:windowExitAnimation">@android:anim/fade_out</item>
+    </style>
+
 </resources>
 

@@ -35,4 +35,12 @@
         <item>5_thread</item>
     </array>
 
+    <array name="reading_cache_size">
+        <item>40MB</item>
+        <item>80MB</item>
+        <item>160MB</item>
+        <item>320MB</item>
+        <item>640MB</item>
+    </array>
+
 </resources>

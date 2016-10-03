@@ -4,22 +4,23 @@
 
     <item
         android:id="@+id/menu_manager_sync"
-        android:icon="@mipmap/ic_perm_group_sync_settings"
+        android:icon="@mipmap/ic_refresh_grey600_48dp"
         android:orderInCategory="0"
         android:title="@string/menu_popup_sync"
-        huxi:showAsAction="ifRoom|collapseActionView"/>
+        huxi:showAsAction="ifRoom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
     <item
         android:id="@+id/menu_download_setting"
         android:orderInCategory="1"
-        huxi:showAsAction="never"
-        android:title="@string/download_setting"/>
+        android:title="@string/download_setting"
+        />
 
     <item
         android:id="@+id/menu_all_stop"
         android:orderInCategory="2"
         android:title="@string/menu_all_stop"
         huxi:showAsAction="never"/>
-
 
 </menu>

@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.widget.Toast;
 
 import org.huxizhijian.hhcomicviewer2.db.ComicCaptureDBHelper;
 import org.huxizhijian.hhcomicviewer2.db.ComicDBHelper;
@@ -92,7 +91,6 @@ public class DownloadManager {
             doNextDownload();
         } else {
             mComicCaptureLinkedList.add(comicCapture);
-
         }
     }
 
@@ -166,6 +164,12 @@ public class DownloadManager {
             }
         }
         return false;
+    }
+
+    //检查任务是否在队列中
+    public boolean isInQueue(ComicCapture comicCapture) {
+        return mComicCaptureLinkedList != null && mComicCaptureLinkedList.size() != 0
+                && mComicCaptureLinkedList.contains(comicCapture);
     }
 
     /**
@@ -362,8 +366,8 @@ public class DownloadManager {
                             length = conn.getContentLength();
                         }
                         if (length <= 0) {
-                            Toast.makeText(mContext, "获取文件长度错误!", Toast.LENGTH_SHORT).show();
-                            return;
+                            Log.i(TAG, "run: 获取文件长度错误！");
+                            throw new IOException();
                         }
                         File file = null;
 
@@ -409,6 +413,7 @@ public class DownloadManager {
                             input = conn.getInputStream();
                             byte[] buffer = new byte[1024 * 4];
                             int len = -1;
+
                             while ((len = input.read(buffer)) != -1) {
                                 //将数据写入文件
                                 raf.write(buffer, 0, len);
@@ -450,6 +455,8 @@ public class DownloadManager {
                 intent.putExtra("comicCapture", mComicCapture);
                 mContext.sendBroadcast(intent);
                 mComicCaptureDBHelper.update(mComicCapture);
+                isFinished = true;
+                setDownloadPause(mComicCapture);
             } finally {
                 try {
                     if (conn != null) {

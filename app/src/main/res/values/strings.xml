@@ -5,7 +5,6 @@
     <string name="searchable_label">结果列表</string>
     <string name="searchable_hint">请输入漫画或者作者…</string>
 
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="search_hint_content">搜索…</string>
     <string name="loading_search">正在努力获取分类列表中…</string>
     <string name="comic_result_list">结果列表</string>
@@ -40,7 +39,7 @@
     <string name="about">关于</string>
     <string name="advance">高级</string>
     <string name="download_setting">下载设置</string>
-    <string name="app_version">汗汗漫画阅读器  v0.82</string>
+    <string name="app_version">汗汗漫画阅读器  v0.84</string>
     <string name="app_author_info"><![CDATA[huxizhijian  <huxizhijian92@gmail.com>]]></string>
     <string name="search_comic">搜索漫画：</string>
     <string name="classified_list">分类列表：</string>

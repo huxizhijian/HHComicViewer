@@ -103,8 +103,8 @@ public class Comic implements Serializable, Comparable {
         this.author = meta.attr("content").split("：")[1].split(" ")[0];
         Element src = doc.select("div[class=2replh]").first();
         String src1 = src.text();
-        String src2 = src1.split(",")[1];
-        this.description = src2.substring(title.length() + 3, src2.length() - 4);
+        String src2 = src1.split(",")[0];
+        this.description = src1.substring(title.length() + src2.length() + 4, src1.length() - 4);
         Element replcSrc = doc.select("div[class=replc]").first();
         Element imgSrc = replcSrc.getElementsByTag("img").first();
         this.thumbnailUrl = imgSrc.attr("src");

@@ -1,13 +1,18 @@
 package org.huxizhijian.hhcomicviewer2.activities;
 
+import android.Manifest;
 import android.app.ActionBar;
 import android.app.SearchManager;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
@@ -68,6 +73,7 @@ public class ComicInfoActivity extends FragmentActivity implements OnClickListen
     private List<ComicCapture> mDownloadedComicCaptures; //开始下载的章节列表
     private List<String> mFinishedComicCaptures; //下载完成的章节名列表
     private Comic mComic;
+    private List<String> mSelectedCaptures;
 
     //下载选择页fragment
     private FragmentTransaction mFt;
@@ -168,38 +174,8 @@ public class ComicInfoActivity extends FragmentActivity implements OnClickListen
                                 mVolAdapter = new VolRecyclerViewAdapter(ComicInfoActivity.this,
                                         mComic.getCaptureName(), mComic.getReadCapture(), mFinishedComicCaptures);
                             }
-                            //设置activity的label
-                            setTitle(mComic.getTitle());
-                            //设置各控件的值
-                            mTv_title.setText(mComic.getTitle());
-                            mTv_author.setText(mComic.getAuthor());
-                            mTv_details.setText(mComic.getDescription());
-                            Glide.with(ComicInfoActivity.this)
-                                    .load(mComic.getThumbnailUrl())
-                                    .placeholder(R.mipmap.blank)
-                                    .error(R.mipmap.blank)
-                                    .fitCenter()
-                                    .into(mImageView);
-                            //初始化RecyclerView
-                            mRecyclerView.setLayoutManager(new FullyGridLayoutManager(ComicInfoActivity.this, 4));
-                            mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-                            mVolAdapter.setOnItemClickListener(new VolRecyclerViewAdapter.OnItemClickListener() {
-                                @Override
-                                public void onItemClick(View view, int position) {
-                                    Intent intent = new Intent(ComicInfoActivity.this, GalleryActivity.class);
-                                    intent.putExtra("comic", mComic);
-                                    intent.putExtra("position", position);
-                                    startActivityForResult(intent, 0);
-                                }
+                            setViewsValue();
 
-                                @Override
-                                public void onItemLongClick(View view, int position) {
-                                }
-                            });
-                            mRecyclerView.setAdapter(mVolAdapter);
-                            mRecyclerView.setVisibility(View.VISIBLE);
-                            mProgressBar.setVisibility(View.GONE);
-                            mScrollView.setVisibility(View.VISIBLE);
                         } catch (UnsupportedEncodingException e) {
                             e.printStackTrace();
                         }
@@ -214,38 +190,9 @@ public class ComicInfoActivity extends FragmentActivity implements OnClickListen
                             mComic = mComicDBHelper.findByUrl(url);
                             if (mComic.isMark() || mComic.isDownload()) {
                                 if (mComic != null && mComic.getCaptureName() != null) {
-                                    mTv_title.setText(mComic.getTitle());
-                                    mTv_author.setText(mComic.getAuthor());
-                                    mTv_details.setText(mComic.getDescription());
-                                    Glide.with(ComicInfoActivity.this)
-                                            .load(mComic.getThumbnailUrl())
-                                            .placeholder(R.mipmap.blank)
-                                            .error(R.mipmap.blank)
-                                            .crossFade()
-                                            .fitCenter()
-                                            .into(mImageView);
-                                    //初始化RecyclerView
-                                    mRecyclerView.setLayoutManager(new FullyGridLayoutManager(ComicInfoActivity.this, 4));
-                                    mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-                                    mVolAdapter = new VolRecyclerViewAdapter(ComicInfoActivity.this, mComic.getCaptureName()
-                                            , mFinishedComicCaptures);
-                                    mVolAdapter.setOnItemClickListener(new VolRecyclerViewAdapter.OnItemClickListener() {
-                                        @Override
-                                        public void onItemClick(View view, int position) {
-                                            Intent intent = new Intent(ComicInfoActivity.this, GalleryActivity.class);
-                                            intent.putExtra("comic", mComic);
-                                            intent.putExtra("position", position);
-                                            startActivityForResult(intent, 0);
-                                        }
-
-                                        @Override
-                                        public void onItemLongClick(View view, int position) {
-                                        }
-                                    });
-                                    mRecyclerView.setAdapter(mVolAdapter);
-                                    mRecyclerView.setVisibility(View.VISIBLE);
-                                    mProgressBar.setVisibility(View.GONE);
-                                    mScrollView.setVisibility(View.VISIBLE);
+                                    mVolAdapter = new VolRecyclerViewAdapter(ComicInfoActivity.this,
+                                            mComic.getCaptureName(), mComic.getReadCapture(), mFinishedComicCaptures);
+                                    setViewsValue();
                                 }
                             }
                         } else {
@@ -265,6 +212,41 @@ public class ComicInfoActivity extends FragmentActivity implements OnClickListen
                 }
 
         );
+    }
+
+    private void setViewsValue() {
+        //设置activity的label
+        setTitle(mComic.getTitle());
+        //设置各控件的值
+        mTv_title.setText(mComic.getTitle());
+        mTv_author.setText(mComic.getAuthor());
+        mTv_details.setText(mComic.getDescription());
+        Glide.with(ComicInfoActivity.this)
+                .load(mComic.getThumbnailUrl())
+                .placeholder(R.mipmap.blank)
+                .error(R.mipmap.blank)
+                .fitCenter()
+                .into(mImageView);
+        //初始化RecyclerView
+        mRecyclerView.setLayoutManager(new FullyGridLayoutManager(ComicInfoActivity.this, 4));
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mVolAdapter.setOnItemClickListener(new VolRecyclerViewAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Intent intent = new Intent(ComicInfoActivity.this, GalleryActivity.class);
+                intent.putExtra("comic", mComic);
+                intent.putExtra("position", position);
+                startActivityForResult(intent, 0);
+            }
+
+            @Override
+            public void onItemLongClick(View view, int position) {
+            }
+        });
+        mRecyclerView.setAdapter(mVolAdapter);
+        mRecyclerView.setVisibility(View.VISIBLE);
+        mProgressBar.setVisibility(View.GONE);
+        mScrollView.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -306,6 +288,7 @@ public class ComicInfoActivity extends FragmentActivity implements OnClickListen
                     mComic.setMark(true);
                     mComic.setLastReadTime(System.currentTimeMillis());
                     mComicDBHelper.add(mComic);
+                    mComic.setId(mComicDBHelper.findByUrl(mComic.getComicUrl()).getId());
                     Toast.makeText(ComicInfoActivity.this, "收藏成功!", Toast.LENGTH_SHORT).show();
                 } else if (mComic == null) {
                     Toast.makeText(ComicInfoActivity.this, "还没有加载完成，请耐心等待~", Toast.LENGTH_SHORT).show();
@@ -418,6 +401,7 @@ public class ComicInfoActivity extends FragmentActivity implements OnClickListen
             mComic.setLastReadTime(System.currentTimeMillis());
             //加入数据库
             mComicDBHelper.add(mComic);
+            mComic.setId(mComicDBHelper.findByUrl(mComic.getComicUrl()).getId());
         } else if (mComic == null) {
             Toast.makeText(ComicInfoActivity.this, "还没有加载完成，请耐心等待~", Toast.LENGTH_SHORT).show();
             return;
@@ -425,6 +409,22 @@ public class ComicInfoActivity extends FragmentActivity implements OnClickListen
 
         //开始下载
         if (selectedCaptures.size() != 0) {
+            //检查自身权限
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                    Toast.makeText(this, "没有下载权限！", Toast.LENGTH_SHORT).show();
+                    mSelectedCaptures = selectedCaptures;
+                    ActivityCompat.requestPermissions(this,
+                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+                } else {
+                    mSelectedCaptures = selectedCaptures;
+                    ActivityCompat.requestPermissions(this,
+                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+                }
+            }
+
             int position = -1;
             List<Integer> positionList = new ArrayList<>();
             ComicCapture capture = null;
@@ -445,6 +445,44 @@ public class ComicInfoActivity extends FragmentActivity implements OnClickListen
                 mHandler.sendMessageDelayed(msg, 1000 * i);
             }
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case 0:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted, yay! Do the contacts-related task you need to do.
+                    if (mSelectedCaptures != null && mSelectedCaptures.size() != 0) {
+                        int position = -1;
+                        List<Integer> positionList = new ArrayList<>();
+                        ComicCapture capture = null;
+                        for (String volName : mSelectedCaptures) {
+                            position = mComic.getCaptureName().indexOf(volName);
+                            positionList.add(position);
+                        }
+                        //将下载任务排序
+                        Collections.sort(positionList);
+                        for (int i = 0; i < positionList.size(); i++) {
+                            position = positionList.get(i);
+                            capture = new ComicCapture(mComic.getTitle(), mComic.getCaptureName().get(position),
+                                    mComic.getCaptureUrl().get(position), mComic.getComicUrl());
+                            Message msg = new Message();
+                            msg.what = Constants.MSG_DOWNLOAD;
+                            msg.obj = capture;
+                            //将任务按照顺序加入队伍，时间间隔1000ms
+                            mHandler.sendMessageDelayed(msg, 1000 * i);
+                        }
+                        mSelectedCaptures = null;
+                    }
+                } else {
+                    // permission denied, boo! Disable the functionality that depends on this permission.
+                    return;
+                }
+                break;
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     @Override

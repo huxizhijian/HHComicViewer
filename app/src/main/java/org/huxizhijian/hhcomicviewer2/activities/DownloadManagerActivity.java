@@ -50,6 +50,8 @@ public class DownloadManagerActivity extends Activity implements View.OnClickLis
     private ComicDBHelper mComicDBHelper;
     private ComicCaptureDBHelper mComicCaptureDBHelper;
     private DownloadManager mDownloadManager;
+    private boolean mManagerBackGroundDoing = false;
+    private boolean defaultExpandAll = false; //是否默认打开所有
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +97,11 @@ public class DownloadManagerActivity extends Activity implements View.OnClickLis
                     });
                     mExpandableListView.setAdapter(mAdapter);
                     mExpandableListView.setVisibility(View.VISIBLE);
+                    if (defaultExpandAll) {
+                        for (int i = 0; i < mDownloadedComicList.size(); i++) {
+                            mExpandableListView.expandGroup(i);
+                        }
+                    }
                 }
                 return true;
             case R.id.menu_all_stop:
@@ -160,6 +167,15 @@ public class DownloadManagerActivity extends Activity implements View.OnClickLis
         mComicDBHelper = ComicDBHelper.getInstance(this);
         mComicCaptureDBHelper = ComicCaptureDBHelper.getInstance(this);
         mDownloadedComicList = mComicDBHelper.findDownloadedComics();
+        if (mDownloadManager == null) {
+            mDownloadManager = DownloadManager.getInstance(DownloadManagerActivity.this);
+        }
+        if (mDownloadManager.hasMission()) {
+            mBtn_all_control.setText("全部暂停");
+        } else {
+            mBtn_all_control.setText("全部开始");
+        }
+
         if (mDownloadedComicList != null) {
             mDownloadedCaptureList = mComicCaptureDBHelper.findDownloadCaptureMap(mDownloadedComicList);
             //初始化控件数据
@@ -182,7 +198,8 @@ public class DownloadManagerActivity extends Activity implements View.OnClickLis
 
             //加载用户设置
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-            if (sharedPreferences.getBoolean("default_open_all", false)) {
+            defaultExpandAll = sharedPreferences.getBoolean("default_open_all", false);
+            if (defaultExpandAll) {
                 //一开始就打开所有一级目录
                 for (int i = 0; i < mDownloadedComicList.size(); i++) {
                     mExpandableListView.expandGroup(i);
@@ -204,20 +221,20 @@ public class DownloadManagerActivity extends Activity implements View.OnClickLis
         switch (v.getId()) {
             case R.id.btn_all_start_stop:
                 //全部开始、全部停止
-                if (mDownloadManager == null) {
-                    mDownloadManager = DownloadManager.getInstance(DownloadManagerActivity.this);
-                }
+                if (mManagerBackGroundDoing) return;
                 if (mDownloadManager.hasMission()) {
                     //全部暂停
                     Intent intent = new Intent(this, DownloadManagerService.class);
                     intent.setAction(DownloadManagerService.ACTION_ALL_STOP);
                     startService(intent);
                     mBtn_all_control.setText("全部开始");
+                    mManagerBackGroundDoing = true;
                 } else {
                     //全部开始
                     Intent intent = new Intent(this, DownloadManagerService.class);
                     intent.setAction(DownloadManagerService.ACTION_ALL_START);
                     startService(intent);
+                    mManagerBackGroundDoing = true;
                 }
                 break;
             case R.id.btn_download_manager:
@@ -250,6 +267,14 @@ public class DownloadManagerActivity extends Activity implements View.OnClickLis
         }
     }
 
+    public boolean isManagerBackGroundDoing() {
+        return mManagerBackGroundDoing;
+    }
+
+    public void setManagerBackGroundDoing(boolean managerBackGroundDoing) {
+        mManagerBackGroundDoing = managerBackGroundDoing;
+    }
+
     @Override
     public void onBackPressed() {
         if (mAdapter != null && mAdapter.isEditMode()) {
@@ -271,6 +296,8 @@ public class DownloadManagerActivity extends Activity implements View.OnClickLis
             if (mLastUpdateTime == 0) {
                 mLastUpdateTime = System.currentTimeMillis();
             }
+
+            mManagerBackGroundDoing = false;
 
             ComicCapture comicCapture = (ComicCapture) intent.getSerializableExtra("comicCapture");
 

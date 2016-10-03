@@ -2,7 +2,9 @@ package org.huxizhijian.hhcomicviewer2.service;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -32,6 +34,22 @@ public class DownloadManagerService extends Service implements DownloadManager.O
     public static final String ACTION_RECEIVER = "ACTION_RECEIVER";
     public static final String ACTION_CHECK_MISSION = "ACTION_CHECK_MISSION";
 
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            //获取每个Capture的picList
+            if (msg.what == 0) {
+                InitComicCapture init = new InitComicCapture((ComicCapture) msg.obj, new CallBack() {
+                    @Override
+                    public void onFinished(ComicCapture comicCapture) {
+                        mDownloadManager.startDownload(comicCapture);
+                    }
+                });
+                DownloadManager.sExecutorService.execute(init);
+            }
+        }
+    };
+
     public DownloadManagerService() {
     }
 
@@ -58,7 +76,7 @@ public class DownloadManagerService extends Service implements DownloadManager.O
             //查看是否存在数据库中(是否未下载)
             if (mComicCaptureDBHelper.findByCaptureUrl(comicCapture.getCaptureUrl()) == null) {
                 //设置下载目录
-                comicCapture.setSavePath(BaseUtils.getDownloadPath(comicCapture));
+                comicCapture.setSavePath(BaseUtils.getDownloadPath(this, comicCapture));
                 mComicCaptureDBHelper.add(comicCapture);
                 //获取自动分配的ID
                 comicCapture = mComicCaptureDBHelper.findByCaptureUrl(comicCapture.getCaptureUrl());
@@ -97,15 +115,14 @@ public class DownloadManagerService extends Service implements DownloadManager.O
         } else if (intent.getAction().equals(ACTION_ALL_START)) {
             //全部开始下载
             List<ComicCapture> unFinishedCaptures = mComicCaptureDBHelper.findUnFinishedCaptures();
-            for (int i = 0; i < unFinishedCaptures.size(); i++) {
-                //获取每个Capture的picList
-                InitComicCapture init = new InitComicCapture(unFinishedCaptures.get(i), new CallBack() {
-                    @Override
-                    public void onFinished(ComicCapture comicCapture) {
-                        mDownloadManager.startDownload(comicCapture);
-                    }
-                });
-                DownloadManager.sExecutorService.execute(init);
+            if (unFinishedCaptures != null) {
+                Message message = null;
+                for (int i = 0; i < unFinishedCaptures.size(); i++) {
+                    message = new Message();
+                    message.what = 0;
+                    message.obj = unFinishedCaptures.get(i);
+                    mHandler.sendMessageDelayed(message, 1000 * i);
+                }
             }
         } else if (intent.getAction().equals(ACTION_ALL_STOP)) {
             //全部停止下载

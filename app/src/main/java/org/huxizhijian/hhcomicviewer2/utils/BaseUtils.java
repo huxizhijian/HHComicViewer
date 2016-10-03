@@ -3,6 +3,7 @@ package org.huxizhijian.hhcomicviewer2.utils;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
@@ -19,17 +20,21 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static android.content.Context.MODE_PRIVATE;
+
 /**
  * 基础工具类
  * Created by wei on 2016/8/20.
  */
 public class BaseUtils {
 
-    public static String getDownloadPath(ComicCapture comicCapture) {
+    public static String getDownloadPath(Context context, ComicCapture comicCapture) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("user", MODE_PRIVATE);
+        String downloadPath = sharedPreferences.getString("download_path", Constants.DEFAULT_DOWNLOAD_PATH);
         //获得下载目录
         StringBuilder path = new StringBuilder();
         String backslash = "/";  //反斜杠
-        path.append(Constants.DEFAULT_DOWNLOAD_PATH).append(backslash);
+        path.append(downloadPath).append(backslash);
         path.append(comicCapture.getComicTitle()).append(backslash);
         path.append(comicCapture.getCaptureName()).append(backslash);
         return path.toString();

@@ -444,6 +444,12 @@ public class ZoomImageView extends ImageView implements OnScaleGestureListener,
         if (dw > width && dh > height) {
             scale = Math.min(width * 1.0f / dw, height * 1.0f / dh);
         }
+
+        // 如果宽和高都小于屏幕，则让其按比例适应屏幕大小
+        if (dw < width && dh < height) {
+            scale = Math.min(width * 1.0f / dw, height * 1.0f / dh);
+        }
+
         initScale = scale;
 
         Log.i(TAG, "initScale = " + initScale);

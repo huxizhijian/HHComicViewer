@@ -33,5 +33,6 @@ public class Constants {
     public static final int DOWNLOAD_FINISHED = 0x3;
     public static final int DOWNLOAD_PAUSE = 0x4;
     public static final int DOWNLOAD_ERROR = 0x5;
-    public static final int MSG_DOWNLOAD = 0x6;
+    public static final int DOWNLOAD_IN_QUEUE = 0x6;
+    public static final int MSG_DOWNLOAD = 0x7;
 }

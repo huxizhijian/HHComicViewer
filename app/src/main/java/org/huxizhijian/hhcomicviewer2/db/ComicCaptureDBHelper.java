@@ -46,6 +46,9 @@ public class ComicCaptureDBHelper {
         try {
             unFinishedCaptures = sDb.selector(ComicCapture.class)
                     .where("download_status", "!=", Constants.DOWNLOAD_FINISHED).findAll();
+            if (unFinishedCaptures != null && unFinishedCaptures.size() != 0) {
+                Collections.sort(unFinishedCaptures);
+            }
         } catch (DbException e) {
             e.printStackTrace();
         }
