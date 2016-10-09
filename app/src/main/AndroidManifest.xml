@@ -36,9 +36,6 @@
             android:name=".activities.GalleryActivity"
             android:theme="@android:style/Theme.DeviceDefault.NoActionBar.Fullscreen"/>
         <activity
-            android:name=".activities.ComicInfoActivity"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name=".activities.ComicResultListActivity"
             android:label="@string/comic_result_list"
             android:launchMode="singleTop"
@@ -61,11 +58,14 @@
             android:name=".activities.DownloadManagerActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
-
         <activity
             android:name=".activities.PreferenceActivity"
             android:label=""
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activities.ComicDetailsActivity"
+            android:screenOrientation="portrait">
+        </activity>
     </application>
 
 </manifest>

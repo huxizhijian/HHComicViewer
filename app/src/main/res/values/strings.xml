@@ -15,7 +15,7 @@
     <string name="no_network">没有网络!</string>
     <string name="menu_popup_sync">刷新</string>
     <string name="menu_download_list">下载</string>
-    <string name="menu_config">设置</string>
+    <string name="menu_config">阅读</string>
     <string name="menu_exit">退出</string>
     <string name="app_name_short">汗汗漫画</string>
     <string name="tab_search">搜索</string>
@@ -43,4 +43,7 @@
     <string name="app_author_info"><![CDATA[huxizhijian  <huxizhijian92@gmail.com>]]></string>
     <string name="search_comic">搜索漫画：</string>
     <string name="classified_list">分类列表：</string>
+    <string name="search_author">搜作者</string>
+    <string name="none_marked">你没有收藏漫画，快去搜索吧。</string>
+    <string name="comic_capture_list">漫画目录列表：</string>
 </resources>

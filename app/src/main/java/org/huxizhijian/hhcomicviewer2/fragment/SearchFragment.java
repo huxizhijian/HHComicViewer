@@ -89,7 +89,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         } else {
             mLoadingLayout.setVisibility(View.VISIBLE);
             Document doc = Jsoup.parse(Constants.CLASSIFIES_CONTENT);
-            Elements classifies = doc.select("a[class=linkb]");
+            Elements classifies = doc.select("span").select("a");
             mClassifies = new ArrayList<>();
             mLinks = new ArrayList<>();
             for (int i = 0; i < classifies.size(); i++) {

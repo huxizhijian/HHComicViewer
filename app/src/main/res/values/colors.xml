@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
-    <color name="main_color">#ff8c00</color>
-    <color name="shadow_main_color">#66ff8c00</color>
-
-    <!-- shadow -->
-    <color name="shadow_light">#38000000</color>
-    <color name="holo_light_primary_dark">#000000</color>
+    <color name="colorPrimary">#ff8900</color>
+    <color name="colorPrimaryDark">#f57c00</color>
+    <color name="colorAccent">#009688</color>
+    <color name="main_color">#ff8900</color>
+    <color name="dark_main_color">#f57c00</color>
+    <color name="shadow_main_color">#66ff9800</color>
+    <color name="green_color_download">#2baf2b</color>
+    <color name="white">#ffffff</color>
+    <color name="dark_alpha">#98000000</color>
 </resources>

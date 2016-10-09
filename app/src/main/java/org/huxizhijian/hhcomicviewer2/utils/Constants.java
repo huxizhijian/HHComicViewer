@@ -8,10 +8,9 @@ import android.os.Environment;
  */
 
 public class Constants {
-    public static final int THEME_COLOR = 0xffff8c00; //主题色调
-    public static final int COLOR_BLACK = 0xaa000000; //黑色
-    public static final String HHCOMIC_URL = "http://www.hhcomic.cc/"; //主站网址
-    public static final String ENCODE_KEY = "tahfcioewrm"; //解码关键字
+    public static final String HHCOMIC_URL = "http://www.popomh.com/"; //主站网址
+    public static final String COMIC_VOL_PAGE = "http://www.huhumh.com/mh/hu"; //漫画章节模板
+    public static final String ENCODE_KEY = "tazsicoewrn"; //解码关键字
     public static final String PIC_SERVICE_URL = "http://104.237.55.123:9393/dm"; //图片服务器
     public static final String SEARCH_URL = "http://ssooff.com/"; //搜索网站
     public static final String ACTION_CLASSIFIES = "action_classifies"; //标记为获取分类列表行
@@ -20,11 +19,10 @@ public class Constants {
 
     public static final String DEFAULT_DOWNLOAD_PATH = Environment.getExternalStorageDirectory().getPath() + "/HHComic";
 
-    public static final String CLASSIFIES_CONTENT = "<div id=\"menu\">\n" +
-            "        <a href=\"/hhlist/1/\" class=\"linkb\">萌萌</a> | <a href=\"/hhlist/2/\" class=\"linkb\">搞笑</a> | <a href=\"/hhlist/3/\" class=\"linkb\">格斗</a> | <a href=\"/hhlist/4/\" class=\"linkb\">科幻</a> | <a href=\"/hhlist/5/\" class=\"linkb\">剧情</a> | <a href=\"/hhlist/6/\" " +
-            "class=\"linkb\">侦探</a> | <a href=\"/hhlist/7/\" class=\"linkb\">竞技</a> | <a href=\"/hhlist/8/\" class=\"linkb\">魔法</a> | <a href=\"/hhlist/9/\" class=\"linkb\">神鬼</a> | <a href=\"/hhlist/10/\" class=\"linkb\">校园</a> | <a href=\"/hhlist/11/\" class=\"linkb\">惊栗</a> " +
-            "| <a href=\"/hhlist/12/\" class=\"linkb\">厨艺</a> | <a href=\"/hhlist/13/\" class=\"linkb\">百合</a> | <a href=\"/hhlist/14/\" class=\"linkb\">图片</a> | <a href=\"/hhlist/15/\" class=\"linkb\">冒险</a> | <a href=\"/hhlist/19/\" class=\"linkb\">小说</a> | <a href=\"/hhlist/20/\" class=\"linkb\">港漫</a> "
-            + "| <a href=\"/hhlist/21/\" class=\"linkb\"><strong>耽美</strong></a> | <a href=\"/hhlist/22/\" class=\"linkb\">经典</a> | <a href=\"/hhlist/23/\" class=\"linkb\">欧美</a> | <a href=\"/hhlist/24/\" class=\"linkb\">日文</a>  </div>\n";
+    public static final String CLASSIFIES_CONTENT = " <div>\n" +
+            "<span><a href='/comic/class_1.html'>萌系</a></span><span><a href='/comic/class_2.html'>搞笑</a></span><span><a href='/comic/class_3.html'>格斗</a></span><span><a href='/comic/class_4.html'>科幻</a></span><span><a href='/comic/class_5.html'>剧情</a></span><span><a href='/comic/class_6.html'>侦探</a></span><span><a href='/comic/class_7.html'>竞技</a></span>" +
+            "<span><a href='/comic/class_8.html'>魔法</a></span><span><a href='/comic/class_9.html'>神鬼</a></span><span><a href='/comic/class_10.html'>校园</a></span><span><a href='/comic/class_11.html'>惊栗</a></span><span><a href='/comic/class_12.html'>厨艺</a></span><span><a href='/comic/class_13.html'>伪娘</a></span><span><a href='/comic/class_15.html'>冒险</a></span>" +
+            "<span><a href='/comic/class_19.html'>小说</a></span><span><a href='/comic/class_20.html'>港漫</a></span><span><a href='/comic/class_21.html'>耽美</a></span><span><a href='/comic/class_22.html'>经典</a></span><span><a href='/comic/class_23.html'>欧美</a></span><span><a href='/comic/class_24.html'>日文</a></span><span><a href='/comic/class_25.html'>亲情</a></span></div>\n";
 
 
     public static final int DOWNLOAD_INIT = 0x0;

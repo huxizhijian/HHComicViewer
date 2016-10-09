@@ -15,7 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.huxizhijian.hhcomicviewer2.R;
-import org.huxizhijian.hhcomicviewer2.activities.ComicInfoActivity;
+import org.huxizhijian.hhcomicviewer2.activities.ComicDetailsActivity;
 import org.huxizhijian.hhcomicviewer2.activities.DownloadManagerActivity;
 import org.huxizhijian.hhcomicviewer2.activities.GalleryActivity;
 import org.huxizhijian.hhcomicviewer2.db.ComicDBHelper;
@@ -144,9 +144,10 @@ public class DownloadManagerAdapter extends BaseExpandableListAdapter {
         groupHolder.iv_comic_info.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mContext, ComicInfoActivity.class);
-                intent.setAction(ComicInfoActivity.ACTION_HISTORY);
+                Intent intent = new Intent(mContext, ComicDetailsActivity.class);
                 intent.putExtra("url", mDownloadedComicList.get(groupPosition).getComicUrl());
+                intent.putExtra("thumbnailUrl", mDownloadedComicList.get(groupPosition).getThumbnailUrl());
+                intent.putExtra("title", mDownloadedComicList.get(groupPosition).getTitle());
                 mContext.startActivity(intent);
             }
         });

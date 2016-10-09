@@ -1,7 +1,10 @@
 package org.huxizhijian.hhcomicviewer2.service;
 
 import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -12,6 +15,7 @@ import org.huxizhijian.hhcomicviewer2.db.ComicCaptureDBHelper;
 import org.huxizhijian.hhcomicviewer2.enities.ComicCapture;
 import org.huxizhijian.hhcomicviewer2.utils.BaseUtils;
 import org.huxizhijian.hhcomicviewer2.utils.Constants;
+import org.huxizhijian.hhcomicviewer2.utils.NotificationUtil;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -32,7 +36,6 @@ public class DownloadManagerService extends Service implements DownloadManager.O
     public static final String ACTION_ALL_STOP = "ACTION_ALL_STOP";
     public static final String ACTION_DELETE = "ACTION_DELETE";
     public static final String ACTION_RECEIVER = "ACTION_RECEIVER";
-    public static final String ACTION_CHECK_MISSION = "ACTION_CHECK_MISSION";
 
     private Handler mHandler = new Handler() {
         @Override
@@ -50,6 +53,10 @@ public class DownloadManagerService extends Service implements DownloadManager.O
         }
     };
 
+    //广播接收器
+    private NotificationChangeReceiver mReceiver;
+    private NotificationUtil mNotificationUtil;
+
     public DownloadManagerService() {
     }
 
@@ -59,6 +66,12 @@ public class DownloadManagerService extends Service implements DownloadManager.O
         mComicCaptureDBHelper = ComicCaptureDBHelper.getInstance(this);
         mDownloadManager = DownloadManager.getInstance(this);
         mDownloadManager.setOnMissionFinishedListener(this);
+        //初始化
+        mReceiver = new NotificationChangeReceiver();
+        mNotificationUtil = NotificationUtil.getInstance(this);
+        //注册广播接收器
+        IntentFilter filter = new IntentFilter(ACTION_RECEIVER);
+        registerReceiver(mReceiver, filter);
     }
 
     @Nullable
@@ -72,6 +85,7 @@ public class DownloadManagerService extends Service implements DownloadManager.O
         if (intent.getAction().equals(ACTION_START)) {
             //开始下载
             ComicCapture comicCapture = (ComicCapture) intent.getSerializableExtra("comicCapture");
+
             comicCapture.setDownloadStatus(Constants.DOWNLOAD_INIT);
             //查看是否存在数据库中(是否未下载)
             if (mComicCaptureDBHelper.findByCaptureUrl(comicCapture.getCaptureUrl()) == null) {
@@ -132,24 +146,47 @@ public class DownloadManagerService extends Service implements DownloadManager.O
             ComicCapture comicCapture = (ComicCapture) intent.getSerializableExtra("comicCapture");
             Log.i("DownloadManagerService", "onStartCommand: delete");
             mDownloadManager.deleteCapture(comicCapture);
-        } else if (intent.getAction().equals(ACTION_CHECK_MISSION)) {
-            //检查是否还有任务在下载，没有就退出
-            if (!mDownloadManager.hasMission()) {
-                stopSelf();
-            }
         }
         return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        //注销广播接收器
+        if (mReceiver != null) {
+            unregisterReceiver(mReceiver);
+        }
+    }
+
+    @Override
     public void onFinished() {
-        //任务全部完成
-        //停止自身
+        //任务全部完成，service停止
         stopSelf();
     }
 
     public interface CallBack {
         void onFinished(ComicCapture comicCapture);
+    }
+
+    class NotificationChangeReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (!intent.getAction().equals(ACTION_RECEIVER)) return;
+            String action = intent.getStringExtra("notification");
+            if (action == null) return;
+            ComicCapture capture = (ComicCapture) intent.getSerializableExtra("comicCapture");
+            switch (action) {
+                case "show":
+                    mNotificationUtil.showNotification(DownloadManagerService.this, capture);
+                    break;
+                case "cancel":
+                    mNotificationUtil.cancelNotification(DownloadManagerService.this, capture.getId());
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
     class InitComicCapture extends Thread {

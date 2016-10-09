@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:huxi="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/menu_read_comic_info"
+        android:icon="@mipmap/read_24dp"
+        android:orderInCategory="0"
+        android:title="@string/read"
+        huxi:showAsAction="ifRoom|collapseActionView"/>
+
+</menu>

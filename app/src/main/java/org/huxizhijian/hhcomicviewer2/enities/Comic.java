@@ -1,5 +1,6 @@
 package org.huxizhijian.hhcomicviewer2.enities;
 
+import org.huxizhijian.hhcomicviewer2.utils.Constants;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -29,6 +30,16 @@ public class Comic implements Serializable, Comparable {
     private String description; //漫画说明
     @Column(name = "thumbnail_url")
     private String thumbnailUrl;  //缩略图的网址
+    @Column(name = "comic_status")
+    private String comicStatus; //漫画连载状态
+    @Column(name = "comic_update_time")
+    private String comicUpdateTime; //漫画更新时间
+    @Column(name = "comic_favorite")
+    private String comicFavorite; //漫画收藏人数
+    @Column(name = "rating_number")
+    private float ratingNumber; //评分系统的分数
+    @Column(name = "rating_people_num")
+    private int ratingPeopleNum; //评分的人数
     @Column(name = "is_mark")
     private boolean isMark = false; //是否收藏
     @Column(name = "is_download")
@@ -51,7 +62,6 @@ public class Comic implements Serializable, Comparable {
     //无法保存在数据库里，如果isDownload为true将会创建数个实体类保存在download表里
     private List<String> captureName; //章节名
     private List<String> captureUrl; //章节url
-    private ArrayList<ComicCapture> comicCaptures; //如果下载，则初始化该字段
 
     //离线时解析出章节名，章节url
     public void initCaptureNameAndList() {
@@ -96,27 +106,73 @@ public class Comic implements Serializable, Comparable {
 
     public Comic(String comicUrl, String content) {
         this.comicUrl = comicUrl;
+        //解析出comic编号
+        String[] comicSplits = comicUrl.split("/");
+        String comicNum = comicSplits[comicSplits.length - 1].split("\\.")[0];
         //获取到网页内容时自动完善内容
         Document doc = Jsoup.parse(content);
-        this.title = doc.title().split(",")[0];
-        Element meta = doc.select("meta[name=Keywords]").first();
-        this.author = meta.attr("content").split("：")[1].split(" ")[0];
-        Element src = doc.select("div[class=2replh]").first();
-        String src1 = src.text();
-        String src2 = src1.split(",")[0];
-        this.description = src1.substring(title.length() + src2.length() + 4, src1.length() - 4);
-        Element replcSrc = doc.select("div[class=replc]").first();
-        Element imgSrc = replcSrc.getElementsByTag("img").first();
-        this.thumbnailUrl = imgSrc.attr("src");
-        Element volSrc = doc.select("div[class=vol]").first();
-        Elements vols = volSrc.select("a[target=_blank]");
+        Element comicInfoDiv = doc.select("div[id=permalink]").first();
+
+        this.title = comicInfoDiv.getElementsByTag("h1").first().text();
+        this.thumbnailUrl = comicInfoDiv.select("div[id=about_style]").first()
+                .getElementsByTag("img").first().attr("src");
+
+        Element about_kit = comicInfoDiv.select("div[id=about_kit]").first();
+        Elements comicInfoList = about_kit.select("li");
+        comicInfoList.remove(0);
+        for (Element comicInfo : comicInfoList) {
+            switch (comicInfo.getElementsByTag("b").first().text()) {
+                case "作者:":
+                    this.author = comicInfo.text().split(":")[1];
+                    break;
+                case "状态:":
+                    this.comicStatus = comicInfo.text();
+                    break;
+                case "集数:":
+                    this.comicStatus += (" " + comicInfo.text().split("\\)")[0] + "\\)");
+                    break;
+                case "更新:":
+                    this.comicUpdateTime = comicInfo.text();
+                    break;
+                case "收藏:":
+                    this.comicFavorite = comicInfo.text();
+                    break;
+                case "评价:":
+                    this.ratingNumber = Float.valueOf(comicInfo.getElementsByTag("span").first().text());
+                    this.ratingPeopleNum = Integer.valueOf(comicInfo.text().split("\\(")[1].split("人")[0]);
+                    break;
+                case "简介":
+                    this.description = comicInfo.text();
+                    break;
+            }
+        }
+
+        //章节目录解析
+        Element volListSrc = doc.select("div[class=cVolList]").first();
+        Elements tagsSrc = volListSrc.select("div[class=cVolTag]");
+        Elements tagCaptureSrc = volListSrc.select("ul[class=cVolUl]");
+        /*this.tags = new ArrayList<>();
+        this.tagCounts = new ArrayList<>();
+        this.tagCount = tagsSrc.size();*/
         this.captureName = new ArrayList<>();
         this.captureUrl = new ArrayList<>();
-        for (int i = 0; i < vols.size(); i++) {
-            this.captureName.add(vols.get(vols.size() - i - 1).text());
-            this.captureUrl.add(vols.get(vols.size() - i - 1).attr("href"));
+        for (int i = 0; i < tagsSrc.size(); i++) {
+//            this.tags.add(tagsSrc.get(i).text());
+            Elements capturesSrc = tagCaptureSrc.get(i).select("a[class=l_s]");
+//            tagCounts.add(capturesSrc.size());
+            for (int j = capturesSrc.size() - 1; j > -1; j--) {
+                //这个倒数循环把原本的倒序的章节顺序变为正序
+                captureName.add(capturesSrc.get(j).attr("title"));
+                //地址需要做一个变换，因为需要另外一个网站的网址，更好解析
+                String urlSrc = capturesSrc.get(j).attr("href");
+                //图片服务器编号
+                String domainNum = urlSrc.split("=")[1];
+                //章节编号
+                String captureNum = urlSrc.split("/")[1].substring(4);
+                captureUrl.add(Constants.COMIC_VOL_PAGE + comicNum + "/" + captureNum + ".htm?s=" + domainNum);
+            }
         }
-        this.captureCount = captureName.size();
+        this.captureCount = this.captureName.size();
     }
 
     public String getCaptureUrlList() {
@@ -128,21 +184,114 @@ public class Comic implements Serializable, Comparable {
     }
 
     public boolean checkUpdate(String content) {
-        //查看是否有更新
+        //查看是否有更新;
+        //解析出comic编号
+        String[] comicSplits = comicUrl.split("/");
+        String comicNum = comicSplits[comicSplits.length - 1].split("\\.")[0];
+        //获取到网页内容时自动完善内容
         Document doc = Jsoup.parse(content);
-        Element volSrc = doc.select("div[class=vol]").first();
-        Elements vols = volSrc.select("a[target=_blank]");
+        Element comicInfoDiv = doc.select("div[id=permalink]").first();
+
+        this.title = comicInfoDiv.getElementsByTag("h1").first().text();
+
+        Element about_kit = comicInfoDiv.select("div[id=about_kit]").first();
+        Elements comicInfoList = about_kit.select("li");
+        comicInfoList.remove(0);
+        for (Element comicInfo : comicInfoList) {
+            switch (comicInfo.getElementsByTag("b").first().text()) {
+                case "作者:":
+                    this.author = comicInfo.text().split(":")[1];
+                    break;
+                case "状态:":
+                    this.comicStatus = comicInfo.text();
+                    break;
+                case "集数:":
+                    this.comicStatus += (" " + comicInfo.text().split("\\)")[0]);
+                    break;
+                case "更新:":
+                    this.comicUpdateTime = comicInfo.text();
+                    break;
+                case "收藏:":
+                    this.comicFavorite = comicInfo.text();
+                    break;
+                case "评价:":
+                    this.ratingNumber = Float.valueOf(comicInfo.getElementsByTag("span").first().text());
+                    this.ratingPeopleNum = Integer.valueOf(comicInfo.text().split("\\(")[1].split("人")[0]);
+                    break;
+                case "简介":
+                    this.description = comicInfo.text();
+                    break;
+            }
+        }
+
+        //章节目录解析
+        Element volListSrc = doc.select("div[class=cVolList]").first();
+        Elements tagsSrc = volListSrc.select("div[class=cVolTag]");
+        Elements tagCaptureSrc = volListSrc.select("ul[class=cVolUl]");
+
         this.captureName = new ArrayList<>();
         this.captureUrl = new ArrayList<>();
-        for (int i = 0; i < vols.size(); i++) {
-            this.captureName.add(vols.get(vols.size() - i - 1).text());
-            this.captureUrl.add(vols.get(vols.size() - i - 1).attr("href"));
+        for (int i = 0; i < tagsSrc.size(); i++) {
+//            this.tags.add(tagsSrc.get(i).text());
+            Elements capturesSrc = tagCaptureSrc.get(i).select("a[class=l_s]");
+//            tagCounts.add(capturesSrc.size());
+            for (int j = capturesSrc.size() - 1; j > -1; j--) {
+                //这个倒数循环把原本的倒序的章节顺序变为正序
+                captureName.add(capturesSrc.get(j).attr("title"));
+                //地址需要做一个变换，因为需要另外一个网站的网址，更好解析
+                String urlSrc = capturesSrc.get(j).attr("href");
+                //图片服务器编号
+                String domainNum = urlSrc.split("=")[1];
+                //章节编号
+                String captureNum = urlSrc.split("/")[1].substring(4);
+                captureUrl.add(Constants.COMIC_VOL_PAGE + comicNum + "/" + captureNum + ".htm?s=" + domainNum);
+            }
         }
         if (this.captureCount != this.captureName.size()) {
             this.isUpdate = true;
         }
         this.captureCount = this.captureName.size();
         return isUpdate;
+    }
+
+    public String getComicStatus() {
+        return comicStatus;
+    }
+
+    public void setComicStatus(String comicStatus) {
+        this.comicStatus = comicStatus;
+    }
+
+    public String getComicUpdateTime() {
+        return comicUpdateTime;
+    }
+
+    public void setComicUpdateTime(String comicUpdateTime) {
+        this.comicUpdateTime = comicUpdateTime;
+    }
+
+    public String getComicFavorite() {
+        return comicFavorite;
+    }
+
+    public void setComicFavorite(String comicFavorite) {
+        this.comicFavorite = comicFavorite;
+    }
+
+    public float getRatingNumber() {
+        return ratingNumber;
+    }
+
+    public void setRatingNumber(float ratingNumber) {
+        this.ratingNumber = ratingNumber;
+    }
+
+    public int getRatingPeopleNum() {
+        return ratingPeopleNum;
+    }
+
+    public void setRatingPeopleNum(int ratingPeopleNum) {
+        this.ratingPeopleNum = ratingPeopleNum;
     }
 
     public boolean isUpdate() {
@@ -160,16 +309,6 @@ public class Comic implements Serializable, Comparable {
     public void setCaptureNameList(String captureNameList) {
         this.captureNameList = captureNameList;
     }
-
-
-    public ArrayList<ComicCapture> getComicCaptures() {
-        return comicCaptures;
-    }
-
-    public void setComicCaptures(ArrayList<ComicCapture> comicCaptures) {
-        this.comicCaptures = comicCaptures;
-    }
-
 
     public int getCaptureCount() {
         return captureCount;

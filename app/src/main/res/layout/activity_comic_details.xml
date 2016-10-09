@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/comic_details_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        tools:context="org.huxizhijian.hhcomicviewer2.activities.ComicDetailsActivity">
+
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/app_bar_comic_details"
+            android:layout_width="match_parent"
+            android:layout_height="256dp"
+            android:fitsSystemWindows="true"
+            android:theme="@style/ThemeOverlay.AppCompat.Light">
+
+            <android.support.design.widget.CollapsingToolbarLayout
+                android:id="@+id/collapsing_tool_bar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fitsSystemWindows="true"
+                app:contentScrim="?attr/colorPrimary"
+                app:expandedTitleMarginEnd="64dp"
+                app:expandedTitleMarginStart="48dp"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                app:titleEnabled="false">
+
+                <!-- 缩略图及信息 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="32dp"
+                    android:layout_marginLeft="56dp"
+                    android:layout_marginRight="56dp"
+                    android:layout_marginTop="60dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/comic_thumbnail_comic_details"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:adjustViewBounds="true"/>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/comic_title_comic_details"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="4dp"
+                            android:gravity="center_horizontal"
+                            android:maxLines="3"
+                            android:paddingLeft="4dp"
+                            android:paddingRight="4dp"
+                            android:textColor="#000000"
+                            android:textSize="20sp"/>
+
+                        <TextView
+                            android:id="@+id/comic_author_comic_details"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="4dp"
+                            android:clickable="true"
+                            android:gravity="center_horizontal"
+                            android:maxLines="1"
+                            android:paddingLeft="4dp"
+                            android:paddingRight="4dp"
+                            android:textColor="@color/colorAccent"
+                            android:textSize="16sp"/>
+
+                        <TextView
+                            android:id="@+id/comic_vol_status_comic_details"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="4dp"
+                            android:ellipsize="end"
+                            android:gravity="center_horizontal"
+                            android:lines="1"
+                            android:paddingLeft="4dp"
+                            android:paddingRight="4dp"
+                            android:textColor="#89000000"
+                            android:textSize="12sp"/>
+
+                        <TextView
+                            android:id="@+id/comic_update_time_comic_details"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="4dp"
+                            android:ellipsize="end"
+                            android:gravity="center_horizontal"
+                            android:lines="1"
+                            android:paddingLeft="4dp"
+                            android:paddingRight="4dp"
+                            android:textColor="#89000000"
+                            android:textSize="12sp"/>
+
+                        <TextView
+                            android:id="@+id/comic_favorite_number_comic_details"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="4dp"
+                            android:ellipsize="end"
+                            android:gravity="center_horizontal"
+                            android:lines="1"
+                            android:paddingLeft="4dp"
+                            android:paddingRight="4dp"
+                            android:textColor="#89000000"
+                            android:textSize="12sp"/>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/toolbar_comic_details"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    app:layout_collapseMode="pin"
+                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+
+            </android.support.design.widget.CollapsingToolbarLayout>
+        </android.support.design.widget.AppBarLayout>
+
+        <!--漂浮按钮-->
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/FAB_comic_details"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:clickable="true"
+            android:src="@mipmap/read_24dp"
+            app:fabSize="normal"
+            app:layout_anchor="@id/app_bar_comic_details"
+            app:layout_anchorGravity="bottom|right|end"/>
+
+        <android.support.v4.widget.NestedScrollView
+            android:id="@+id/nest_scroll_view_comic_details"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <LinearLayout
+                android:id="@+id/linear_layout_comic_details"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="@drawable/divider_linear_layout"
+                android:dividerPadding="2dp"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:showDividers="middle">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <RatingBar
+                        android:id="@+id/ratingBar_comic_details"
+                        style="@style/Base.Widget.AppCompat.RatingBar.Indicator"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:numStars="5"
+                        android:rating="0.0"/>
+
+                    <TextView
+                        android:id="@+id/ratingBar_description_comic_details"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/button_pad_comic_details"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:id="@+id/btn_favorite"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_weight="1"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical"
+                        android:padding="4dp">
+
+                        <ImageView
+                            android:id="@+id/btn_favorite_comic_details"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:adjustViewBounds="true"
+                            android:paddingBottom="4dp"
+                            android:paddingTop="4dp"
+                            android:src="@mipmap/favorite"/>
+
+                        <TextView
+                            android:id="@+id/button_text_favorite_comic_details"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:adjustViewBounds="true"
+                            android:gravity="center_horizontal"
+                            android:text="@string/mark"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/btn_share"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_weight="1"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical"
+                        android:padding="4dp">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:adjustViewBounds="true"
+                            android:paddingBottom="4dp"
+                            android:paddingTop="4dp"
+                            android:src="@mipmap/share"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:adjustViewBounds="true"
+                            android:gravity="center_horizontal"
+                            android:text="@string/share"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/btn_find"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_weight="1"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical"
+                        android:padding="4dp">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:adjustViewBounds="true"
+                            android:paddingBottom="4dp"
+                            android:paddingTop="4dp"
+                            android:src="@mipmap/find_active"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:adjustViewBounds="true"
+                            android:gravity="center_horizontal"
+                            android:text="@string/search_author"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/btn_download"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_weight="1"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical"
+                        android:padding="4dp">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:adjustViewBounds="true"
+                            android:paddingBottom="4dp"
+                            android:paddingTop="4dp"
+                            android:src="@mipmap/download"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:adjustViewBounds="true"
+                            android:gravity="center_horizontal"
+                            android:text="@string/download"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <!-- 简介 -->
+                <TextView
+                    android:id="@+id/comic_description_comic_details"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:clickable="true"
+                    android:ellipsize="end"
+                    android:maxLines="4"
+                    android:paddingLeft="24dp"
+                    android:paddingRight="24dp"
+                    android:textColor="#000"
+                    android:textSize="14sp"/>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyclerView_comic_details"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:paddingLeft="24dp"
+                    android:paddingRight="24dp">
+
+                </android.support.v7.widget.RecyclerView>
+
+            </LinearLayout>
+        </android.support.v4.widget.NestedScrollView>
+    </android.support.design.widget.CoordinatorLayout>
+
+</layout>

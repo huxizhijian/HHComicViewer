@@ -45,7 +45,7 @@ public class ConfigFragment extends Fragment {
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_conifg, container, false);
+        View view = inflater.inflate(R.layout.fragment_config, container, false);
         ListView listView = (ListView) view.findViewById(R.id.listView_config);
         initData();
 
@@ -56,7 +56,6 @@ public class ConfigFragment extends Fragment {
                 vh.setText(R.id.textView_config_fragment, config.text);
             }
         });
-        listView.setDividerHeight(2);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -113,7 +112,7 @@ public class ConfigFragment extends Fragment {
     private void initData() {
         mConfigs = new ArrayList<>();
         Config read = new Config(R.mipmap.read, "阅读");
-        Config download = new Config(R.mipmap.download, "下载");
+        Config download = new Config(R.mipmap.download_manager, "下载");
         Config advance = new Config(R.mipmap.advance, "高级");
         Config history = new Config(R.mipmap.history, "历史");
         Config clear = new Config(R.mipmap.delete, "清除在线阅读缓存");

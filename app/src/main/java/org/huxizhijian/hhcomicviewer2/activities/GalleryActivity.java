@@ -125,7 +125,7 @@ public class GalleryActivity extends Activity implements View.OnClickListener {
             initImageView();
         } else {
             //否则在线看
-            RequestParams params = new RequestParams(Constants.HHCOMIC_URL + mComic.getCaptureUrl().get(mCapturePosition));
+            RequestParams params = new RequestParams(mComic.getCaptureUrl().get(mCapturePosition));
             x.http().get(params, new Callback.CommonCallback<byte[]>() {
                 @Override
                 public void onSuccess(byte[] result) {

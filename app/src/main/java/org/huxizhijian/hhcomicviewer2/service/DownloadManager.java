@@ -59,7 +59,7 @@ public class DownloadManager {
         mDownloadThreadDBHelper = DownloadThreadDBHelper.getInstance(context);
         mComicCaptureLinkedList = new LinkedList<>();
         this.mContext = context;
-        this.mNotificationUtil = new NotificationUtil(context);
+        this.mNotificationUtil = NotificationUtil.getInstance(mContext);
         //加载用户设置
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         String threadCount = sharedPreferences.getString("download_thread_count", "3_thread");
@@ -218,9 +218,9 @@ public class DownloadManager {
         } else {
             newDownloadThreadInfo();
         }
-        mNotificationUtil.showNotification(mComicCapture);
         //向activity发送广播通知下载任务开始
         Intent intent = new Intent(DownloadManagerService.ACTION_RECEIVER);
+        intent.putExtra("notification", "show");
         intent.putExtra("comicCapture", mComicCapture);
         mContext.sendBroadcast(intent);
     }
@@ -282,8 +282,8 @@ public class DownloadManager {
             //向activity发送广播通知下载任务暂停
             Intent intent = new Intent(DownloadManagerService.ACTION_RECEIVER);
             intent.putExtra("comicCapture", mComicCapture);
+            intent.putExtra("notification", "cancel");
             mContext.sendBroadcast(intent);
-            mNotificationUtil.cancelNotification(mComicCapture.getId());
             mComicCapture = null;
             //将标记改为false
             isPause = false;
@@ -448,11 +448,10 @@ public class DownloadManager {
             } catch (IOException e) {
                 e.printStackTrace();
                 mComicCapture.setDownloadStatus(Constants.DOWNLOAD_ERROR);
-                //取消正在下载通知
-                mNotificationUtil.cancelNotification(mComicCapture.getId());
-                //向activity发送广播通知
+                //向activity发送广播通知下载取消
                 Intent intent = new Intent(DownloadManagerService.ACTION_RECEIVER);
                 intent.putExtra("comicCapture", mComicCapture);
+                intent.putExtra("notification", "cancel");
                 mContext.sendBroadcast(intent);
                 mComicCaptureDBHelper.update(mComicCapture);
                 isFinished = true;
@@ -486,10 +485,6 @@ public class DownloadManager {
                 }
             }
             if (allFinished) {
-                //取消正在下载通知
-                mNotificationUtil.cancelNotification(mComicCapture.getId());
-                //下载完成通知
-                mNotificationUtil.finishedNotification(mComicCapture);
                 //下载完成后删除本任务线程信息
                 mDownloadThreadDBHelper.deleteAllCaptureThread(mThreadInfo.getComicCaptureUrl());
                 mComicCapture.setDownloadStatus(Constants.DOWNLOAD_FINISHED);
@@ -497,10 +492,13 @@ public class DownloadManager {
                 mComicCaptureDBHelper.update(mComicCapture);
                 //向activity发送广播通知下载任务结束
                 Intent intent = new Intent(DownloadManagerService.ACTION_RECEIVER);
+                intent.putExtra("notification", "cancel");
                 intent.putExtra("comicCapture", mComicCapture);
                 mContext.sendBroadcast(intent);
                 Log.i(TAG, "checkAllThreadFinish: all finished " + mComicCapture.getCaptureName());
                 Log.i(TAG, "checkAllThreadFinish: the position is " + mComicCapture.getDownloadPosition());
+                //下载完成通知
+                mNotificationUtil.finishedNotification(mComicCapture);
                 mComicCapture = null;
                 //下载页数初始化
                 mDownloadPosition = 0;

@@ -1,11 +1,11 @@
 package org.huxizhijian.hhcomicviewer2.activities;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,7 +36,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ComicResultListActivity extends Activity {
+public class ComicResultListActivity extends AppCompatActivity {
 
     //控件及适配器
     private LinearLayout mLoadingLayout;
@@ -79,6 +79,7 @@ public class ComicResultListActivity extends Activity {
             String classified = intent.getStringExtra("classified");
             setTitle("分类 - " + classified);
             mUrl = intent.getStringExtra("url");
+            mUrl = mUrl.substring(0, mUrl.length() - 6);
         }
         showComicList();
     }
@@ -90,32 +91,32 @@ public class ComicResultListActivity extends Activity {
     }
 
     @Override
-    public boolean onMenuItemSelected(int featureId, MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             finish();
             return true;
         }
-        return super.onMenuItemSelected(featureId, item);
+        return super.onOptionsItemSelected(item);
     }
 
     private void showComicList() {
-        RequestParams params = new RequestParams(mUrl);
+        RequestParams params = new RequestParams(mUrl + 1 + ".html");
         x.http().get(params, new Callback.CommonCallback<byte[]>() {
             @Override
             public void onSuccess(byte[] result) {
                 try {
-                    String content = new String(result, "gb2312");
-                    Document doc = Jsoup.parse(content);
                     mComicList = new ArrayList<>();
                     //数据加载
                     if (!mIsSearch) {
                         //非搜索
+                        String content = new String(result, "utf-8");
+                        Document doc = Jsoup.parse(content);
                         //page信息查找
-                        Element pageInfo = doc.select("div[class=replz]").first();
+                        Element pageInfo = doc.select("div[class=cComicPageChange]").first();
                         Elements pages = pageInfo.select("a");
                         for (Element page : pages) {
-                            if (page.text().equals("末页")) {
-                                String pageSize = page.attr("href").split("\\.")[0];
+                            if (page.text().equals("尾页")) {
+                                String pageSize = page.attr("href").split("\\.")[0].split("/")[3];
                                 mPageSize = Integer.valueOf(pageSize);
                                 mPosition = 1;
 //                                System.out.println(mPageSize);
@@ -124,6 +125,8 @@ public class ComicResultListActivity extends Activity {
                         newPageParse(doc);
                     } else {
                         //如果为搜索界面
+                        String content = new String(result, "gb2312");
+                        Document doc = Jsoup.parse(content);
                         Element comics = doc.select("div[class=dSHtm]").first();
                         Elements comicUrls = comics.select("div");
                         comicUrls.remove(0);
@@ -131,7 +134,8 @@ public class ComicResultListActivity extends Activity {
                         for (int i = 0; i < comicUrls.size(); i++) {
                             comic = new Comic();
                             Element comicSrc = comicUrls.get(i).select("a").first();
-                            comic.setComicUrl(comicSrc.attr("href"));
+                            String url = comicSrc.attr("href");
+                            comic.setComicUrl(url);
                             comic.setTitle(comicSrc.text());
                             Element imgUrl = comicUrls.get(i).select("img").first();
                             comic.setThumbnailUrl(imgUrl.attr("src"));
@@ -160,14 +164,14 @@ public class ComicResultListActivity extends Activity {
                     } else {
                         mListView.addFootView(false);
                     }
-                    mListView.setDividerHeight(4);
                     mListView.setAdapter(mAdapter);
                     mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                            Intent intent = new Intent(ComicResultListActivity.this, ComicInfoActivity.class);
-                            intent.setAction(ComicInfoActivity.ACTION_SEARCH);
+                            Intent intent = new Intent(ComicResultListActivity.this, ComicDetailsActivity.class);
                             intent.putExtra("url", mComicList.get(position).getComicUrl());
+                            intent.putExtra("thumbnailUrl", mComicList.get(position).getThumbnailUrl());
+                            intent.putExtra("title", mComicList.get(position).getTitle());
                             startActivity(intent);
                         }
                     });
@@ -201,12 +205,12 @@ public class ComicResultListActivity extends Activity {
     }
 
     private void loadNextPage() {
-        RequestParams params = new RequestParams(mUrl + mPosition + ".htm");
+        RequestParams params = new RequestParams(mUrl + mPosition + ".html");
         x.http().get(params, new Callback.CommonCallback<byte[]>() {
             @Override
             public void onSuccess(byte[] result) {
                 try {
-                    String content = new String(result, "gb2312");
+                    String content = new String(result, "utf-8");
                     Document doc = Jsoup.parse(content);
                     newPageParse(doc);
                     mAdapter.setDatas(mComicList);
@@ -237,17 +241,16 @@ public class ComicResultListActivity extends Activity {
     }
 
     private void newPageParse(Document doc) {
-        Element comics = doc.select("div[class=m_list]").first();
-        Elements comicUrls = comics.select("h3");
+        Element comics = doc.select("div[class=cComicList]").first();
+        Elements comicUrls = comics.select("a");
         Elements comicPicUrls = comics.select("img");
         Comic comic;
         for (int i = 0; i < comicUrls.size(); i++) {
             comic = new Comic();
-            Element comicSrc = comicUrls.get(i).select("a").first();
+            Element comicSrc = comicUrls.get(i);
             comic.setComicUrl(Constants.HHCOMIC_URL + comicSrc.attr("href"));
             comic.setTitle(comicSrc.attr("title"));
-            comic.setThumbnailUrl(comicPicUrls.get(i).attr("src"));
-            comic.setDescription(comicPicUrls.get(i).attr("alt").substring(3));
+            comic.setThumbnailUrl(comicPicUrls.get(i).select("img").first().attr("src"));
             mComicList.add(comic);
         }
     }
@@ -255,12 +258,13 @@ public class ComicResultListActivity extends Activity {
     private void initView() {
         mLoadingLayout = (LinearLayout) findViewById(R.id.loading_layout_search_result);
         mListView = (LoadPageListView) findViewById(R.id.listView_result);
-        //对actionBar进行设置
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            BaseUtils.initActionBar(actionBar, Constants.THEME_COLOR);
-        }
+
+        //toolbar的设置
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setNavigationIcon(R.mipmap.ic_arrow_back_black_24dp);
+        //将其当成actionbar
+        setSupportActionBar(toolbar);
+        BaseUtils.setStatusBarTint(this, getResources().getColor(R.color.colorPrimaryDark));
     }
 
     //自定义adapter

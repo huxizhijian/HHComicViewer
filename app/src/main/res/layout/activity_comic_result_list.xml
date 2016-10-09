@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="4dp"
     tools:context=".activities.ComicResultListActivity">
+
+    <include layout="@layout/toolbar"/>
 
     <LinearLayout
         android:id="@+id/loading_layout_search_result"
@@ -19,7 +21,7 @@
             android:id="@+id/pb_search_result_wait"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -27,12 +29,15 @@
             android:layout_gravity="center"
             android:text="@string/loading_search_result"
             android:textColor="#8b8a8a"
-            android:textSize="10sp" />
+            android:textSize="10sp"/>
     </LinearLayout>
 
     <org.huxizhijian.hhcomicviewer2.view.LoadPageListView
         android:id="@+id/listView_result"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone" />
+        android:divider="@drawable/list_comic_divider"
+        android:dividerHeight="2dp"
+        android:visibility="gone"/>
+
 </LinearLayout>

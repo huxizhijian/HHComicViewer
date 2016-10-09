@@ -1,9 +1,9 @@
 package org.huxizhijian.hhcomicviewer2.activities;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import org.huxizhijian.hhcomicviewer2.R;
@@ -13,9 +13,8 @@ import org.huxizhijian.hhcomicviewer2.fragment.DownloadSettingFragment;
 import org.huxizhijian.hhcomicviewer2.fragment.HistoryFragment;
 import org.huxizhijian.hhcomicviewer2.fragment.ReadingSettingFragment;
 import org.huxizhijian.hhcomicviewer2.utils.BaseUtils;
-import org.huxizhijian.hhcomicviewer2.utils.Constants;
 
-public class PreferenceActivity extends Activity {
+public class PreferenceActivity extends AppCompatActivity {
 
     public static final String ACTION_HISTORY = "ACTION_HISTORY";
     public static final String ACTION_READING = "ACTION_READING";
@@ -29,14 +28,14 @@ public class PreferenceActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_preference);
-        //修改ActionBar
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null) {
-            //增加左上角返回按钮
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            //修改ActionBar颜色
-            BaseUtils.initActionBar(getActionBar(), Constants.THEME_COLOR);
-        }
+
+        //toolbar的设置
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setNavigationIcon(R.mipmap.ic_arrow_back_black_24dp);
+        //将其当成actionbar
+        setSupportActionBar(toolbar);
+        BaseUtils.setStatusBarTint(this, getResources().getColor(R.color.colorPrimaryDark));
+
         String action = getIntent().getAction();
         switch (action) {
             case ACTION_HISTORY:
@@ -83,12 +82,12 @@ public class PreferenceActivity extends Activity {
     }
 
     @Override
-    public boolean onMenuItemSelected(int featureId, MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             finish();
             return true;
         }
-        return super.onMenuItemSelected(featureId, item);
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

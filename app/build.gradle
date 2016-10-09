@@ -17,6 +17,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    dataBinding {
+        enabled = true;
+    }
 }
 
 dependencies {
@@ -30,4 +33,8 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:24.2.0'
     compile 'org.xutils:xutils:3.3.36'
     compile 'com.flyco.dialog:FlycoDialog_Lib:1.3.2@aar'
+    compile 'com.android.support:cardview-v7:24.2.0'
+    compile 'com.obsez.android.lib.filechooser:filechooser:1.1.2'
+    compile 'com.readystatesoftware.systembartint:systembartint:1.0.4'
+    compile 'com.android.support:design:24.2.0'
 }

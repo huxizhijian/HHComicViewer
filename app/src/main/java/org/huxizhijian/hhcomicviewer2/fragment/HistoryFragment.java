@@ -15,7 +15,7 @@ import android.widget.ListView;
 import com.bumptech.glide.Glide;
 
 import org.huxizhijian.hhcomicviewer2.R;
-import org.huxizhijian.hhcomicviewer2.activities.ComicInfoActivity;
+import org.huxizhijian.hhcomicviewer2.activities.ComicDetailsActivity;
 import org.huxizhijian.hhcomicviewer2.adapter.CommonAdapter;
 import org.huxizhijian.hhcomicviewer2.db.ComicDBHelper;
 import org.huxizhijian.hhcomicviewer2.enities.Comic;
@@ -49,13 +49,13 @@ public class HistoryFragment extends Fragment {
         if (mComics == null) return;
         mAdapter = new HistoryListViewAdapter(getActivity(), mComics, R.layout.item_list_view);
         mListView.setAdapter(mAdapter);
-        mListView.setDividerHeight(8);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Intent intent = new Intent(getActivity(), ComicInfoActivity.class);
-                intent.setAction(ComicInfoActivity.ACTION_SEARCH);
+                Intent intent = new Intent(getActivity(), ComicDetailsActivity.class);
                 intent.putExtra("url", mComics.get(position).getComicUrl());
+                intent.putExtra("thumbnailUrl", mComics.get(position).getThumbnailUrl());
+                intent.putExtra("title", mComics.get(position).getTitle());
                 startActivity(intent);
             }
         });

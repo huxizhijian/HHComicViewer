@@ -1,7 +1,5 @@
 package org.huxizhijian.hhcomicviewer2.activities;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -10,6 +8,8 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,13 +26,12 @@ import org.huxizhijian.hhcomicviewer2.enities.ComicCapture;
 import org.huxizhijian.hhcomicviewer2.service.DownloadManager;
 import org.huxizhijian.hhcomicviewer2.service.DownloadManagerService;
 import org.huxizhijian.hhcomicviewer2.utils.BaseUtils;
-import org.huxizhijian.hhcomicviewer2.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class DownloadManagerActivity extends Activity implements View.OnClickListener {
+public class DownloadManagerActivity extends AppCompatActivity implements View.OnClickListener {
 
     //控件
     private Button mBtn_all_control, mBtn_manager, mBtn_delete;
@@ -58,7 +57,6 @@ public class DownloadManagerActivity extends Activity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_download_manager);
         initView();
-        initData();
     }
 
     @Override
@@ -68,7 +66,7 @@ public class DownloadManagerActivity extends Activity implements View.OnClickLis
     }
 
     @Override
-    public boolean onMenuItemSelected(int featureId, MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             finish();
             return true;
@@ -111,7 +109,8 @@ public class DownloadManagerActivity extends Activity implements View.OnClickLis
                     intent.setAction(DownloadManagerService.ACTION_ALL_STOP);
                     stopService(intent);
                     //取消所有通知
-                    NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                    NotificationManager manager = (NotificationManager)
+                            getSystemService(Context.NOTIFICATION_SERVICE);
                     manager.cancelAll();
                 }
                 return true;
@@ -124,12 +123,14 @@ public class DownloadManagerActivity extends Activity implements View.OnClickLis
             default:
                 break;
         }
-        return super.onMenuItemSelected(featureId, item);
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        //加载数据
+        initData();
         //注册广播监听
         mReceiver = new DownloadReceiver();
         IntentFilter filter = new IntentFilter();
@@ -152,14 +153,13 @@ public class DownloadManagerActivity extends Activity implements View.OnClickLis
         mBtn_delete = (Button) findViewById(R.id.btn_delete_download_manager);
         mTv_storage_info = (TextView) findViewById(R.id.textView_storage_space);
 
-        //修改ActionBar
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null) {
-            //增加左上角返回按钮
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            //修改ActionBar颜色
-            BaseUtils.initActionBar(getActionBar(), Constants.THEME_COLOR);
-        }
+        //toolbar的设置
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(R.string.download);
+        toolbar.setNavigationIcon(R.mipmap.ic_arrow_back_black_24dp);
+        //将其当成actionbar
+        setSupportActionBar(toolbar);
+        BaseUtils.setStatusBarTint(this, getResources().getColor(R.color.colorPrimaryDark));
     }
 
     private void initData() {

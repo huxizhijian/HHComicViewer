@@ -54,11 +54,11 @@ public class ParsePicUrlList {
             charNum++;
         }
         String[] result = picListUrl.split(f);
-        String fi = "";
+        StringBuilder fi = new StringBuilder();
         for (int i = 0; i < result.length; i++) {
-            fi += String.valueOf((char) (Integer.valueOf(result[i]).intValue()));
+            fi.append(String.valueOf((char) (Integer.valueOf(result[i]).intValue())));
         }
-        String[] jpgUrl = fi.split("\\|");
+        String[] jpgUrl = fi.toString().split("\\|");
         ArrayList<String> picList = new ArrayList<>();
         for (int i = 0; i < jpgUrl.length; i++) {
             picList.add(serverUrl + jpgUrl[i]);

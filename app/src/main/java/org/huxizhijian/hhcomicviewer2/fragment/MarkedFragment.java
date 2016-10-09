@@ -13,10 +13,11 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.huxizhijian.hhcomicviewer2.R;
-import org.huxizhijian.hhcomicviewer2.activities.ComicInfoActivity;
+import org.huxizhijian.hhcomicviewer2.activities.ComicDetailsActivity;
 import org.huxizhijian.hhcomicviewer2.adapter.StaggeredComicAdapter;
 import org.huxizhijian.hhcomicviewer2.db.ComicDBHelper;
 import org.huxizhijian.hhcomicviewer2.enities.Comic;
@@ -29,6 +30,7 @@ import java.util.List;
 public class MarkedFragment extends Fragment {
 
     private RecyclerView mRecyclerView;
+    private TextView mTv;
     private ComicDBHelper mComicDBHelper;
     private List<Comic> mMarkedComics;
     private StaggeredComicAdapter mAdapter;
@@ -41,56 +43,72 @@ public class MarkedFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_marked, container, false);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_marked);
+        mTv = (TextView) view.findViewById(R.id.textView_no_marked);
         mComicDBHelper = ComicDBHelper.getInstance(getActivity());
-        initData();
         return view;
-    }
-
-    private void initData() {
-        mMarkedComics = mComicDBHelper.findMarkedComics();
-        if (mMarkedComics == null) return;
-
-        mAdapter = new StaggeredComicAdapter(getActivity(), mMarkedComics);
-        mAdapter.setOnItemClickListener(new StaggeredComicAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                Intent intent = new Intent(getActivity(), ComicInfoActivity.class);
-                intent.setAction(ComicInfoActivity.ACTION_MARKED);
-                intent.putExtra("url", mMarkedComics.get(position).getComicUrl());
-                startActivity(intent);
-            }
-
-            @Override
-            public void onItemLongClick(View view, int position) {
-                showDialog(position);
-            }
-        });
-        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
-        mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mRecyclerView.setAdapter(mAdapter);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (mAdapter != null) {
-            mMarkedComics = mComicDBHelper.findMarkedComics();
-            if (mMarkedComics != null) {
-                mAdapter.setComicList(mMarkedComics);
-//                preloadBitmap();
-                mAdapter.notifyDataSetChanged();
-            }
-        }
+        //兼具初始设定view的作用
+        refreshData();
     }
 
+    //刷新值
     public void refreshData() {
-        if (mAdapter != null) {
-            mMarkedComics = mComicDBHelper.findMarkedComics();
-            if (mMarkedComics != null) {
-                mAdapter.setComicList(mMarkedComics);
-                mAdapter.notifyDataSetChanged();
+        mMarkedComics = mComicDBHelper.findMarkedComics();
+        if (mMarkedComics != null) {
+            if (mAdapter == null) {
+                mAdapter = new StaggeredComicAdapter(getActivity(), mMarkedComics);
+                mAdapter.setOnItemClickListener(new StaggeredComicAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        Intent intent = new Intent(getActivity(), ComicDetailsActivity.class);
+                        intent.putExtra("url", mMarkedComics.get(position).getComicUrl());
+                        intent.putExtra("thumbnailUrl", mMarkedComics.get(position).getThumbnailUrl());
+                        intent.putExtra("title", mMarkedComics.get(position).getTitle());
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void onItemLongClick(View view, int position) {
+                        showDialog(position);
+                    }
+                });
+                StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(3,
+                        StaggeredGridLayoutManager.VERTICAL);
+                mRecyclerView.setLayoutManager(layoutManager);
+                mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+                mRecyclerView.setAdapter(mAdapter);
+                mTv.setVisibility(View.GONE);
+            } else {
+                mAdapter = null;
+                mAdapter = new StaggeredComicAdapter(getActivity(), mMarkedComics);
+                mAdapter.setOnItemClickListener(new StaggeredComicAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        Intent intent = new Intent(getActivity(), ComicDetailsActivity.class);
+                        intent.putExtra("url", mMarkedComics.get(position).getComicUrl());
+                        intent.putExtra("thumbnailUrl", mMarkedComics.get(position).getThumbnailUrl());
+                        intent.putExtra("title", mMarkedComics.get(position).getTitle());
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void onItemLongClick(View view, int position) {
+                        showDialog(position);
+                    }
+                });
+                StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(3,
+                        StaggeredGridLayoutManager.VERTICAL);
+                mRecyclerView.setLayoutManager(layoutManager);
+                mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+                mRecyclerView.setAdapter(mAdapter);
+                mTv.setVisibility(View.GONE);
             }
+        } else {
+            mTv.setVisibility(View.VISIBLE);
         }
     }
 

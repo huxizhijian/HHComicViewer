@@ -10,8 +10,8 @@ import android.widget.RemoteViews;
 import org.huxizhijian.hhcomicviewer2.R;
 import org.huxizhijian.hhcomicviewer2.activities.DownloadManagerActivity;
 import org.huxizhijian.hhcomicviewer2.enities.ComicCapture;
+import org.huxizhijian.hhcomicviewer2.service.DownloadManagerService;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,16 +21,24 @@ import java.util.Map;
  */
 public class NotificationUtil {
 
-    private NotificationManager mNotificationManager;
-    private Map<Integer, Notification> mNotifications;
+    private static NotificationManager sNotificationManager;
+    private static Map<Integer, Notification> sNotifications;
+    private static NotificationUtil sNotificationUtil;
     private Context mContext;
 
-    public NotificationUtil(Context context) {
+    private NotificationUtil(Context context) {
         //获得通知服务
-        mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        sNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         //创建一个通知的集合
-        mNotifications = new HashMap<>();
+        sNotifications = new HashMap<>();
         this.mContext = context;
+    }
+
+    public static NotificationUtil getInstance(Context context) {
+        if (sNotificationUtil == null) {
+            sNotificationUtil = new NotificationUtil(context);
+        }
+        return sNotificationUtil;
     }
 
     /**
@@ -38,8 +46,8 @@ public class NotificationUtil {
      *
      * @param comicCapture
      */
-    public void showNotification(ComicCapture comicCapture) {
-        if (!mNotifications.containsKey(comicCapture.getId())) {
+    public void showNotification(DownloadManagerService service, ComicCapture comicCapture) {
+        if (!sNotifications.containsKey(comicCapture.getId())) {
             //创建通知对象
             Notification notification = new Notification();
             //设置滚动文字
@@ -62,28 +70,21 @@ public class NotificationUtil {
             remoteViews.setTextViewText(R.id.textView_notification_progress, 0 + "/" + comicCapture.getPageCount());
             //设置remoteViews
             notification.contentView = remoteViews;
-            //发出通知
-            mNotificationManager.notify(comicCapture.getId(), notification);
+            //发出通知，将service设为前台
+            sNotificationManager.notify(comicCapture.getId(), notification);
+//            service.startForeground(comicCapture.getId(), notification);
             //把通知加到集合中
-            mNotifications.put(comicCapture.getId(), notification);
+            sNotifications.put(comicCapture.getId(), notification);
         }
     }
 
-    public void cancelNotification(int id) {
+    public void cancelNotification(DownloadManagerService service, int id) {
         //取消通知
-        mNotificationManager.cancel(id);
+        sNotificationManager.cancel(id);
+        //将service的前台活动通知取消
+//        service.stopForeground(true);
         //将通知移除集合中
-        mNotifications.remove(id);
-    }
-
-    public void cancelAll() {
-        //取消所有通知
-        Collection keys = mNotifications.keySet();
-        for (Object key : keys) {
-            Integer id = (Integer) key;
-            mNotificationManager.cancel(id);
-            mNotifications.remove(id);
-        }
+        sNotifications.remove(id);
     }
 
     /**
@@ -111,7 +112,7 @@ public class NotificationUtil {
         builder.setAutoCancel(true);
         Notification notification = builder.getNotification();
         //发出通知
-        mNotificationManager.notify(Constants.FINISHED_NOTIFICATION_ID, notification);
+        sNotificationManager.notify(Constants.FINISHED_NOTIFICATION_ID, notification);
     }
 
     /**
@@ -121,14 +122,14 @@ public class NotificationUtil {
      * @param downloadPosition
      */
     public void updateNotification(int id, int downloadPosition, int pageCount) {
-        Notification notification = mNotifications.get(id);
+        Notification notification = sNotifications.get(id);
         if (notification != null) {
             //如果当前通知是活动的，修改进度条
             int progress = (int) ((float) downloadPosition / (float) pageCount * 100f);
             notification.contentView.setProgressBar(R.id.progress_bar_notification, 100, progress, false);
             //修改下载数字
             notification.contentView.setTextViewText(R.id.textView_notification_progress, downloadPosition + "/" + pageCount);
-            mNotificationManager.notify(id, notification);
+            sNotificationManager.notify(id, notification);
         }
     }
 }

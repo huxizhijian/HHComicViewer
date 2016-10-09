@@ -1,15 +1,15 @@
 package org.huxizhijian.hhcomicviewer2.activities;
 
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,13 +21,13 @@ import org.huxizhijian.hhcomicviewer2.fragment.MarkedFragment;
 import org.huxizhijian.hhcomicviewer2.fragment.SearchFragment;
 import org.huxizhijian.hhcomicviewer2.service.DownloadManagerService;
 import org.huxizhijian.hhcomicviewer2.utils.BaseUtils;
-import org.huxizhijian.hhcomicviewer2.utils.Constants;
 import org.huxizhijian.hhcomicviewer2.view.ChangeColorIconWithText;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends FragmentActivity implements View.OnClickListener, ViewPager.OnPageChangeListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener,
+        ViewPager.OnPageChangeListener {
 
     //控件及适配器
     private ViewPager mViewPager;
@@ -100,13 +100,14 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         mTabIndicator.add(marked);
         mTabIndicator.add(search);
         mTabIndicator.add(config);
-
         marked.setIconAlpha(1.0f);
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayShowHomeEnabled(false);
-            BaseUtils.initActionBar(actionBar, Constants.THEME_COLOR);
-        }
+
+        //toolbar的设置
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(R.string.app_name_short);
+        //将其当成actionbar
+        setSupportActionBar(toolbar);
+        BaseUtils.setStatusBarTint(this, getResources().getColor(R.color.colorPrimaryDark));
     }
 
     @Override
@@ -117,14 +118,26 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent = null;
         switch (item.getItemId()) {
             case R.id.menu_popup_sync:
                 //刷新数据
                 ((MarkedFragment) mTags.get(0)).refreshData();
                 return true;
             case R.id.menu_download_list:
-                Intent intent = new Intent(this, DownloadManagerActivity.class);
+                intent = new Intent(MainActivity.this, DownloadManagerActivity.class);
                 startActivity(intent);
+                return true;
+            case R.id.menu_config:
+                intent = new Intent(MainActivity.this, PreferenceActivity.class);
+                intent.setAction(PreferenceActivity.ACTION_READING);
+                startActivity(intent);
+                return true;
+            case R.id.menu_exit:
+                intent = new Intent(MainActivity.this, DownloadManagerService.class);
+                intent.setAction(DownloadManagerService.ACTION_ALL_STOP);
+                startService(intent);
+                this.finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -185,13 +198,5 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     @Override
     public void onPageScrollStateChanged(int state) {
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Intent intent = new Intent(this, DownloadManagerService.class);
-        intent.setAction(DownloadManagerService.ACTION_CHECK_MISSION);
-        startService(intent);
     }
 }

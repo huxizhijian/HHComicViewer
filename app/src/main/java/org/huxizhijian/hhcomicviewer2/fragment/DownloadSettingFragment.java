@@ -9,10 +9,10 @@ import android.widget.Toast;
 
 import com.flyco.dialog.listener.OnBtnClickL;
 import com.flyco.dialog.widget.MaterialDialog;
+import com.obsez.android.lib.filechooser.ChooserDialog;
 
 import org.huxizhijian.hhcomicviewer2.R;
 import org.huxizhijian.hhcomicviewer2.utils.Constants;
-import org.huxizhijian.hhcomicviewer2.widget.FilePicker;
 
 import java.io.File;
 
@@ -52,25 +52,26 @@ public class DownloadSettingFragment extends PreferenceFragment {
                 @Override
                 public void onBtnClick() {
                     materialDialog.dismiss();
-                    FilePicker picker = new FilePicker(getActivity(), FilePicker.DIRECTORY);
-                    picker.setRootPath(mDownloadPath);
-                    picker.setOnFilePickListener(new FilePicker.OnFilePickListener() {
-                        @Override
-                        public void onFilePicked(String currentPath) {
-                            File file = new File(currentPath);
-                            if (file.canWrite()) {
-                                //写入配置
-                                mDownloadPath = currentPath;
-                                SharedPreferences.Editor editor = mPreferences.edit();
-                                editor.putString("download_path", currentPath);
-                                editor.apply();
-                                preference.setSummary(currentPath);
-                            } else {
-                                Toast.makeText(getActivity(), "该目录不可写", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-                    picker.show();
+                    new ChooserDialog().with(getActivity())
+                            .withFilter(true, false)
+                            .withStartFile(mDownloadPath)
+                            .withChosenListener(new ChooserDialog.Result() {
+                                @Override
+                                public void onChoosePath(String path, File pathFile) {
+                                    if (pathFile.canWrite()) {
+                                        //写入配置
+                                        mDownloadPath = path;
+                                        SharedPreferences.Editor editor = mPreferences.edit();
+                                        editor.putString("download_path", path);
+                                        editor.apply();
+                                        preference.setSummary(path);
+                                    } else {
+                                        Toast.makeText(getActivity(), "该目录不可写", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            })
+                            .build()
+                            .show();
                 }
             });
             materialDialog.setCancelable(false);

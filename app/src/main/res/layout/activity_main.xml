@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:huxi="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".activities.MainActivity">
+
+    <include layout="@layout/toolbar"/>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/view_pager_main"
@@ -17,6 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="55dp"
         android:background="@drawable/tab_bg"
+        android:elevation="4dp"
         android:orientation="horizontal">
 
         <org.huxizhijian.hhcomicviewer2.view.ChangeColorIconWithText
@@ -28,7 +34,7 @@
             huxi:color="@color/main_color"
             huxi:icon="@mipmap/ic_menu_star"
             huxi:text="@string/tab_mark"
-            huxi:text_size="11sp" />
+            huxi:text_size="11sp"/>
 
         <org.huxizhijian.hhcomicviewer2.view.ChangeColorIconWithText
             android:id="@+id/indicator_search"
@@ -39,7 +45,7 @@
             huxi:color="@color/main_color"
             huxi:icon="@mipmap/ic_menu_search"
             huxi:text="@string/tab_search"
-            huxi:text_size="11sp" />
+            huxi:text_size="11sp"/>
 
         <org.huxizhijian.hhcomicviewer2.view.ChangeColorIconWithText
             android:id="@+id/indicator_config"
@@ -50,8 +56,7 @@
             huxi:color="@color/main_color"
             huxi:icon="@mipmap/ic_menu_preferences"
             huxi:text="@string/tab_config"
-            huxi:text_size="11sp" />
+            huxi:text_size="11sp"/>
 
     </LinearLayout>
-
 </LinearLayout>

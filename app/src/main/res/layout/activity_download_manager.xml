@@ -7,15 +7,17 @@
     android:descendantFocusability="blocksDescendants"
     android:gravity="bottom"
     android:orientation="vertical"
-    android:paddingLeft="8dp"
-    android:paddingRight="8dp"
     tools:context="org.huxizhijian.hhcomicviewer2.activities.DownloadManagerActivity">
+
+    <include layout="@layout/toolbar"/>
 
     <ExpandableListView
         android:id="@+id/elv_download_manager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"/>
 
     <TextView
         android:id="@+id/textView_storage_space"

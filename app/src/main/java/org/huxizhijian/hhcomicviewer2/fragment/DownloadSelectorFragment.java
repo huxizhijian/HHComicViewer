@@ -15,7 +15,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import org.huxizhijian.hhcomicviewer2.R;
-import org.huxizhijian.hhcomicviewer2.activities.ComicInfoActivity;
+import org.huxizhijian.hhcomicviewer2.activities.ComicDetailsActivity;
 import org.huxizhijian.hhcomicviewer2.adapter.VolDownloadSelectorAdapter;
 import org.huxizhijian.hhcomicviewer2.enities.Comic;
 
@@ -30,6 +30,7 @@ public class DownloadSelectorFragment extends Fragment implements View.OnClickLi
     private RecyclerView mRecyclerView;
     private VolDownloadSelectorAdapter mAdapter;
     private List<String> mDownloadedComicCaptures;
+    private List<String> mFinishedComicCaptureList;  //下载好的章节
     private Comic mComic;
 
     public DownloadSelectorFragment() {
@@ -38,16 +39,17 @@ public class DownloadSelectorFragment extends Fragment implements View.OnClickLi
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        this.mDataBinder = (ComicInfoActivity) context;
+        this.mDataBinder = (ComicDetailsActivity) context;
         mComic = mDataBinder.getComic();
         mDownloadedComicCaptures = mDataBinder.getDownloadedComicCaptures();
+        mFinishedComicCaptureList = mDataBinder.getFinishedComicCaptures();
     }
 
     public void initData() {
         mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 4));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mAdapter = new VolDownloadSelectorAdapter(getActivity(),
-                mComic.getCaptureName(), mDownloadedComicCaptures);
+                mComic.getCaptureName(), mDownloadedComicCaptures, mFinishedComicCaptureList);
         mAdapter.setOnItemClickListener(new VolDownloadSelectorAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
@@ -107,6 +109,8 @@ public class DownloadSelectorFragment extends Fragment implements View.OnClickLi
         Comic getComic();
 
         List<String> getDownloadedComicCaptures();
+
+        List<String> getFinishedComicCaptures();
 
         void sendSelectedCaptures(List<String> selectedCaptures);
 

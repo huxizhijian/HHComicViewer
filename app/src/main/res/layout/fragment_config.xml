@@ -1,0 +1,21 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".fragment.ConfigFragment">
+
+
+    <ListView
+        android:id="@+id/listView_config"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:divider="@drawable/list_config_divider"
+        android:dividerHeight="2dp"
+        android:gravity="top"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"/>
+
+</LinearLayout>
