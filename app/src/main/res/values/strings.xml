@@ -39,11 +39,12 @@
     <string name="about">关于</string>
     <string name="advance">高级</string>
     <string name="download_setting">下载设置</string>
-    <string name="app_version">汗汗漫画阅读器  v0.84</string>
+    <string name="app_version">汗汗漫画阅读器  v0.92</string>
     <string name="app_author_info"><![CDATA[huxizhijian  <huxizhijian92@gmail.com>]]></string>
     <string name="search_comic">搜索漫画：</string>
     <string name="classified_list">分类列表：</string>
     <string name="search_author">搜作者</string>
     <string name="none_marked">你没有收藏漫画，快去搜索吧。</string>
     <string name="comic_capture_list">漫画目录列表：</string>
+    <string name="app_github">https://github.com/huxizhijian/HHComicViewer</string>
 </resources>

@@ -79,7 +79,7 @@ public class ComicResultListActivity extends AppCompatActivity {
             String classified = intent.getStringExtra("classified");
             setTitle("分类 - " + classified);
             mUrl = intent.getStringExtra("url");
-            mUrl = mUrl.substring(0, mUrl.length() - 6);
+            mUrl = mUrl.substring(0, mUrl.length() - 5); //去掉网址后面的.html
         }
         showComicList();
     }
@@ -100,7 +100,7 @@ public class ComicResultListActivity extends AppCompatActivity {
     }
 
     private void showComicList() {
-        RequestParams params = new RequestParams(mUrl + 1 + ".html");
+        RequestParams params = new RequestParams(mUrl + "/" + 1 + ".html");
         x.http().get(params, new Callback.CommonCallback<byte[]>() {
             @Override
             public void onSuccess(byte[] result) {
@@ -205,7 +205,7 @@ public class ComicResultListActivity extends AppCompatActivity {
     }
 
     private void loadNextPage() {
-        RequestParams params = new RequestParams(mUrl + mPosition + ".html");
+        RequestParams params = new RequestParams(mUrl + "/" + mPosition + ".html");
         x.http().get(params, new Callback.CommonCallback<byte[]>() {
             @Override
             public void onSuccess(byte[] result) {

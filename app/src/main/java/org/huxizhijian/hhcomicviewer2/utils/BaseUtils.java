@@ -11,6 +11,7 @@ import android.graphics.drawable.LayerDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
+import android.os.StatFs;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -22,6 +23,7 @@ import org.huxizhijian.hhcomicviewer2.enities.Comic;
 import org.huxizhijian.hhcomicviewer2.enities.ComicCapture;
 
 import java.io.File;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -43,6 +45,38 @@ public class BaseUtils {
         path.append(comicCapture.getComicTitle()).append(backslash);
         path.append(comicCapture.getCaptureName()).append(backslash);
         return path.toString();
+    }
+
+    public static String getStorageBlockSpace(String path) {
+        //获取剩余存储空间
+        File filePath = new File(path);
+        StatFs sf = new StatFs(filePath.getPath());//创建StatFs对象
+        long blockSize = sf.getBlockSize();//获得blockSize
+        long totalBlock = sf.getBlockCount();//获得全部block
+        long availableBlock = sf.getAvailableBlocks();//获取可用的block
+        //用String数组来存放Block信息
+        String[] total = fileSize(totalBlock * blockSize);
+        String[] available = fileSize(availableBlock * blockSize);
+        return "剩余空间：" + available[0] + available[1] + "/" + total[0] + total[1];
+    }
+
+    //用来定义存储空间显示格式
+    private static String[] fileSize(long size) {
+        String s = "";
+        if (size > 1024) {
+            s = "KB";
+            size /= 1024;
+            if (size > 1024) {
+                s = "MB";
+                size /= 1024;
+            }
+        }
+        DecimalFormat df = new DecimalFormat();
+        df.setGroupingSize(3);
+        String[] result = new String[3];
+        result[0] = df.format(size);
+        result[1] = s;
+        return result;
     }
 
     public static String getDownloadPathRoot(Comic comic) {

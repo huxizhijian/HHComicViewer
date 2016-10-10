@@ -360,6 +360,7 @@ public class DownloadManagerAdapter extends BaseExpandableListAdapter {
 
     private void pause(ComicCapture capture) {
         //暂停下载
+        if (!mManagerActivity.mHasWritePermission) return;
         Intent intent = new Intent(mContext, DownloadManagerService.class);
         intent.setAction(DownloadManagerService.ACTION_STOP);
         intent.putExtra("comicCapture", capture);
@@ -368,6 +369,7 @@ public class DownloadManagerAdapter extends BaseExpandableListAdapter {
 
     private void restart(ComicCapture capture) {
         //重新开始下载
+        if (!mManagerActivity.mHasWritePermission) return;
         Intent intent = new Intent(mContext, DownloadManagerService.class);
         intent.setAction(DownloadManagerService.ACTION_START_RANGE);
         intent.putExtra("comicCapture", capture);

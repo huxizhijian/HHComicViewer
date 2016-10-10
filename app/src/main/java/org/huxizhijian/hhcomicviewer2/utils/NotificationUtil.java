@@ -71,8 +71,8 @@ public class NotificationUtil {
             //设置remoteViews
             notification.contentView = remoteViews;
             //发出通知，将service设为前台
-            sNotificationManager.notify(comicCapture.getId(), notification);
-//            service.startForeground(comicCapture.getId(), notification);
+//            sNotificationManager.notify(comicCapture.getId(), notification);
+            service.startForeground(comicCapture.getId(), notification);
             //把通知加到集合中
             sNotifications.put(comicCapture.getId(), notification);
         }
@@ -80,9 +80,9 @@ public class NotificationUtil {
 
     public void cancelNotification(DownloadManagerService service, int id) {
         //取消通知
-        sNotificationManager.cancel(id);
+//        sNotificationManager.cancel(id);
         //将service的前台活动通知取消
-//        service.stopForeground(true);
+        service.stopForeground(true);
         //将通知移除集合中
         sNotifications.remove(id);
     }

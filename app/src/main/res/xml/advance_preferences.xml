@@ -11,11 +11,6 @@
         android:summary="恢复导出的漫画收藏、阅读及下载信息"
         android:title="导入数据"/>
 
-    <Preference
-        android:key="update_parse_setting"
-        android:summary="当解析漫画总出错时可以试试"
-        android:title="更新解析配置"/>
-
     <ListPreference
         android:defaultValue="160MB"
         android:entries="@array/reading_cache_size"

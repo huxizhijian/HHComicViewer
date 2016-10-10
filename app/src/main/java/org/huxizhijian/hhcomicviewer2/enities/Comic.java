@@ -129,7 +129,7 @@ public class Comic implements Serializable, Comparable {
                     this.comicStatus = comicInfo.text();
                     break;
                 case "集数:":
-                    this.comicStatus += (" " + comicInfo.text().split("\\)")[0] + "\\)");
+                    this.comicStatus += (" " + comicInfo.text().split("\\)")[0] + ")");
                     break;
                 case "更新:":
                     this.comicUpdateTime = comicInfo.text();
@@ -206,7 +206,7 @@ public class Comic implements Serializable, Comparable {
                     this.comicStatus = comicInfo.text();
                     break;
                 case "集数:":
-                    this.comicStatus += (" " + comicInfo.text().split("\\)")[0]);
+                    this.comicStatus += (" " + comicInfo.text().split("\\)")[0] + ")");
                     break;
                 case "更新:":
                     this.comicUpdateTime = comicInfo.text();

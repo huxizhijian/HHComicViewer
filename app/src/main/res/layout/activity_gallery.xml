@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -43,7 +44,8 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/tv_name_gallery"
-            android:thumb="@drawable/seekbar_thumb"/>
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"/>
 
         <TextView
             android:id="@+id/tv_name_gallery"
@@ -55,30 +57,38 @@
             android:textColor="#bebebe"
             android:textSize="18sp"/>
 
-
-        <ImageButton
+        <TextView
             android:id="@+id/btn_next_gallery"
-            android:layout_width="72dp"
-            android:layout_height="36dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_below="@+id/seekBar_gallery"
-            android:layout_margin="10dp"
-            android:background="@drawable/bg_btn"
+            android:layout_marginBottom="4dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="4dp"
             android:gravity="center"
-            android:src="@mipmap/next"/>
+            android:padding="8dp"
+            android:text="@string/string_next_btn_gallery"
+            android:textSize="18sp"/>
 
-        <ImageButton
+        <TextView
             android:id="@+id/btn_prev_gallery"
-            android:layout_width="72dp"
-            android:layout_height="36dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/seekBar_gallery"
-            android:layout_margin="10dp"
-            android:background="@drawable/bg_btn"
+            android:layout_marginBottom="4dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="4dp"
             android:gravity="center"
-            android:src="@mipmap/prev"/>
+            android:padding="8dp"
+            android:text="@string/string_prev_btn_gallery"
+            android:textColor="#bebebe"
+            android:textSize="18sp"/>
 
     </RelativeLayout>
 

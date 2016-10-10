@@ -9,12 +9,14 @@ import android.os.Environment;
 
 public class Constants {
     public static final String HHCOMIC_URL = "http://www.popomh.com/"; //主站网址
-    public static final String COMIC_VOL_PAGE = "http://www.huhumh.com/mh/hu"; //漫画章节模板
+    public static final String COMIC_VOL_PAGE = "http://www.huhudm.com/mh/hu"; //漫画章节网址
     public static final String ENCODE_KEY = "tazsicoewrn"; //解码关键字
     public static final String PIC_SERVICE_URL = "http://104.237.55.123:9393/dm"; //图片服务器
     public static final String SEARCH_URL = "http://ssooff.com/"; //搜索网站
     public static final String ACTION_CLASSIFIES = "action_classifies"; //标记为获取分类列表行
     public static final String NO_NETWORK = "没有网络!";
+
+    public static final int DOWNLOADING_NOTIFICATION_ID = 0x512;
     public static final int FINISHED_NOTIFICATION_ID = 0x1024;
 
     public static final String DEFAULT_DOWNLOAD_PATH = Environment.getExternalStorageDirectory().getPath() + "/HHComic";

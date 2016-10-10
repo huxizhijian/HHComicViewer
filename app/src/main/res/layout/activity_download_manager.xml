@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:descendantFocusability="blocksDescendants"
-    android:gravity="bottom"
+    android:gravity="top"
     android:orientation="vertical"
     tools:context="org.huxizhijian.hhcomicviewer2.activities.DownloadManagerActivity">
 
@@ -23,6 +23,8 @@
         android:id="@+id/textView_storage_space"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         android:gravity="left"/>
 
     <LinearLayout

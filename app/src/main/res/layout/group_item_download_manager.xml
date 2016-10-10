@@ -13,7 +13,7 @@
         android:layout_gravity="center_vertical|end"
         android:layout_marginRight="8dp"
         android:layout_marginLeft="8dp"
-        android:src="@android:drawable/ic_menu_directions"
+        android:src="@android:drawable/ic_menu_gallery"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"

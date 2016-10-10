@@ -33,7 +33,7 @@ public class MarkedFragment extends Fragment {
     private TextView mTv;
     private ComicDBHelper mComicDBHelper;
     private List<Comic> mMarkedComics;
-    private StaggeredComicAdapter mAdapter;
+    private StaggeredComicAdapter mAdapter = null;
 
     public MarkedFragment() {
     }
@@ -58,7 +58,7 @@ public class MarkedFragment extends Fragment {
     //刷新值
     public void refreshData() {
         mMarkedComics = mComicDBHelper.findMarkedComics();
-        if (mMarkedComics != null) {
+        if (mMarkedComics != null && mMarkedComics.size() != 0) {
             if (mAdapter == null) {
                 mAdapter = new StaggeredComicAdapter(getActivity(), mMarkedComics);
                 mAdapter.setOnItemClickListener(new StaggeredComicAdapter.OnItemClickListener() {

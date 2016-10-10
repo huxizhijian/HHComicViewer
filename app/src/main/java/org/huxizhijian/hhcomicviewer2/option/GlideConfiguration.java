@@ -1,4 +1,4 @@
-package org.huxizhijian.hhcomicviewer2.glide;
+package org.huxizhijian.hhcomicviewer2.option;
 
 import android.content.Context;
 import android.content.SharedPreferences;

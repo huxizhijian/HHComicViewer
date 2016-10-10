@@ -159,6 +159,6 @@ public class ComicCapture implements Serializable, Comparable {
     @Override
     public int compareTo(@NonNull Object o) {
         ComicCapture compareCapture = (ComicCapture) o;
-        return this.captureUrl.compareTo(compareCapture.getCaptureUrl());
+        return this.captureName.compareTo(compareCapture.getCaptureName());
     }
 }

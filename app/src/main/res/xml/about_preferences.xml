@@ -12,16 +12,8 @@
         android:title="版本号"/>
 
     <Preference
-        android:key="check_update"
-        android:title="检查更新"/>
-
-    <CheckBoxPreference
-        android:defaultValue="false"
-        android:key="update_alpha_version"
-        android:title="更新测试版"/>
-
-    <Preference
-        android:key="open_source"
-        android:title="开源许可"/>
+        android:key="app_github"
+        android:summary="@string/app_github"
+        android:title="github主页"/>
 
 </PreferenceScreen>

@@ -134,13 +134,13 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
                     public void onError(Throwable ex, boolean isOnCallback) {
                         ex.printStackTrace();
                         if (BaseUtils.getAPNType(ComicDetailsActivity.this) == BaseUtils.NONEWTWORK) {
-                            Toast.makeText(ComicDetailsActivity.this, Constants.NO_NETWORK, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), Constants.NO_NETWORK, Toast.LENGTH_SHORT).show();
                             //没有网络，读取数据库中的信息
                             if (mComic != null && mComic.isMark() && mComic.isDownload()) {
                                 updateViews();
                             }
                         } else {
-                            Toast.makeText(ComicDetailsActivity.this, "出错！", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "出错！", Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -170,7 +170,7 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
 
         //加载评分信息
         mBinding.ratingBarComicDetails.setRating((mComic.getRatingNumber() / 10.0f) * 5.0f);
-        mBinding.ratingBarDescriptionComicDetails.setText(mComic.getRatingNumber() + "分, " +
+        mBinding.ratingBarDescriptionComicDetails.setText(mComic.getRatingNumber() + "分(10分制), " +
                 "共计" + mComic.getRatingPeopleNum() + "人评分");
 
         //章节列表加载
@@ -185,6 +185,8 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
         //初始化RecyclerView
         mBinding.recyclerViewComicDetails.setLayoutManager(new FullyGridLayoutManager(ComicDetailsActivity.this, 4));
         mBinding.recyclerViewComicDetails.setItemAnimator(new DefaultItemAnimator());
+        mBinding.recyclerViewComicDetails.setHasFixedSize(true);
+        mBinding.recyclerViewComicDetails.setNestedScrollingEnabled(false);
         mVolAdapter.setOnItemClickListener(new VolRecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
@@ -420,7 +422,7 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
                 break;
             case R.id.comic_description_comic_details:
                 //打开漫画简介
-                if (isDescriptionOpen) {
+                if (!isDescriptionOpen) {
                     mBinding.comicDescriptionComicDetails.setMaxLines(1024);
                     mBinding.comicDescriptionComicDetails.setText(mComic.getDescription());
                     isDescriptionOpen = !isDescriptionOpen;
@@ -458,7 +460,6 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
 
     @Override
     public void sendSelectedCaptures(List<String> selectedCaptures) {
-
         //更新漫画的数据库资料
         Comic findComic = mComicDBHelper.findByUrl(mComic.getComicUrl());
         //设置下载标记为true
@@ -485,7 +486,7 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
                     != PackageManager.PERMISSION_GRANTED) {
                 if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                    Toast.makeText(this, "没有下载权限！", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "没有获得权限，无法下载！", Toast.LENGTH_SHORT).show();
                     mSelectedCaptures = selectedCaptures;
                     ActivityCompat.requestPermissions(this,
                             new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
@@ -493,8 +494,8 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
                     mSelectedCaptures = selectedCaptures;
                     ActivityCompat.requestPermissions(this,
                             new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
-                    return;
                 }
+                return;
             }
 
             int position = -1;
@@ -575,7 +576,11 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
         @Override
         public void onReceive(Context context, Intent intent) {
             if (!intent.getAction().equals(DownloadManagerService.ACTION_RECEIVER)) return;
+            if (mComic == null || mComicCaptureDBHelper == null) return;
             ComicCapture comicCapture = (ComicCapture) intent.getSerializableExtra("comicCapture");
+            if (comicCapture == null) return;
+            if (!comicCapture.getComicUrl().equals(mComic.getComicUrl())) return;
+
             if (comicCapture.getDownloadStatus() != Constants.DOWNLOAD_DOWNLOADING ||
                     comicCapture.getDownloadStatus() != Constants.DOWNLOAD_ERROR ||
                     comicCapture.getDownloadStatus() != Constants.DOWNLOAD_PAUSE) {

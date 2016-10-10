@@ -1,10 +1,20 @@
 package org.huxizhijian.hhcomicviewer2.activities;
 
+import android.Manifest;
 import android.app.FragmentTransaction;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import com.turhanoz.android.reactivedirectorychooser.event.OnDirectoryCancelEvent;
+import com.turhanoz.android.reactivedirectorychooser.event.OnDirectoryChosenEvent;
+import com.turhanoz.android.reactivedirectorychooser.ui.OnDirectoryChooserFragmentInteraction;
 
 import org.huxizhijian.hhcomicviewer2.R;
 import org.huxizhijian.hhcomicviewer2.fragment.AboutSettingFragment;
@@ -14,7 +24,7 @@ import org.huxizhijian.hhcomicviewer2.fragment.HistoryFragment;
 import org.huxizhijian.hhcomicviewer2.fragment.ReadingSettingFragment;
 import org.huxizhijian.hhcomicviewer2.utils.BaseUtils;
 
-public class PreferenceActivity extends AppCompatActivity {
+public class PreferenceActivity extends AppCompatActivity implements OnDirectoryChooserFragmentInteraction {
 
     public static final String ACTION_HISTORY = "ACTION_HISTORY";
     public static final String ACTION_READING = "ACTION_READING";
@@ -23,6 +33,8 @@ public class PreferenceActivity extends AppCompatActivity {
     public static final String ACTION_ABOUT = "ACTION_ABOUT";
 
     FragmentTransaction mFt;
+
+    DownloadSettingFragment mDownloadSettingFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,9 +77,9 @@ public class PreferenceActivity extends AppCompatActivity {
             case ACTION_DOWNLOAD:
                 //打开下载设置
                 setTitle("下载");
-                DownloadSettingFragment downloadSettingFragment = new DownloadSettingFragment();
+                mDownloadSettingFragment = new DownloadSettingFragment();
                 mFt = getFragmentManager().beginTransaction();
-                mFt.replace(R.id.frame_activity_preference, downloadSettingFragment);
+                mFt.replace(R.id.frame_activity_preference, mDownloadSettingFragment);
                 mFt.commit();
                 break;
             case ACTION_ABOUT:
@@ -94,5 +106,58 @@ public class PreferenceActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         mFt = null;
+    }
+
+    public void checkPermission() {
+        //检查自身权限
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                Toast.makeText(this, "没有权限，无法完成下载文件夹管理操作！", Toast.LENGTH_SHORT).show();
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+            } else {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+            }
+        } else {
+            //打开dialog
+            if (mDownloadSettingFragment != null) {
+                mDownloadSettingFragment.openDirectChooserDialog();
+            }
+        }
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case 0:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted, yay! Do the contacts-related task you need to do.
+                    //打开dialog
+                    if (mDownloadSettingFragment != null) {
+                        mDownloadSettingFragment.openDirectChooserDialog();
+                    }
+                } else {
+                    // permission denied, boo! Disable the functionality that depends on this permission.
+                    return;
+                }
+                break;
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    @Override
+    public void onEvent(OnDirectoryChosenEvent onDirectoryChosenEvent) {
+        if (mDownloadSettingFragment != null) {
+            mDownloadSettingFragment.onEvent(onDirectoryChosenEvent);
+        }
+    }
+
+    @Override
+    public void onEvent(OnDirectoryCancelEvent onDirectoryCancelEvent) {
     }
 }

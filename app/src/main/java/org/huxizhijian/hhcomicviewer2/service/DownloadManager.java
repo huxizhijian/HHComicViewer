@@ -345,8 +345,10 @@ public class DownloadManager {
                     mDownloadPosition++;
                     mComicCapture.setDownloadPosition(mDownloadPosition);
                     mComicCaptureDBHelper.updateProgress(mComicCapture);
-                    //发送广播
-                    mNotificationUtil.updateNotification(mComicCapture.getId(), mDownloadPosition, mComicCapture.getPageCount());
+                    //发送通知
+                    mNotificationUtil.updateNotification(mComicCapture.getId(),
+                            mDownloadPosition, mComicCapture.getPageCount());
+
                     //向activity发送广播通知下载任务进行中
                     Intent intent = new Intent(DownloadManagerService.ACTION_RECEIVER);
                     intent.putExtra("comicCapture", mComicCapture);

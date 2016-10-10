@@ -5,16 +5,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:context=".activities.MainActivity">
 
-    <include layout="@layout/toolbar"/>
+    <include
+        layout="@layout/toolbar"
+        android:fitsSystemWindows="true"/>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/view_pager_main"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:fitsSystemWindows="true">
 
     </android.support.v4.view.ViewPager>
 
@@ -23,6 +27,7 @@
         android:layout_height="55dp"
         android:background="@drawable/tab_bg"
         android:elevation="4dp"
+        android:fitsSystemWindows="true"
         android:orientation="horizontal">
 
         <org.huxizhijian.hhcomicviewer2.view.ChangeColorIconWithText

@@ -86,9 +86,9 @@ public class DownloadManagerService extends Service implements DownloadManager.O
             //开始下载
             ComicCapture comicCapture = (ComicCapture) intent.getSerializableExtra("comicCapture");
 
-            comicCapture.setDownloadStatus(Constants.DOWNLOAD_INIT);
             //查看是否存在数据库中(是否未下载)
             if (mComicCaptureDBHelper.findByCaptureUrl(comicCapture.getCaptureUrl()) == null) {
+                comicCapture.setDownloadStatus(Constants.DOWNLOAD_INIT);
                 //设置下载目录
                 comicCapture.setSavePath(BaseUtils.getDownloadPath(this, comicCapture));
                 mComicCaptureDBHelper.add(comicCapture);
@@ -107,6 +107,18 @@ public class DownloadManagerService extends Service implements DownloadManager.O
                     }
                 });
                 DownloadManager.sExecutorService.execute(init);
+            } else {
+                //继续下载
+                comicCapture = mComicCaptureDBHelper.findByCaptureUrl(comicCapture.getCaptureUrl());
+                if (comicCapture.getDownloadStatus() != Constants.DOWNLOAD_FINISHED) {
+                    InitComicCapture init = new InitComicCapture(comicCapture, new CallBack() {
+                        @Override
+                        public void onFinished(ComicCapture comicCapture) {
+                            mDownloadManager.startDownload(comicCapture);
+                        }
+                    });
+                    DownloadManager.sExecutorService.execute(init);
+                }
             }
         } else if (intent.getAction().equals(ACTION_START_RANGE)) {
             //继续下载
@@ -147,12 +159,15 @@ public class DownloadManagerService extends Service implements DownloadManager.O
             Log.i("DownloadManagerService", "onStartCommand: delete");
             mDownloadManager.deleteCapture(comicCapture);
         }
-        return super.onStartCommand(intent, flags, startId);
+        return START_REDELIVER_INTENT;
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        mDownloadManager.setOnMissionFinishedListener(null);
+        mDownloadManager = null;
+
         //注销广播接收器
         if (mReceiver != null) {
             unregisterReceiver(mReceiver);
@@ -175,7 +190,10 @@ public class DownloadManagerService extends Service implements DownloadManager.O
             if (!intent.getAction().equals(ACTION_RECEIVER)) return;
             String action = intent.getStringExtra("notification");
             if (action == null) return;
+            if (mNotificationUtil == null) return;
             ComicCapture capture = (ComicCapture) intent.getSerializableExtra("comicCapture");
+            if (capture == null) return;
+
             switch (action) {
                 case "show":
                     mNotificationUtil.showNotification(DownloadManagerService.this, capture);
@@ -207,7 +225,7 @@ public class DownloadManagerService extends Service implements DownloadManager.O
             StringBuffer content = null;
             String line = null;
             try {
-                url = new URL(Constants.HHCOMIC_URL + mComicCapture.getCaptureUrl());
+                url = new URL(mComicCapture.getCaptureUrl());
                 conn = (HttpURLConnection) url.openConnection();
                 conn.setConnectTimeout(5000);
                 conn.setRequestMethod("GET");

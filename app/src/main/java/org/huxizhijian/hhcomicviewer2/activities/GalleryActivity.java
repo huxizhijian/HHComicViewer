@@ -23,7 +23,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -111,6 +110,9 @@ public class GalleryActivity extends Activity implements View.OnClickListener {
 
     private void getWebContent() {
         mIsDownloaded = false;
+        if (mCapturePosition == -1) {
+            mCapturePosition = mComic.getReadCapture();
+        }
         String captureUrl = mComic.getCaptureUrl().get(mCapturePosition);
         if (mCaptureDBHelper == null) {
             mCaptureDBHelper = ComicCaptureDBHelper.getInstance(this);
@@ -191,7 +193,9 @@ public class GalleryActivity extends Activity implements View.OnClickListener {
 
             @Override
             public void onPageSelected(int position) {
-                mSeekBar.setProgress(position);
+                if (mSeekBar.getProgress() != position) {
+                    mSeekBar.setProgress(position);
+                }
                 mTv_progress.setText(position + 1 + "/" + mComicCapture.getPageCount());
                 mTv_position.setText(position + 1 + "");
             }
@@ -205,8 +209,8 @@ public class GalleryActivity extends Activity implements View.OnClickListener {
 
     private void initMenu() {
         mMenu = (RelativeLayout) findViewById(R.id.menu_gallery);
-        ImageButton btn_prev = (ImageButton) findViewById(R.id.btn_prev_gallery);
-        ImageButton btn_next = (ImageButton) findViewById(R.id.btn_next_gallery);
+        TextView btn_prev = (TextView) findViewById(R.id.btn_prev_gallery);
+        TextView btn_next = (TextView) findViewById(R.id.btn_next_gallery);
         mSeekBar = (SeekBar) findViewById(R.id.seekBar_gallery);
         mTv_name = (TextView) findViewById(R.id.tv_name_gallery);
         mTv_progress = (TextView) findViewById(R.id.tv_progress_gallery);
@@ -217,12 +221,13 @@ public class GalleryActivity extends Activity implements View.OnClickListener {
         //用户设置
         preferencesSet();
 
-
         mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
-            public void onProgressChanged(SeekBar seekBar, int position, boolean b) {
-                mViewPager.setCurrentItem(position, false);
-                mViewPager.clearAnimation();
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (fromUser) {
+                    mViewPager.setCurrentItem(progress, false);
+                    mViewPager.clearAnimation();
+                }
             }
 
             @Override
@@ -233,6 +238,7 @@ public class GalleryActivity extends Activity implements View.OnClickListener {
             public void onStopTrackingTouch(SeekBar seekBar) {
             }
         });
+
         btn_prev.setOnClickListener(this);
         btn_next.setOnClickListener(this);
         mTv_time.setText(BaseUtils.getNowDate());
