@@ -9,7 +9,7 @@
 
 ![screenshot-02](art/Screenshot_2.png)
 
-![screenshot-03](art/Screenshot-3.png)
+![screenshot-03](art/Screenshot_3.png)
 
 # License
 <div class="codehilite"><pre>Copyright (C) 2016 huxizhijian
