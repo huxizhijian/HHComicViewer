@@ -1,3 +1,19 @@
+/*
+ * Copyright 2016 huxizhijian
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.huxizhijian.hhcomicviewer2.service;
 
 import android.content.Context;
@@ -310,6 +326,7 @@ public class DownloadManager {
 
         private ThreadInfo mThreadInfo;
         boolean isFinished = false; //标识线程是否下载完毕
+        boolean isError = false; //标识下载线程是否都下载错误
 
         DownloadThread(ThreadInfo mThreadInfo) {
             this.mThreadInfo = mThreadInfo;
@@ -358,6 +375,7 @@ public class DownloadManager {
                             mThreadInfo.getDownloadPosition()));
                     conn = (HttpURLConnection) url.openConnection();
                     conn.setConnectTimeout(5000);
+                    conn.setReadTimeout(180000); //下载一页3分钟为超时
                     conn.setRequestMethod("GET");
                     //初始化文件长度
                     if (mThreadInfo.getLength() == -1) {
@@ -449,6 +467,8 @@ public class DownloadManager {
                 checkAllThreadFinish();
             } catch (IOException e) {
                 e.printStackTrace();
+                //保存进度
+                mDownloadThreadDBHelper.update(mThreadInfo);
                 mComicCapture.setDownloadStatus(Constants.DOWNLOAD_ERROR);
                 //向activity发送广播通知下载取消
                 Intent intent = new Intent(DownloadManagerService.ACTION_RECEIVER);
@@ -456,7 +476,9 @@ public class DownloadManager {
                 intent.putExtra("notification", "cancel");
                 mContext.sendBroadcast(intent);
                 mComicCaptureDBHelper.update(mComicCapture);
-                isFinished = true;
+
+                isError = true;
+                checkAllThreadError();
                 setDownloadPause(mComicCapture);
             } finally {
                 try {
@@ -472,6 +494,22 @@ public class DownloadManager {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+            }
+        }
+
+        /**
+         * 判断所有线程是否执行错误
+         */
+        private synchronized void checkAllThreadError() {
+            boolean allError = true;
+            for (DownloadThread thread : mThreadList) {
+                if (!thread.isError) {
+                    allError = false;
+                    break;
+                }
+            }
+            if (allError) {
+                doNextDownload();
             }
         }
 

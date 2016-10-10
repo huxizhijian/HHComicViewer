@@ -1,3 +1,19 @@
+/*
+ * Copyright 2016 huxizhijian
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.huxizhijian.hhcomicviewer2.activities;
 
 import android.Manifest;
@@ -136,8 +152,10 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
                         if (BaseUtils.getAPNType(ComicDetailsActivity.this) == BaseUtils.NONEWTWORK) {
                             Toast.makeText(getApplicationContext(), Constants.NO_NETWORK, Toast.LENGTH_SHORT).show();
                             //没有网络，读取数据库中的信息
-                            if (mComic != null && mComic.isMark() && mComic.isDownload()) {
-                                updateViews();
+                            if (mComic != null) {
+                                if (mComic.isMark() || mComic.isDownload()) {
+                                    updateViews();
+                                }
                             }
                         } else {
                             Toast.makeText(getApplicationContext(), "出错！", Toast.LENGTH_SHORT).show();

@@ -1,3 +1,19 @@
+/*
+ * Copyright 2016 huxizhijian
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.huxizhijian.hhcomicviewer2.activities;
 
 import android.Manifest;
@@ -124,6 +140,7 @@ public class DownloadManagerActivity extends AppCompatActivity implements View.O
             case R.id.menu_all_stop:
                 //强制停止所有任务，没有反应时用
                 if (mDownloadManager.hasMission()) {
+                    mDownloadManager = null;
                     Intent intent = new Intent(this, DownloadManagerService.class);
                     intent.setAction(DownloadManagerService.ACTION_ALL_STOP);
                     stopService(intent);
@@ -131,6 +148,10 @@ public class DownloadManagerActivity extends AppCompatActivity implements View.O
                     NotificationManager manager = (NotificationManager)
                             getSystemService(Context.NOTIFICATION_SERVICE);
                     manager.cancelAll();
+                }
+                System.gc();
+                if (mDownloadManager == null) {
+                    mDownloadManager = DownloadManager.getInstance(this);
                 }
                 return true;
             case R.id.menu_download_setting:

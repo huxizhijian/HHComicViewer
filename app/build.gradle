@@ -8,8 +8,8 @@ android {
         applicationId "org.huxizhijian.hhcomicviewer2"
         minSdkVersion 15
         targetSdkVersion 24
-        versionCode 92
-        versionName "0.92"
+        versionCode 93
+        versionName "0.93"
     }
     buildTypes {
         release {
