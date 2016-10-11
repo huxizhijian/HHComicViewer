@@ -19,6 +19,7 @@ package org.huxizhijian.hhcomicviewer2.service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -63,6 +64,8 @@ public class DownloadManager {
     private Context mContext;
     private NotificationUtil mNotificationUtil; //通知管理类
     private OnMissionFinishedListener mOnMissionFinishedListener; //任务完成回调接口
+
+    Handler mHandler = new Handler();
 
     private static final String TAG = "DownloadManager";
 
@@ -115,7 +118,7 @@ public class DownloadManager {
         mComicCaptureLinkedList.clear();
         if (mComicCapture != null) {
             //如果有线程正在下载，暂停线程
-            isPause = true;
+            setDownloadPause(mComicCapture);
         }
     }
 
@@ -156,11 +159,41 @@ public class DownloadManager {
      *
      * @param comicCapture
      */
-    public void setDownloadPause(ComicCapture comicCapture) {
+    public void setDownloadPause(final ComicCapture comicCapture) {
         if (mComicCapture != null && mComicCapture.getCaptureUrl().equals(comicCapture.getCaptureUrl())) {
             //如果要暂停的刚好正在下载
             //暂停线程
             isPause = true;
+            //等待5秒钟
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (mComicCapture != null && isPause &&
+                            mComicCapture.getCaptureUrl().equals(comicCapture.getCaptureUrl())) {
+                        for (int i = 0; i < mThreadList.size(); i++) {
+                            if (mThreadList.get(i).getState() == Thread.State.RUNNABLE) {
+                                //如果线程还在进行，将其中断
+                                mThreadList.get(i).interrupt();
+                            }
+                        }
+                        mComicCapture.setDownloadPosition(mDownloadPosition);
+                        mComicCapture.setDownloadStatus(Constants.DOWNLOAD_PAUSE);
+                        //下载页数初始化
+                        mDownloadPosition = 0;
+                        mComicCaptureDBHelper.update(mComicCapture);
+                        //向activity发送广播通知下载任务暂停
+                        Intent intent = new Intent(DownloadManagerService.ACTION_RECEIVER);
+                        intent.putExtra("comicCapture", mComicCapture);
+                        intent.putExtra("notification", "cancel");
+                        mContext.sendBroadcast(intent);
+                        mComicCapture = null;
+                        //将标记改为false
+                        isPause = false;
+                        //开启下一个任务
+                        doNextDownload();
+                    }
+                }
+            }, 5000);
         } else if (mComicCaptureLinkedList.contains(comicCapture)) {
             //如果存在待下载列表中
             //移除即可

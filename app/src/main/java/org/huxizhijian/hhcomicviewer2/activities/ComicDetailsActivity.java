@@ -345,9 +345,10 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void read() {
-        Intent intent;
-        if (mComic == null) return;
-        intent = new Intent(ComicDetailsActivity.this, GalleryActivity.class);
+        //单击FAB或者toolbar的按钮
+        if (mComic == null || mComic.getCaptureUrl() == null || mComic.getCaptureUrl().size() == 0)
+            return;
+        Intent intent = new Intent(ComicDetailsActivity.this, GalleryActivity.class);
         intent.putExtra("comic", mComic);
         intent.putExtra("position", mComic.getReadCapture());
         startActivityForResult(intent, 0);
