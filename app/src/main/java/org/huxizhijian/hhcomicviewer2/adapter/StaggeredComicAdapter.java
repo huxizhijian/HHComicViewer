@@ -17,7 +17,6 @@
 package org.huxizhijian.hhcomicviewer2.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 
@@ -62,13 +62,13 @@ public class StaggeredComicAdapter extends RecyclerView.Adapter<StaggeredComicAd
         holder.tv.setText(mComicList.get(holder.getLayoutPosition()).getTitle());
         Glide.with(mContext)
                 .load(mComicList.get(holder.getLayoutPosition()).getThumbnailUrl())
-                .asBitmap()
                 .placeholder(R.mipmap.blank)
                 .dontAnimate()
-                .into(new SimpleTarget<Bitmap>() {
+                .into(new SimpleTarget<GlideDrawable>() {
                     @Override
-                    public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
-                        holder.iv.setImageBitmap(bitmap);
+                    public void onResourceReady(GlideDrawable glideDrawable,
+                                                GlideAnimation<? super GlideDrawable> glideAnimation) {
+                        holder.iv.setImageDrawable(glideDrawable);
                     }
                 });
         setUpItemEvent(holder);

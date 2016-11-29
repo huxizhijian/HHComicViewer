@@ -17,6 +17,7 @@
 package org.huxizhijian.hhcomicviewer2.fragment;
 
 
+import android.app.ActivityOptions;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -29,6 +30,7 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -73,6 +75,9 @@ public class MarkedFragment extends Fragment {
 
     //刷新值
     public void refreshData() {
+        if (mComicDBHelper == null) {
+            mComicDBHelper = ComicDBHelper.getInstance(getActivity());
+        }
         mMarkedComics = mComicDBHelper.findMarkedComics();
         if (mMarkedComics != null && mMarkedComics.size() != 0) {
             if (mAdapter == null) {
@@ -108,7 +113,23 @@ public class MarkedFragment extends Fragment {
                         intent.putExtra("url", mMarkedComics.get(position).getComicUrl());
                         intent.putExtra("thumbnailUrl", mMarkedComics.get(position).getThumbnailUrl());
                         intent.putExtra("title", mMarkedComics.get(position).getTitle());
-                        startActivity(intent);
+
+                        ImageView sharedView = (ImageView) view.findViewById(R.id.imageView_staggered);
+
+                        if (sharedView.getDrawable() != null) {
+                            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                                //如果是android5.0及以上，开启shareElement动画
+                                String transitionName = getString(R.string.image_transition_name);
+
+                                ActivityOptions transitionActivityOptions = ActivityOptions
+                                        .makeSceneTransitionAnimation(getActivity(), sharedView, transitionName);
+                                startActivity(intent, transitionActivityOptions.toBundle());
+                            } else {
+                                startActivity(intent);
+                            }
+                        } else {
+                            startActivity(intent);
+                        }
                     }
 
                     @Override

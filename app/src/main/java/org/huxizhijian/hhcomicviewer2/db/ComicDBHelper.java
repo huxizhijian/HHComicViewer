@@ -62,16 +62,16 @@ public class ComicDBHelper {
     public synchronized void add(Comic comic) {
         try {
             if (comic.isMark() || comic.isDownload()) {
-                if (comic.getCaptureNameList() == null || comic.getCaptureNameList().equals("")) {
-                    comic.saveCaptureNameList();
+                if (comic.getChapterNameList() == null || comic.getChapterNameList().equals("")) {
+                    comic.saveChapterNameList();
                 }
-                if (comic.getCaptureUrlList() == null || comic.getCaptureUrlList().equals("")) {
-                    comic.saveCaptureUrlList();
+                if (comic.getChapterUrlList() == null || comic.getChapterUrlList().equals("")) {
+                    comic.saveChapterUrlList();
                 }
             }
             if (comic.isUpdate()) {
-                comic.saveCaptureNameList();
-                comic.saveCaptureUrlList();
+                comic.saveChapterNameList();
+                comic.saveChapterUrlList();
             }
             sDb.save(comic);
         } catch (DbException e) {
@@ -82,16 +82,16 @@ public class ComicDBHelper {
     public synchronized void update(Comic comic) {
         try {
             if (comic.isMark() || comic.isDownload()) {
-                if (comic.getCaptureNameList() == null || comic.getCaptureNameList().equals("")) {
-                    comic.saveCaptureNameList();
+                if (comic.getChapterNameList() == null || comic.getChapterNameList().equals("")) {
+                    comic.saveChapterNameList();
                 }
-                if (comic.getCaptureUrlList() == null || comic.getCaptureUrlList().equals("")) {
-                    comic.saveCaptureUrlList();
+                if (comic.getChapterUrlList() == null || comic.getChapterUrlList().equals("")) {
+                    comic.saveChapterUrlList();
                 }
             }
             if (comic.isUpdate()) {
-                comic.saveCaptureNameList();
-                comic.saveCaptureUrlList();
+                comic.saveChapterNameList();
+                comic.saveChapterUrlList();
                 comic.setUpdate(false);
             }
             sDb.update(comic);
@@ -104,7 +104,7 @@ public class ComicDBHelper {
         Comic comic = findByUrlInTable(url);
         if (comic != null) {
             if (comic.isMark() || comic.isDownload()) {
-                comic.initCaptureNameAndList();
+                comic.initChapterNameAndList();
             }
         }
         return comic;

@@ -27,23 +27,27 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import org.huxizhijian.hhcomicviewer2.db.ComicCaptureDBHelper;
-import org.huxizhijian.hhcomicviewer2.enities.ComicCapture;
+import org.huxizhijian.hhcomicviewer2.app.HHApplication;
+import org.huxizhijian.hhcomicviewer2.db.ComicChapterDBHelper;
+import org.huxizhijian.hhcomicviewer2.enities.ComicChapter;
 import org.huxizhijian.hhcomicviewer2.utils.BaseUtils;
 import org.huxizhijian.hhcomicviewer2.utils.Constants;
 import org.huxizhijian.hhcomicviewer2.utils.NotificationUtil;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class DownloadManagerService extends Service implements DownloadManager.OnMissionFinishedListener {
 
-    private ComicCaptureDBHelper mComicCaptureDBHelper;
+    private ComicChapterDBHelper mComicChapterDBHelper;
     private DownloadManager mDownloadManager;
+    private OkHttpClient mClient;
 
     public static final String ACTION_START = "ACTION_START";
     public static final String ACTION_START_RANGE = "ACTION_START_RANGE";
@@ -56,18 +60,34 @@ public class DownloadManagerService extends Service implements DownloadManager.O
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            //获取每个Capture的picList
+            //获取每个Chapter的picList
             if (msg.what == 0) {
-                InitComicCapture init = new InitComicCapture((ComicCapture) msg.obj, new CallBack() {
-                    @Override
-                    public void onFinished(ComicCapture comicCapture) {
-                        mDownloadManager.startDownload(comicCapture);
-                    }
-                });
-                DownloadManager.sExecutorService.execute(init);
+                ComicChapter comicChapter = (ComicChapter) msg.obj;
+                updateChapter(comicChapter);
             }
         }
     };
+
+    private void updateChapter(final ComicChapter comicChapter) {
+        asyncQuery(comicChapter.getChapterUrl(), new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+                comicChapter.setDownloadStatus(Constants.DOWNLOAD_ERROR);
+                mComicChapterDBHelper.update(comicChapter);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                byte[] contents = response.body().bytes();
+                comicChapter.updatePicList(comicChapter.getChapterUrl(), new String(contents, "GB2312"));
+                if (mDownloadManager == null) {
+                    mDownloadManager = DownloadManager.getInstance(getApplicationContext());
+                }
+                mDownloadManager.startDownload(comicChapter);
+            }
+        });
+    }
 
     //广播接收器
     private NotificationChangeReceiver mReceiver;
@@ -79,7 +99,7 @@ public class DownloadManagerService extends Service implements DownloadManager.O
     @Override
     public void onCreate() {
         super.onCreate();
-        mComicCaptureDBHelper = ComicCaptureDBHelper.getInstance(this);
+        mComicChapterDBHelper = ComicChapterDBHelper.getInstance(this);
         mDownloadManager = DownloadManager.getInstance(this);
         mDownloadManager.setOnMissionFinishedListener(this);
         //初始化
@@ -100,69 +120,70 @@ public class DownloadManagerService extends Service implements DownloadManager.O
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent.getAction().equals(ACTION_START)) {
             //开始下载
-            ComicCapture comicCapture = (ComicCapture) intent.getSerializableExtra("comicCapture");
+            ComicChapter comicChapter = (ComicChapter) intent.getSerializableExtra("comicChapter");
 
             //查看是否存在数据库中(是否未下载)
-            if (mComicCaptureDBHelper.findByCaptureUrl(comicCapture.getCaptureUrl()) == null) {
-                comicCapture.setDownloadStatus(Constants.DOWNLOAD_INIT);
+            if (mComicChapterDBHelper.findByChapterUrl(comicChapter.getChapterUrl()) == null) {
+                comicChapter.setDownloadStatus(Constants.DOWNLOAD_INIT);
                 //设置下载目录
-                comicCapture.setSavePath(BaseUtils.getDownloadPath(this, comicCapture));
-                mComicCaptureDBHelper.add(comicCapture);
+                comicChapter.setSavePath(BaseUtils.getDownloadPath(this, comicChapter));
+                mComicChapterDBHelper.add(comicChapter);
                 //获取自动分配的ID
-                comicCapture = mComicCaptureDBHelper.findByCaptureUrl(comicCapture.getCaptureUrl());
-                InitComicCapture init = new InitComicCapture(comicCapture, new CallBack() {
+                comicChapter = mComicChapterDBHelper.findByChapterUrl(comicChapter.getChapterUrl());
+                final ComicChapter finalComicChapter = comicChapter;
+                asyncQuery(comicChapter.getChapterUrl(), new okhttp3.Callback() {
                     @Override
-                    public void onFinished(ComicCapture comicCapture) {
-                        mComicCaptureDBHelper.update(comicCapture);
-                        mDownloadManager.startDownload(comicCapture);
+                    public void onFailure(Call call, IOException e) {
+                        e.printStackTrace();
+                        finalComicChapter.setDownloadStatus(Constants.DOWNLOAD_ERROR);
+                        mComicChapterDBHelper.update(finalComicChapter);
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        byte[] contents = response.body().bytes();
+                        finalComicChapter.updatePicList(finalComicChapter.getChapterUrl(),
+                                new String(contents, "GB2312"));
+                        mComicChapterDBHelper.update(finalComicChapter);
+                        if (mDownloadManager == null) {
+                            mDownloadManager = DownloadManager.getInstance(getApplicationContext());
+                        }
+                        mDownloadManager.startDownload(finalComicChapter);
                         //发送广播
                         Intent intentBroadcast = new Intent();
                         intentBroadcast.setAction(DownloadManagerService.ACTION_RECEIVER);
-                        intentBroadcast.putExtra("comicCapture", comicCapture);
+                        intentBroadcast.putExtra("comicChapter", finalComicChapter);
                         sendBroadcast(intentBroadcast);
                     }
                 });
-                DownloadManager.sExecutorService.execute(init);
             } else {
                 //继续下载
-                comicCapture = mComicCaptureDBHelper.findByCaptureUrl(comicCapture.getCaptureUrl());
-                if (comicCapture.getDownloadStatus() != Constants.DOWNLOAD_FINISHED) {
-                    InitComicCapture init = new InitComicCapture(comicCapture, new CallBack() {
-                        @Override
-                        public void onFinished(ComicCapture comicCapture) {
-                            mDownloadManager.startDownload(comicCapture);
-                        }
-                    });
-                    DownloadManager.sExecutorService.execute(init);
+                comicChapter = mComicChapterDBHelper.findByChapterUrl(comicChapter.getChapterUrl());
+                if (comicChapter.getDownloadStatus() != Constants.DOWNLOAD_FINISHED) {
+                    updateChapter(comicChapter);
                 }
             }
         } else if (intent.getAction().equals(ACTION_START_RANGE)) {
             //继续下载
-            ComicCapture comicCapture = (ComicCapture) intent.getSerializableExtra("comicCapture");
-            comicCapture = mComicCaptureDBHelper.findByCaptureUrl(comicCapture.getCaptureUrl());
-            if (comicCapture.getDownloadStatus() != Constants.DOWNLOAD_FINISHED) {
-                InitComicCapture init = new InitComicCapture(comicCapture, new CallBack() {
-                    @Override
-                    public void onFinished(ComicCapture comicCapture) {
-                        mDownloadManager.startDownload(comicCapture);
-                    }
-                });
-                DownloadManager.sExecutorService.execute(init);
+            ComicChapter comicChapter = (ComicChapter) intent.getSerializableExtra("comicChapter");
+            comicChapter = mComicChapterDBHelper.findByChapterUrl(comicChapter.getChapterUrl());
+            if (comicChapter.getDownloadStatus() != Constants.DOWNLOAD_FINISHED) {
+                updateChapter(comicChapter);
             }
         } else if (intent.getAction().equals(ACTION_STOP)) {
             //暂停下载
-            ComicCapture comicCapture = (ComicCapture) intent.getSerializableExtra("comicCapture");
+            ComicChapter comicChapter = (ComicChapter) intent.getSerializableExtra("comicChapter");
             Log.i("DownloadManagerService", "onStartCommand: stop");
-            mDownloadManager.setDownloadPause(comicCapture);
+            mDownloadManager.setDownloadPause(comicChapter);
         } else if (intent.getAction().equals(ACTION_ALL_START)) {
             //全部开始下载
-            List<ComicCapture> unFinishedCaptures = mComicCaptureDBHelper.findUnFinishedCaptures();
-            if (unFinishedCaptures != null) {
+            List<ComicChapter> unFinishedChapters = mComicChapterDBHelper.findUnFinishedChapters();
+            if (unFinishedChapters != null) {
                 Message message = null;
-                for (int i = 0; i < unFinishedCaptures.size(); i++) {
+                for (int i = 0; i < unFinishedChapters.size(); i++) {
                     message = new Message();
                     message.what = 0;
-                    message.obj = unFinishedCaptures.get(i);
+                    message.obj = unFinishedChapters.get(i);
                     mHandler.sendMessageDelayed(message, 1000 * i);
                 }
             }
@@ -171,9 +192,9 @@ public class DownloadManagerService extends Service implements DownloadManager.O
             mDownloadManager.stopAllDownload();
         } else if (intent.getAction().equals(ACTION_DELETE)) {
             //删除一个下载任务
-            ComicCapture comicCapture = (ComicCapture) intent.getSerializableExtra("comicCapture");
+            ComicChapter comicChapter = (ComicChapter) intent.getSerializableExtra("comicChapter");
             Log.i("DownloadManagerService", "onStartCommand: delete");
-            mDownloadManager.deleteCapture(comicCapture);
+            mDownloadManager.deleteChapter(comicChapter);
         }
         return START_REDELIVER_INTENT;
     }
@@ -196,10 +217,6 @@ public class DownloadManagerService extends Service implements DownloadManager.O
         stopSelf();
     }
 
-    public interface CallBack {
-        void onFinished(ComicCapture comicCapture);
-    }
-
     class NotificationChangeReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -207,15 +224,15 @@ public class DownloadManagerService extends Service implements DownloadManager.O
             String action = intent.getStringExtra("notification");
             if (action == null) return;
             if (mNotificationUtil == null) return;
-            ComicCapture capture = (ComicCapture) intent.getSerializableExtra("comicCapture");
-            if (capture == null) return;
+            ComicChapter Chapter = (ComicChapter) intent.getSerializableExtra("comicChapter");
+            if (Chapter == null) return;
 
             switch (action) {
                 case "show":
-                    mNotificationUtil.showNotification(DownloadManagerService.this, capture);
+                    mNotificationUtil.showNotification(DownloadManagerService.this, Chapter);
                     break;
                 case "cancel":
-                    mNotificationUtil.cancelNotification(DownloadManagerService.this, capture.getId());
+                    mNotificationUtil.cancelNotification(DownloadManagerService.this, Chapter.getId());
                     break;
                 default:
                     break;
@@ -223,45 +240,10 @@ public class DownloadManagerService extends Service implements DownloadManager.O
         }
     }
 
-    class InitComicCapture extends Thread {
-        private ComicCapture mComicCapture;
-        private CallBack mCallBack;
-
-        public InitComicCapture(ComicCapture comicCapture, @Nullable CallBack callBack) {
-            this.mComicCapture = comicCapture;
-            if (callBack != null) {
-                this.mCallBack = callBack;
-            }
-        }
-
-        @Override
-        public void run() {
-            URL url = null;
-            HttpURLConnection conn = null;
-            StringBuffer content = null;
-            String line = null;
-            try {
-                url = new URL(mComicCapture.getCaptureUrl());
-                conn = (HttpURLConnection) url.openConnection();
-                conn.setConnectTimeout(5000);
-                conn.setRequestMethod("GET");
-                conn.connect();
-                BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream(), "GB2312"));
-                content = new StringBuffer();
-                while ((line = reader.readLine()) != null) {
-                    content.append(line);
-                }
-                reader.close();
-                conn.disconnect();
-                mComicCapture.updatePicList(mComicCapture.getCaptureUrl(), content.toString());
-                if (mCallBack != null) {
-                    mCallBack.onFinished(mComicCapture);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-                mComicCapture.setDownloadStatus(Constants.DOWNLOAD_ERROR);
-                mComicCaptureDBHelper.update(mComicCapture);
-            }
-        }
+    private void asyncQuery(String url, Callback callback) {
+        if (mClient == null) mClient = ((HHApplication) getApplication()).getClient();
+        Request request = new Request.Builder().url(url).build();
+        mClient.newCall(request).enqueue(callback);
     }
 }
+

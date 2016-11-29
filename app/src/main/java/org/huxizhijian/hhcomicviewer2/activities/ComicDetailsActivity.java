@@ -17,6 +17,8 @@
 package org.huxizhijian.hhcomicviewer2.activities;
 
 import android.Manifest;
+import android.animation.Animator;
+import android.annotation.TargetApi;
 import android.app.SearchManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -24,6 +26,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -34,48 +37,57 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.transition.Fade;
+import android.transition.Transition;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewAnimationUtils;
+import android.view.animation.AccelerateInterpolator;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
 import org.huxizhijian.hhcomicviewer2.R;
 import org.huxizhijian.hhcomicviewer2.adapter.VolRecyclerViewAdapter;
+import org.huxizhijian.hhcomicviewer2.app.HHApplication;
 import org.huxizhijian.hhcomicviewer2.databinding.ActivityComicDetailsBinding;
-import org.huxizhijian.hhcomicviewer2.db.ComicCaptureDBHelper;
+import org.huxizhijian.hhcomicviewer2.db.ComicChapterDBHelper;
 import org.huxizhijian.hhcomicviewer2.db.ComicDBHelper;
 import org.huxizhijian.hhcomicviewer2.enities.Comic;
-import org.huxizhijian.hhcomicviewer2.enities.ComicCapture;
+import org.huxizhijian.hhcomicviewer2.enities.ComicChapter;
 import org.huxizhijian.hhcomicviewer2.fragment.DownloadSelectorFragment;
 import org.huxizhijian.hhcomicviewer2.service.DownloadManagerService;
 import org.huxizhijian.hhcomicviewer2.utils.BaseUtils;
 import org.huxizhijian.hhcomicviewer2.utils.Constants;
 import org.huxizhijian.hhcomicviewer2.view.FullyGridLayoutManager;
-import org.xutils.common.Callback;
-import org.xutils.http.RequestParams;
-import org.xutils.x;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
 public class ComicDetailsActivity extends AppCompatActivity implements View.OnClickListener,
         DownloadSelectorFragment.SelectorDataBinder {
 
-    ActivityComicDetailsBinding mBinding = null;
+    private ActivityComicDetailsBinding mBinding = null;
 
     //数据操作
     private ComicDBHelper mComicDBHelper;
-    private ComicCaptureDBHelper mComicCaptureDBHelper;
+    private ComicChapterDBHelper mComicChapterDBHelper;
 
     //数据
-    private List<ComicCapture> mDownloadedComicCaptures; //开始下载的章节列表
-    private List<String> mFinishedComicCaptures; //下载完成的章节名列表
+    private List<ComicChapter> mDownloadedComicChapters; //开始下载的章节列表
+    private List<String> mFinishedComicChapters; //下载完成的章节名列表
     private Comic mComic;
-    private List<String> mSelectedCaptures;
+    private List<String> mSelectedChapters;
     private String mUrl;
     private boolean isDescriptionOpen = false;
 
@@ -91,23 +103,112 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
         @Override
         public void handleMessage(Message msg) {
             if (msg.what == Constants.MSG_DOWNLOAD) {
-                ComicCapture capture = (ComicCapture) msg.obj;
+                ComicChapter Chapter = (ComicChapter) msg.obj;
                 Intent intent = new Intent(ComicDetailsActivity.this, DownloadManagerService.class);
                 intent.setAction(DownloadManagerService.ACTION_START);
-                intent.putExtra("comicCapture", capture);
+                intent.putExtra("comicChapter", Chapter);
                 startService(intent);
             }
         }
     };
 
     //广播接收器
-    ComicCaptureDownloadUpdateReceiver mReceiver;
+    ComicChapterDownloadUpdateReceiver mReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_comic_details);
         initView();
+        preLoadingImageAndTitle();
+        initDBValues();
+        initData();
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            setupEnterAnimations();
+            setupExitAnimations();
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void animateRevealShow(View viewRoot) {
+        //获取中心点坐标
+        int cx = (viewRoot.getLeft() + viewRoot.getRight()) / 2;
+        int cy = (viewRoot.getTop() + viewRoot.getBottom()) / 2;
+        //获取宽高的中的最大值
+        int finalRadius = Math.max(viewRoot.getWidth(), viewRoot.getHeight());
+
+        Animator anim = ViewAnimationUtils.createCircularReveal(viewRoot, cx, cy, 0, finalRadius);
+        viewRoot.setVisibility(View.VISIBLE); //设为可见
+        anim.setDuration(getResources().getInteger(R.integer.anim_duration_medium));//设置时间
+        anim.setInterpolator(new AccelerateInterpolator());//设置插补器 一开始慢后来快
+        anim.start();
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void setupEnterAnimations() {
+        Fade enterTransition = new Fade();  //淡入淡出
+        getWindow().setEnterTransition(enterTransition);
+        enterTransition.setDuration(getResources().getInteger(R.integer.anim_duration_medium));//时间
+        enterTransition.addListener(new Transition.TransitionListener() {
+            @Override
+            public void onTransitionStart(Transition transition) {
+                transition.removeListener(this);
+                animateRevealShow(mBinding.appBarComicDetails);//toolbar的缩放动画
+            }
+
+            @Override
+            public void onTransitionEnd(Transition transition) {
+
+            }
+
+            @Override
+            public void onTransitionCancel(Transition transition) {
+
+            }
+
+            @Override
+            public void onTransitionPause(Transition transition) {
+
+            }
+
+            @Override
+            public void onTransitionResume(Transition transition) {
+
+            }
+        });
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void setupExitAnimations() {
+        Fade returnTransition = new Fade();  //淡入淡出
+        getWindow().setReturnTransition(returnTransition);
+        returnTransition.setDuration(getResources().getInteger(R.integer.anim_duration_medium));//时间
+        returnTransition.addListener(new Transition.TransitionListener() {
+            @Override
+            public void onTransitionStart(Transition transition) {
+                //移除监听
+                transition.removeListener(this);
+            }
+
+            @Override
+            public void onTransitionEnd(Transition transition) {
+            }
+
+            @Override
+            public void onTransitionCancel(Transition transition) {
+            }
+
+            @Override
+            public void onTransitionPause(Transition transition) {
+            }
+
+            @Override
+            public void onTransitionResume(Transition transition) {
+            }
+        });
+    }
+
+    private void preLoadingImageAndTitle() {
         Intent intent = getIntent();
         mUrl = intent.getStringExtra("url");
         String thumbnailUrl = intent.getStringExtra("thumbnailUrl");
@@ -120,60 +221,69 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
                 .error(R.mipmap.blank)
                 .fitCenter()
                 .into(mBinding.comicThumbnailComicDetails);
-        mBinding.comicTitleComicDetails.setText(title);
 
-        initDBValues();
-        initData();
+        mBinding.comicTitleComicDetails.setText(title);
     }
 
     private void initData() {
         mComic = mComicDBHelper.findByUrl(mUrl);
-        RequestParams params = new RequestParams(mUrl);
-        x.http().get(params, new Callback.CommonCallback<byte[]>() {
-                    @Override
-                    public void onSuccess(byte[] result) {
-                        try {
-                            final String content = new String(result, "utf-8");
-                            //初始化
-                            if (mComic == null) {
-                                mComic = new Comic(mUrl, content);
-                            } else {
-                                mComic.checkUpdate(content);
-                            }
-                            updateViews();
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable ex, boolean isOnCallback) {
-                        ex.printStackTrace();
-                        if (BaseUtils.getAPNType(ComicDetailsActivity.this) == BaseUtils.NONEWTWORK) {
+        Request request = new Request.Builder().url(mUrl).build();
+        OkHttpClient client = ((HHApplication) getApplication()).getClient();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+                if (BaseUtils.getAPNType(ComicDetailsActivity.this) == BaseUtils.NONEWTWORK) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
                             Toast.makeText(getApplicationContext(), Constants.NO_NETWORK, Toast.LENGTH_SHORT).show();
                             //没有网络，读取数据库中的信息
                             if (mComic != null) {
                                 if (mComic.isMark() || mComic.isDownload()) {
-                                    updateViews();
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            updateViews();
+                                        }
+                                    });
                                 }
                             }
-                        } else {
+                        }
+                    });
+                } else {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
                             Toast.makeText(getApplicationContext(), "出错！", Toast.LENGTH_SHORT).show();
                         }
-                    }
-
-                    @Override
-                    public void onCancelled(CancelledException cex) {
-                        cex.printStackTrace();
-                    }
-
-                    @Override
-                    public void onFinished() {
-                    }
+                    });
                 }
+            }
 
-        );
-        mReceiver = new ComicCaptureDownloadUpdateReceiver();
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                try {
+                    byte[] result = response.body().bytes();
+                    final String content = new String(result, "utf-8");
+                    //初始化
+                    if (mComic == null) {
+                        mComic = new Comic(mUrl, content);
+                    } else {
+                        mComic.checkUpdate(content);
+                    }
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            updateViews();
+                        }
+                    });
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        mReceiver = new ComicChapterDownloadUpdateReceiver();
     }
 
     private void updateViews() {
@@ -194,10 +304,10 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
         //章节列表加载
         if (mComic.isMark() || mComic.isDownload()) {
             mVolAdapter = new VolRecyclerViewAdapter(ComicDetailsActivity.this,
-                    mComic.getCaptureName(), mComic.getReadCapture(), mFinishedComicCaptures);
+                    mComic.getChapterName(), mComic.getReadChapter(), mFinishedComicChapters);
         } else {
             mVolAdapter = new VolRecyclerViewAdapter(ComicDetailsActivity.this,
-                    mComic.getCaptureName(), mFinishedComicCaptures);
+                    mComic.getChapterName(), mFinishedComicChapters);
         }
 
         //初始化RecyclerView
@@ -240,17 +350,17 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
 
     private void initDBValues() {
         mComicDBHelper = ComicDBHelper.getInstance(this);
-        mComicCaptureDBHelper = ComicCaptureDBHelper.getInstance(this);
+        mComicChapterDBHelper = ComicChapterDBHelper.getInstance(this);
         //查找已经开始下载的章节
-        mDownloadedComicCaptures = mComicCaptureDBHelper.findByComicUrl(mUrl);
+        mDownloadedComicChapters = mComicChapterDBHelper.findByComicUrl(mUrl);
         //遍历
-        if (mDownloadedComicCaptures != null) {
-            for (int i = 0; i < mDownloadedComicCaptures.size(); i++) {
-                if (mDownloadedComicCaptures.get(i).getDownloadStatus() == Constants.DOWNLOAD_FINISHED) {
-                    if (mFinishedComicCaptures == null) {
-                        mFinishedComicCaptures = new ArrayList<>();
+        if (mDownloadedComicChapters != null) {
+            for (int i = 0; i < mDownloadedComicChapters.size(); i++) {
+                if (mDownloadedComicChapters.get(i).getDownloadStatus() == Constants.DOWNLOAD_FINISHED) {
+                    if (mFinishedComicChapters == null) {
+                        mFinishedComicChapters = new ArrayList<>();
                     }
-                    mFinishedComicCaptures.add(mDownloadedComicCaptures.get(i).getCaptureName());
+                    mFinishedComicChapters.add(mDownloadedComicChapters.get(i).getChapterName());
                 }
             }
         }
@@ -296,20 +406,20 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
         registerReceiver(mReceiver, filter);
 
         //如果有下载内容更新界面
-        if (mVolAdapter != null && mComicCaptureDBHelper != null) {
-            mDownloadedComicCaptures = mComicCaptureDBHelper.findByComicUrl(mComic.getComicUrl());
+        if (mVolAdapter != null && mComicChapterDBHelper != null) {
+            mDownloadedComicChapters = mComicChapterDBHelper.findByComicUrl(mComic.getComicUrl());
             //遍历
-            if (mDownloadedComicCaptures != null && mDownloadedComicCaptures.size() != 0) {
-                for (int i = 0; i < mDownloadedComicCaptures.size(); i++) {
-                    if (mDownloadedComicCaptures.get(i).getDownloadStatus()
+            if (mDownloadedComicChapters != null && mDownloadedComicChapters.size() != 0) {
+                for (int i = 0; i < mDownloadedComicChapters.size(); i++) {
+                    if (mDownloadedComicChapters.get(i).getDownloadStatus()
                             == Constants.DOWNLOAD_FINISHED) {
-                        if (mFinishedComicCaptures == null) {
-                            mFinishedComicCaptures = new ArrayList<>();
+                        if (mFinishedComicChapters == null) {
+                            mFinishedComicChapters = new ArrayList<>();
                         }
-                        mFinishedComicCaptures.add(mDownloadedComicCaptures.get(i).getCaptureName());
+                        mFinishedComicChapters.add(mDownloadedComicChapters.get(i).getChapterName());
                     }
                 }
-                mVolAdapter.setFinishedComicCaptureList(mFinishedComicCaptures);
+                mVolAdapter.setFinishedComicChapterList(mFinishedComicChapters);
                 //刷新界面
                 mVolAdapter.notifyDataSetChanged();
             }
@@ -340,17 +450,17 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
         mComic = (Comic) data.getSerializableExtra("comic");
         mComic.setLastReadTime(System.currentTimeMillis());
         if (mVolAdapter != null) {
-            mVolAdapter.setReadCapture(mComic.getReadCapture());
+            mVolAdapter.setReadChapter(mComic.getReadChapter());
         }
     }
 
     private void read() {
-        //单击FAB或者toolbar的按钮
-        if (mComic == null || mComic.getCaptureUrl() == null || mComic.getCaptureUrl().size() == 0)
+        //单击toolbar的按钮
+        if (mComic == null || mComic.getChapterUrl() == null || mComic.getChapterUrl().size() == 0)
             return;
         Intent intent = new Intent(ComicDetailsActivity.this, GalleryActivity.class);
         intent.putExtra("comic", mComic);
-        intent.putExtra("position", mComic.getReadCapture());
+        intent.putExtra("position", mComic.getReadChapter());
         startActivityForResult(intent, 0);
     }
 
@@ -459,26 +569,25 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
         return mComic;
     }
 
-    @Override
-    public List<String> getDownloadedComicCaptures() {
-        if (mDownloadedComicCaptures != null) {
-            List<String> downloadedComicCapture = new ArrayList<>();
-            for (int i = 0; i < mDownloadedComicCaptures.size(); i++) {
-                downloadedComicCapture.add(mDownloadedComicCaptures.get(i).getCaptureName());
+    public List<String> getDownloadedComicChapters() {
+        if (mDownloadedComicChapters != null) {
+            List<String> downloadedComicChapter = new ArrayList<>();
+            for (int i = 0; i < mDownloadedComicChapters.size(); i++) {
+                downloadedComicChapter.add(mDownloadedComicChapters.get(i).getChapterName());
             }
-            return downloadedComicCapture;
+            return downloadedComicChapter;
         } else {
             return null;
         }
     }
 
     @Override
-    public List<String> getFinishedComicCaptures() {
-        return mFinishedComicCaptures;
+    public List<String> getFinishedComicChapters() {
+        return mFinishedComicChapters;
     }
 
     @Override
-    public void sendSelectedCaptures(List<String> selectedCaptures) {
+    public void sendSelectedChapters(List<String> selectedChapters) {
         //更新漫画的数据库资料
         Comic findComic = mComicDBHelper.findByUrl(mComic.getComicUrl());
         //设置下载标记为true
@@ -499,18 +608,18 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
         }
 
         //开始下载
-        if (selectedCaptures.size() != 0) {
+        if (selectedChapters.size() != 0) {
             //检查自身权限
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     != PackageManager.PERMISSION_GRANTED) {
                 if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                     Toast.makeText(this, "没有获得权限，无法下载！", Toast.LENGTH_SHORT).show();
-                    mSelectedCaptures = selectedCaptures;
+                    mSelectedChapters = selectedChapters;
                     ActivityCompat.requestPermissions(this,
                             new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
                 } else {
-                    mSelectedCaptures = selectedCaptures;
+                    mSelectedChapters = selectedChapters;
                     ActivityCompat.requestPermissions(this,
                             new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
                 }
@@ -519,20 +628,20 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
 
             int position = -1;
             List<Integer> positionList = new ArrayList<>();
-            ComicCapture capture = null;
-            for (String volName : selectedCaptures) {
-                position = mComic.getCaptureName().indexOf(volName);
+            ComicChapter Chapter = null;
+            for (String volName : selectedChapters) {
+                position = mComic.getChapterName().indexOf(volName);
                 positionList.add(position);
             }
             //将下载任务排序
             Collections.sort(positionList);
             for (int i = 0; i < positionList.size(); i++) {
                 position = positionList.get(i);
-                capture = new ComicCapture(mComic.getTitle(), mComic.getCaptureName().get(position),
-                        mComic.getCaptureUrl().get(position), mComic.getComicUrl());
+                Chapter = new ComicChapter(mComic.getTitle(), mComic.getChapterName().get(position),
+                        mComic.getChapterUrl().get(position), mComic.getComicUrl());
                 Message msg = new Message();
                 msg.what = Constants.MSG_DOWNLOAD;
-                msg.obj = capture;
+                msg.obj = Chapter;
                 //将任务按照顺序加入队伍，时间间隔1000ms
                 mHandler.sendMessageDelayed(msg, 1000 * i);
             }
@@ -546,27 +655,27 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
             case 0:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // permission was granted, yay! Do the contacts-related task you need to do.
-                    if (mSelectedCaptures != null && mSelectedCaptures.size() != 0) {
+                    if (mSelectedChapters != null && mSelectedChapters.size() != 0) {
                         int position = -1;
                         List<Integer> positionList = new ArrayList<>();
-                        ComicCapture capture = null;
-                        for (String volName : mSelectedCaptures) {
-                            position = mComic.getCaptureName().indexOf(volName);
+                        ComicChapter Chapter = null;
+                        for (String volName : mSelectedChapters) {
+                            position = mComic.getChapterName().indexOf(volName);
                             positionList.add(position);
                         }
                         //将下载任务排序
                         Collections.sort(positionList);
                         for (int i = 0; i < positionList.size(); i++) {
                             position = positionList.get(i);
-                            capture = new ComicCapture(mComic.getTitle(), mComic.getCaptureName().get(position),
-                                    mComic.getCaptureUrl().get(position), mComic.getComicUrl());
+                            Chapter = new ComicChapter(mComic.getTitle(), mComic.getChapterName().get(position),
+                                    mComic.getChapterUrl().get(position), mComic.getComicUrl());
                             Message msg = new Message();
                             msg.what = Constants.MSG_DOWNLOAD;
-                            msg.obj = capture;
+                            msg.obj = Chapter;
                             //将任务按照顺序加入队伍，时间间隔1000ms
                             mHandler.sendMessageDelayed(msg, 1000 * i);
                         }
-                        mSelectedCaptures = null;
+                        mSelectedChapters = null;
                     }
                 } else {
                     // permission denied, boo! Disable the functionality that depends on this permission.
@@ -591,33 +700,33 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
         super.onBackPressed();
     }
 
-    class ComicCaptureDownloadUpdateReceiver extends BroadcastReceiver {
+    class ComicChapterDownloadUpdateReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (!intent.getAction().equals(DownloadManagerService.ACTION_RECEIVER)) return;
-            if (mComic == null || mComicCaptureDBHelper == null) return;
-            ComicCapture comicCapture = (ComicCapture) intent.getSerializableExtra("comicCapture");
-            if (comicCapture == null) return;
-            if (!comicCapture.getComicUrl().equals(mComic.getComicUrl())) return;
+            if (mComic == null || mComicChapterDBHelper == null) return;
+            ComicChapter comicChapter = (ComicChapter) intent.getSerializableExtra("comicChapter");
+            if (comicChapter == null) return;
+            if (!comicChapter.getComicUrl().equals(mComic.getComicUrl())) return;
 
-            if (comicCapture.getDownloadStatus() != Constants.DOWNLOAD_DOWNLOADING ||
-                    comicCapture.getDownloadStatus() != Constants.DOWNLOAD_ERROR ||
-                    comicCapture.getDownloadStatus() != Constants.DOWNLOAD_PAUSE) {
-                mDownloadedComicCaptures = mComicCaptureDBHelper.findByComicUrl(mComic.getComicUrl());
-                if (comicCapture.getDownloadStatus() == Constants.DOWNLOAD_FINISHED) {
+            if (comicChapter.getDownloadStatus() != Constants.DOWNLOAD_DOWNLOADING ||
+                    comicChapter.getDownloadStatus() != Constants.DOWNLOAD_ERROR ||
+                    comicChapter.getDownloadStatus() != Constants.DOWNLOAD_PAUSE) {
+                mDownloadedComicChapters = mComicChapterDBHelper.findByComicUrl(mComic.getComicUrl());
+                if (comicChapter.getDownloadStatus() == Constants.DOWNLOAD_FINISHED) {
                     //更新界面
                     if (mVolAdapter == null) return;
                     //遍历
-                    for (int i = 0; i < mDownloadedComicCaptures.size(); i++) {
-                        if (mDownloadedComicCaptures.get(i).getDownloadStatus()
+                    for (int i = 0; i < mDownloadedComicChapters.size(); i++) {
+                        if (mDownloadedComicChapters.get(i).getDownloadStatus()
                                 == Constants.DOWNLOAD_FINISHED) {
-                            if (mFinishedComicCaptures == null) {
-                                mFinishedComicCaptures = new ArrayList<>();
+                            if (mFinishedComicChapters == null) {
+                                mFinishedComicChapters = new ArrayList<>();
                             }
-                            mFinishedComicCaptures.add(mDownloadedComicCaptures.get(i).getCaptureName());
+                            mFinishedComicChapters.add(mDownloadedComicChapters.get(i).getChapterName());
                         }
                     }
-                    mVolAdapter.setFinishedComicCaptureList(mFinishedComicCaptures);
+                    mVolAdapter.setFinishedComicChapterList(mFinishedComicChapters);
                     //刷新界面
                     mVolAdapter.notifyDataSetChanged();
                 }

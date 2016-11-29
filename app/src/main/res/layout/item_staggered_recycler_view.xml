@@ -39,7 +39,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:adjustViewBounds="true"
-            android:src="@mipmap/blank"/>
+            android:src="@mipmap/blank"
+            android:transitionName="@string/image_transition_name"/>
 
         <TextView
             android:id="@+id/textView_staggered"

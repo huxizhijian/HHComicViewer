@@ -41,10 +41,10 @@ import android.widget.Toast;
 
 import org.huxizhijian.hhcomicviewer2.R;
 import org.huxizhijian.hhcomicviewer2.adapter.DownloadManagerAdapter;
-import org.huxizhijian.hhcomicviewer2.db.ComicCaptureDBHelper;
+import org.huxizhijian.hhcomicviewer2.db.ComicChapterDBHelper;
 import org.huxizhijian.hhcomicviewer2.db.ComicDBHelper;
 import org.huxizhijian.hhcomicviewer2.enities.Comic;
-import org.huxizhijian.hhcomicviewer2.enities.ComicCapture;
+import org.huxizhijian.hhcomicviewer2.enities.ComicChapter;
 import org.huxizhijian.hhcomicviewer2.service.DownloadManager;
 import org.huxizhijian.hhcomicviewer2.service.DownloadManagerService;
 import org.huxizhijian.hhcomicviewer2.utils.BaseUtils;
@@ -63,7 +63,7 @@ public class DownloadManagerActivity extends AppCompatActivity implements View.O
 
     //数据
     private List<Comic> mDownloadedComicList;
-    private Map<String, List<ComicCapture>> mDownloadedCaptureList;
+    private Map<String, List<ComicChapter>> mDownloadedChapterList;
     private DownloadManagerAdapter mAdapter;
     private List<String> mComicUrlList;
 
@@ -72,10 +72,11 @@ public class DownloadManagerActivity extends AppCompatActivity implements View.O
     //控制
     private DownloadReceiver mReceiver;
     private ComicDBHelper mComicDBHelper;
-    private ComicCaptureDBHelper mComicCaptureDBHelper;
+    private ComicChapterDBHelper mComicChapterDBHelper;
     private DownloadManager mDownloadManager;
     private boolean mManagerBackGroundDoing = false;
     private boolean mDefaultExpandAll = false; //是否默认打开所有
+    private long mLastAllControlPressed;
 
     public boolean mHasWritePermission = true;
 
@@ -113,8 +114,8 @@ public class DownloadManagerActivity extends AppCompatActivity implements View.O
                 mExpandableListView.setVisibility(View.GONE);
                 mDownloadedComicList = mComicDBHelper.findDownloadedComics();
                 if (mDownloadedComicList != null && mDownloadedComicList.size() != 0) {
-                    mDownloadedCaptureList = mComicCaptureDBHelper.findDownloadCaptureMap(mDownloadedComicList);
-                    mAdapter = new DownloadManagerAdapter(this, mDownloadedComicList, mDownloadedCaptureList);
+                    mDownloadedChapterList = mComicChapterDBHelper.findDownloadChapterMap(mDownloadedComicList);
+                    mAdapter = new DownloadManagerAdapter(this, mDownloadedComicList, mDownloadedChapterList);
                     mComicUrlList = new ArrayList<>();
                     for (Comic comic : mDownloadedComicList) {
                         mComicUrlList.add(comic.getComicUrl());
@@ -241,7 +242,7 @@ public class DownloadManagerActivity extends AppCompatActivity implements View.O
     private void initData() {
         mReceiver = new DownloadReceiver();
         mComicDBHelper = ComicDBHelper.getInstance(this);
-        mComicCaptureDBHelper = ComicCaptureDBHelper.getInstance(this);
+        mComicChapterDBHelper = ComicChapterDBHelper.getInstance(this);
         mDownloadedComicList = mComicDBHelper.findDownloadedComics();
         if (mDownloadManager == null) {
             mDownloadManager = DownloadManager.getInstance(DownloadManagerActivity.this);
@@ -253,9 +254,9 @@ public class DownloadManagerActivity extends AppCompatActivity implements View.O
         }
 
         if (mDownloadedComicList != null) {
-            mDownloadedCaptureList = mComicCaptureDBHelper.findDownloadCaptureMap(mDownloadedComicList);
+            mDownloadedChapterList = mComicChapterDBHelper.findDownloadChapterMap(mDownloadedComicList);
             //初始化控件数据
-            mAdapter = new DownloadManagerAdapter(this, mDownloadedComicList, mDownloadedCaptureList);
+            mAdapter = new DownloadManagerAdapter(this, mDownloadedComicList, mDownloadedChapterList);
             mExpandableListView.setAdapter(mAdapter);
             //初始化ComicList
             mComicUrlList = new ArrayList<>();
@@ -303,8 +304,10 @@ public class DownloadManagerActivity extends AppCompatActivity implements View.O
         switch (v.getId()) {
             case R.id.btn_all_start_stop:
                 //全部开始、全部停止
+                if (System.currentTimeMillis() - mLastAllControlPressed < 2000) return;
                 if (!mHasWritePermission) return;
                 if (mManagerBackGroundDoing) return;
+
                 if (mDownloadManager.hasMission()) {
                     //全部暂停
                     Intent intent = new Intent(this, DownloadManagerService.class);
@@ -319,6 +322,7 @@ public class DownloadManagerActivity extends AppCompatActivity implements View.O
                     startService(intent);
                     mManagerBackGroundDoing = true;
                 }
+                mLastAllControlPressed = System.currentTimeMillis();
                 break;
             case R.id.btn_download_manager:
                 //管理
@@ -327,28 +331,32 @@ public class DownloadManagerActivity extends AppCompatActivity implements View.O
                     mBtn_manager.setText("管理");
                     mAdapter.closeEditMode();
                 } else {
-                    mBtn_delete.setVisibility(View.VISIBLE);
-                    mBtn_manager.setText("取消");
-                    mAdapter.openEditMode();
+                    editModeOpen();
                 }
                 break;
             case R.id.btn_delete_download_manager:
                 //删除
                 if (!mHasWritePermission) return;
                 if (mAdapter.isEditMode()) {
-                    List<ComicCapture> selectedCaptureList = mAdapter.getSelectedCaptures();
-                    if (selectedCaptureList != null) {
+                    List<ComicChapter> selectedChapterList = mAdapter.getSelectedChapters();
+                    if (selectedChapterList != null) {
                         mAdapter.delete();
-                        for (ComicCapture capture : selectedCaptureList) {
+                        for (ComicChapter chapter : selectedChapterList) {
                             Intent intent = new Intent(this, DownloadManagerService.class);
                             intent.setAction(DownloadManagerService.ACTION_DELETE);
-                            intent.putExtra("comicCapture", capture);
+                            intent.putExtra("comicChapter", chapter);
                             startService(intent);
                         }
                     }
                 }
                 break;
         }
+    }
+
+    public void editModeOpen() {
+        mBtn_delete.setVisibility(View.VISIBLE);
+        mBtn_manager.setText("取消");
+        mAdapter.openEditMode();
     }
 
     public boolean isManagerBackGroundDoing() {
@@ -376,33 +384,33 @@ public class DownloadManagerActivity extends AppCompatActivity implements View.O
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (mDownloadedComicList == null) return;
+            if (mComicUrlList == null || mDownloadedComicList == null) return;
             if (mLastUpdateTime == 0) {
                 mLastUpdateTime = System.currentTimeMillis();
             }
 
             mManagerBackGroundDoing = false;
 
-            ComicCapture comicCapture = (ComicCapture) intent.getSerializableExtra("comicCapture");
+            ComicChapter comicChapter = (ComicChapter) intent.getSerializableExtra("comicChapter");
 
             /*//控制刷新间隔不少于400ms，如果不是正在下载，还是要刷新状态
             if (System.currentTimeMillis() - mLastUpdateTime < 400 &&
-                    comicCapture.getDownloadStatus() == Constants.DOWNLOAD_DOWNLOADING) return;*/
+                    comicChapter.getDownloadStatus() == Constants.DOWNLOAD_DOWNLOADING) return;*/
 
-            int groupPosition = mComicUrlList.indexOf(comicCapture.getComicUrl());
-            List<ComicCapture> captureList = mDownloadedCaptureList.get(comicCapture.getComicUrl());
-            if (captureList == null) return;
+            int groupPosition = mComicUrlList.indexOf(comicChapter.getComicUrl());
+            List<ComicChapter> chapterList = mDownloadedChapterList.get(comicChapter.getComicUrl());
+            if (chapterList == null) return;
             //替换list
-            if (captureList.contains(comicCapture)) {
+            if (chapterList.contains(comicChapter)) {
                 //如果存在，直接替换
-                captureList.set(captureList.indexOf(comicCapture), comicCapture);
+                chapterList.set(chapterList.indexOf(comicChapter), comicChapter);
             } else {
-                //没有找到符合的capture，说明这是新的任务，将其加入队列
-                captureList.add(comicCapture);
+                //没有找到符合的chapter，说明这是新的任务，将其加入队列
+                chapterList.add(comicChapter);
             }
 
-            mAdapter.setDownloadedCaptureList(mDownloadedCaptureList);
-            mAdapter.resetCheckStatus();
+            mAdapter.setDownloadedchapterList(mDownloadedChapterList);
+//            mAdapter.resetCheckStatus();
             mAdapter.notifyDataSetChanged();
             mExpandableListView.collapseGroup(groupPosition);
             mExpandableListView.expandGroup(groupPosition);

@@ -60,61 +60,61 @@ public class Comic implements Serializable, Comparable {
     private boolean isMark = false; //是否收藏
     @Column(name = "is_download")
     private boolean isDownload = false; //是否下载
-    @Column(name = "read_capture")
-    private int readCapture = 0; //阅读的章节
+    @Column(name = "read_chapter")
+    private int readChapter = 0; //阅读的章节
     @Column(name = "read_page")
     private int readPage = 0; //阅读的页数
     @Column(name = "last_read_time")
     private long lastReadTime;  //最后一次阅读时间，用于排序
-    @Column(name = "capture_count")
-    private int captureCount; //章节总数
-    @Column(name = "capture_name_list")
-    private String captureNameList = ""; //为了更好的离线观看，将以字符串的方式记录章节名称
-    @Column(name = "capture_url_list")
-    private String captureUrlList = ""; //同上，这是章节url
+    @Column(name = "chapter_count")
+    private int chapterCount; //章节总数
+    @Column(name = "chapter_name_list")
+    private String chapterNameList = ""; //为了更好的离线观看，将以字符串的方式记录章节名称
+    @Column(name = "chapter_url_list")
+    private String chapterUrlList = ""; //同上，这是章节url
     @Column(name = "is_update")
     private boolean isUpdate = false; //是否有更新(章节数变化)
 
     //无法保存在数据库里，如果isDownload为true将会创建数个实体类保存在download表里
-    private List<String> captureName; //章节名
-    private List<String> captureUrl; //章节url
+    private List<String> chapterName; //章节名
+    private List<String> chapterUrl; //章节url
 
     //离线时解析出章节名，章节url
-    public void initCaptureNameAndList() {
-        if (captureNameList == null || captureUrlList == null ||
-                captureNameList.equals("") || captureUrlList.equals("")) return;
-        String[] names = captureNameList.split("@");
-        String[] urls = captureUrlList.split("@");
-        List<String> captureName = new ArrayList<>();
-        List<String> captureUrl = new ArrayList<>();
+    public void initChapterNameAndList() {
+        if (chapterNameList == null || chapterUrlList == null ||
+                chapterNameList.equals("") || chapterUrlList.equals("")) return;
+        String[] names = chapterNameList.split("@");
+        String[] urls = chapterUrlList.split("@");
+        List<String> chapterName = new ArrayList<>();
+        List<String> chapterUrl = new ArrayList<>();
         for (int i = 0; i < names.length; i++) {
-            captureName.add(names[i]);
-            captureUrl.add(urls[i]);
+            chapterName.add(names[i]);
+            chapterUrl.add(urls[i]);
         }
-        this.captureName = captureName;
-        this.captureUrl = captureUrl;
+        this.chapterName = chapterName;
+        this.chapterUrl = chapterUrl;
     }
 
     //存储章节名
-    public void saveCaptureNameList() {
-        if (captureName == null) return;
+    public void saveChapterNameList() {
+        if (chapterName == null) return;
         StringBuilder nameList = new StringBuilder();
         String splitString = "@";
-        for (String splitCaptureName : captureName) {
-            nameList.append(splitCaptureName).append(splitString);
+        for (String splitchapterName : chapterName) {
+            nameList.append(splitchapterName).append(splitString);
         }
-        this.captureNameList = nameList.toString();
+        this.chapterNameList = nameList.toString();
     }
 
     //存储章节url
-    public void saveCaptureUrlList() {
-        if (captureUrl == null) return;
+    public void saveChapterUrlList() {
+        if (chapterUrl == null) return;
         StringBuilder nameList = new StringBuilder();
         String splitString = "@";
-        for (String splitCaptureName : captureUrl) {
-            nameList.append(splitCaptureName).append(splitString);
+        for (String splitchapterName : chapterUrl) {
+            nameList.append(splitchapterName).append(splitString);
         }
-        this.captureUrlList = nameList.toString();
+        this.chapterUrlList = nameList.toString();
     }
 
     public Comic() {
@@ -166,37 +166,37 @@ public class Comic implements Serializable, Comparable {
         //章节目录解析
         Element volListSrc = doc.select("div[class=cVolList]").first();
         Elements tagsSrc = volListSrc.select("div[class=cVolTag]");
-        Elements tagCaptureSrc = volListSrc.select("ul[class=cVolUl]");
+        Elements tagchapterSrc = volListSrc.select("ul[class=cVolUl]");
         /*this.tags = new ArrayList<>();
         this.tagCounts = new ArrayList<>();
         this.tagCount = tagsSrc.size();*/
-        this.captureName = new ArrayList<>();
-        this.captureUrl = new ArrayList<>();
+        this.chapterName = new ArrayList<>();
+        this.chapterUrl = new ArrayList<>();
         for (int i = 0; i < tagsSrc.size(); i++) {
 //            this.tags.add(tagsSrc.get(i).text());
-            Elements capturesSrc = tagCaptureSrc.get(i).select("a[class=l_s]");
-//            tagCounts.add(capturesSrc.size());
-            for (int j = capturesSrc.size() - 1; j > -1; j--) {
+            Elements chaptersSrc = tagchapterSrc.get(i).select("a[class=l_s]");
+//            tagCounts.add(chaptersSrc.size());
+            for (int j = chaptersSrc.size() - 1; j > -1; j--) {
                 //这个倒数循环把原本的倒序的章节顺序变为正序
-                captureName.add(capturesSrc.get(j).attr("title"));
+                chapterName.add(chaptersSrc.get(j).attr("title"));
                 //地址需要做一个变换，因为需要另外一个网站的网址，更好解析
-                String urlSrc = capturesSrc.get(j).attr("href");
+                String urlSrc = chaptersSrc.get(j).attr("href");
                 //图片服务器编号
                 String domainNum = urlSrc.split("=")[1];
                 //章节编号
-                String captureNum = urlSrc.split("/")[1].substring(4);
-                captureUrl.add(Constants.COMIC_VOL_PAGE + comicNum + "/" + captureNum + ".htm?s=" + domainNum);
+                String chapterNum = urlSrc.split("/")[1].substring(4);
+                chapterUrl.add(Constants.COMIC_VOL_PAGE + comicNum + "/" + chapterNum + ".htm?s=" + domainNum);
             }
         }
-        this.captureCount = this.captureName.size();
+        this.chapterCount = this.chapterName.size();
     }
 
-    public String getCaptureUrlList() {
-        return captureUrlList;
+    public String getChapterUrlList() {
+        return chapterUrlList;
     }
 
-    public void setCaptureUrlList(String captureUrlList) {
-        this.captureUrlList = captureUrlList;
+    public void setChapterUrlList(String chapterUrlList) {
+        this.chapterUrlList = chapterUrlList;
     }
 
     public boolean checkUpdate(String content) {
@@ -243,30 +243,30 @@ public class Comic implements Serializable, Comparable {
         //章节目录解析
         Element volListSrc = doc.select("div[class=cVolList]").first();
         Elements tagsSrc = volListSrc.select("div[class=cVolTag]");
-        Elements tagCaptureSrc = volListSrc.select("ul[class=cVolUl]");
+        Elements tagchapterSrc = volListSrc.select("ul[class=cVolUl]");
 
-        this.captureName = new ArrayList<>();
-        this.captureUrl = new ArrayList<>();
+        this.chapterName = new ArrayList<>();
+        this.chapterUrl = new ArrayList<>();
         for (int i = 0; i < tagsSrc.size(); i++) {
 //            this.tags.add(tagsSrc.get(i).text());
-            Elements capturesSrc = tagCaptureSrc.get(i).select("a[class=l_s]");
-//            tagCounts.add(capturesSrc.size());
-            for (int j = capturesSrc.size() - 1; j > -1; j--) {
+            Elements chaptersSrc = tagchapterSrc.get(i).select("a[class=l_s]");
+//            tagCounts.add(chaptersSrc.size());
+            for (int j = chaptersSrc.size() - 1; j > -1; j--) {
                 //这个倒数循环把原本的倒序的章节顺序变为正序
-                captureName.add(capturesSrc.get(j).attr("title"));
+                chapterName.add(chaptersSrc.get(j).attr("title"));
                 //地址需要做一个变换，因为需要另外一个网站的网址，更好解析
-                String urlSrc = capturesSrc.get(j).attr("href");
+                String urlSrc = chaptersSrc.get(j).attr("href");
                 //图片服务器编号
                 String domainNum = urlSrc.split("=")[1];
                 //章节编号
-                String captureNum = urlSrc.split("/")[1].substring(4);
-                captureUrl.add(Constants.COMIC_VOL_PAGE + comicNum + "/" + captureNum + ".htm?s=" + domainNum);
+                String chapterNum = urlSrc.split("/")[1].substring(4);
+                chapterUrl.add(Constants.COMIC_VOL_PAGE + comicNum + "/" + chapterNum + ".htm?s=" + domainNum);
             }
         }
-        if (this.captureCount != this.captureName.size()) {
+        if (this.chapterCount != this.chapterName.size()) {
             this.isUpdate = true;
         }
-        this.captureCount = this.captureName.size();
+        this.chapterCount = this.chapterName.size();
         return isUpdate;
     }
 
@@ -318,16 +318,16 @@ public class Comic implements Serializable, Comparable {
         isUpdate = update;
     }
 
-    public String getCaptureNameList() {
-        return captureNameList;
+    public String getChapterNameList() {
+        return chapterNameList;
     }
 
-    public void setCaptureNameList(String captureNameList) {
-        this.captureNameList = captureNameList;
+    public void setChapterNameList(String chapterNameList) {
+        this.chapterNameList = chapterNameList;
     }
 
-    public int getCaptureCount() {
-        return captureCount;
+    public int getChapterCount() {
+        return chapterCount;
     }
 
     public String getThumbnailUrl() {
@@ -338,8 +338,8 @@ public class Comic implements Serializable, Comparable {
         this.thumbnailUrl = thumbnailUrl;
     }
 
-    public void setCaptureCount(int captureCount) {
-        this.captureCount = captureCount;
+    public void setChapterCount(int chapterCount) {
+        this.chapterCount = chapterCount;
     }
 
     public int getId() {
@@ -398,28 +398,28 @@ public class Comic implements Serializable, Comparable {
         isDownload = download;
     }
 
-    public List<String> getCaptureName() {
-        return captureName;
+    public List<String> getChapterName() {
+        return chapterName;
     }
 
-    public void setCaptureName(List<String> captureName) {
-        this.captureName = captureName;
+    public void setChapterName(List<String> chapterName) {
+        this.chapterName = chapterName;
     }
 
-    public List<String> getCaptureUrl() {
-        return captureUrl;
+    public List<String> getChapterUrl() {
+        return chapterUrl;
     }
 
-    public void setCaptureUrl(List<String> captureUrl) {
-        this.captureUrl = captureUrl;
+    public void setChapterUrl(List<String> chapterUrl) {
+        this.chapterUrl = chapterUrl;
     }
 
-    public int getReadCapture() {
-        return readCapture;
+    public int getReadChapter() {
+        return readChapter;
     }
 
-    public void setReadCapture(int readCapture) {
-        this.readCapture = readCapture;
+    public void setReadChapter(int readChapter) {
+        this.readChapter = readChapter;
     }
 
     public int getReadPage() {
@@ -448,10 +448,10 @@ public class Comic implements Serializable, Comparable {
                 ", description='" + description + '\'' +
                 ", isMark=" + isMark +
                 ", isDownload=" + isDownload +
-                ", readCapture=" + readCapture +
+                ", readChapter=" + readChapter +
                 ", readPage=" + readPage +
                 ", lastReadTime=" + lastReadTime +
-                ", captureCount=" + captureCount +
+                ", chapterCount=" + chapterCount +
                 ", thumbnail_url=" + thumbnailUrl +
                 '}';
     }

@@ -18,9 +18,14 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ll_child"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/selectableItemBackground"
+    android:clickable="true"
     android:descendantFocusability="blocksDescendants"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:padding="4dp">
@@ -37,13 +42,13 @@
         android:layout_weight="1">
 
         <TextView
-            android:id="@+id/textView_capture_name_download_manager"
+            android:id="@+id/textView_chapter_name_download_manager"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:text="@string/capture_name"/>
+            android:text="@string/chapter_name"/>
 
         <TextView
             android:id="@+id/textView_progress_download_manager"
@@ -59,7 +64,7 @@
             android:layout_height="16dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_below="@+id/textView_capture_name_download_manager"
+            android:layout_below="@+id/textView_chapter_name_download_manager"
             app:progress_reach_color="@color/colorPrimary"
             app:progress_reach_height="4dp"
             app:progress_text_color="@color/colorPrimary"
@@ -72,7 +77,6 @@
         android:id="@+id/imageView_download_manager"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:clickable="true"
         android:src="@mipmap/ic_media_play"/>
 
 </LinearLayout>

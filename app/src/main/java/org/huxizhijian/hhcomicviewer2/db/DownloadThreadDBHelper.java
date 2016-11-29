@@ -68,8 +68,8 @@ public class DownloadThreadDBHelper {
         }
     }
 
-    public synchronized void deleteAllCaptureThread(String comicCaptureUrl) {
-        WhereBuilder builder = WhereBuilder.b("comic_capture_url", "=", comicCaptureUrl);
+    public synchronized void deleteAllChapterThread(String comicChapterUrl) {
+        WhereBuilder builder = WhereBuilder.b("comic_chapter_url", "=", comicChapterUrl);
         try {
             sDb.delete(ThreadInfo.class, builder);
         } catch (DbException e) {
@@ -77,12 +77,12 @@ public class DownloadThreadDBHelper {
         }
     }
 
-    public List<ThreadInfo> findByCaptureUrl(String captureUrl) {
+    public List<ThreadInfo> findByChapterUrl(String chapterUrl) {
         List<ThreadInfo> threadInfos = new ArrayList<>();
         ThreadInfo threadInfo;
         try {
-            List<DbModel> dbModels = sDb.findDbModelAll(new SqlInfo("select * from thread_info where comic_capture_url = " +
-                    "'" + captureUrl + "'"));
+            List<DbModel> dbModels = sDb.findDbModelAll(new SqlInfo("select * from thread_info where comic_chapter_url = " +
+                    "'" + chapterUrl + "'"));
             for (DbModel dbModel : dbModels) {
                 threadInfo = new ThreadInfo();
                 threadInfo.setId(dbModel.getInt("id"));
@@ -91,7 +91,7 @@ public class DownloadThreadDBHelper {
                 threadInfo.setDownloadPosition(dbModel.getInt("download_position"));
                 threadInfo.setLength(dbModel.getInt("length"));
                 threadInfo.setFinished(dbModel.getInt("finished"));
-                threadInfo.setComicCaptureUrl(dbModel.getString("comic_capture_url"));
+                threadInfo.setComicChapterUrl(dbModel.getString("comic_chapter_url"));
                 threadInfos.add(threadInfo);
             }
         } catch (DbException e) {

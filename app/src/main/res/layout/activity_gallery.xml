@@ -14,135 +14,139 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        tools:context=".activities.GalleryActivity">
 
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#111111"
-    tools:context=".activities.GalleryActivity">
-
-    <TextView
-        android:id="@+id/tv_position_gallery"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:textColor="#6b6b6b"
-        android:textSize="140sp"/>
-
-    <android.support.v4.view.ViewPager
-        android:id="@+id/viewPager_gallery"
+    <FrameLayout
+        android:id="@+id/frame_gallery"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:background="#111111"
+        >
 
-    <ProgressBar
-        android:id="@+id/pg_loading_gallery"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"/>
+        <TextView
+            android:id="@+id/tv_position_gallery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="#6b6b6b"
+            android:textSize="140sp"/>
 
-    <RelativeLayout
-        android:id="@+id/menu_gallery"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal|bottom"
-        android:background="#444444"
-        android:clickable="true"
-        android:focusable="true"
-        android:visibility="gone">
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewPager_gallery"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
-        <SeekBar
-            android:id="@+id/seekBar_gallery"
+        <ProgressBar
+            android:id="@+id/pg_loading_gallery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
+
+        <RelativeLayout
+            android:id="@+id/menu_gallery"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/tv_name_gallery"
-            android:layout_marginLeft="12dp"
-            android:layout_marginRight="12dp"/>
+            android:layout_gravity="center_horizontal|bottom"
+            android:background="#444444"
+            android:clickable="true"
+            android:focusable="true"
+            android:visibility="gone">
 
-        <TextView
-            android:id="@+id/tv_name_gallery"
-            android:layout_width="wrap_content"
+            <SeekBar
+                android:id="@+id/seekBar_gallery"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/tv_name_gallery"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"/>
+
+            <TextView
+                android:id="@+id/tv_name_gallery"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="8dp"
+                android:textColor="#bebebe"
+                android:textSize="18sp"/>
+
+            <TextView
+                android:id="@+id/btn_next_gallery"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/seekBar_gallery"
+                android:layout_marginBottom="4dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="4dp"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text="@string/string_next_btn_gallery"
+                android:textSize="18sp"/>
+
+            <TextView
+                android:id="@+id/btn_prev_gallery"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/seekBar_gallery"
+                android:layout_marginBottom="4dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="4dp"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text="@string/string_prev_btn_gallery"
+                android:textColor="#bebebe"
+                android:textSize="18sp"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_margin="8dp"
-            android:textColor="#bebebe"
-            android:textSize="18sp"/>
+            android:layout_gravity="top"
+            android:padding="8dp">
 
-        <TextView
-            android:id="@+id/btn_next_gallery"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/seekBar_gallery"
-            android:layout_marginBottom="4dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="4dp"
-            android:gravity="center"
-            android:padding="8dp"
-            android:text="@string/string_next_btn_gallery"
-            android:textSize="18sp"/>
+            <TextView
+                android:id="@+id/tv_progress_gallery"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:textColor="#acacac"
+                android:textSize="16sp"/>
 
-        <TextView
-            android:id="@+id/btn_prev_gallery"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/seekBar_gallery"
-            android:layout_marginBottom="4dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="4dp"
-            android:gravity="center"
-            android:padding="8dp"
-            android:text="@string/string_prev_btn_gallery"
-            android:textColor="#bebebe"
-            android:textSize="18sp"/>
+            <TextView
+                android:id="@+id/tv_time_gallery"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_gravity="center"
+                android:textColor="#acacac"
+                android:textSize="16sp"/>
 
-    </RelativeLayout>
+            <ImageView
+                android:id="@+id/iv_battery_gallery"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:adjustViewBounds="true"
+                android:maxHeight="48dp"
+                android:maxWidth="24dp"
+                android:src="@mipmap/battery_unknown"/>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top"
-        android:padding="8dp">
+        </RelativeLayout>
 
-        <TextView
-            android:id="@+id/tv_progress_gallery"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:textColor="#acacac"
-            android:textSize="16sp"/>
+    </FrameLayout>
+</layout>
 
-        <TextView
-            android:id="@+id/tv_time_gallery"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_gravity="center"
-            android:textColor="#acacac"
-            android:textSize="16sp"/>
-
-        <ImageView
-            android:id="@+id/iv_battery_gallery"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:adjustViewBounds="true"
-            android:maxHeight="48dp"
-            android:maxWidth="24dp"
-            android:src="@mipmap/battery_unknown"/>
-
-    </RelativeLayout>
-
-</FrameLayout>

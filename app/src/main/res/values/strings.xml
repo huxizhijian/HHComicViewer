@@ -26,7 +26,7 @@
     <string name="loading_search_result">获取漫画列表中…</string>
     <string name="comic_title">漫画名</string>
     <string name="comic_author">作者名</string>
-    <string name="desc_capture">情况简介</string>
+    <string name="desc_chapter">情况简介</string>
     <string name="no_network">没有网络!</string>
     <string name="menu_popup_sync">刷新</string>
     <string name="menu_download_list">下载</string>
@@ -44,7 +44,7 @@
     <string name="pause">暂停</string>
     <string name="manager">管理</string>
     <string name="all_start">全部开始</string>
-    <string name="capture_name">章节名</string>
+    <string name="chapter_name">章节名</string>
     <string name="delete">删除</string>
     <string name="mark">收藏</string>
     <string name="read">阅读</string>
@@ -54,12 +54,14 @@
     <string name="about">关于</string>
     <string name="advance">高级</string>
     <string name="download_setting">下载设置</string>
-    <string name="app_version">汗汗漫画阅读器  v0.93</string>
+    <string name="app_version">汗汗漫画阅读器  v0.95</string>
     <string name="app_author_info"><![CDATA[huxizhijian  <huxizhijian92@gmail.com>]]></string>
     <string name="search_comic">搜索漫画：</string>
     <string name="classified_list">分类列表：</string>
     <string name="search_author">搜作者</string>
     <string name="none_marked">你没有收藏漫画，快去搜索吧。</string>
-    <string name="comic_capture_list">漫画目录列表：</string>
+    <string name="comic_chapter_list">漫画目录列表：</string>
     <string name="app_github">https://github.com/huxizhijian/HHComicViewer</string>
+    <string name="image_transition_name">image_transition</string>
+    <integer name="anim_duration_medium">500</integer>
 </resources>

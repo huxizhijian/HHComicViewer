@@ -37,19 +37,19 @@ public class ThreadInfo {
     private int length = -1; //正在下载的图片文件长度
     @Column(name = "finished")
     private int finished = -1; //下载完成的文件长度
-    @Column(name = "comic_capture_url")
-    private String ComicCaptureUrl; //漫画章节url，可以找出同一个漫画章节的所有线程
+    @Column(name = "comic_chapter_url")
+    private String ComicChapterUrl; //漫画章节url，可以找出同一个漫画章节的所有线程
 
     public ThreadInfo() {
     }
 
-    public ThreadInfo(int threadPosition, int threadCount, int downloadPosition, int length, int finished, String comicCaptureUrl) {
+    public ThreadInfo(int threadPosition, int threadCount, int downloadPosition, int length, int finished, String comicChapterUrl) {
         this.threadPosition = threadPosition;
         this.threadCount = threadCount;
         this.downloadPosition = downloadPosition;
         this.length = length;
         this.finished = finished;
-        ComicCaptureUrl = comicCaptureUrl;
+        ComicChapterUrl = comicChapterUrl;
     }
 
     public int getId() {
@@ -100,11 +100,11 @@ public class ThreadInfo {
         this.finished = finished;
     }
 
-    public String getComicCaptureUrl() {
-        return ComicCaptureUrl;
+    public String getComicChapterUrl() {
+        return ComicChapterUrl;
     }
 
-    public void setComicCaptureUrl(String comicCaptureUrl) {
-        ComicCaptureUrl = comicCaptureUrl;
+    public void setComicChapterUrl(String comicChapterUrl) {
+        ComicChapterUrl = comicChapterUrl;
     }
 }

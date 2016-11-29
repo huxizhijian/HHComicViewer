@@ -36,7 +36,7 @@ import android.view.inputmethod.InputMethodManager;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import org.huxizhijian.hhcomicviewer2.enities.Comic;
-import org.huxizhijian.hhcomicviewer2.enities.ComicCapture;
+import org.huxizhijian.hhcomicviewer2.enities.ComicChapter;
 
 import java.io.File;
 import java.text.DecimalFormat;
@@ -51,29 +51,34 @@ import static android.content.Context.MODE_PRIVATE;
  */
 public class BaseUtils {
 
-    public static String getDownloadPath(Context context, ComicCapture comicCapture) {
+    public static String getDownloadPath(Context context, ComicChapter comicChapter) {
         SharedPreferences sharedPreferences = context.getSharedPreferences("user", MODE_PRIVATE);
         String downloadPath = sharedPreferences.getString("download_path", Constants.DEFAULT_DOWNLOAD_PATH);
         //获得下载目录
         StringBuilder path = new StringBuilder();
         String backslash = "/";  //反斜杠
         path.append(downloadPath).append(backslash);
-        path.append(comicCapture.getComicTitle()).append(backslash);
-        path.append(comicCapture.getCaptureName()).append(backslash);
+        path.append(comicChapter.getComicTitle()).append(backslash);
+        path.append(comicChapter.getChapterName()).append(backslash);
         return path.toString();
     }
 
     public static String getStorageBlockSpace(String path) {
-        //获取剩余存储空间
-        File filePath = new File(path);
-        StatFs sf = new StatFs(filePath.getPath());//创建StatFs对象
-        long blockSize = sf.getBlockSize();//获得blockSize
-        long totalBlock = sf.getBlockCount();//获得全部block
-        long availableBlock = sf.getAvailableBlocks();//获取可用的block
-        //用String数组来存放Block信息
-        String[] total = fileSize(totalBlock * blockSize);
-        String[] available = fileSize(availableBlock * blockSize);
-        return "剩余空间：" + available[0] + available[1] + "/" + total[0] + total[1];
+        try {
+            //获取剩余存储空间
+            File filePath = new File(path);
+            StatFs sf = new StatFs(filePath.getPath());//创建StatFs对象
+            long blockSize = sf.getBlockSize();//获得blockSize
+            long totalBlock = sf.getBlockCount();//获得全部block
+            long availableBlock = sf.getAvailableBlocks();//获取可用的block
+            //用String数组来存放Block信息
+            String[] total = fileSize(totalBlock * blockSize);
+            String[] available = fileSize(availableBlock * blockSize);
+            return "剩余空间：" + available[0] + available[1] + "/" + total[0] + total[1];
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
     //用来定义存储空间显示格式

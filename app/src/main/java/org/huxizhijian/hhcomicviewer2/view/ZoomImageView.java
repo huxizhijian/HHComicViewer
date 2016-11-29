@@ -40,13 +40,16 @@ import android.widget.ImageView;
 public class ZoomImageView extends ImageView implements OnScaleGestureListener,
         OnTouchListener, ViewTreeObserver.OnGlobalLayoutListener {
     private static final String TAG = ZoomImageView.class.getSimpleName();
-    public static final float SCALE_MAX = 3.0f;
+    public static final float SCALE_MAX = 2.0f;
     private static final float SCALE_MID = 1.5f;
 
     /**
      * 初始化时的缩放比例，如果图片宽或高大于屏幕，此值将小于0
      */
     private float initScale = 1.0f;
+    private float midScale = initScale * SCALE_MID;
+    private float maxScale = initScale * SCALE_MAX;
+
     private boolean once = true;
 
     /**
@@ -133,9 +136,9 @@ public class ZoomImageView extends ImageView implements OnScaleGestureListener,
                         float x = e.getX();
                         float y = e.getY();
                         Log.i("DoubleTap", getScale() + " , " + initScale);
-                        if (getScale() < SCALE_MID) {
+                        if (getScale() < midScale) {
                             ZoomImageView.this.postDelayed(
-                                    new AutoScaleRunnable(SCALE_MID, x, y), 16);
+                                    new AutoScaleRunnable(midScale, x, y), 16);
                             isAutoScale = true;
                         }
                         //禁止其二次放大
@@ -227,7 +230,7 @@ public class ZoomImageView extends ImageView implements OnScaleGestureListener,
         /**
          * 缩放的范围控制
          */
-        if ((scale < SCALE_MAX && scaleFactor > 1.0f)
+        if ((scale < maxScale && scaleFactor > 1.0f)
                 || (scale > initScale && scaleFactor < 1.0f)) {
             /**
              * 最大值最小值判断
@@ -235,8 +238,8 @@ public class ZoomImageView extends ImageView implements OnScaleGestureListener,
             if (scaleFactor * scale < initScale) {
                 scaleFactor = initScale / scale;
             }
-            if (scaleFactor * scale > SCALE_MAX) {
-                scaleFactor = SCALE_MAX / scale;
+            if (scaleFactor * scale > maxScale) {
+                scaleFactor = maxScale / scale;
             }
             /**
              * 设置缩放比例

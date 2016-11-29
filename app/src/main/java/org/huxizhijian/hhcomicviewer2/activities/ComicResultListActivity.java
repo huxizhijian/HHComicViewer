@@ -16,6 +16,7 @@
 
 package org.huxizhijian.hhcomicviewer2.activities;
 
+import android.app.ActivityOptions;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -34,6 +35,7 @@ import com.bumptech.glide.Glide;
 
 import org.huxizhijian.hhcomicviewer2.R;
 import org.huxizhijian.hhcomicviewer2.adapter.CommonAdapter;
+import org.huxizhijian.hhcomicviewer2.app.HHApplication;
 import org.huxizhijian.hhcomicviewer2.enities.Comic;
 import org.huxizhijian.hhcomicviewer2.utils.BaseUtils;
 import org.huxizhijian.hhcomicviewer2.utils.Constants;
@@ -43,14 +45,18 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.xutils.common.Callback;
-import org.xutils.http.RequestParams;
-import org.xutils.x;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class ComicResultListActivity extends AppCompatActivity {
 
@@ -116,11 +122,27 @@ public class ComicResultListActivity extends AppCompatActivity {
     }
 
     private void showComicList() {
-        RequestParams params = new RequestParams(mUrl + "/" + 1 + ".html");
-        x.http().get(params, new Callback.CommonCallback<byte[]>() {
+        Request request = new Request.Builder().url(mUrl + "/" + 1 + ".html").build();
+        OkHttpClient client = ((HHApplication) getApplication()).getClient();
+        client.newCall(request).enqueue(new okhttp3.Callback() {
             @Override
-            public void onSuccess(byte[] result) {
+            public void onFailure(Call call, IOException e) {
+                Log.e("init ", "onError: ", e);
+                if (BaseUtils.getAPNType(ComicResultListActivity.this) == BaseUtils.NONEWTWORK) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(ComicResultListActivity.this,
+                                    Constants.NO_NETWORK, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
                 try {
+                    byte[] result = response.body().bytes();
                     mComicList = new ArrayList<>();
                     //数据加载
                     if (!mIsSearch) {
@@ -160,98 +182,103 @@ public class ComicResultListActivity extends AppCompatActivity {
                             mComicList.add(comic);
                         }
                     }
-
-                    //ListView设置
-                    mAdapter = new ListViewAdapter(ComicResultListActivity.this, mComicList, R.layout.item_list_view);
-                    if (!mIsSearch) {
-                        mListView.addFootView(true);
-                        mListView.setLoaderListener(new LoadPageListView.ILoaderListener() {
-                            @Override
-                            public void onLoad() {
-                                //加载下一页
-                                if (mPosition + 1 <= mPageSize) {
-                                    mPosition++;
-                                    loadNextPage();
-                                } else {
-                                    Toast.makeText(ComicResultListActivity.this, "已经到最后了哦~", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
-                    } else {
-                        mListView.addFootView(false);
-                    }
-                    mListView.setAdapter(mAdapter);
-                    mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    runOnUiThread(new Runnable() {
                         @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                            Intent intent = new Intent(ComicResultListActivity.this, ComicDetailsActivity.class);
-                            intent.putExtra("url", mComicList.get(position).getComicUrl());
-                            intent.putExtra("thumbnailUrl", mComicList.get(position).getThumbnailUrl());
-                            intent.putExtra("title", mComicList.get(position).getTitle());
-                            startActivity(intent);
+                        public void run() {
+                            updateViews();
                         }
                     });
-
-                    //更新界面
-                    mLoadingLayout.setVisibility(View.GONE);
-                    mListView.setVisibility(View.VISIBLE);
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
-            }
-
-            @Override
-            public void onError(Throwable ex, boolean isOnCallback) {
-                Log.e("init ", "onError: ", ex);
-                if (BaseUtils.getAPNType(ComicResultListActivity.this) == BaseUtils.NONEWTWORK) {
-                    Toast.makeText(ComicResultListActivity.this, Constants.NO_NETWORK, Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onCancelled(CancelledException cex) {
-                Log.e("init ", "onCancelled: ", cex);
-            }
-
-            @Override
-            public void onFinished() {
-
             }
         });
     }
 
+    private void updateViews() {
+        //ListView设置
+        mAdapter = new ListViewAdapter(ComicResultListActivity.this, mComicList, R.layout.item_list_view);
+        if (!mIsSearch) {
+            mListView.addFootView(true);
+            mListView.setLoaderListener(new LoadPageListView.ILoaderListener() {
+                @Override
+                public void onLoad() {
+                    //加载下一页
+                    if (mPosition + 1 <= mPageSize) {
+                        mPosition++;
+                        loadNextPage();
+                    } else {
+                        Toast.makeText(ComicResultListActivity.this, "已经到最后了哦~", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        } else {
+            mListView.addFootView(false);
+        }
+        mListView.setAdapter(mAdapter);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                Intent intent = new Intent(ComicResultListActivity.this, ComicDetailsActivity.class);
+                intent.putExtra("url", mComicList.get(position).getComicUrl());
+                intent.putExtra("thumbnailUrl", mComicList.get(position).getThumbnailUrl());
+                intent.putExtra("title", mComicList.get(position).getTitle());
+
+                ImageView sharedView = (ImageView) view.findViewById(R.id.imageView_item);
+
+                if (sharedView.getDrawable() != null) {
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                        //如果是android5.0及以上，开启shareElement动画
+                        String transitionName = getString(R.string.image_transition_name);
+
+                        ActivityOptions transitionActivityOptions = ActivityOptions
+                                .makeSceneTransitionAnimation(ComicResultListActivity.this, sharedView, transitionName);
+                        startActivity(intent, transitionActivityOptions.toBundle());
+                    } else {
+                        startActivity(intent);
+                    }
+                } else {
+                    startActivity(intent);
+                }
+            }
+        });
+
+        //更新界面
+        mLoadingLayout.setVisibility(View.GONE);
+        mListView.setVisibility(View.VISIBLE);
+    }
+
     private void loadNextPage() {
-        RequestParams params = new RequestParams(mUrl + "/" + mPosition + ".html");
-        x.http().get(params, new Callback.CommonCallback<byte[]>() {
+        Request request = new Request.Builder().url(mUrl + "/" + mPosition + ".html").build();
+        OkHttpClient client = ((HHApplication) getApplication()).getClient();
+        client.newCall(request).enqueue(new Callback() {
             @Override
-            public void onSuccess(byte[] result) {
-                try {
-                    String content = new String(result, "utf-8");
-                    Document doc = Jsoup.parse(content);
-                    newPageParse(doc);
-                    mAdapter.setDatas(mComicList);
-                    mListView.loadComplete();
-                    mAdapter.notifyDataSetChanged();
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onError(Throwable ex, boolean isOnCallback) {
+            public void onFailure(Call call, IOException e) {
                 if (BaseUtils.getAPNType(ComicResultListActivity.this) == BaseUtils.NONEWTWORK) {
-                    Toast.makeText(ComicResultListActivity.this, Constants.NO_NETWORK, Toast.LENGTH_SHORT).show();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(ComicResultListActivity.this,
+                                    Constants.NO_NETWORK, Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
             }
 
             @Override
-            public void onCancelled(CancelledException cex) {
-
-            }
-
-            @Override
-            public void onFinished() {
-
+            public void onResponse(Call call, Response response) throws IOException {
+                byte[] result = response.body().bytes();
+                String content = new String(result, "utf-8");
+                Document doc = Jsoup.parse(content);
+                newPageParse(doc);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mAdapter.setDatas(mComicList);
+                        mListView.loadComplete();
+                        mAdapter.notifyDataSetChanged();
+                    }
+                });
             }
         });
     }

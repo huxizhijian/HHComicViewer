@@ -42,21 +42,21 @@ public class VolDownloadSelectorAdapter extends RecyclerView.Adapter<VolDownload
     private LayoutInflater mInflater;
     private Context mContext;
     private OnItemClickListener mOnItemClickListener;
-    private List<String> mComicCaptureList; //已经开始下载的章节
-    private List<String> mFinishedComicCaptureList;  //下载好的章节
-    private List<String> mSelectedCaptureNames; //选择的下载章节
+    private List<String> mComicchapterList; //已经开始下载的章节
+    private List<String> mFinishedComicchapterList;  //下载好的章节
+    private List<String> mSelectedchapterNames; //选择的下载章节
 
     private Bitmap mBitmap_ok = null;
     private Bitmap mBitmap_downloading = null;
 
     public VolDownloadSelectorAdapter(Context context, List<String> volName,
-                                      List<String> comicCaptures, List<String> finishedComicCaptureList) {
+                                      List<String> comicchapters, List<String> finishedComicchapterList) {
         this.mVolName = volName;
         this.mInflater = LayoutInflater.from(context);
         this.mContext = context;
-        this.mComicCaptureList = comicCaptures;
-        this.mFinishedComicCaptureList = finishedComicCaptureList;
-        mSelectedCaptureNames = new ArrayList<>();
+        this.mComicchapterList = comicchapters;
+        this.mFinishedComicchapterList = finishedComicchapterList;
+        mSelectedchapterNames = new ArrayList<>();
     }
 
     @Override
@@ -71,10 +71,10 @@ public class VolDownloadSelectorAdapter extends RecyclerView.Adapter<VolDownload
         holder.tv.setText(mVolName.get(position));
         holder.iv.setVisibility(View.GONE);
         //标记下载好的章节
-        if (mComicCaptureList != null && mComicCaptureList.contains(mVolName.get(position))) {
+        if (mComicchapterList != null && mComicchapterList.contains(mVolName.get(position))) {
             //进行标记
-            if (mFinishedComicCaptureList != null &&
-                    mFinishedComicCaptureList.contains(mVolName.get(position))) {
+            if (mFinishedComicchapterList != null &&
+                    mFinishedComicchapterList.contains(mVolName.get(position))) {
                 //如果是下载完成的章节
                 if (mBitmap_ok == null) {
                     //进行图片的初始化
@@ -94,7 +94,7 @@ public class VolDownloadSelectorAdapter extends RecyclerView.Adapter<VolDownload
                 holder.iv.setVisibility(View.VISIBLE);
             }
         }
-        if (mSelectedCaptureNames.contains(mVolName.get(position))) {
+        if (mSelectedchapterNames.contains(mVolName.get(position))) {
             //选择的章节
             holder.cv.setCardBackgroundColor(mContext.getResources().getColor(R.color.green_color_download));
         } else {
@@ -103,28 +103,28 @@ public class VolDownloadSelectorAdapter extends RecyclerView.Adapter<VolDownload
         setUpItemEvent(holder);
     }
 
-    public void captureClick(int position) {
-        String captureName = mVolName.get(position);
-        if (mComicCaptureList != null && mComicCaptureList.contains(captureName)) return;
-        if (!mSelectedCaptureNames.contains(captureName)) {
-            mSelectedCaptureNames.add(captureName);
+    public void chapterClick(int position) {
+        String chapterName = mVolName.get(position);
+        if (mComicchapterList != null && mComicchapterList.contains(chapterName)) return;
+        if (!mSelectedchapterNames.contains(chapterName)) {
+            mSelectedchapterNames.add(chapterName);
             notifyItemChanged(position);
         } else {
-            mSelectedCaptureNames.remove(captureName);
+            mSelectedchapterNames.remove(chapterName);
             notifyItemChanged(position);
         }
     }
 
 
-    public List<String> getSelectedCaptureNames() {
-        return mSelectedCaptureNames;
+    public List<String> getSelectedchapterNames() {
+        return mSelectedchapterNames;
     }
 
     public void allSelect() {
-        mSelectedCaptureNames.clear();
+        mSelectedchapterNames.clear();
         for (int i = 0; i < mVolName.size(); i++) {
-            if (!(mComicCaptureList != null && mComicCaptureList.contains(mVolName.get(i)))) {
-                mSelectedCaptureNames.add(mVolName.get(i));
+            if (!(mComicchapterList != null && mComicchapterList.contains(mVolName.get(i)))) {
+                mSelectedchapterNames.add(mVolName.get(i));
             }
         }
         notifyDataSetChanged();

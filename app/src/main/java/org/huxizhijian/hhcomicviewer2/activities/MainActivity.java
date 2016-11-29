@@ -138,7 +138,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (item.getItemId()) {
             case R.id.menu_popup_sync:
                 //刷新数据
-                ((MarkedFragment) mTags.get(0)).refreshData();
+                if (mViewPager.getCurrentItem() == 0) {
+                    ((MarkedFragment) mTags.get(0)).refreshData();
+                }
                 return true;
             case R.id.menu_download_list:
                 intent = new Intent(MainActivity.this, DownloadManagerActivity.class);

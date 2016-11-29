@@ -44,8 +44,8 @@ public class DownloadSelectorFragment extends Fragment implements View.OnClickLi
     private SelectorDataBinder mDataBinder;
     private RecyclerView mRecyclerView;
     private VolDownloadSelectorAdapter mAdapter;
-    private List<String> mDownloadedComicCaptures;
-    private List<String> mFinishedComicCaptureList;  //下载好的章节
+    private List<String> mDownloadedComicChapters;
+    private List<String> mFinishedComicChapterList;  //下载好的章节
     private Comic mComic;
 
     public DownloadSelectorFragment() {
@@ -56,19 +56,19 @@ public class DownloadSelectorFragment extends Fragment implements View.OnClickLi
         super.onAttach(context);
         this.mDataBinder = (ComicDetailsActivity) context;
         mComic = mDataBinder.getComic();
-        mDownloadedComicCaptures = mDataBinder.getDownloadedComicCaptures();
-        mFinishedComicCaptureList = mDataBinder.getFinishedComicCaptures();
+        mDownloadedComicChapters = mDataBinder.getDownloadedComicChapters();
+        mFinishedComicChapterList = mDataBinder.getFinishedComicChapters();
     }
 
     public void initData() {
         mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 4));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mAdapter = new VolDownloadSelectorAdapter(getActivity(),
-                mComic.getCaptureName(), mDownloadedComicCaptures, mFinishedComicCaptureList);
+                mComic.getChapterName(), mDownloadedComicChapters, mFinishedComicChapterList);
         mAdapter.setOnItemClickListener(new VolDownloadSelectorAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                mAdapter.captureClick(position);
+                mAdapter.chapterClick(position);
             }
 
             @Override
@@ -100,11 +100,11 @@ public class DownloadSelectorFragment extends Fragment implements View.OnClickLi
         switch (v.getId()) {
             case R.id.button_start_download_ds_fragment:
                 //开始下载
-                if (mAdapter.getSelectedCaptureNames().size() == 0) {
+                if (mAdapter.getSelectedchapterNames().size() == 0) {
                     Toast.makeText(getActivity(), "没有选择下载章节", Toast.LENGTH_SHORT).show();
                 } else {
                     //将下载章节列表传送到Activity中
-                    mDataBinder.sendSelectedCaptures(mAdapter.getSelectedCaptureNames());
+                    mDataBinder.sendSelectedChapters(mAdapter.getSelectedchapterNames());
                     //关闭
                     mDataBinder.hideFragment();
                 }
@@ -123,11 +123,11 @@ public class DownloadSelectorFragment extends Fragment implements View.OnClickLi
     public interface SelectorDataBinder {
         Comic getComic();
 
-        List<String> getDownloadedComicCaptures();
+        List<String> getDownloadedComicChapters();
 
-        List<String> getFinishedComicCaptures();
+        List<String> getFinishedComicChapters();
 
-        void sendSelectedCaptures(List<String> selectedCaptures);
+        void sendSelectedChapters(List<String> selectedChapters);
 
         void hideFragment();
     }

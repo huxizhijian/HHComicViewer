@@ -29,14 +29,14 @@ import java.util.ArrayList;
  * 章节实体类，主要保存下载状态
  * Created by wei on 2016/8/23.
  */
-@Table(name = "comic_capture")
-public class ComicCapture implements Serializable, Comparable {
+@Table(name = "comic_chapter")
+public class ComicChapter implements Serializable, Comparable {
     @Column(name = "id", isId = true)
-    private int id; //id
-    @Column(name = "capture_name")
-    private String captureName; //章节名
-    @Column(name = "capture_url")
-    private String captureUrl; //章节的url
+    protected int id; //id
+    @Column(name = "chapter_name")
+    protected String chapterName; //章节名
+    @Column(name = "chapter_url")
+    protected String chapterUrl; //章节的url
     @Column(name = "download_status")
     private int downloadStatus; //下载状态
     @Column(name = "download_position")
@@ -60,19 +60,19 @@ public class ComicCapture implements Serializable, Comparable {
         this.picList = picList;
     }
 
-    public ComicCapture() {
+    public ComicChapter() {
     }
 
-    public ComicCapture(String url, String content) {
+    public ComicChapter(String url, String content) {
         this.picList = ParsePicUrlList.scanPicInPage(url, content);
-        this.captureUrl = url;
+        this.chapterUrl = url;
         this.pageCount = picList.size();
     }
 
-    public ComicCapture(String comicTitle, String captureName, String captureUrl, String comicUrl) {
+    public ComicChapter(String comicTitle, String chapterName, String chapterUrl, String comicUrl) {
         this.comicTitle = comicTitle;
-        this.captureName = captureName;
-        this.captureUrl = captureUrl;
+        this.chapterName = chapterName;
+        this.chapterUrl = chapterUrl;
         this.comicUrl = comicUrl;
         this.downloadPosition = 0;
     }
@@ -114,20 +114,20 @@ public class ComicCapture implements Serializable, Comparable {
         this.id = id;
     }
 
-    public String getCaptureName() {
-        return captureName;
+    public String getChapterName() {
+        return chapterName;
     }
 
-    public void setCaptureName(String captureName) {
-        this.captureName = captureName;
+    public void setChapterName(String chapterName) {
+        this.chapterName = chapterName;
     }
 
-    public String getCaptureUrl() {
-        return captureUrl;
+    public String getChapterUrl() {
+        return chapterUrl;
     }
 
-    public void setCaptureUrl(String captureUrl) {
-        this.captureUrl = captureUrl;
+    public void setChapterUrl(String chapterUrl) {
+        this.chapterUrl = chapterUrl;
     }
 
     public int getDownloadStatus() {
@@ -156,10 +156,10 @@ public class ComicCapture implements Serializable, Comparable {
 
     @Override
     public String toString() {
-        return "ComicCapture{" +
+        return "ComicChapter{" +
                 "id=" + id +
-                ", captureName='" + captureName + '\'' +
-                ", captureUrl='" + captureUrl + '\'' +
+                ", chapterName='" + chapterName + '\'' +
+                ", chapterUrl='" + chapterUrl + '\'' +
                 ", downloadStatus=" + downloadStatus +
                 ", pageCount=" + pageCount +
                 ", comicTitle='" + comicTitle + '\'' +
@@ -168,13 +168,13 @@ public class ComicCapture implements Serializable, Comparable {
 
     @Override
     public boolean equals(Object obj) {
-        ComicCapture compareCapture = (ComicCapture) obj;
-        return this.captureUrl.equals(compareCapture.getCaptureUrl());
+        ComicChapter compareChapter = (ComicChapter) obj;
+        return this.chapterUrl.equals(compareChapter.getChapterUrl());
     }
 
     @Override
     public int compareTo(@NonNull Object o) {
-        ComicCapture compareCapture = (ComicCapture) o;
-        return this.captureName.compareTo(compareCapture.getCaptureName());
+        ComicChapter compareChapter = (ComicChapter) o;
+        return this.chapterName.compareTo(compareChapter.getChapterName());
     }
 }

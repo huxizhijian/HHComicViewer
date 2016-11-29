@@ -110,7 +110,7 @@ public class HistoryFragment extends Fragment {
         public void convert(ViewHolder vh, Comic comic) {
             vh.setText(R.id.tv_title_item, comic.getTitle());
             vh.setText(R.id.tv_description_item, "作者：" + comic.getAuthor());
-            vh.setText(R.id.tv_read_info_item, "上次看到第" + (comic.getReadCapture() + 1) + "集，" +
+            vh.setText(R.id.tv_read_info_item, "上次看到第" + (comic.getReadChapter() + 1) + "集，" +
                     "第" + (comic.getReadPage() + 1) + "页");
             ImageView imageView = vh.getView(R.id.imageView_item);
             Glide.with(getActivity())

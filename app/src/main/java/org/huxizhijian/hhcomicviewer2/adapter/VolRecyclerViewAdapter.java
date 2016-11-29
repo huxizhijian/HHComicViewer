@@ -41,9 +41,9 @@ public class VolRecyclerViewAdapter extends RecyclerView.Adapter<VolRecyclerView
     private LayoutInflater mInflater;
     private Context mContext;
     private OnItemClickListener mOnItemClickListener;
-    private int mCapturePosition = 0;
+    private int mChapterPosition = 0;
     private boolean mIsReaded = false;
-    private List<String> mFinishedComicCaptureList;  //下载好的章节
+    private List<String> mFinishedComicChapterList;  //下载好的章节
 
     private Bitmap mBitmap_ok = null; //下载好的章节右下角显示完成的图片
 
@@ -53,21 +53,21 @@ public class VolRecyclerViewAdapter extends RecyclerView.Adapter<VolRecyclerView
         this.mContext = context;
     }
 
-    public VolRecyclerViewAdapter(Context context, List<String> volName, List<String> finishedComicCaptures) {
+    public VolRecyclerViewAdapter(Context context, List<String> volName, List<String> finishedComicChapters) {
         this.mVolName = volName;
         this.mInflater = LayoutInflater.from(context);
         this.mContext = context;
-        this.mFinishedComicCaptureList = finishedComicCaptures;
+        this.mFinishedComicChapterList = finishedComicChapters;
     }
 
     public VolRecyclerViewAdapter(Context context, List<String> volName,
-                                  int capturePosition, List<String> finishedComicCaptures) {
+                                  int ChapterPosition, List<String> finishedComicChapters) {
         this.mVolName = volName;
         this.mInflater = LayoutInflater.from(context);
         this.mContext = context;
-        this.mCapturePosition = capturePosition;
+        this.mChapterPosition = ChapterPosition;
         this.mIsReaded = true;
-        this.mFinishedComicCaptureList = finishedComicCaptures;
+        this.mFinishedComicChapterList = finishedComicChapters;
     }
 
     @Override
@@ -79,15 +79,15 @@ public class VolRecyclerViewAdapter extends RecyclerView.Adapter<VolRecyclerView
     @Override
     public void onBindViewHolder(VolViewHolder holder, int position) {
         holder.tv.setText(mVolName.get(position));
-        if (mIsReaded && position == mCapturePosition) {
+        if (mIsReaded && position == mChapterPosition) {
             //标记上次阅读的章节
             holder.cv.setCardBackgroundColor(mContext.getResources().getColor(R.color.main_color));
         } else {
             holder.cv.setCardBackgroundColor(mContext.getResources().getColor(R.color.white));
         }
-        if (mFinishedComicCaptureList != null) {
+        if (mFinishedComicChapterList != null) {
             //标记下载好的章节
-            if (mFinishedComicCaptureList.contains(mVolName.get(position))) {
+            if (mFinishedComicChapterList.contains(mVolName.get(position))) {
                 //进行标记
                 if (mBitmap_ok == null) {
                     //进行图片的初始化
@@ -133,8 +133,8 @@ public class VolRecyclerViewAdapter extends RecyclerView.Adapter<VolRecyclerView
         this.mOnItemClickListener = onItemClickListener;
     }
 
-    public void setFinishedComicCaptureList(List<String> finishedComicCaptureList) {
-        mFinishedComicCaptureList = finishedComicCaptureList;
+    public void setFinishedComicChapterList(List<String> finishedComicChapterList) {
+        mFinishedComicChapterList = finishedComicChapterList;
     }
 
     @Override
@@ -142,12 +142,12 @@ public class VolRecyclerViewAdapter extends RecyclerView.Adapter<VolRecyclerView
         return mVolName.size();
     }
 
-    public void setReadCapture(int capturePosition) {
-        int prePosition = this.mCapturePosition;
-        this.mCapturePosition = capturePosition;
+    public void setReadChapter(int ChapterPosition) {
+        int prePosition = this.mChapterPosition;
+        this.mChapterPosition = ChapterPosition;
         mIsReaded = true;
         notifyItemChanged(prePosition);
-        notifyItemChanged(mCapturePosition);
+        notifyItemChanged(mChapterPosition);
     }
 
     class VolViewHolder extends RecyclerView.ViewHolder {

@@ -51,33 +51,38 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 
 import org.huxizhijian.hhcomicviewer2.R;
-import org.huxizhijian.hhcomicviewer2.db.ComicCaptureDBHelper;
+import org.huxizhijian.hhcomicviewer2.app.HHApplication;
+import org.huxizhijian.hhcomicviewer2.db.ComicChapterDBHelper;
 import org.huxizhijian.hhcomicviewer2.db.ComicDBHelper;
 import org.huxizhijian.hhcomicviewer2.enities.Comic;
-import org.huxizhijian.hhcomicviewer2.enities.ComicCapture;
+import org.huxizhijian.hhcomicviewer2.enities.ComicChapter;
 import org.huxizhijian.hhcomicviewer2.utils.BaseUtils;
 import org.huxizhijian.hhcomicviewer2.utils.Constants;
 import org.huxizhijian.hhcomicviewer2.view.ZoomImageView;
-import org.xutils.common.Callback;
-import org.xutils.http.RequestParams;
-import org.xutils.x;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.LinkedList;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 
 public class GalleryActivity extends Activity implements View.OnClickListener {
 
     //comic信息
-    private ComicCapture mComicCapture;
+    private ComicChapter mComicChapter;
     private ArrayList<String> mPicList;
     private Comic mComic;
-    private int mCapturePosition;
+    private int mChapterPosition;
 
     //数据库操作
-    private ComicCaptureDBHelper mCaptureDBHelper;
+    private ComicChapterDBHelper mChapterDBHelper;
     private boolean mIsDownloaded = false; //该章节是否已经下载完毕
 
     //控件
@@ -118,7 +123,7 @@ public class GalleryActivity extends Activity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery);
         mComic = (Comic) getIntent().getSerializableExtra("comic");
-        mCapturePosition = getIntent().getIntExtra("position", 0);
+        mChapterPosition = getIntent().getIntExtra("position", 0);
         initMenu();
         initViewPager();
         getWebContent();
@@ -126,54 +131,57 @@ public class GalleryActivity extends Activity implements View.OnClickListener {
 
     private void getWebContent() {
         mIsDownloaded = false;
-        if (mCapturePosition == -1) {
-            mCapturePosition = mComic.getReadCapture();
+        if (mChapterPosition == -1) {
+            mChapterPosition = mComic.getReadChapter();
         }
-        String captureUrl = mComic.getCaptureUrl().get(mCapturePosition);
-        if (mCaptureDBHelper == null) {
-            mCaptureDBHelper = ComicCaptureDBHelper.getInstance(this);
+        String chapterUrl = mComic.getChapterUrl().get(mChapterPosition);
+        if (mChapterDBHelper == null) {
+            mChapterDBHelper = ComicChapterDBHelper.getInstance(this);
         }
-        mComicCapture = null;
-        mComicCapture = mCaptureDBHelper.findByCaptureUrl(captureUrl);
+        mComicChapter = null;
+        mComicChapter = mChapterDBHelper.findByChapterUrl(chapterUrl);
         mViewPager.setVisibility(View.GONE);
         mProgressBar.setVisibility(View.VISIBLE);
-        if (mComicCapture != null && mComicCapture.getDownloadStatus() == Constants.DOWNLOAD_FINISHED) {
+        if (mComicChapter != null && mComicChapter.getDownloadStatus() == Constants.DOWNLOAD_FINISHED) {
             //如果已经下载完毕
             mIsDownloaded = true;
             initImageView();
         } else {
             //否则在线看
-            RequestParams params = new RequestParams(mComic.getCaptureUrl().get(mCapturePosition));
-            x.http().get(params, new Callback.CommonCallback<byte[]>() {
+            Request request = new Request.Builder().url(mComic.getChapterUrl().get(mChapterPosition)).build();
+            OkHttpClient client = ((HHApplication) getApplication()).getClient();
+            client.newCall(request).enqueue(new Callback() {
                 @Override
-                public void onSuccess(byte[] result) {
+                public void onFailure(Call call, IOException e) {
+                    Log.e("getWebContent", "onError: " + e.toString());
+                    if (BaseUtils.getAPNType(GalleryActivity.this) == BaseUtils.NONEWTWORK) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(GalleryActivity.this, Constants.NO_NETWORK, Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
                     try {
+                        byte[] result = response.body().bytes();
                         final String content = new String(result, "gb2312");
-                        mComicCapture = new ComicCapture(mComic.getTitle(), mComic.getCaptureName().get(mCapturePosition),
-                                mComic.getCaptureUrl().get(mCapturePosition), mComic.getComicUrl());
-                        mComicCapture.updatePicList(mComic.getCaptureUrl().get(mCapturePosition), content);
-                        mPicList = mComicCapture.getPicList();
-                        initImageView();
+                        mComicChapter = new ComicChapter(mComic.getTitle(), mComic.getChapterName().get(mChapterPosition),
+                                mComic.getChapterUrl().get(mChapterPosition), mComic.getComicUrl());
+                        mComicChapter.updatePicList(mComic.getChapterUrl().get(mChapterPosition), content);
+                        mPicList = mComicChapter.getPicList();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                initImageView();
+                            }
+                        });
                     } catch (UnsupportedEncodingException e) {
                         e.printStackTrace();
                     }
-                }
-
-                @Override
-                public void onError(Throwable ex, boolean isOnCallback) {
-                    Log.e("getWebContent", "onError: " + ex.toString());
-                    if (BaseUtils.getAPNType(GalleryActivity.this) == BaseUtils.NONEWTWORK) {
-                        Toast.makeText(GalleryActivity.this, Constants.NO_NETWORK, Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-                @Override
-                public void onCancelled(CancelledException cex) {
-                    Log.e("getWebContent", "onCancelled: " + cex.toString());
-                }
-
-                @Override
-                public void onFinished() {
                 }
             });
         }
@@ -181,8 +189,8 @@ public class GalleryActivity extends Activity implements View.OnClickListener {
 
     private void initImageView() {
         //加载各种数据
-        mSeekBar.setMax(mComicCapture.getPageCount() - 1);
-        mTv_name.setText(mComicCapture.getCaptureName());
+        mSeekBar.setMax(mComicChapter.getPageCount() - 1);
+        mTv_name.setText(mComicChapter.getChapterName());
         if (mViewPagerAdapter == null) {
             mViewPagerAdapter = new ViewPagerAdapter();
         } else {
@@ -193,13 +201,13 @@ public class GalleryActivity extends Activity implements View.OnClickListener {
         mViewPager.setAdapter(mViewPagerAdapter);
         //将progressbar设置为不可见
         mProgressBar.setVisibility(View.GONE);
-        if (mComic.getReadCapture() == mCapturePosition) {
+        if (mComic.getReadChapter() == mChapterPosition) {
             //设置读到的页数
             mViewPager.setCurrentItem(mComic.getReadPage(), false);
         }
         //初始化页数
         mSeekBar.setProgress(mViewPager.getCurrentItem());
-        mTv_progress.setText(mViewPager.getCurrentItem() + 1 + "/" + mComicCapture.getPageCount());
+        mTv_progress.setText(mViewPager.getCurrentItem() + 1 + "/" + mComicChapter.getPageCount());
         mTv_position.setText(mViewPager.getCurrentItem() + 1 + "");
 
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -212,7 +220,7 @@ public class GalleryActivity extends Activity implements View.OnClickListener {
                 if (mSeekBar.getProgress() != position) {
                     mSeekBar.setProgress(position);
                 }
-                mTv_progress.setText(position + 1 + "/" + mComicCapture.getPageCount());
+                mTv_progress.setText(position + 1 + "/" + mComicChapter.getPageCount());
                 mTv_position.setText(position + 1 + "");
             }
 
@@ -240,7 +248,7 @@ public class GalleryActivity extends Activity implements View.OnClickListener {
         mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (fromUser) {
+                if (mComicChapter != null && fromUser) {
                     mViewPager.setCurrentItem(progress, false);
                     mViewPager.clearAnimation();
                 }
@@ -320,7 +328,7 @@ public class GalleryActivity extends Activity implements View.OnClickListener {
     protected void onPause() {
         super.onPause();
         unregisterReceiver(batteryBroadcastReceiver);
-        mComic.setReadCapture(mCapturePosition);
+        mComic.setReadChapter(mChapterPosition);
         mComic.setReadPage(mViewPager.getCurrentItem());
         ComicDBHelper.getInstance(this).update(mComic);
     }
@@ -329,29 +337,37 @@ public class GalleryActivity extends Activity implements View.OnClickListener {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_prev_gallery:
-                if (mCapturePosition - 1 >= 0) {
-                    mCapturePosition--;
-                    mComic.setReadCapture(mCapturePosition);
-                    mComic.setReadPage(0);
-                    mViewPager.setCurrentItem(0, false);
-                    getWebContent();
-                } else {
-                    Toast.makeText(GalleryActivity.this, "当前是第一话", Toast.LENGTH_SHORT).show();
-                }
+                openPrevchapter();
                 break;
             case R.id.btn_next_gallery:
-                if (mCapturePosition + 1 < mComic.getCaptureUrl().size()) {
-                    mCapturePosition++;
-                    mComic.setReadCapture(mCapturePosition);
-                    mComic.setReadPage(0);
-                    mViewPager.setCurrentItem(0, false);
-                    getWebContent();
-                } else {
-                    Toast.makeText(GalleryActivity.this, "当前是最后一话", Toast.LENGTH_SHORT).show();
-                }
+                openNextChapter();
                 break;
             default:
                 break;
+        }
+    }
+
+    private void openPrevchapter() {
+        if (mChapterPosition - 1 >= 0) {
+            mChapterPosition--;
+            mComic.setReadChapter(mChapterPosition);
+            mComic.setReadPage(0);
+            mViewPager.setCurrentItem(0, false);
+            getWebContent();
+        } else {
+            Toast.makeText(GalleryActivity.this, "当前是第一话", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void openNextChapter() {
+        if (mChapterPosition + 1 < mComic.getChapterUrl().size()) {
+            mChapterPosition++;
+            mComic.setReadChapter(mChapterPosition);
+            mComic.setReadPage(0);
+            mViewPager.setCurrentItem(0, false);
+            getWebContent();
+        } else {
+            Toast.makeText(GalleryActivity.this, "当前是最后一话", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -413,7 +429,7 @@ public class GalleryActivity extends Activity implements View.OnClickListener {
 
         @Override
         public int getCount() {
-            return mComicCapture.getPageCount();
+            return mComicChapter.getPageCount();
         }
 
         private ZoomImageView getImageView() {
@@ -445,7 +461,6 @@ public class GalleryActivity extends Activity implements View.OnClickListener {
 
                 @Override
                 public void closeMenu() {
-//                    System.out.println("close menu");
                     //设置关闭动画
                     Animation animation = AnimationUtils.loadAnimation(GalleryActivity.this, R.anim.menu_hide_action);
                     mMenu.clearAnimation();
@@ -483,20 +498,26 @@ public class GalleryActivity extends Activity implements View.OnClickListener {
             public void leftTap() {
                 if (position - 1 >= 0) {
                     mViewPager.setCurrentItem(position - 1, false);
+                } else {
+                    //开启上一章
+                    openPrevchapter();
                 }
             }
 
             @Override
             public void rightTap() {
-                if (position + 1 < mComicCapture.getPageCount()) {
+                if (position + 1 < mComicChapter.getPageCount()) {
                     mViewPager.setCurrentItem(position + 1, false);
+                } else {
+                    //开启下一章
+                    openNextChapter();
                 }
             }
         });
 
         if (mIsDownloaded) {
             //如果是下载的章节
-            File file = new File(mComicCapture.getSavePath(), BaseUtils.getPageName(position));
+            File file = new File(mComicChapter.getSavePath(), BaseUtils.getPageName(position));
             if (file.exists()) {
                 Glide.with(this)
                         .load(file)
@@ -563,7 +584,7 @@ public class GalleryActivity extends Activity implements View.OnClickListener {
             animation.start();
             mIsMenuOpen = false;
         } else {
-            mComic.setReadCapture(mCapturePosition);
+            mComic.setReadChapter(mChapterPosition);
             mComic.setReadPage(mViewPager.getCurrentItem());
             Intent intent = new Intent();
             intent.putExtra("comic", mComic);
@@ -586,7 +607,7 @@ public class GalleryActivity extends Activity implements View.OnClickListener {
                     return true;
                 case KeyEvent.KEYCODE_VOLUME_DOWN:
                     if (mViewPagerAdapter != null) {
-                        if (mViewPager.getCurrentItem() + 1 < mComicCapture.getPageCount()) {
+                        if (mViewPager.getCurrentItem() + 1 < mComicChapter.getPageCount()) {
                             mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1, false);
                         }
                     }

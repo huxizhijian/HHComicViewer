@@ -21,12 +21,17 @@ import android.app.Application;
 import org.xutils.DbManager;
 import org.xutils.x;
 
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.OkHttpClient;
+
 /**
  * 本工程的application
  * Created by wei on 2016/8/23.
  */
 public class HHApplication extends Application {
 
+    private volatile OkHttpClient mClient;
 
     public DbManager.DaoConfig getDaoConfig() {
         //初始化数据库
@@ -49,6 +54,24 @@ public class HHApplication extends Application {
         return daoConfig;
     }
 
+    public OkHttpClient getClient() {
+        if (mClient == null) {
+            createClient();
+        }
+        return mClient;
+    }
+
+    private void createClient() {
+        synchronized (OkHttpClient.class) {
+            if (mClient == null) {
+                mClient = new OkHttpClient.Builder()
+                        .connectTimeout(10000, TimeUnit.SECONDS)
+                        .readTimeout(180000, TimeUnit.SECONDS)
+                        .build();
+            }
+        }
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -56,5 +79,7 @@ public class HHApplication extends Application {
         x.Ext.init(this);
         //开启debug模式
         x.Ext.setDebug(true);
+        createClient();
     }
+
 }
