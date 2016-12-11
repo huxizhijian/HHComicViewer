@@ -40,15 +40,16 @@ import android.widget.ImageView;
 public class ZoomImageView extends ImageView implements OnScaleGestureListener,
         OnTouchListener, ViewTreeObserver.OnGlobalLayoutListener {
     private static final String TAG = ZoomImageView.class.getSimpleName();
-    public static final float SCALE_MAX = 2.0f;
+    private static final float SCALE_MAX = 2.0f;
     private static final float SCALE_MID = 1.5f;
+    private static final float SCALE_LINE = 1.2f;
 
     /**
      * 初始化时的缩放比例，如果图片宽或高大于屏幕，此值将小于0
      */
     private float initScale = 1.0f;
-    private float midScale = initScale * SCALE_MID;
-    private float maxScale = initScale * SCALE_MAX;
+    private float midScale = SCALE_MID;
+    private float maxScale = SCALE_MAX;
 
     private boolean once = true;
 
@@ -469,7 +470,15 @@ public class ZoomImageView extends ImageView implements OnScaleGestureListener,
             scale = Math.min(width * 1.0f / dw, height * 1.0f / dh);
         }
 
+        //重设各种缩放参数
         initScale = scale;
+        if (scale >= SCALE_LINE) {
+            midScale = scale * SCALE_MID;
+            maxScale = scale * SCALE_MAX;
+        } else {
+            midScale = SCALE_MID;
+            maxScale = SCALE_MAX;
+        }
 
         Log.i(TAG, "initScale = " + initScale);
         mScaleMatrix.postTranslate((width - dw) / 2, (height - dh) / 2);

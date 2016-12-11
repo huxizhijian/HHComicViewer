@@ -20,6 +20,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
+import android.os.Process;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -372,6 +373,8 @@ public class DownloadManager {
 
         DownloadThread(ThreadInfo mThreadInfo) {
             this.mThreadInfo = mThreadInfo;
+            //设置为后台线程（nice值为10）
+            Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
         }
 
         @Override

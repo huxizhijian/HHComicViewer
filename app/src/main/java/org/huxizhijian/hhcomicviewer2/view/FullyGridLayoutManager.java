@@ -105,7 +105,9 @@ public class FullyGridLayoutManager extends GridLayoutManager {
                     measuredDimension[1] = view.getMeasuredHeight() + p.bottomMargin + p.topMargin;
                     recycler.recycleView(view);
                 }
-            } catch (Exception e) {}
+            } catch (Exception e) {
+//                e.printStackTrace();
+            }
         }
     }
 }

@@ -71,7 +71,7 @@ public class NotificationUtil {
                 .setCategory(NotificationCompat.CATEGORY_PROGRESS);
         builder.setTicker(comicChapter.getChapterName() + " 开始下载");
         //设置通知消息
-        CharSequence contentTitle = comicChapter.getComicTitle() + " - 开始下载"; // 通知栏标题
+        CharSequence contentTitle = comicChapter.getChapterName() + " - 开始下载"; // 通知栏标题
         CharSequence contentText = 0 + "/" + comicChapter.getPageCount(); // 通知栏内容
         //设置点击通知栏之后的操作
         Intent intent = new Intent(mContext, DownloadManagerActivity.class);
@@ -109,7 +109,7 @@ public class NotificationUtil {
                 .setAutoCancel(true);
         //设置通知消息
         CharSequence contentTitle = comicChapter.getComicTitle(); // 通知栏标题
-        CharSequence contentText = comicChapter.getChapterName() + " 等章节 - 下载完毕"; // 通知栏内容
+        CharSequence contentText = comicChapter.getChapterName() + " 等 - 下载完毕"; // 通知栏内容
         //设置点击通知栏之后的操作
         Intent intent = new Intent(mContext, DownloadManagerActivity.class);
         //封装到PendingIntent中
@@ -143,7 +143,7 @@ public class NotificationUtil {
                 .setCategory(NotificationCompat.CATEGORY_PROGRESS);
         builder.setTicker(comicChapter.getChapterName() + " 正在下载");
         //设置通知消息
-        CharSequence contentTitle = comicChapter.getComicTitle() + " - 正在下载"; // 通知栏标题
+        CharSequence contentTitle = comicChapter.getChapterName() + " - 正在下载"; // 通知栏标题
         CharSequence contentText = comicChapter.getDownloadPosition() + "/" + comicChapter.getPageCount(); // 通知栏内容
         //设置点击通知栏之后的操作
         Intent intent = new Intent(mContext, DownloadManagerActivity.class);

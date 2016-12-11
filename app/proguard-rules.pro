@@ -16,6 +16,11 @@
 #   public *;
 #}
 
+#databinding混淆设置
+-keep class android.databinding.** { *; }
+-dontwarn sun.misc.**
+-dontwarn android.databinding.**
+
 # xUtils混淆设置
 -keepattributes Signature,*Annotation*
 -keep public class org.xutils.** {
@@ -39,6 +44,16 @@
 -keep interface com.squareup.okhttp.** { *; }
 
 -dontwarn okio.**
+
+#MobShareSDK混淆设置
+-keep class cn.sharesdk.**{*;}
+	-keep class com.sina.**{*;}
+	-keep class **.R$* {*;}
+	-keep class **.R{*;}
+	-keep class com.mob.**{*;}
+	-dontwarn com.mob.**
+	-dontwarn cn.sharesdk.**
+	-dontwarn **.R$*
 
 #指定压缩级别
 -optimizationpasses 5

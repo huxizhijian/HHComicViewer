@@ -32,23 +32,32 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.transition.Fade;
 import android.transition.Transition;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewAnimationUtils;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateInterpolator;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.rey.material.app.BottomSheetDialog;
 
 import org.huxizhijian.hhcomicviewer2.R;
+import org.huxizhijian.hhcomicviewer2.adapter.VolDownloadSelectorAdapter;
 import org.huxizhijian.hhcomicviewer2.adapter.VolRecyclerViewAdapter;
 import org.huxizhijian.hhcomicviewer2.app.HHApplication;
 import org.huxizhijian.hhcomicviewer2.databinding.ActivityComicDetailsBinding;
@@ -56,7 +65,6 @@ import org.huxizhijian.hhcomicviewer2.db.ComicChapterDBHelper;
 import org.huxizhijian.hhcomicviewer2.db.ComicDBHelper;
 import org.huxizhijian.hhcomicviewer2.enities.Comic;
 import org.huxizhijian.hhcomicviewer2.enities.ComicChapter;
-import org.huxizhijian.hhcomicviewer2.fragment.DownloadSelectorFragment;
 import org.huxizhijian.hhcomicviewer2.service.DownloadManagerService;
 import org.huxizhijian.hhcomicviewer2.utils.BaseUtils;
 import org.huxizhijian.hhcomicviewer2.utils.Constants;
@@ -64,18 +72,20 @@ import org.huxizhijian.hhcomicviewer2.view.FullyGridLayoutManager;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import cn.sharesdk.onekeyshare.OnekeyShare;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class ComicDetailsActivity extends AppCompatActivity implements View.OnClickListener,
-        DownloadSelectorFragment.SelectorDataBinder {
+
+public class ComicDetailsActivity extends AppCompatActivity implements View.OnClickListener {
 
     private ActivityComicDetailsBinding mBinding = null;
 
@@ -90,10 +100,9 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
     private List<String> mSelectedChapters;
     private String mUrl;
     private boolean isDescriptionOpen = false;
-
-    //下载选择页fragment
-    private FragmentTransaction mFt;
-    private DownloadSelectorFragment mDsFragment;
+    private boolean isDescriptionCanOpen = false;
+    private int mDetailsHeigth;
+    private int mBackHeigth;
 
     //章节列表adapter
     private VolRecyclerViewAdapter mVolAdapter;
@@ -295,6 +304,42 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
 
         //加载简介
         mBinding.comicDescriptionComicDetails.setText(mComic.getDescription());
+        //测量高度
+        mBinding.comicDescriptionComicDetailsBack.setVisibility(View.VISIBLE);
+        mBinding.comicDescriptionComicDetailsBack.setText(mComic.getDescription());
+        final ViewTreeObserver vto1 = mBinding.comicDescriptionComicDetails.getViewTreeObserver();
+        vto1.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                mDetailsHeigth = mBinding.comicDescriptionComicDetails.getHeight();
+                //获得高度之后，移除监听
+                vto1.removeGlobalOnLayoutListener(this);
+            }
+        });
+        //测量tv_back 的高度
+        ViewTreeObserver vto = mBinding.comicDescriptionComicDetailsBack.getViewTreeObserver();
+        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+
+            @Override
+            public void onGlobalLayout() {
+                mBackHeigth = mBinding.comicDescriptionComicDetailsBack.getHeight();
+                mBinding.comicDescriptionComicDetailsBack.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+
+                //比较高度：
+                if (mBackHeigth > mDetailsHeigth) {
+                    //说明有展开的内容：
+                    mBinding.ivArrow.setVisibility(View.VISIBLE);
+                    //默认是关闭状态：
+                    mBinding.comicDescriptionComicDetails.setTag(true);
+                    isDescriptionCanOpen = true;
+                } else {
+                    mBinding.ivArrow.setVisibility(View.GONE);
+                    isDescriptionCanOpen = false;
+                }
+
+                mBinding.comicDescriptionComicDetailsBack.setVisibility(View.GONE);
+            }
+        });
 
         //加载评分信息
         mBinding.ratingBarComicDetails.setRating((mComic.getRatingNumber() / 10.0f) * 5.0f);
@@ -345,7 +390,7 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
         mBinding.btnDownload.setOnClickListener(this);
         //其他控件
         mBinding.comicAuthorComicDetails.setOnClickListener(this);
-        mBinding.comicDescriptionComicDetails.setOnClickListener(this);
+        mBinding.comicDescriptionComicDetailsLl.setOnClickListener(this);
     }
 
     private void initDBValues() {
@@ -388,7 +433,11 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                this.finish();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    this.finishAfterTransition();
+                } else {
+                    this.finish();
+                }
                 return true;
             case R.id.menu_read_comic_info:
                 read();
@@ -442,6 +491,51 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
         //注销receiver
         if (mReceiver != null) {
             unregisterReceiver(mReceiver);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        fixInputMethodManagerLeak(this);
+    }
+
+    public static void fixInputMethodManagerLeak(Context destContext) {
+        if (destContext == null) {
+            return;
+        }
+
+        InputMethodManager imm = (InputMethodManager) destContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm == null) {
+            return;
+        }
+
+        String[] arr = new String[]{"mCurRootView", "mServedView", "mNextServedView"};
+        Field f = null;
+        Object obj_get = null;
+        for (int i = 0; i < arr.length; i++) {
+            String param = arr[i];
+            try {
+                f = imm.getClass().getDeclaredField(param);
+                if (!f.isAccessible()) {
+                    f.setAccessible(true);
+                } // author: sodino mail:sodino@qq.com
+                obj_get = f.get(imm);
+                if (obj_get != null && obj_get instanceof View) {
+                    View v_get = (View) obj_get;
+                    if (v_get.getContext() == destContext) { // 被InputMethodManager持有引用的context是想要目标销毁的
+                        f.set(imm, null); // 置空，破坏掉path to gc节点
+                    } else {
+                        // 不是想要目标销毁的，即为又进了另一层界面了，不要处理，避免影响原逻辑,也就不用继续for循环了
+                        /*if (QLog.isColorLevel()) {
+                            QLog.d(ReflecterHelper.class.getSimpleName(), QLog.CLR, "fixInputMethodManagerLeak break, context is not suitable, get_context=" + v_get.getContext()+" dest_context=" + destContext);
+                        }*/
+                        break;
+                    }
+                }
+            } catch (Throwable t) {
+                t.printStackTrace();
+            }
         }
     }
 
@@ -505,6 +599,35 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
                 break;
             case R.id.btn_share:
                 //分享
+                if (mComic == null) break;
+
+                OnekeyShare oks = new OnekeyShare();
+                //关闭sso授权
+                oks.disableSSOWhenAuthorize();
+
+                // 分享时Notification的图标和文字  2.5.9以后的版本不调用此方法
+                //oks.setNotification(R.drawable.ic_launcher, getString(R.string.app_name));
+                // title标题，印象笔记、邮箱、信息、微信、人人网和QQ空间使用
+                oks.setTitle(mComic.getTitle());
+                // titleUrl是标题的网络链接，仅在Linked-in,QQ和QQ空间使用
+                oks.setTitleUrl(mComic.getComicUrl());
+                // text是分享文本，所有平台都需要这个字段
+                oks.setText("我在汗汗漫画网站上看到《" + mComic.getTitle() + "》这个漫画，非常有趣，你也来看看吧。");
+                //分享网络图片，新浪微博分享网络图片需要通过审核后申请高级写入接口，否则请注释掉测试新浪微博
+                oks.setImageUrl(mComic.getThumbnailUrl());
+                // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
+                //oks.setImagePath("/sdcard/test.jpg");//确保SDcard下面存在此张图片
+                // url仅在微信（包括好友和朋友圈）中使用
+                oks.setUrl(mComic.getComicUrl());
+                // comment是我对这条分享的评论，仅在人人网和QQ空间使用
+                // oks.setComment("我是测试评论文本");
+                // site是分享此内容的网站名称，仅在QQ空间使用
+                oks.setSite(getResources().getString(R.string.app_name_short));
+                // siteUrl是分享此内容的网站地址，仅在QQ空间使用
+                oks.setSiteUrl(Constants.HHCOMIC_URL);
+
+                // 启动分享GUI
+                oks.show(this);
                 break;
             case R.id.btn_find:
                 //搜索同一作者的作品
@@ -519,26 +642,14 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
                 if (mComic == null) {
                     Toast.makeText(ComicDetailsActivity.this, "请等待加载完成~", Toast.LENGTH_SHORT).show();
                 } else {
-                    //下载按钮事件
-                    if (mFt == null) {
-                        mFt = getSupportFragmentManager().beginTransaction();
-                    }
-                    mDsFragment = new DownloadSelectorFragment();
-                    //设置动画
-                    mFt.setCustomAnimations(
-                            R.anim.menu_show_action,
-                            R.anim.menu_hide_action,
-                            R.anim.menu_show_action,
-                            R.anim.menu_hide_action);
-
-                    //让FAB消失
-                    mBinding.FABComicDetails.setVisibility(View.GONE);
-
-                    mFt.replace(R.id.comic_details_content, mDsFragment);
-                    mFt.addToBackStack(null);
-                    mFt.commit();
-                    mDsFragment = null;
-                    mFt = null;
+                    BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
+                    View view = LayoutInflater.from(this).inflate(R.layout.fragment_download_selector, null);
+                    //设置各种事件
+                    setupContentViewListener(view, bottomSheetDialog);
+                    bottomSheetDialog.contentView(view);
+                    bottomSheetDialog.heightParam(ViewGroup.LayoutParams.WRAP_CONTENT);
+                    bottomSheetDialog.cancelable(true);
+                    bottomSheetDialog.show();
                 }
                 break;
             case R.id.comic_author_comic_details:
@@ -549,24 +660,70 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
                 intent.putExtra(SearchManager.QUERY, mComic.getAuthor());
                 startActivity(intent);
                 break;
-            case R.id.comic_description_comic_details:
-                //打开漫画简介
+            case R.id.comic_description_comic_details_ll:
+                //打开漫画简介，改变箭头方向，如果简介不能打开，返回
+                if (!isDescriptionCanOpen) break;
+
                 if (!isDescriptionOpen) {
+                    mBinding.ivArrow.setImageResource(R.mipmap.arrow_up_black_24dp);
                     mBinding.comicDescriptionComicDetails.setMaxLines(1024);
-                    mBinding.comicDescriptionComicDetails.setText(mComic.getDescription());
                     isDescriptionOpen = !isDescriptionOpen;
                 } else {
+                    mBinding.ivArrow.setImageResource(R.mipmap.arrow_down_black_24dp);
                     mBinding.comicDescriptionComicDetails.setMaxLines(4);
-                    mBinding.comicDescriptionComicDetails.setText(mComic.getDescription());
                     isDescriptionOpen = !isDescriptionOpen;
                 }
                 break;
         }
     }
 
-    @Override
-    public Comic getComic() {
-        return mComic;
+    private void setupContentViewListener(View view, final BottomSheetDialog dialog) {
+        Button startDownload = (Button) view.findViewById(R.id.button_start_download_ds_fragment);
+        Button allSelect = (Button) view.findViewById(R.id.button_select_all_ds_fragment);
+        ImageView cancel = (ImageView) view.findViewById(R.id.image_cancel_ds_fragment);
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_download_selector);
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 4));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        final VolDownloadSelectorAdapter adapter = new VolDownloadSelectorAdapter(this,
+                mComic.getChapterName(), getDownloadedComicChapters(), mFinishedComicChapters);
+        adapter.setOnItemClickListener(new VolDownloadSelectorAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                adapter.chapterClick(position);
+            }
+
+            @Override
+            public void onItemLongClick(View view, int position) {
+            }
+        });
+        recyclerView.setAdapter(adapter);
+
+        startDownload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //开始下载
+                if (adapter.getSelectedchapterNames().size() == 0) {
+                    Toast.makeText(ComicDetailsActivity.this, "没有选择下载章节", Toast.LENGTH_SHORT).show();
+                } else {
+                    //将下载章节列表传送到Activity中
+                    sendSelectedChapters(adapter.getSelectedchapterNames());
+                    //关闭
+                    dialog.dismiss();
+                }
+            }
+        });
+        allSelect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                adapter.allSelect();
+            }
+        });
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
     }
 
     public List<String> getDownloadedComicChapters() {
@@ -581,12 +738,6 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
         }
     }
 
-    @Override
-    public List<String> getFinishedComicChapters() {
-        return mFinishedComicChapters;
-    }
-
-    @Override
     public void sendSelectedChapters(List<String> selectedChapters) {
         //更新漫画的数据库资料
         Comic findComic = mComicDBHelper.findByUrl(mComic.getComicUrl());
@@ -684,20 +835,6 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
                 break;
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
-
-    @Override
-    public void hideFragment() {
-        onBackPressed();
-        mFt = getSupportFragmentManager().beginTransaction();
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (mBinding.FABComicDetails.getVisibility() == View.GONE) {
-            mBinding.FABComicDetails.setVisibility(View.VISIBLE);
-        }
-        super.onBackPressed();
     }
 
     class ComicChapterDownloadUpdateReceiver extends BroadcastReceiver {

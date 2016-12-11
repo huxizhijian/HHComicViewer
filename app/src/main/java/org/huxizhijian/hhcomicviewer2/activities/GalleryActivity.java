@@ -63,6 +63,7 @@ import org.huxizhijian.hhcomicviewer2.view.ZoomImageView;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -104,15 +105,26 @@ public class GalleryActivity extends Activity implements View.OnClickListener {
 
     //使用handler循环更新时间
     private static final int UPDATE_TIME = 0x9;
-    Handler handler = new Handler() {
+
+    static class MyHandler extends Handler {
+        //使用弱引用，并且声明为静态内部类，否则会造成leak
+        WeakReference<TextView> mOut;
+
+        MyHandler(TextView tv_time) {
+            mOut = new WeakReference<>(tv_time);
+        }
+
         @Override
         public void handleMessage(Message msg) {
             if (msg.what == UPDATE_TIME) {
-                mTv_time.setText(BaseUtils.getNowDate());
+                TextView tv_time = mOut.get();
+                if (tv_time != null) {
+                    tv_time.setText(BaseUtils.getNowDate());
+                }
                 sendEmptyMessageDelayed(UPDATE_TIME, 10000);
             }
         }
-    };
+    }
 
     //用户设置
     private boolean loadOnLineFullSizeImage = false; //在线阅读下载全尺寸图片
@@ -266,7 +278,9 @@ public class GalleryActivity extends Activity implements View.OnClickListener {
         btn_prev.setOnClickListener(this);
         btn_next.setOnClickListener(this);
         mTv_time.setText(BaseUtils.getNowDate());
+
         //设置10秒后更新时间
+        MyHandler handler = new MyHandler(mTv_time);
         handler.sendEmptyMessageDelayed(UPDATE_TIME, 10000);
     }
 
@@ -602,6 +616,8 @@ public class GalleryActivity extends Activity implements View.OnClickListener {
                     if (mViewPagerAdapter != null) {
                         if (mViewPager.getCurrentItem() - 1 >= 0) {
                             mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1, false);
+                        } else {
+                            openPrevchapter();
                         }
                     }
                     return true;
@@ -609,6 +625,8 @@ public class GalleryActivity extends Activity implements View.OnClickListener {
                     if (mViewPagerAdapter != null) {
                         if (mViewPager.getCurrentItem() + 1 < mComicChapter.getPageCount()) {
                             mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1, false);
+                        } else {
+                            openNextChapter();
                         }
                     }
                     return true;

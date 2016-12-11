@@ -17,6 +17,7 @@
 package org.huxizhijian.hhcomicviewer2.fragment;
 
 
+import android.app.ActivityOptions;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
@@ -68,11 +69,27 @@ public class HistoryFragment extends Fragment {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                //封装intent
                 Intent intent = new Intent(getActivity(), ComicDetailsActivity.class);
                 intent.putExtra("url", mComics.get(position).getComicUrl());
                 intent.putExtra("thumbnailUrl", mComics.get(position).getThumbnailUrl());
                 intent.putExtra("title", mComics.get(position).getTitle());
-                startActivity(intent);
+
+                ImageView sharedView = (ImageView) view.findViewById(R.id.imageView_item);
+                if (sharedView.getDrawable() != null) {
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                        //如果是android5.0及以上，开启shareElement动画
+                        String transitionName = getString(R.string.image_transition_name);
+
+                        ActivityOptions transitionActivityOptions = ActivityOptions
+                                .makeSceneTransitionAnimation(getActivity(), sharedView, transitionName);
+                        startActivity(intent, transitionActivityOptions.toBundle());
+                    } else {
+                        startActivity(intent);
+                    }
+                } else {
+                    startActivity(intent);
+                }
             }
         });
     }
@@ -80,16 +97,6 @@ public class HistoryFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (mAdapter != null) {
-            mComics = mComicDBHelper.findAll();
-            if (mComics != null) {
-                mAdapter.setDatas(mComics);
-                mAdapter.notifyDataSetChanged();
-            }
-        }
-    }
-
-    public void refreshData() {
         if (mAdapter != null) {
             mComics = mComicDBHelper.findAll();
             if (mComics != null) {

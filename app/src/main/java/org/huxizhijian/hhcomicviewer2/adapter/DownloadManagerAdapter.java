@@ -476,13 +476,18 @@ public class DownloadManagerAdapter extends BaseExpandableListAdapter {
                 //如果父view的checked为true，将该父控件下的所有子控件删除
                 mDownloadedchapterList.get(mDownloadedComicList.get(i).getComicUrl()).clear();
             } else {
+                //待删除的章节
+                List<ComicChapter> willDeleteChapters = new ArrayList<>();
                 //单个子控件删除
                 for (int j = 0; j < mIsCheckedChild[i].length; j++) {
                     if (mIsCheckedChild[i][j]) {
                         ComicChapter comicChapter =
                                 mDownloadedchapterList.get(mDownloadedComicList.get(i).getComicUrl()).get(j);
-                        mDownloadedchapterList.get(mDownloadedComicList.get(i).getComicUrl()).remove(comicChapter);
+                        willDeleteChapters.add(comicChapter);
                     }
+                }
+                for (ComicChapter chapter : willDeleteChapters) {
+                    mDownloadedchapterList.get(mDownloadedComicList.get(i).getComicUrl()).remove(chapter);
                 }
             }
         }

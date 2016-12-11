@@ -152,7 +152,7 @@ public class DownloadManagerActivity extends AppCompatActivity implements View.O
                 }
                 System.gc();
                 if (mDownloadManager == null) {
-                    mDownloadManager = DownloadManager.getInstance(this);
+                    mDownloadManager = DownloadManager.getInstance(getApplicationContext());
                 }
                 return true;
             case R.id.menu_download_setting:
@@ -245,7 +245,7 @@ public class DownloadManagerActivity extends AppCompatActivity implements View.O
         mComicChapterDBHelper = ComicChapterDBHelper.getInstance(this);
         mDownloadedComicList = mComicDBHelper.findDownloadedComics();
         if (mDownloadManager == null) {
-            mDownloadManager = DownloadManager.getInstance(DownloadManagerActivity.this);
+            mDownloadManager = DownloadManager.getInstance(getApplicationContext());
         }
         if (mDownloadManager.hasMission()) {
             mBtn_all_control.setText("全部暂停");
@@ -424,7 +424,7 @@ public class DownloadManagerActivity extends AppCompatActivity implements View.O
 
             //button控件信息修改
             if (mDownloadManager == null) {
-                mDownloadManager = DownloadManager.getInstance(DownloadManagerActivity.this);
+                mDownloadManager = DownloadManager.getInstance(getApplicationContext());
             }
             if (mDownloadManager.hasMission()) {
                 mBtn_all_control.setText("全部暂停");
