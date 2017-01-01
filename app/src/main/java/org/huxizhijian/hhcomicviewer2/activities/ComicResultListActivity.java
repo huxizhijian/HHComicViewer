@@ -20,6 +20,7 @@ import android.app.ActivityOptions;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -181,6 +182,20 @@ public class ComicResultListActivity extends AppCompatActivity {
                             comic.setDescription(desc.get(2).text());
                             mComicList.add(comic);
                         }
+
+                        //保存搜索记录
+                        SharedPreferences sharedPreferences = getSharedPreferences("history", Context.MODE_PRIVATE);
+                        String group = sharedPreferences.getString("keys", "");
+                        String newGroup = null;
+                        String key = getIntent().getStringExtra(SearchManager.QUERY);
+                        if (group.equals("")) {
+                            newGroup = key;
+                        } else {
+                            newGroup = group + ":@" + key;
+                        }
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("keys", newGroup);
+                        editor.apply();
                     }
                     runOnUiThread(new Runnable() {
                         @Override

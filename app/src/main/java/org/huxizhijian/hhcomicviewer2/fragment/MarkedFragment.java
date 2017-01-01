@@ -17,11 +17,9 @@
 package org.huxizhijian.hhcomicviewer2.fragment;
 
 
-import android.app.ActivityOptions;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -30,12 +28,10 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.huxizhijian.hhcomicviewer2.R;
-import org.huxizhijian.hhcomicviewer2.activities.ComicDetailsActivity;
 import org.huxizhijian.hhcomicviewer2.adapter.StaggeredComicAdapter;
 import org.huxizhijian.hhcomicviewer2.db.ComicDBHelper;
 import org.huxizhijian.hhcomicviewer2.enities.Comic;
@@ -81,22 +77,7 @@ public class MarkedFragment extends Fragment {
         mMarkedComics = mComicDBHelper.findMarkedComics();
         if (mMarkedComics != null && mMarkedComics.size() != 0) {
             if (mAdapter == null) {
-                mAdapter = new StaggeredComicAdapter(getActivity(), mMarkedComics);
-                mAdapter.setOnItemClickListener(new StaggeredComicAdapter.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
-                        Intent intent = new Intent(getActivity(), ComicDetailsActivity.class);
-                        intent.putExtra("url", mMarkedComics.get(position).getComicUrl());
-                        intent.putExtra("thumbnailUrl", mMarkedComics.get(position).getThumbnailUrl());
-                        intent.putExtra("title", mMarkedComics.get(position).getTitle());
-                        startActivity(intent);
-                    }
-
-                    @Override
-                    public void onItemLongClick(View view, int position) {
-                        showDialog(position);
-                    }
-                });
+                mAdapter = new StaggeredComicAdapter(getActivity(), this, mMarkedComics);
                 StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(3,
                         StaggeredGridLayoutManager.VERTICAL);
                 mRecyclerView.setLayoutManager(layoutManager);
@@ -105,38 +86,7 @@ public class MarkedFragment extends Fragment {
                 mTv.setVisibility(View.GONE);
             } else {
                 mAdapter = null;
-                mAdapter = new StaggeredComicAdapter(getActivity(), mMarkedComics);
-                mAdapter.setOnItemClickListener(new StaggeredComicAdapter.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
-                        Intent intent = new Intent(getActivity(), ComicDetailsActivity.class);
-                        intent.putExtra("url", mMarkedComics.get(position).getComicUrl());
-                        intent.putExtra("thumbnailUrl", mMarkedComics.get(position).getThumbnailUrl());
-                        intent.putExtra("title", mMarkedComics.get(position).getTitle());
-
-                        ImageView sharedView = (ImageView) view.findViewById(R.id.imageView_staggered);
-
-                        if (sharedView.getDrawable() != null) {
-                            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-                                //如果是android5.0及以上，开启shareElement动画
-                                String transitionName = getString(R.string.image_transition_name);
-
-                                ActivityOptions transitionActivityOptions = ActivityOptions
-                                        .makeSceneTransitionAnimation(getActivity(), sharedView, transitionName);
-                                startActivity(intent, transitionActivityOptions.toBundle());
-                            } else {
-                                startActivity(intent);
-                            }
-                        } else {
-                            startActivity(intent);
-                        }
-                    }
-
-                    @Override
-                    public void onItemLongClick(View view, int position) {
-                        showDialog(position);
-                    }
-                });
+                mAdapter = new StaggeredComicAdapter(getActivity(), this, mMarkedComics);
                 StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(3,
                         StaggeredGridLayoutManager.VERTICAL);
                 mRecyclerView.setLayoutManager(layoutManager);
@@ -149,7 +99,7 @@ public class MarkedFragment extends Fragment {
         }
     }
 
-    private void showDialog(final int position) {
+    public void showDialog(final int position) {
         //先new出一个监听器，设置好监听
         DialogInterface.OnClickListener dialogOnClickListener = new DialogInterface.OnClickListener() {
 

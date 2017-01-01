@@ -19,10 +19,8 @@
       xmlns:huxi="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/menu_read_comic_info"
-        android:icon="@mipmap/read_24dp"
-        android:orderInCategory="0"
-        android:title="@string/read"
-        huxi:showAsAction="ifRoom|collapseActionView"/>
+        android:id="@+id/sort_comic_info"
+        android:title="排序"
+        huxi:showAsAction="never"/>
 
 </menu>

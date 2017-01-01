@@ -31,6 +31,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
@@ -48,6 +49,8 @@ import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -132,10 +135,45 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
         preLoadingImageAndTitle();
         initDBValues();
         initData();
+        setupAppBarListener();
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             setupEnterAnimations();
             setupExitAnimations();
         }
+    }
+
+    private CollapsingToolbarLayoutState state;
+
+    private enum CollapsingToolbarLayoutState {
+        EXPANDED, //展开
+        COLLAPSED, //收起
+        INTERNEDIATE //中间
+    }
+
+    private void setupAppBarListener() {
+        //设置监听事件，控制readButton的显隐
+        mBinding.appBarComicDetails.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                if (verticalOffset == 0) {
+                    if (state != CollapsingToolbarLayoutState.EXPANDED) {
+                        state = CollapsingToolbarLayoutState.EXPANDED;//修改状态标记为展开
+                    }
+                } else if (Math.abs(verticalOffset) >= appBarLayout.getTotalScrollRange()) {
+                    if (state != CollapsingToolbarLayoutState.COLLAPSED) {
+                        mBinding.readButton.setVisibility(View.VISIBLE);//隐藏播放按钮
+                        state = CollapsingToolbarLayoutState.COLLAPSED;//修改状态标记为折叠
+                    }
+                } else {
+                    if (state != CollapsingToolbarLayoutState.INTERNEDIATE) {
+                        if (state == CollapsingToolbarLayoutState.COLLAPSED) {
+                            mBinding.readButton.setVisibility(View.GONE);//由折叠变为中间状态时隐藏播放按钮
+                        }
+                        state = CollapsingToolbarLayoutState.INTERNEDIATE;//修改状态标记为中间
+                    }
+                }
+            }
+        });
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -381,8 +419,9 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
             mBinding.buttonTextFavoriteComicDetails.setText("已收藏");
         }
 
-        //单击时间注册
+        //单击事件注册
         mBinding.FABComicDetails.setOnClickListener(this);
+        mBinding.readButton.setOnClickListener(this);
         //四大按钮
         mBinding.btnFavorite.setOnClickListener(this);
         mBinding.btnShare.setOnClickListener(this);
@@ -391,6 +430,14 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
         //其他控件
         mBinding.comicAuthorComicDetails.setOnClickListener(this);
         mBinding.comicDescriptionComicDetailsLl.setOnClickListener(this);
+
+        //读取完毕显示数据
+        mBinding.loadingComicInfo.setVisibility(View.GONE);
+        mBinding.linearLayoutComicDetails.setVisibility(View.VISIBLE);
+        Animation alpha = AnimationUtils.loadAnimation(this, R.anim.alpha_in);
+        //加速度插值器
+        alpha.setInterpolator(new AccelerateInterpolator());
+        mBinding.linearLayoutComicDetails.startAnimation(alpha);
     }
 
     private void initDBValues() {
@@ -438,9 +485,6 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
                 } else {
                     this.finish();
                 }
-                return true;
-            case R.id.menu_read_comic_info:
-                read();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -673,6 +717,10 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
                     mBinding.comicDescriptionComicDetails.setMaxLines(4);
                     isDescriptionOpen = !isDescriptionOpen;
                 }
+                break;
+            case R.id.readButton:
+                //阅读按钮（FAB收起时显示）
+                read();
                 break;
         }
     }

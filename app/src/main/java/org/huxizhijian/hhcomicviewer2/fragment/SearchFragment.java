@@ -294,20 +294,6 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
                 //收起输入法
                 BaseUtils.hideInputMethod(mAtv_key, getActivity());
 
-                //保存搜索记录
-                if (mSharedPreferences != null) {
-                    String group = mSharedPreferences.getString("keys", "");
-                    String newGroup = null;
-                    if (group.equals("")) {
-                        newGroup = key;
-                    } else {
-                        newGroup = group + ":@" + key;
-                    }
-                    SharedPreferences.Editor editor = mSharedPreferences.edit();
-                    editor.putString("keys", newGroup);
-                    editor.apply();
-                }
-
                 //进行搜索操作
                 Intent intent = new Intent(getActivity(), ComicResultListActivity.class);
                 intent.setAction(Intent.ACTION_SEARCH);

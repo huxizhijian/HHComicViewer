@@ -16,7 +16,9 @@
 
 package org.huxizhijian.hhcomicviewer2.adapter;
 
+import android.app.ActivityOptions;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,7 +32,10 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 
 import org.huxizhijian.hhcomicviewer2.R;
+import org.huxizhijian.hhcomicviewer2.activities.ComicDetailsActivity;
+import org.huxizhijian.hhcomicviewer2.activities.MainActivity;
 import org.huxizhijian.hhcomicviewer2.enities.Comic;
+import org.huxizhijian.hhcomicviewer2.fragment.MarkedFragment;
 
 import java.util.List;
 
@@ -41,14 +46,15 @@ import java.util.List;
 public class StaggeredComicAdapter extends RecyclerView.Adapter<StaggeredComicAdapter.StaggeredViewHolder> {
 
     private List<Comic> mComicList;
-    private OnItemClickListener mOnItemClickListener;
     private LayoutInflater mInflater;
-    private Context mContext;
+    private MainActivity mContext;
+    private MarkedFragment mFragment;
 
-    public StaggeredComicAdapter(Context context, List<Comic> comicList) {
+    public StaggeredComicAdapter(Context context, MarkedFragment fragment, List<Comic> comicList) {
         this.mInflater = LayoutInflater.from(context);
         this.mComicList = comicList;
-        this.mContext = context;
+        this.mContext = (MainActivity) context;
+        this.mFragment = fragment;
     }
 
     @Override
@@ -79,38 +85,46 @@ public class StaggeredComicAdapter extends RecyclerView.Adapter<StaggeredComicAd
         return mComicList.size();
     }
 
-    protected void setUpItemEvent(final StaggeredViewHolder holder) {
-        if (mOnItemClickListener != null) {
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    mOnItemClickListener.onItemClick(holder.itemView, holder.getLayoutPosition());
+    private void setUpItemEvent(final StaggeredViewHolder holder) {
+        final int position = holder.getLayoutPosition();
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(mContext, ComicDetailsActivity.class);
+                intent.putExtra("url", mComicList.get(position).getComicUrl());
+                intent.putExtra("thumbnailUrl", mComicList.get(position).getThumbnailUrl());
+                intent.putExtra("title", mComicList.get(position).getTitle());
+
+                ImageView sharedView = (ImageView) view.findViewById(R.id.imageView_staggered);
+
+                if (sharedView.getDrawable() != null) {
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                        //如果是android5.0及以上，开启shareElement动画
+                        String transitionName = mContext.getString(R.string.image_transition_name);
+
+                        ActivityOptions transitionActivityOptions = ActivityOptions
+                                .makeSceneTransitionAnimation(mContext, sharedView, transitionName);
+                        mContext.startActivity(intent, transitionActivityOptions.toBundle());
+                    } else {
+                        mContext.startActivity(intent);
+                    }
+                } else {
+                    mContext.startActivity(intent);
                 }
-            });
+            }
+        });
 
-            //longClick
-            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    mOnItemClickListener.onItemLongClick(holder.itemView, holder.getLayoutPosition());
-                    return false;
-                }
-            });
-        }
+        //longClick
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                mFragment.showDialog(position);
+                return false;
+            }
+        });
     }
 
-
-    public interface OnItemClickListener {
-        void onItemClick(View view, int position);
-
-        void onItemLongClick(View view, int position);
-    }
-
-    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
-        this.mOnItemClickListener = onItemClickListener;
-    }
-
-    public void setComicList(List<Comic> comicList) {
+    public void updateComicList(List<Comic> comicList) {
         this.mComicList = comicList;
     }
 
