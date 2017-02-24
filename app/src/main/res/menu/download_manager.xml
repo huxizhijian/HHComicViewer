@@ -16,27 +16,25 @@
   -->
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:huxi="http://schemas.android.com/apk/res-auto">
+      xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/menu_manager_sync"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:icon="@mipmap/ic_refresh_black_24dp"
-        android:orderInCategory="0"
-        android:title="@string/menu_popup_sync"
-        huxi:showAsAction="ifRoom|collapseActionView"/>
+        android:id="@+id/menu_edit_mode"
+        android:icon="@drawable/ic_edit_24dp"
+        android:title="@string/edit"
+        app:showAsAction="always"/>
+
 
     <item
         android:id="@+id/menu_download_setting"
-        android:orderInCategory="1"
+        android:icon="@drawable/ic_setting_24dp"
         android:title="@string/download_setting"
-        />
+        app:showAsAction="always"/>
 
     <item
-        android:id="@+id/menu_all_stop"
-        android:orderInCategory="2"
-        android:title="@string/menu_all_stop"
-        huxi:showAsAction="never"/>
+        android:id="@+id/menu_edit_confirm"
+        android:icon="@drawable/ic_ok_24dp"
+        android:title="@string/right"
+        app:showAsAction="always"/>
 
 </menu>

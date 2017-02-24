@@ -26,9 +26,9 @@ import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
 
 import org.huxizhijian.hhcomicviewer2.R;
-import org.huxizhijian.hhcomicviewer2.activities.DownloadManagerActivity;
-import org.huxizhijian.hhcomicviewer2.enities.ComicChapter;
+import org.huxizhijian.hhcomicviewer2.model.ComicChapter;
 import org.huxizhijian.hhcomicviewer2.service.DownloadManagerService;
+import org.huxizhijian.hhcomicviewer2.ui.download.OfflineComicDownloadActivity;
 
 /**
  * 通知工具类
@@ -74,7 +74,7 @@ public class NotificationUtil {
         CharSequence contentTitle = comicChapter.getChapterName() + " - 开始下载"; // 通知栏标题
         CharSequence contentText = 0 + "/" + comicChapter.getPageCount(); // 通知栏内容
         //设置点击通知栏之后的操作
-        Intent intent = new Intent(mContext, DownloadManagerActivity.class);
+        Intent intent = new Intent(mContext, OfflineComicDownloadActivity.class);
         //封装到PendingIntent中
         PendingIntent contentIntent = PendingIntent.getActivity(mContext, 0, intent, 0);
         //统一设置
@@ -111,7 +111,7 @@ public class NotificationUtil {
         CharSequence contentTitle = comicChapter.getComicTitle(); // 通知栏标题
         CharSequence contentText = comicChapter.getChapterName() + " 等 - 下载完毕"; // 通知栏内容
         //设置点击通知栏之后的操作
-        Intent intent = new Intent(mContext, DownloadManagerActivity.class);
+        Intent intent = new Intent(mContext, OfflineComicDownloadActivity.class);
         //封装到PendingIntent中
         PendingIntent contentIntent = PendingIntent.getActivity(mContext, 0, intent, 0);
         //统一设置
@@ -146,7 +146,7 @@ public class NotificationUtil {
         CharSequence contentTitle = comicChapter.getChapterName() + " - 正在下载"; // 通知栏标题
         CharSequence contentText = comicChapter.getDownloadPosition() + "/" + comicChapter.getPageCount(); // 通知栏内容
         //设置点击通知栏之后的操作
-        Intent intent = new Intent(mContext, DownloadManagerActivity.class);
+        Intent intent = new Intent(mContext, OfflineComicDownloadActivity.class);
         //封装到PendingIntent中
         PendingIntent contentIntent = PendingIntent.getActivity(mContext, 0, intent, 0);
         //统一设置

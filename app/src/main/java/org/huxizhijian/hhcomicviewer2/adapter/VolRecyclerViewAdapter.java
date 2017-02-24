@@ -61,12 +61,14 @@ public class VolRecyclerViewAdapter extends RecyclerView.Adapter<VolRecyclerView
     }
 
     public VolRecyclerViewAdapter(Context context, List<String> volName,
-                                  int ChapterPosition, List<String> finishedComicChapters) {
+                                  int chapterPosition, List<String> finishedComicChapters) {
         this.mVolName = volName;
         this.mInflater = LayoutInflater.from(context);
         this.mContext = context;
-        this.mChapterPosition = ChapterPosition;
-        this.mIsReaded = true;
+        if (chapterPosition != -1) {
+            this.mIsReaded = true;
+        }
+        this.mChapterPosition = chapterPosition;
         this.mFinishedComicChapterList = finishedComicChapters;
     }
 
@@ -74,6 +76,10 @@ public class VolRecyclerViewAdapter extends RecyclerView.Adapter<VolRecyclerView
     public VolViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = mInflater.inflate(R.layout.item_vol_recycler_view, parent, false);
         return new VolViewHolder(view);
+    }
+
+    public void setVolName(List<String> volName) {
+        mVolName = volName;
     }
 
     @Override

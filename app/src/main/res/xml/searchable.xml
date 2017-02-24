@@ -15,5 +15,5 @@
   ~ limitations under the License.
   -->
 <searchable xmlns:android="http://schemas.android.com/apk/res/android"
-    android:hint="@string/searchable_hint"
-    android:label="@string/searchable_label" />
+    android:hint="@string/search_hint"
+    android:label="@string/search_label" />

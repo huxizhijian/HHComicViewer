@@ -16,14 +16,13 @@
   -->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
-        tools:context=".activities.GalleryActivity">
+        tools:context=".ui.entry.GalleryActivity">
 
-    <FrameLayout
+    <org.huxizhijian.hhcomicviewer2.view.OpenMenuFrameLayout
         android:id="@+id/frame_gallery"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#111111"
-        >
+        android:background="#111111">
 
         <TextView
             android:id="@+id/tv_position_gallery"
@@ -36,7 +35,14 @@
         <android.support.v4.view.ViewPager
             android:id="@+id/viewPager_gallery"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:visibility="gone"/>
+
+        <org.huxizhijian.hhcomicviewer2.view.ZoomableListView
+            android:id="@+id/list_view_gallery"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"/>
 
         <ProgressBar
             android:id="@+id/pg_loading_gallery"
@@ -147,6 +153,6 @@
 
         </RelativeLayout>
 
-    </FrameLayout>
+    </org.huxizhijian.hhcomicviewer2.view.OpenMenuFrameLayout>
 </layout>
 

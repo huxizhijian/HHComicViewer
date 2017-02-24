@@ -21,7 +21,7 @@
     android:orientation="vertical"
     android:paddingLeft="4dp"
     android:paddingRight="4dp"
-    tools:context=".fragment.MarkedFragment">
+    tools:context=".ui.entry.MarkedFragment">
 
     <TextView
         android:id="@+id/textView_no_marked"
@@ -32,9 +32,16 @@
         android:text="@string/none_marked"
         android:visibility="gone"/>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view_marked"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_marked"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view_marked"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </LinearLayout>

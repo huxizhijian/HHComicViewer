@@ -19,4 +19,21 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="item_vol_card_view_margin">0dp</dimen>
     <dimen name="item_staggered_card_view_margin">2dp</dimen>
+    <dimen name="nav_header_vertical_spacing">16dp</dimen>
+    <dimen name="nav_header_height">160dp</dimen>
+
+    <dimen name="padding_normal">16dp</dimen>
+    <dimen name="padding_large">24dp</dimen>
+
+    <dimen name="spacing_huge">64dp</dimen>
+    <dimen name="spacing_micro">4dp</dimen>
+
+    <dimen name="z_app_bar">4dp</dimen>
+    <dimen name="z_card">2dp</dimen>
+    <dimen name="touch_raise">6dp</dimen>
+    <dimen name="z_dialog">24dp</dimen>
+
+    <dimen name="fab_large">56dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+
 </resources>

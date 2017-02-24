@@ -33,6 +33,9 @@ import android.view.View.OnTouchListener;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
+import org.huxizhijian.hhcomicviewer2.view.listener.OnCenterTapListener;
+import org.huxizhijian.hhcomicviewer2.view.listener.OnLeftOrRightTapListener;
+
 /**
  * 可以缩放的ImageView
  * Created by wei on 2016/1/17.
@@ -539,25 +542,11 @@ public class ZoomImageView extends ImageView implements OnScaleGestureListener,
         return Math.sqrt((dx * dx) + (dy * dy)) >= mTouchSlop;
     }
 
-    public void setOnCenterTapListener(OnCenterTapListener onCenterTapListner) {
-        this.onCenterTapListener = onCenterTapListner;
+    public void setOnCenterTapListener(OnCenterTapListener onCenterTapListener) {
+        this.onCenterTapListener = onCenterTapListener;
     }
 
     public void setOnLeftOrRightTapListener(OnLeftOrRightTapListener leftOrRightTapListener) {
         this.onLeftOrRightTapListener = leftOrRightTapListener;
-    }
-
-    public interface OnCenterTapListener {
-        void openMenu();
-
-        void closeMenu();
-
-        boolean isOpen();
-    }
-
-    public interface OnLeftOrRightTapListener {
-        void leftTap();
-
-        void rightTap();
     }
 }

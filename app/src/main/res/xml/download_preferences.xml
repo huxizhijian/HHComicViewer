@@ -34,10 +34,4 @@
         android:summary="清理在漫画下载路径但是不在数据库中的漫画下载文件"
         android:title="清理下载冗余"/>
 
-    <CheckBoxPreference
-        android:defaultValue="false"
-        android:key="default_open_all"
-        android:summary="开启下载列表时会默认打开所有一级目录"
-        android:title="默认打开下载漫画组"/>
-
 </PreferenceScreen>

@@ -1,0 +1,100 @@
+/*
+ * Copyright 2016-2017 huxizhijian
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.huxizhijian.hhcomicviewer2.persenter.implpersenter;
+
+import org.huxizhijian.hhcomicviewer2.model.Comic;
+import org.huxizhijian.hhcomicviewer2.persenter.IComicDetailsPresenter;
+import org.huxizhijian.hhcomicviewer2.persenter.viewinterface.IComicDetailsActivity;
+import org.huxizhijian.hhcomicviewer2.utils.CommonUtils;
+import org.huxizhijian.hhcomicviewer2.utils.HHApiProvider;
+import org.huxizhijian.sdk.network.service.NormalRequest;
+import org.huxizhijian.sdk.network.service.NormalResponse;
+import org.jetbrains.annotations.NotNull;
+
+import java.io.UnsupportedEncodingException;
+
+/**
+ * Created by wei on 2017/1/3.
+ */
+
+public class ComicDetailsPresenter implements IComicDetailsPresenter {
+
+    private IComicDetailsActivity mComicDetailsActivity;
+
+    public ComicDetailsPresenter(@NotNull IComicDetailsActivity activity) {
+        this.mComicDetailsActivity = activity;
+    }
+
+    public String getComicUrl(int cid) {
+        return CommonUtils.getComicUrl(cid);
+    }
+
+    @Override
+    public void getComic(final int cid, final Comic oldComic) {
+        /*final Request request = new Request.Builder().get()
+                .url(CommonUtils.getComicUrl(cid))
+                .build();
+        HHApplication.getInstance().getClient().newCall(request)
+                .enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        mComicDetailsActivity.onFailure(e);
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        Comic comic = null;
+                        try {
+                            String content = new String(response.body().bytes(), "utf-8");
+                            //初始化
+                            if (oldComic == null) {
+                                comic = new Comic(cid, content);
+                            } else {
+                                comic = oldComic;
+                                comic.checkUpdate(content);
+                            }
+                            mComicDetailsActivity.onResponse(comic);
+                        } catch (UnsupportedEncodingException e) {
+                            mComicDetailsActivity.onFailure(e);
+                        }
+                    }
+                });*/
+        HHApiProvider.getInstance().getWebContentAsyn(CommonUtils.getComicUrl(cid), new NormalResponse<byte[]>() {
+            @Override
+            public void success(NormalRequest request, byte[] data) {
+                Comic comic = null;
+                try {
+                    String content = new String(data, "utf-8");
+                    //初始化
+                    if (oldComic == null) {
+                        comic = new Comic(cid, content);
+                    } else {
+                        comic = oldComic;
+                        comic.checkUpdate(content);
+                    }
+                    mComicDetailsActivity.onResponse(comic);
+                } catch (UnsupportedEncodingException e) {
+                    mComicDetailsActivity.onException(e);
+                }
+            }
+
+            @Override
+            public void fail(int errorCode, String errorMsg) {
+                mComicDetailsActivity.onFailure(errorCode, errorMsg);
+            }
+        });
+    }
+}

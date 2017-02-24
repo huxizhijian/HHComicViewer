@@ -15,33 +15,27 @@
   ~ limitations under the License.
   -->
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:elevation="2dp"
-                android:padding="8dp">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    android:orientation="horizontal"
+    android:padding="8dp">
 
     <ImageView
         android:id="@+id/imageView_item"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
+        android:layout_weight="2"
         android:adjustViewBounds="true"
-        android:maxHeight="117dp"
-        android:maxWidth="88dp"
         android:src="@mipmap/blank"
         android:transitionName="@string/image_transition_name"/>
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/imageView_item"
-        android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/imageView_item"
-        android:layout_toRightOf="@+id/imageView_item"
+        android:layout_weight="5"
         android:orientation="vertical">
 
         <TextView
@@ -79,4 +73,4 @@
 
     </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>

@@ -17,6 +17,21 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <Preference
+        android:key="open_reading_setting"
+        android:summary="打开阅读设置"
+        android:title="阅读设置"/>
+
+    <Preference
+        android:key="open_download_setting"
+        android:summary="打开下载设置"
+        android:title="下载设置"/>
+
+    <Preference
+        android:key="open_advance_setting"
+        android:summary="打开高级设置"
+        android:title="高级设置"/>
+
+    <Preference
         android:key="author"
         android:summary="@string/app_author_info"
         android:title="作者"/>

@@ -19,7 +19,7 @@
       xmlns:huxi="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/sort_comic_info"
+        android:id="@+id/menu_sort"
         android:title="排序"
         huxi:showAsAction="never"/>
 

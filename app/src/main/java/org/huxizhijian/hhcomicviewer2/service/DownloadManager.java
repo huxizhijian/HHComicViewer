@@ -22,16 +22,17 @@ import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Process;
 import android.preference.PreferenceManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
-import org.huxizhijian.hhcomicviewer2.app.HHApplication;
+import org.huxizhijian.hhcomicviewer2.HHApplication;
 import org.huxizhijian.hhcomicviewer2.db.ComicChapterDBHelper;
 import org.huxizhijian.hhcomicviewer2.db.ComicDBHelper;
 import org.huxizhijian.hhcomicviewer2.db.DownloadThreadDBHelper;
-import org.huxizhijian.hhcomicviewer2.enities.Comic;
-import org.huxizhijian.hhcomicviewer2.enities.ComicChapter;
-import org.huxizhijian.hhcomicviewer2.enities.ThreadInfo;
-import org.huxizhijian.hhcomicviewer2.utils.BaseUtils;
+import org.huxizhijian.hhcomicviewer2.model.Comic;
+import org.huxizhijian.hhcomicviewer2.model.ComicChapter;
+import org.huxizhijian.hhcomicviewer2.model.ThreadInfo;
+import org.huxizhijian.hhcomicviewer2.utils.CommonUtils;
 import org.huxizhijian.hhcomicviewer2.utils.Constants;
 import org.huxizhijian.hhcomicviewer2.utils.NotificationUtil;
 
@@ -57,6 +58,7 @@ import okhttp3.Response;
 public class DownloadManager {
 
     private static volatile DownloadManager mDownloadManager; //单例模式
+
     private ComicChapterDBHelper mComicChapterDBHelper; //DB控制
     private DownloadThreadDBHelper mDownloadThreadDBHelper; //下载线程DB控制
     private LinkedList<ComicChapter> mComicChapterLinkedList; //待下载列表
@@ -140,27 +142,27 @@ public class DownloadManager {
     public void deleteChapter(ComicChapter comicChapter) {
         //取消这个任务
         setDownloadPause(comicChapter);
-        if (mDownloadThreadDBHelper.findByChapterUrl(comicChapter.getChapterUrl()) != null) {
+        if (mDownloadThreadDBHelper.findByChapterUrl(comicChapter.getChid()) != null) {
             //删除章节数据库信息
-            mDownloadThreadDBHelper.deleteAllChapterThread(comicChapter.getChapterUrl());
+            mDownloadThreadDBHelper.deleteAllChapterThread(comicChapter.getChid());
         }
 
         //如果存在下载文件，则删除
-        BaseUtils.deleteDirectory(comicChapter.getSavePath());
+        CommonUtils.deleteDirectory(comicChapter.getSavePath());
 
         //删除漫画的数据库信息
         mComicChapterDBHelper.delete(comicChapter);
 
         //如果该任务下的comic没有下载的章节了
-        List<ComicChapter> chapters = mComicChapterDBHelper.findByComicUrl(comicChapter.getComicUrl());
+        List<ComicChapter> chapters = mComicChapterDBHelper.findByComicCid(comicChapter.getCid());
         if (chapters == null || chapters.size() == 0) {
             ComicDBHelper comicDBHelper = ComicDBHelper.getInstance(mContext);
-            Comic comic = comicDBHelper.findByUrl(comicChapter.getComicUrl());
+            Comic comic = comicDBHelper.findByCid(comicChapter.getCid());
             //将下载标记改为false
             comic.setDownload(false);
             comicDBHelper.update(comic);
             //删除上级目录
-            BaseUtils.deleteDirectoryParent(comicChapter.getSavePath());
+            CommonUtils.deleteDirectoryParent(comicChapter.getSavePath());
         }
     }
 
@@ -170,7 +172,7 @@ public class DownloadManager {
      * @param comicChapter
      */
     public void setDownloadPause(final ComicChapter comicChapter) {
-        if (mComicChapter != null && mComicChapter.getChapterUrl().equals(comicChapter.getChapterUrl())) {
+        if (mComicChapter != null && mComicChapter.getChid() == comicChapter.getChid()) {
             //如果要暂停的刚好正在下载
             //暂停线程
             isPause = true;
@@ -179,7 +181,7 @@ public class DownloadManager {
                 @Override
                 public void run() {
                     if (mComicChapter != null && isPause &&
-                            mComicChapter.getChapterUrl().equals(comicChapter.getChapterUrl())) {
+                            mComicChapter.getChid() == comicChapter.getChid()) {
                         for (int i = 0; i < mThreadList.size(); i++) {
                             if (mThreadList.get(i).getState() == Thread.State.RUNNABLE) {
                                 //如果线程还在进行，将其中断
@@ -195,7 +197,8 @@ public class DownloadManager {
                         Intent intent = new Intent(DownloadManagerService.ACTION_RECEIVER);
                         intent.putExtra("comicChapter", mComicChapter);
                         intent.putExtra("notification", "cancel");
-                        mContext.sendBroadcast(intent);
+                        intent.putExtra("state", Constants.DOWNLOAD_PAUSE);
+                        LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
                         mComicChapter = null;
                         //将标记改为false
                         isPause = false;
@@ -259,7 +262,7 @@ public class DownloadManager {
         //如果之前有进行过下载
         if (mComicChapter.getDownloadStatus() != Constants.DOWNLOAD_INIT) {
             //如果没有下载完毕
-            mInfos = mDownloadThreadDBHelper.findByChapterUrl(mComicChapter.getChapterUrl());
+            mInfos = mDownloadThreadDBHelper.findByChapterUrl(mComicChapter.getChid());
             if (mInfos == null) {
                 //没有进行过下载
                 newDownloadThreadInfo();
@@ -279,9 +282,10 @@ public class DownloadManager {
         }
         //向activity发送广播通知下载任务开始
         Intent intent = new Intent(DownloadManagerService.ACTION_RECEIVER);
-        intent.putExtra("notification", "show");
         intent.putExtra("comicChapter", mComicChapter);
-        mContext.sendBroadcast(intent);
+        intent.putExtra("notification", "show");
+        intent.putExtra("state", Constants.DOWNLOAD_START);
+        LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
     }
 
     /**
@@ -293,10 +297,10 @@ public class DownloadManager {
         mComicChapterDBHelper.update(mComicChapter);
         if (mComicChapter.getChapterName().length() > mThreadCount) {
             for (int i = 0; i < mThreadCount; i++) {
-                ThreadInfo threadInfo = new ThreadInfo(i, mThreadCount, 0, -1, 0, mComicChapter.getChapterUrl());
+                ThreadInfo threadInfo = new ThreadInfo(i, mThreadCount, 0, -1, 0, mComicChapter.getChid());
                 mDownloadThreadDBHelper.add(threadInfo);
             }
-            mInfos = mDownloadThreadDBHelper.findByChapterUrl(mComicChapter.getChapterUrl());
+            mInfos = mDownloadThreadDBHelper.findByChapterUrl(mComicChapter.getChid());
             for (ThreadInfo info : mInfos) {
                 DownloadThread thread = new DownloadThread(info);
                 sExecutorService.execute(thread);
@@ -308,9 +312,9 @@ public class DownloadManager {
             mComicChapterDBHelper.update(mComicChapter);
         } else {
             //如果并没有3页以上，转为单线程下载
-            ThreadInfo threadInfo = new ThreadInfo(0, 1, 0, -1, 0, mComicChapter.getChapterUrl());
+            ThreadInfo threadInfo = new ThreadInfo(0, 1, 0, -1, 0, mComicChapter.getChid());
             mDownloadThreadDBHelper.add(threadInfo);
-            mInfos = mDownloadThreadDBHelper.findByChapterUrl(mComicChapter.getChapterUrl());
+            mInfos = mDownloadThreadDBHelper.findByChapterUrl(mComicChapter.getChid());
             for (ThreadInfo info : mInfos) {
                 DownloadThread thread = new DownloadThread(info);
                 sExecutorService.execute(thread);
@@ -342,7 +346,8 @@ public class DownloadManager {
             Intent intent = new Intent(DownloadManagerService.ACTION_RECEIVER);
             intent.putExtra("comicChapter", mComicChapter);
             intent.putExtra("notification", "cancel");
-            mContext.sendBroadcast(intent);
+            intent.putExtra("state", Constants.DOWNLOAD_PAUSE);
+            LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
             mComicChapter = null;
             //将标记改为false
             isPause = false;
@@ -382,7 +387,7 @@ public class DownloadManager {
             if (mComicChapter == null) return;
             RandomAccessFile raf = null;
             Response response = null;
-            if (mDownloadThreadDBHelper.findByChapterUrl(mThreadInfo.getComicChapterUrl()) == null) {
+            if (mDownloadThreadDBHelper.findByChapterUrl(mThreadInfo.getChid()) == null) {
                 //如果没有该线程的数据库信息，保存该信息
                 mDownloadThreadDBHelper.add(mThreadInfo);
             }
@@ -412,7 +417,9 @@ public class DownloadManager {
                     //向activity发送广播通知下载任务进行中
                     Intent intent = new Intent(DownloadManagerService.ACTION_RECEIVER);
                     intent.putExtra("comicChapter", mComicChapter);
-                    mContext.sendBroadcast(intent);
+                    intent.putExtra("state", Constants.DOWNLOAD_DOWNLOADING);
+                    LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
+
                     Request.Builder builder = new Request.Builder().url(mComicChapter.getPicList().get(mThreadInfo.getThreadPosition() *
                             (mComicChapter.getPageCount() / mThreadInfo.getThreadCount()) +
                             mThreadInfo.getDownloadPosition()));
@@ -433,7 +440,7 @@ public class DownloadManager {
                         }
                         File file = null;
 
-                        file = new File(filePath, BaseUtils.getPageName(mThreadInfo.getThreadPosition() *
+                        file = new File(filePath, CommonUtils.getPageName(mThreadInfo.getThreadPosition() *
                                 (mComicChapter.getPageCount() / mThreadInfo.getThreadCount()) +
                                 mThreadInfo.getDownloadPosition()));
                         //可以在任意位置进行写入的输出流
@@ -464,7 +471,7 @@ public class DownloadManager {
                         response = mClient.newCall(builder.addHeader("Range",
                                 "bytes=" + start + "-" + mThreadInfo.getLength()).build()).execute();
                         //设置写入的文件
-                        File file = new File(filePath, BaseUtils.getPageName(mThreadInfo.getThreadPosition() *
+                        File file = new File(filePath, CommonUtils.getPageName(mThreadInfo.getThreadPosition() *
                                 (mComicChapter.getPageCount() / mThreadInfo.getThreadCount()) +
                                 mThreadInfo.getDownloadPosition()));
                         raf = new RandomAccessFile(file, "rwd");
@@ -499,7 +506,8 @@ public class DownloadManager {
                     //设置长度为需要重新获取
                     mThreadInfo.setLength(-1);
                     //将下载进度往前推一页
-                    Log.i(TAG, "run: thread-" + mThreadInfo.getThreadPosition() + " finish page " + mThreadInfo.getDownloadPosition());
+                    Log.i(TAG, "run: thread-" + mThreadInfo.getThreadPosition() +
+                            " finish page " + mThreadInfo.getDownloadPosition());
                     mThreadInfo.setDownloadPosition(mThreadInfo.getDownloadPosition() + 1);
                     mDownloadThreadDBHelper.update(mThreadInfo);
                 }
@@ -517,7 +525,8 @@ public class DownloadManager {
                 Intent intent = new Intent(DownloadManagerService.ACTION_RECEIVER);
                 intent.putExtra("comicChapter", mComicChapter);
                 intent.putExtra("notification", "cancel");
-                mContext.sendBroadcast(intent);
+                intent.putExtra("state", Constants.DOWNLOAD_ERROR);
+                LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
                 mComicChapterDBHelper.update(mComicChapter);
 
                 isError = true;
@@ -566,15 +575,19 @@ public class DownloadManager {
             }
             if (allFinished) {
                 //下载完成后删除本任务线程信息
-                mDownloadThreadDBHelper.deleteAllChapterThread(mThreadInfo.getComicChapterUrl());
+                mDownloadThreadDBHelper.deleteAllChapterThread(mThreadInfo.getChid());
                 mComicChapter.setDownloadStatus(Constants.DOWNLOAD_FINISHED);
                 mComicChapter.setDownloadPosition(mComicChapter.getPageCount() - 1);
                 mComicChapterDBHelper.update(mComicChapter);
+
                 //向activity发送广播通知下载任务结束
                 Intent intent = new Intent(DownloadManagerService.ACTION_RECEIVER);
-                intent.putExtra("notification", "cancel");
                 intent.putExtra("comicChapter", mComicChapter);
-                mContext.sendBroadcast(intent);
+                intent.putExtra("notification", "cancel");
+                intent.putExtra("state", Constants.DOWNLOAD_FINISHED);
+                //使用本地广播
+                LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
+
                 Log.i(TAG, "checkAllThreadFinish: all finished " + mComicChapter.getChapterName());
                 Log.i(TAG, "checkAllThreadFinish: the position is " + mComicChapter.getDownloadPosition());
                 //下载完成通知

@@ -16,6 +16,8 @@
 
 package org.huxizhijian.hhcomicviewer2.utils;
 
+import org.huxizhijian.hhcomicviewer2.HHApplication;
+
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -26,13 +28,13 @@ import java.util.regex.Pattern;
  */
 public class ParsePicUrlList {
 
-    public static ArrayList<String> scanPicInPage(String url, String contents) {                        //获取图片网址列表
+    public static ArrayList<String> scanPicInPage(int serverId, String contents) {                        //获取图片网址列表
         String picListUrl = scanPicListUrl(contents);
         ArrayList<String> picList = new ArrayList<>();
         if (picListUrl == "") {
             return picList;
         }
-        picList = parsePicUrl(picListUrl, Constants.ENCODE_KEY, url);
+        picList = parsePicUrl(picListUrl, HHApplication.getInstance().getHHWebVariable().getEncodeKey(), serverId);
         return picList;
     }
 
@@ -48,20 +50,13 @@ public class ParsePicUrlList {
         return picList;
     }
 
-    private static ArrayList<String> parsePicUrl(String picListUrl, String keyWord, String url) {           //分析隐藏的图片网址,根据网站的js代码获取网址
-        String[] num = url.split("s=");
-        if (num.length < 2) {
-            ArrayList<String> fail = new ArrayList<>();
-            fail.add("");
-            return fail;
-        }
-        String number;
-        if (num[1].length() == 1) {
-            number = "0" + num[1];
+    private static ArrayList<String> parsePicUrl(String picListUrl, String keyWord, int serverId) {           //分析隐藏的图片网址,根据网站的js代码获取网址
+        String serverUrl = null;
+        if (serverId < 10) {
+            serverUrl = HHApplication.getInstance().getHHWebVariable().getPicServer() + "0" + serverId + "/";
         } else {
-            number = num[1];
+            serverUrl = HHApplication.getInstance().getHHWebVariable().getPicServer() + serverId + "/";
         }
-        String serverUrl = Constants.PIC_SERVICE_URL + number + "/";
         String k = keyWord.substring(0, keyWord.length() - 1);
         String f = keyWord.substring(keyWord.length() - 1);
         char charNum = '0';

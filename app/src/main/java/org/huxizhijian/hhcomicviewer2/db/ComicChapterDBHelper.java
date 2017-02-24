@@ -17,12 +17,13 @@
 package org.huxizhijian.hhcomicviewer2.db;
 
 import android.content.Context;
+import android.util.SparseArray;
 
-import org.huxizhijian.hhcomicviewer2.app.HHApplication;
-import org.huxizhijian.hhcomicviewer2.enities.ComicChapter;
+import org.huxizhijian.hhcomicviewer2.HHApplication;
+import org.huxizhijian.hhcomicviewer2.model.Comic;
+import org.huxizhijian.hhcomicviewer2.model.ComicChapter;
+import org.huxizhijian.hhcomicviewer2.model.ThreadInfo;
 import org.huxizhijian.hhcomicviewer2.utils.Constants;
-import org.huxizhijian.hhcomicviewer2.enities.Comic;
-import org.huxizhijian.hhcomicviewer2.enities.ThreadInfo;
 import org.xutils.DbManager;
 import org.xutils.db.sqlite.WhereBuilder;
 import org.xutils.ex.DbException;
@@ -30,9 +31,7 @@ import org.xutils.x;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Comicchapter的DB操作类
@@ -47,14 +46,31 @@ public class ComicChapterDBHelper {
         sDb = x.getDb(((HHApplication) context.getApplicationContext()).getDaoConfig());
     }
 
-    public Map<String, List<ComicChapter>> findDownloadChapterMap(List<Comic> downloadedComics) {
-        Map<String, List<ComicChapter>> downloadedChapterMap = new HashMap<>();
+    public SparseArray<List<ComicChapter>> findDownloadChapterMap(List<Comic> downloadedComics) {
+        if (downloadedComics == null || downloadedComics.size() == 0) return new SparseArray<>();
+        SparseArray<List<ComicChapter>> downloadedChapterMap = new SparseArray<>();
         List<ComicChapter> comicChapters;
         for (int i = 0; i < downloadedComics.size(); i++) {
-            comicChapters = findByComicUrl(downloadedComics.get(i).getComicUrl());
-            downloadedChapterMap.put(downloadedComics.get(i).getComicUrl(), comicChapters);
+            comicChapters = findByComicCid(downloadedComics.get(i).getCid());
+            downloadedChapterMap.put(downloadedComics.get(i).getCid(), comicChapters);
         }
         return downloadedChapterMap;
+    }
+
+    public List<Comic> findFinishedComicList(List<Comic> downloadedComics) {
+        if (downloadedComics == null || downloadedComics.size() == 0) return new ArrayList<>();
+        List<Comic> finishedComics = new ArrayList<>();
+        List<ComicChapter> comicChapters;
+        for (int i = 0; i < downloadedComics.size(); i++) {
+            comicChapters = findByComicCid(downloadedComics.get(i).getCid());
+            for (int j = 0; j < comicChapters.size(); j++) {
+                if (comicChapters.get(j).getDownloadStatus() == Constants.DOWNLOAD_FINISHED) {
+                    finishedComics.add(downloadedComics.get(i));
+                    break;
+                }
+            }
+        }
+        return finishedComics;
     }
 
     public List<ComicChapter> findUnFinishedChapters() {
@@ -71,10 +87,10 @@ public class ComicChapterDBHelper {
         return unFinishedChapters;
     }
 
-    public ComicChapter findByChapterUrl(String chapterUrl) {
+    public ComicChapter findByChapterId(long chid) {
         ComicChapter chapter = null;
         try {
-            chapter = sDb.selector(ComicChapter.class).where("chapter_url", "=", chapterUrl).findFirst();
+            chapter = sDb.selector(ComicChapter.class).where("chid", "=", chid).findFirst();
         } catch (DbException e) {
             e.printStackTrace();
         }
@@ -99,7 +115,7 @@ public class ComicChapterDBHelper {
     }
 
     public synchronized void delete(ComicChapter comicChapter) {
-        WhereBuilder builder = WhereBuilder.b("chapter_url", "=", comicChapter.getChapterUrl());
+        WhereBuilder builder = WhereBuilder.b("chid", "=", comicChapter.getChid());
         try {
             sDb.delete(ComicChapter.class, builder);
         } catch (DbException e) {
@@ -123,8 +139,8 @@ public class ComicChapterDBHelper {
         }
     }
 
-    public synchronized void deleteComicChapterOneComic(String comicUrl) {
-        WhereBuilder builder = WhereBuilder.b("comic_url", "=", comicUrl);
+    public synchronized void deleteComicChapterOneComic(int cid) {
+        WhereBuilder builder = WhereBuilder.b("cid", "=", cid);
         try {
             sDb.delete(ThreadInfo.class, builder);
         } catch (DbException e) {
@@ -132,10 +148,10 @@ public class ComicChapterDBHelper {
         }
     }
 
-    public List<ComicChapter> findByComicUrl(String comicUrl) {
+    public List<ComicChapter> findByComicCid(int cid) {
         List<ComicChapter> comicChapters = null;
         try {
-            comicChapters = sDb.selector(ComicChapter.class).where("comic_url", "=", comicUrl).findAll();
+            comicChapters = sDb.selector(ComicChapter.class).where("cid", "=", cid).findAll();
             if (comicChapters != null) {
                 Collections.sort(comicChapters);
             }

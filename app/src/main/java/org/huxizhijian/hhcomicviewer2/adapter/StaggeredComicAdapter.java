@@ -19,6 +19,7 @@ package org.huxizhijian.hhcomicviewer2.adapter;
 import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,16 +27,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
-
 import org.huxizhijian.hhcomicviewer2.R;
-import org.huxizhijian.hhcomicviewer2.activities.ComicDetailsActivity;
-import org.huxizhijian.hhcomicviewer2.activities.MainActivity;
-import org.huxizhijian.hhcomicviewer2.enities.Comic;
-import org.huxizhijian.hhcomicviewer2.fragment.MarkedFragment;
+import org.huxizhijian.hhcomicviewer2.model.Comic;
+import org.huxizhijian.hhcomicviewer2.ui.entry.ComicDetailsActivity;
+import org.huxizhijian.hhcomicviewer2.ui.entry.MarkedFragment;
+import org.huxizhijian.sdk.imageloader.ImageLoaderOptions;
+import org.huxizhijian.sdk.imageloader.listener.ImageLoaderManager;
 
 import java.util.List;
 
@@ -47,13 +44,17 @@ public class StaggeredComicAdapter extends RecyclerView.Adapter<StaggeredComicAd
 
     private List<Comic> mComicList;
     private LayoutInflater mInflater;
-    private MainActivity mContext;
+    private AppCompatActivity mContext;
     private MarkedFragment mFragment;
+    private int mLastClickComic;
+
+    //图片包装工具类
+    private ImageLoaderManager mImageLoader = ImageLoaderOptions.getImageLoaderManager();
 
     public StaggeredComicAdapter(Context context, MarkedFragment fragment, List<Comic> comicList) {
         this.mInflater = LayoutInflater.from(context);
         this.mComicList = comicList;
-        this.mContext = (MainActivity) context;
+        this.mContext = (AppCompatActivity) context;
         this.mFragment = fragment;
     }
 
@@ -65,19 +66,11 @@ public class StaggeredComicAdapter extends RecyclerView.Adapter<StaggeredComicAd
 
     @Override
     public void onBindViewHolder(final StaggeredViewHolder holder, int position) {
-        holder.tv.setText(mComicList.get(holder.getLayoutPosition()).getTitle());
-        Glide.with(mContext)
-                .load(mComicList.get(holder.getLayoutPosition()).getThumbnailUrl())
-                .placeholder(R.mipmap.blank)
-                .dontAnimate()
-                .into(new SimpleTarget<GlideDrawable>() {
-                    @Override
-                    public void onResourceReady(GlideDrawable glideDrawable,
-                                                GlideAnimation<? super GlideDrawable> glideAnimation) {
-                        holder.iv.setImageDrawable(glideDrawable);
-                    }
-                });
-        setUpItemEvent(holder);
+        if (position >= mComicList.size()) return;
+        holder.tv.setText(mComicList.get(position).getTitle());
+        mImageLoader.displayThumbnail(mContext, mComicList.get(position).getThumbnailUrl(), holder.iv,
+                R.mipmap.blank, R.mipmap.blank, 165, 220);
+        setUpItemEvent(holder, position);
     }
 
     @Override
@@ -85,13 +78,12 @@ public class StaggeredComicAdapter extends RecyclerView.Adapter<StaggeredComicAd
         return mComicList.size();
     }
 
-    private void setUpItemEvent(final StaggeredViewHolder holder) {
-        final int position = holder.getLayoutPosition();
+    private void setUpItemEvent(final StaggeredViewHolder holder, final int position) {
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mContext, ComicDetailsActivity.class);
-                intent.putExtra("url", mComicList.get(position).getComicUrl());
+                intent.putExtra("cid", mComicList.get(position).getCid());
                 intent.putExtra("thumbnailUrl", mComicList.get(position).getThumbnailUrl());
                 intent.putExtra("title", mComicList.get(position).getTitle());
 
@@ -111,17 +103,21 @@ public class StaggeredComicAdapter extends RecyclerView.Adapter<StaggeredComicAd
                 } else {
                     mContext.startActivity(intent);
                 }
+
+                mLastClickComic = holder.getLayoutPosition();
             }
         });
 
-        //longClick
-        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                mFragment.showDialog(position);
-                return false;
-            }
-        });
+        if (mFragment != null) {
+            //longClick
+            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    mFragment.showDialog(holder.getLayoutPosition(), mComicList.get(holder.getLayoutPosition()));
+                    return false;
+                }
+            });
+        }
     }
 
     public void updateComicList(List<Comic> comicList) {
@@ -131,6 +127,15 @@ public class StaggeredComicAdapter extends RecyclerView.Adapter<StaggeredComicAd
     public void removeItem(int position) {
         mComicList.remove(position);
         notifyItemRemoved(position);
+        notifyItemRangeChanged(position, mComicList.size() - 1);
+    }
+
+    public int getLastClickComic() {
+        return mLastClickComic;
+    }
+
+    public void setLastClickComic(int lastClickComic) {
+        mLastClickComic = lastClickComic;
     }
 
     class StaggeredViewHolder extends RecyclerView.ViewHolder {
@@ -138,7 +143,7 @@ public class StaggeredComicAdapter extends RecyclerView.Adapter<StaggeredComicAd
         ImageView iv;
         TextView tv;
 
-        public StaggeredViewHolder(View itemView) {
+        StaggeredViewHolder(View itemView) {
             super(itemView);
             //绑定控件
             iv = (ImageView) itemView.findViewById(R.id.imageView_staggered);

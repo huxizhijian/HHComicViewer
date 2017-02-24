@@ -17,10 +17,10 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <Preference
+        android:id="@+id/preference"
         android:key="export_database"
         android:summary="将当前漫画的收藏、阅读及下载的信息导出到其他地方，即使卸载了程序也不会消失"
-        android:title="导出数据"
-        android:id="@+id/preference"/>
+        android:title="导出数据"/>
     <Preference
         android:key="import_database"
         android:summary="恢复导出的漫画收藏、阅读及下载信息"
@@ -34,8 +34,8 @@
         android:title="阅读缓存大小"/>
 
     <Preference
-        android:key="open_download_setting"
-        android:summary="打开下载设置"
-        android:title="下载设置"/>
+        android:key="clear_cache"
+        android:summary="清除在线阅读和缩略图的缓存"
+        android:title="@string/clear_the_cache"/>
 
 </PreferenceScreen>

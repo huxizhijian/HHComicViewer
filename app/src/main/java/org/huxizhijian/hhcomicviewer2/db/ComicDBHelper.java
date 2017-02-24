@@ -18,8 +18,8 @@ package org.huxizhijian.hhcomicviewer2.db;
 
 import android.content.Context;
 
-import org.huxizhijian.hhcomicviewer2.app.HHApplication;
-import org.huxizhijian.hhcomicviewer2.enities.Comic;
+import org.huxizhijian.hhcomicviewer2.HHApplication;
+import org.huxizhijian.hhcomicviewer2.model.Comic;
 import org.xutils.DbManager;
 import org.xutils.ex.DbException;
 import org.xutils.x;
@@ -65,13 +65,13 @@ public class ComicDBHelper {
                 if (comic.getChapterNameList() == null || comic.getChapterNameList().equals("")) {
                     comic.saveChapterNameList();
                 }
-                if (comic.getChapterUrlList() == null || comic.getChapterUrlList().equals("")) {
-                    comic.saveChapterUrlList();
+                if (comic.getChapterIdList() == null || comic.getChapterIdList().equals("")) {
+                    comic.saveChapterIdList();
                 }
             }
             if (comic.isUpdate()) {
                 comic.saveChapterNameList();
-                comic.saveChapterUrlList();
+                comic.saveChapterIdList();
             }
             sDb.save(comic);
         } catch (DbException e) {
@@ -85,13 +85,13 @@ public class ComicDBHelper {
                 if (comic.getChapterNameList() == null || comic.getChapterNameList().equals("")) {
                     comic.saveChapterNameList();
                 }
-                if (comic.getChapterUrlList() == null || comic.getChapterUrlList().equals("")) {
-                    comic.saveChapterUrlList();
+                if (comic.getChapterIdList() == null || comic.getChapterIdList().equals("")) {
+                    comic.saveChapterIdList();
                 }
             }
             if (comic.isUpdate()) {
                 comic.saveChapterNameList();
-                comic.saveChapterUrlList();
+                comic.saveChapterIdList();
                 comic.setUpdate(false);
             }
             sDb.update(comic);
@@ -100,8 +100,8 @@ public class ComicDBHelper {
         }
     }
 
-    public Comic findByUrl(String url) {
-        Comic comic = findByUrlInTable(url);
+    public Comic findByCid(int cid) {
+        Comic comic = findByCidInTable(cid);
         if (comic != null) {
             if (comic.isMark() || comic.isDownload()) {
                 comic.initChapterNameAndList();
@@ -111,10 +111,10 @@ public class ComicDBHelper {
     }
 
     //直接读取表内相符url的Comic类
-    private Comic findByUrlInTable(String comicUrl) {
+    private Comic findByCidInTable(int cid) {
         Comic comic = null;
         try {
-            comic = sDb.selector(Comic.class).where("comic_url", "=", comicUrl).findFirst();
+            comic = sDb.selector(Comic.class).where("cid", "=", cid).findFirst();
         } catch (DbException e) {
             e.printStackTrace();
         }

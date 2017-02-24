@@ -24,8 +24,10 @@ import android.os.Environment;
  */
 
 public class Constants {
-    public static final String HHCOMIC_URL = "http://www.popomh.com"; //主站网址
+    public static final String HHCOMIC_URL = "http://www.hhssee.com"; //主站网址
+    public static final String HHCOMIC_PRE_ID = "/manhua";
     public static final String COMIC_VOL_PAGE = "http://www.huhudm.com/mh/hu"; //漫画章节网址
+    public static final String COMIC_VOL_BEHIND_ID = ".htm?s=";
     public static final String ENCODE_KEY = "tazsicoewrn"; //解码关键字
     public static final String PIC_SERVICE_URL = "http://104.237.55.123:9393/dm"; //图片服务器
     public static final String SEARCH_URL = "http://ssooff.com/"; //搜索网站
@@ -50,4 +52,7 @@ public class Constants {
     public static final int DOWNLOAD_ERROR = 0x5;
     public static final int DOWNLOAD_IN_QUEUE = 0x6;
     public static final int MSG_DOWNLOAD = 0x7;
+
+    public static final String SHARED_PREFERENCES_NAME = "user.pre";
+
 }
