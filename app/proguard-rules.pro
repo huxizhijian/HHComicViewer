@@ -96,3 +96,5 @@
 -dontwarn android.test.**
 -dontwarn android.support.test.**
 -dontwarn org.junit.**
+
+-keepattributes EnclosingMethod

@@ -39,22 +39,16 @@
 
         </android.support.design.widget.AppBarLayout>
 
-        <android.support.v7.widget.CardView
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            app:cardCornerRadius="0dp"
-            app:cardElevation="2dp"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingLeft="4dp"
-                android:paddingRight="4dp"/>
-
-        </android.support.v7.widget.CardView>
+            android:layout_height="match_parent"
+            android:layout_marginBottom="4dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="4dp"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            />
 
 
         <LinearLayout

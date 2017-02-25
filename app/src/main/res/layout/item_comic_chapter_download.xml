@@ -15,42 +15,50 @@
   ~ limitations under the License.
   -->
 
-<LinearLayout
+<android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/ll_child"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/selectableItemBackground"
-    android:descendantFocusability="blocksDescendants"
-    android:gravity="center_vertical"
-    android:orientation="vertical"
-    android:padding="4dp">
+    android:padding="4dp"
+    app:cardCornerRadius="0dp"
+    app:cardElevation="2dp">
 
     <LinearLayout
+        android:id="@+id/ll_child"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:background="?attr/selectableItemBackground"
+        android:descendantFocusability="blocksDescendants"
+        android:orientation="vertical">
 
-        <CheckBox
-            android:id="@+id/checkbox_child_item"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:checked="false"
-            android:visibility="gone"/>
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/textView_chapter_name_download_manager"
-            android:layout_width="260dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="2dp"
-            android:ellipsize="end"
-            android:gravity="start"
-            android:lines="1"
-            android:maxLines="1"
-            android:padding="4dp"
-            android:text="@string/chapter_name"
-            />
+            <CheckBox
+                android:id="@+id/checkbox_child_item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/textView_chapter_name_download_manager"
+                android:layout_width="260dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:ellipsize="end"
+                android:lines="1"
+                android:maxLines="1"
+                android:padding="4dp"
+                android:text="@string/chapter_name"
+                />
+
+        </LinearLayout>
 
     </LinearLayout>
-
-</LinearLayout>
+</android.support.v7.widget.CardView>

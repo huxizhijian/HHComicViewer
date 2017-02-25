@@ -48,9 +48,9 @@ import java.util.Set;
 public class DownloadedComicChapterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     //item类型
-    private final static int ITEM_COMIC_DETAIL = 0x02;
-    private final static int ITEM_COMIC_CHAPTER = 0x03;
-    private final static int ITEM_FOOTER = 0x04;
+    private final static int ITEM_COMIC_DETAIL = 0x00;
+    private final static int ITEM_COMIC_CHAPTER = 0x01;
+    private final static int ITEM_FOOTER = 0x02;
 
     private Activity mContext;
     private LayoutInflater mInflater;
@@ -104,7 +104,7 @@ public class DownloadedComicChapterAdapter extends RecyclerView.Adapter<Recycler
     public void onBindViewHolder(final RecyclerView.ViewHolder vh, final int position) {
         if (vh.getItemViewType() == ITEM_COMIC_DETAIL) {
             ComicDetailItemViewHolder holder = (ComicDetailItemViewHolder) vh;
-            setupItemComicDetail(position, holder);
+            setupItemComicDetail(holder);
         } else if (vh.getItemViewType() == ITEM_FOOTER) {
             final FooterItemViewHolder holder = (FooterItemViewHolder) vh;
             if (isEditModeOn) {
@@ -125,34 +125,13 @@ public class DownloadedComicChapterAdapter extends RecyclerView.Adapter<Recycler
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-            }
-        });
-        if (isEditModeOn) {
-            holder.cb.setVisibility(View.VISIBLE);
-            holder.cb.setChecked(mChapterCbChecked.contains(position));
-            holder.cb.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mChapterCbChecked.contains(position)) {
-                        mChapterCbChecked.remove(position);
+                if (isEditModeOn) {
+                    if (mChapterCbChecked.contains(position - 1)) {
+                        mChapterCbChecked.remove(position - 1);
                         holder.cb.setChecked(false);
                     } else {
-                        mChapterCbChecked.add(position);
+                        mChapterCbChecked.add(position - 1);
                         holder.cb.setChecked(true);
-                    }
-                    isAllSelected();
-                }
-            });
-        }
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isEditModeOn) {
-                    if (mChapterCbChecked.contains(position)) {
-                        mChapterCbChecked.remove(position);
-                    } else {
-                        mChapterCbChecked.add(position);
                     }
                     isAllSelected();
                 } else {
@@ -166,9 +145,31 @@ public class DownloadedComicChapterAdapter extends RecyclerView.Adapter<Recycler
                 }
             }
         });
+        if (isEditModeOn) {
+            holder.cb.setVisibility(View.VISIBLE);
+            holder.cb.setChecked(mChapterCbChecked.contains(position - 1));
+            holder.cb.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mChapterCbChecked.contains(position - 1)) {
+                        mChapterCbChecked.remove(position - 1);
+                    } else {
+                        mChapterCbChecked.add(position - 1);
+                    }
+                    isAllSelected();
+                }
+            });
+        }
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                openEditMode(position - 1);
+                return true;
+            }
+        });
     }
 
-    private void setupItemComicDetail(final int position, final ComicDetailItemViewHolder holder) {
+    private void setupItemComicDetail(final ComicDetailItemViewHolder holder) {
         mImageLoader.displayThumbnail(mContext, mComic.getThumbnailUrl(), holder.iv, R.mipmap.blank,
                 R.mipmap.blank, 165, 220);
 
@@ -247,7 +248,7 @@ public class DownloadedComicChapterAdapter extends RecyclerView.Adapter<Recycler
     }
 
     public void selectAll() {
-        if (mChapterCbChecked.size() == mComicChapterList.size()) {
+        if (mChapterCbChecked.size() != mComicChapterList.size()) {
             //全选
             mComicChapterList.clear();
             for (int i = 0; i < mComicChapterList.size(); i++) {
@@ -270,6 +271,7 @@ public class DownloadedComicChapterAdapter extends RecyclerView.Adapter<Recycler
                 intent.setAction(DownloadManagerService.ACTION_DELETE);
                 intent.putExtra("comicChapter", comicChapter);
                 mContext.startService(intent);
+                removeChapters.add(comicChapter);
             }
             mComicChapterList.removeAll(removeChapters);
         }

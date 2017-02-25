@@ -10,6 +10,7 @@ android {
         targetSdkVersion 25
         versionCode 107
         versionName "1.07"
+        multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
     }
     buildTypes {

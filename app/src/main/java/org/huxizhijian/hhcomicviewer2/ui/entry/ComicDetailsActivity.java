@@ -817,7 +817,7 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
 
     private void setupContentViewListener(View view, final BottomSheetDialog dialog) {
         Button startDownload = (Button) view.findViewById(R.id.button_start_download_ds_fragment);
-        Button allSelect = (Button) view.findViewById(R.id.button_select_all_ds_fragment);
+        final Button allSelect = (Button) view.findViewById(R.id.button_select_all_ds_fragment);
         ImageView cancel = (ImageView) view.findViewById(R.id.image_cancel_ds_fragment);
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_download_selector);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 4));
@@ -834,17 +834,28 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
             public void onItemLongClick(View view, int position) {
             }
         });
+        adapter.setOnAllSelectedChangedListener(new VolDownloadSelectorAdapter.OnAllSelectedChangedListener() {
+            @Override
+            public void onAllSelected() {
+                allSelect.setText("取消");
+            }
+
+            @Override
+            public void onNoAllSelected() {
+                allSelect.setText("全选");
+            }
+        });
         recyclerView.setAdapter(adapter);
 
         startDownload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //开始下载
-                if (adapter.getSelectedchapterNames().size() == 0) {
+                if (adapter.getSelectedChapterNames().size() == 0) {
                     Toast.makeText(ComicDetailsActivity.this, "没有选择下载章节", Toast.LENGTH_SHORT).show();
                 } else {
                     //将下载章节列表传送到Activity中
-                    sendSelectedChapters(adapter.getSelectedchapterNames());
+                    sendSelectedChapters(adapter.getSelectedChapterNames());
                     //关闭
                     dialog.dismiss();
                 }

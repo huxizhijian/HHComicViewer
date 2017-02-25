@@ -41,22 +41,26 @@ public class VolDownloadSelectorAdapter extends RecyclerView.Adapter<VolDownload
     private List<String> mVolName;
     private LayoutInflater mInflater;
     private Context mContext;
+
+    //两个事件回调，单机、长按事件回调，所有选择事件发生和取消时事件回调
     private OnItemClickListener mOnItemClickListener;
-    private List<String> mComicchapterList; //已经开始下载的章节
-    private List<String> mFinishedComicchapterList;  //下载好的章节
-    private List<String> mSelectedchapterNames; //选择的下载章节
+    private OnAllSelectedChangedListener mChangedListener;
+
+    private List<String> mComicChapterList; //已经开始下载的章节
+    private List<String> mFinishedComicChapterList;  //下载好的章节
+    private List<String> mSelectedChapterNames; //选择的下载章节
 
     private Bitmap mBitmap_ok = null;
     private Bitmap mBitmap_downloading = null;
 
     public VolDownloadSelectorAdapter(Context context, List<String> volName,
-                                      List<String> comicchapters, List<String> finishedComicchapterList) {
+                                      List<String> comicChapters, List<String> finishedComicChapterList) {
         this.mVolName = volName;
         this.mInflater = LayoutInflater.from(context);
         this.mContext = context;
-        this.mComicchapterList = comicchapters;
-        this.mFinishedComicchapterList = finishedComicchapterList;
-        mSelectedchapterNames = new ArrayList<>();
+        this.mComicChapterList = comicChapters;
+        this.mFinishedComicChapterList = finishedComicChapterList;
+        mSelectedChapterNames = new ArrayList<>();
     }
 
     @Override
@@ -71,10 +75,10 @@ public class VolDownloadSelectorAdapter extends RecyclerView.Adapter<VolDownload
         holder.tv.setText(mVolName.get(position));
         holder.iv.setVisibility(View.GONE);
         //标记下载好的章节
-        if (mComicchapterList != null && mComicchapterList.contains(mVolName.get(position))) {
+        if (mComicChapterList != null && mComicChapterList.contains(mVolName.get(position))) {
             //进行标记
-            if (mFinishedComicchapterList != null &&
-                    mFinishedComicchapterList.contains(mVolName.get(position))) {
+            if (mFinishedComicChapterList != null &&
+                    mFinishedComicChapterList.contains(mVolName.get(position))) {
                 //如果是下载完成的章节
                 if (mBitmap_ok == null) {
                     //进行图片的初始化
@@ -94,7 +98,7 @@ public class VolDownloadSelectorAdapter extends RecyclerView.Adapter<VolDownload
                 holder.iv.setVisibility(View.VISIBLE);
             }
         }
-        if (mSelectedchapterNames.contains(mVolName.get(position))) {
+        if (mSelectedChapterNames.contains(mVolName.get(position))) {
             //选择的章节
             holder.cv.setCardBackgroundColor(mContext.getResources().getColor(R.color.green_color_download));
         } else {
@@ -105,29 +109,51 @@ public class VolDownloadSelectorAdapter extends RecyclerView.Adapter<VolDownload
 
     public void chapterClick(int position) {
         String chapterName = mVolName.get(position);
-        if (mComicchapterList != null && mComicchapterList.contains(chapterName)) return;
-        if (!mSelectedchapterNames.contains(chapterName)) {
-            mSelectedchapterNames.add(chapterName);
+        if (mComicChapterList != null && mComicChapterList.contains(chapterName)) return;
+        if (!mSelectedChapterNames.contains(chapterName)) {
+            mSelectedChapterNames.add(chapterName);
             notifyItemChanged(position);
         } else {
-            mSelectedchapterNames.remove(chapterName);
+            mSelectedChapterNames.remove(chapterName);
             notifyItemChanged(position);
         }
+        checkAllSelected();
     }
 
 
-    public List<String> getSelectedchapterNames() {
-        return mSelectedchapterNames;
+    public List<String> getSelectedChapterNames() {
+        return mSelectedChapterNames;
     }
 
     public void allSelect() {
-        mSelectedchapterNames.clear();
-        for (int i = 0; i < mVolName.size(); i++) {
-            if (!(mComicchapterList != null && mComicchapterList.contains(mVolName.get(i)))) {
-                mSelectedchapterNames.add(mVolName.get(i));
+        if (mSelectedChapterNames.size() != (mVolName.size() - mComicChapterList.size())) {
+            mSelectedChapterNames.clear();
+            //非全选时才进行全选操作
+            for (int i = 0; i < mVolName.size(); i++) {
+                if (!(mComicChapterList != null && mComicChapterList.contains(mVolName.get(i)))) {
+                    mSelectedChapterNames.add(mVolName.get(i));
+                }
             }
+        } else {
+            mSelectedChapterNames.clear();
         }
+        checkAllSelected();
         notifyDataSetChanged();
+    }
+
+    private boolean checkAllSelected() {
+        if (mSelectedChapterNames.size() == (mVolName.size() - mComicChapterList.size())) {
+            //全选
+            if (mChangedListener != null) {
+                mChangedListener.onAllSelected();
+            }
+            return true;
+        } else {
+            if (mChangedListener != null) {
+                mChangedListener.onNoAllSelected();
+            }
+            return false;
+        }
     }
 
     @Override
@@ -163,6 +189,16 @@ public class VolDownloadSelectorAdapter extends RecyclerView.Adapter<VolDownload
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.mOnItemClickListener = onItemClickListener;
+    }
+
+    public interface OnAllSelectedChangedListener {
+        void onAllSelected();
+
+        void onNoAllSelected();
+    }
+
+    public void setOnAllSelectedChangedListener(OnAllSelectedChangedListener changedListener) {
+        mChangedListener = changedListener;
     }
 
     class VolViewHolder extends RecyclerView.ViewHolder {
