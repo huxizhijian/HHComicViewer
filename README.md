@@ -1,6 +1,6 @@
 # HHComicViewer
 
-这是一个汗汗漫画android平台的浏览软件
+这是一个汗汗漫画android平台阅读软件
 
 
 # Thanks
