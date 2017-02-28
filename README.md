@@ -9,17 +9,40 @@
 
 Here is the libraries
 
+
 [glide](https://github.com/bumptech/glide)
+
+
 [jsoup](https://jsoup.org/)
+
+
 [ShareSDK](http://www.mob.com/)
+
+
 [xutils3](https://github.com/wyouflf/xUtils3)
+
+
 [SystemBarTint](https://github.com/jgilfelt/SystemBarTint)
+
+
 [material](https://github.com/rey5137/material)
+
+
 [Android-DirectoryChooser](https://github.com/passy/Android-DirectoryChooser)
+
+
 [XRecyclerView](https://github.com/jianghejie/XRecyclerView)
+
+
 [okhttp](https://github.com/square/okhttp)
+
+
 [glide-transformations](https://github.com/wasabeef/glide-transformations)
+
+
 [gson](https://github.com/google/gson)
+
+
 
 # License
 <div class="codehilite"><pre>Copyright (C) 2016 huxizhijian
