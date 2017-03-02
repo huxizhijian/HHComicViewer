@@ -16,7 +16,7 @@
 
 package org.huxizhijian.hhcomicviewer2;
 
-import android.app.Application;
+import android.support.multidex.MultiDexApplication;
 
 import org.huxizhijian.hhcomicviewer2.option.HHComicWebVariable;
 import org.huxizhijian.sdk.SDKConstant;
@@ -33,7 +33,7 @@ import okhttp3.OkHttpClient;
  * 本工程的application
  * Created by wei on 2016/8/23.
  */
-public class HHApplication extends Application {
+public class HHApplication extends MultiDexApplication {
 
     private static HHApplication sApplication;
 

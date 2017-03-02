@@ -18,7 +18,6 @@ package org.huxizhijian.sdk.imageloader;
 import android.content.Context;
 
 import org.huxizhijian.sdk.imageloader.listener.ImageLoaderManager;
-import org.huxizhijian.sdk.network.utils.Utils;
 import org.huxizhijian.sdk.sharedpreferences.SharedPreferencesManager;
 
 import static org.huxizhijian.sdk.SDKConstant.DECODE_FORMAT_KEY;
@@ -32,8 +31,7 @@ import static org.huxizhijian.sdk.SDKConstant.SHARED_PREFERENCES_NAME;
 public class ImageLoaderOptions {
 
     //判断是否支持glide对象
-    private static boolean GLIDE_LOADER = Utils.isExist("com.bumptech.glide.Glide",
-            ImageLoaderOptions.class.getClassLoader());
+    private static boolean GLIDE_LOADER = true;
 
     private SharedPreferencesManager mPreferencesManager;
 

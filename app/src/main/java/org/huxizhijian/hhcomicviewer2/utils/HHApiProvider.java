@@ -45,7 +45,7 @@ public class HHApiProvider {
         return sInstance;
     }
 
-    public void getWebContentAsyn(String url, NormalResponse response) {
+    public void getWebContentAsyn(String url, final NormalResponse response) {
         NormalRequest request = new NormalRequest();
         request.setUrl(url);
         request.setMethod(HttpMethod.GET);

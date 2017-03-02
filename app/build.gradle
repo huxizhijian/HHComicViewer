@@ -14,9 +14,19 @@ android {
         vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
+        debug {
+            debuggable true
+            jniDebuggable true
+            zipAlignEnabled true
+            minifyEnabled false
+            shrinkResources false
+        }
         release {
-            minifyEnabled true
-            shrinkResources true
+            jniDebuggable false
+            zipAlignEnabled true
+            minifyEnabled false
+            shrinkResources false
+            debuggable false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -34,6 +44,7 @@ android {
 }
 
 dependencies {
+    compile project(':hhcomicviewersdk')
     compile files('libs/jsoup-1.9.2.jar')
     compile files('libs/MobCommons-2016.1107.1809.jar')
     compile files('libs/MobTools-2016.1107.1809.jar')
@@ -57,6 +68,6 @@ dependencies {
     compile 'com.readystatesoftware.systembartint:systembartint:1.0.4'
     compile 'com.github.rey5137:material:1.2.4'
     compile 'net.rdrei.android.dirchooser:library:3.2'
-    compile 'com.jcodecraeer:xrecyclerview:1.3.2'
-    compile project(':hhcomicviewersdk')
+    compile 'com.jcodecraeer:xrecyclerview:1.3.2@aar'
+    compile 'com.android.support:multidex:1.0.0'
 }
