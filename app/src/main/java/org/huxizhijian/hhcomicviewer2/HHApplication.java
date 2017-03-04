@@ -54,6 +54,10 @@ public class HHApplication extends MultiDexApplication {
         return mWebVariable;
     }
 
+    public void setHHWebVariable(HHComicWebVariable variable) {
+        mWebVariable = variable;
+    }
+
     private volatile OkHttpClient mClient;
 
     public DbManager.DaoConfig getDaoConfig() {

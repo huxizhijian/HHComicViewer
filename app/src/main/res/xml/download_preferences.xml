@@ -29,6 +29,12 @@
         android:summary="同时下载的页数"
         android:title="下载线程数"/>
 
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="allow_media"
+        android:summary="大多数图库应用将不会显示下载目录中的图片"
+        android:title="允许媒体扫描"/>
+
     <Preference
         android:key="clean_download_path"
         android:summary="清理在漫画下载路径但是不在数据库中的漫画下载文件"

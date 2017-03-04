@@ -26,6 +26,7 @@ import android.preference.PreferenceScreen;
 import android.widget.Toast;
 
 import org.huxizhijian.hhcomicviewer2.R;
+import org.huxizhijian.hhcomicviewer2.utils.HHApiProvider;
 import org.huxizhijian.sdk.SDKConstant;
 import org.huxizhijian.sdk.imageloader.ImageLoaderOptions;
 import org.huxizhijian.sdk.sharedpreferences.SharedPreferencesManager;
@@ -66,6 +67,10 @@ public class AdvanceSettingFragment extends PreferenceFragment {
                     }
                 }.execute(getActivity());
                 Toast.makeText(getActivity(), "清除缓存成功", Toast.LENGTH_SHORT).show();
+                return true;
+            case "update_variable":
+                HHApiProvider.getInstance().updateVariable();
+                Toast.makeText(getActivity(), "更新完成", Toast.LENGTH_SHORT).show();
                 return true;
         }
         return super.onPreferenceTreeClick(preferenceScreen, preference);

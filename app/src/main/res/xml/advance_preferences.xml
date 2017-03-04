@@ -34,6 +34,11 @@
         android:title="阅读缓存大小"/>
 
     <Preference
+        android:key="update_variable"
+        android:summary="由于汗汗漫画的网址经常更新，如果无法访问可以试试"
+        android:title="更新主站网址"/>
+
+    <Preference
         android:key="clear_cache"
         android:summary="清除在线阅读和缩略图的缓存"
         android:title="@string/clear_the_cache"/>

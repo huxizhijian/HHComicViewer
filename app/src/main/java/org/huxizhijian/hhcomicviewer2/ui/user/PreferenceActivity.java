@@ -32,6 +32,8 @@ import org.huxizhijian.hhcomicviewer2.R;
 import org.huxizhijian.hhcomicviewer2.ui.entry.HistoryFragment;
 import org.huxizhijian.hhcomicviewer2.utils.CommonUtils;
 
+import java.io.IOException;
+
 public class PreferenceActivity extends AppCompatActivity {
 
     public static final String ACTION_HISTORY = "ACTION_HISTORY";
@@ -39,6 +41,9 @@ public class PreferenceActivity extends AppCompatActivity {
     public static final String ACTION_ADVANCE = "ACTION_ADVANCE";
     public static final String ACTION_DOWNLOAD = "ACTION_DOWNLOAD";
     public static final String ACTION_ABOUT = "ACTION_ABOUT";
+
+    public static final int OPEN_DIALOG = 0x00;
+    public static final int MAKE_NO_MEDIA = 0x01;
 
     FragmentTransaction mFt;
 
@@ -116,23 +121,32 @@ public class PreferenceActivity extends AppCompatActivity {
         mFt = null;
     }
 
-    public void checkPermission() {
+    public void checkPermission(int method) {
         //检查自身权限
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                Toast.makeText(this, "没有权限，无法完成下载文件夹管理操作！", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "没有权限，无法完成操作！", Toast.LENGTH_SHORT).show();
                 ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, method);
             } else {
                 ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, method);
             }
         } else {
-            //打开dialog
-            if (mDownloadSettingFragment != null) {
-                mDownloadSettingFragment.openDirectChooserDialog();
+            if (method == OPEN_DIALOG) {
+                //打开dialog
+                if (mDownloadSettingFragment != null) {
+                    mDownloadSettingFragment.openDirectChooserDialog();
+                }
+            } else if (method == MAKE_NO_MEDIA) {
+                //创建.nomedia文件
+                try {
+                    CommonUtils.createNomediaIfAllow(getApplicationContext());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -142,12 +156,32 @@ public class PreferenceActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
-            case 0:
+            case OPEN_DIALOG:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // permission was granted, yay! Do the contacts-related task you need to do.
                     //打开dialog
                     if (mDownloadSettingFragment != null) {
                         mDownloadSettingFragment.openDirectChooserDialog();
+                    }
+                    //创建.nomedia文件
+                    try {
+                        CommonUtils.createNomediaIfAllow(getApplicationContext());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    // permission denied, boo! Disable the functionality that depends on this permission.
+                    return;
+                }
+                break;
+            case MAKE_NO_MEDIA:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted, yay! Do the contacts-related task you need to do.
+                    //创建.nomedia文件
+                    try {
+                        CommonUtils.createNomediaIfAllow(getApplicationContext());
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
                 } else {
                     // permission denied, boo! Disable the functionality that depends on this permission.

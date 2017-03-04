@@ -28,6 +28,12 @@ public class DownloadingChapterActivity extends OfflineDownloadBaseActivity {
 
     private DownloadingComicChapterAdapter mAdapter;
 
+    public final static int NO_ACTION = 0x00;
+    public final static int ACTION_PAUSE = 0x01;
+    public final static int ACTION_START = 0x02;
+
+    private int mLastAction = NO_ACTION;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,18 +61,38 @@ public class DownloadingChapterActivity extends OfflineDownloadBaseActivity {
                 if (isEditModeOpen()) {
                     mAdapter.deleteClick();
                 } else {
-                    if (checkAllPause()) {
-                        Intent intent = new Intent(DownloadingChapterActivity.this, DownloadManagerService.class);
-                        intent.setAction(DownloadManagerService.ACTION_ALL_START);
-                        startService(intent);
-                    } else {
-                        Intent intent = new Intent(DownloadingChapterActivity.this, DownloadManagerService.class);
-                        intent.setAction(DownloadManagerService.ACTION_ALL_STOP);
-                        startService(intent);
+                    if (mLastAction == NO_ACTION) {
+                        if (checkAllPause()) {
+                            startAll();
+                        } else {
+                            pauseAll();
+                        }
+                    } else if (mLastAction == ACTION_PAUSE) {
+                        if (checkAllPause()) {
+                            startAll();
+                        }
+                    } else if (mLastAction == ACTION_START) {
+                        if (!checkAllPause()) {
+                            pauseAll();
+                        }
                     }
                 }
             }
         });
+    }
+
+    private void startAll() {
+        Intent intent = new Intent(DownloadingChapterActivity.this, DownloadManagerService.class);
+        intent.setAction(DownloadManagerService.ACTION_ALL_START);
+        startService(intent);
+        mLastAction = ACTION_START;
+    }
+
+    private void pauseAll() {
+        Intent intent = new Intent(DownloadingChapterActivity.this, DownloadManagerService.class);
+        intent.setAction(DownloadManagerService.ACTION_ALL_STOP);
+        startService(intent);
+        mLastAction = ACTION_PAUSE;
     }
 
     @Override

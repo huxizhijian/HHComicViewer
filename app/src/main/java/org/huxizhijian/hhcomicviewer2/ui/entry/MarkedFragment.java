@@ -50,7 +50,7 @@ public class MarkedFragment extends RefreshBaseFragment {
 
     //控件
     private RecyclerView mRecyclerView;
-    private TextView mTv;
+    private TextView mTv; //提示没有收藏字符串
     private SwipeRefreshLayout mRefreshLayout;
 
     //数据
@@ -134,8 +134,10 @@ public class MarkedFragment extends RefreshBaseFragment {
             mRecyclerView.setLayoutManager(layoutManager);
             mRecyclerView.setItemAnimator(new DefaultItemAnimator());
             mRecyclerView.setAdapter(mAdapter);
+            mRecyclerView.setVisibility(View.VISIBLE);
             mTv.setVisibility(View.GONE);
         } else {
+            mRecyclerView.setVisibility(View.GONE);
             mTv.setVisibility(View.VISIBLE);
         }
     }

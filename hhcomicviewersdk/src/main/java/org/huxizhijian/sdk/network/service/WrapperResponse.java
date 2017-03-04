@@ -12,7 +12,7 @@ import java.util.List;
  * Created by huxizhijian on 2016/11/19.
  */
 
-public class WrapperResponse extends NormalResponse<String> {
+public class WrapperResponse extends NormalResponse<byte[]> {
 
     private NormalResponse mNormalResponse;
     private List<Convert> mConvertList;
@@ -23,11 +23,11 @@ public class WrapperResponse extends NormalResponse<String> {
     }
 
     @Override
-    public void success(NormalRequest request, String data) {
+    public void success(NormalRequest request, byte[] data) {
         for (Convert convert : mConvertList) {
             if (convert.isCanParse(request.getContentType())) {
                 try {
-                    Object object = convert.parse(data, getType());
+                    Object object = convert.parse(new String(data), getType());
                     mNormalResponse.success(request, object);
                 } catch (IOException e) {
                     e.printStackTrace();

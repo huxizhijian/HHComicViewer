@@ -62,6 +62,8 @@ public class DownloadingComicChapterAdapter extends RecyclerView.Adapter<Recycle
     //checkbox选择判断
     private Set<Integer> mChapterCbChecked;
 
+    private long mLastStartOrPausePressed;
+
     private boolean isEditModeOn;
 
     private ImageLoaderManager mImageLoader = ImageLoaderOptions.getImageLoaderManager();
@@ -157,6 +159,8 @@ public class DownloadingComicChapterAdapter extends RecyclerView.Adapter<Recycle
                     }
                     isAllSelected();
                 } else {
+                    //禁止连续进行操作，禁止时间1.5s
+                    if (System.currentTimeMillis() - mLastStartOrPausePressed <= 1500) return;
                     //进行暂停，开始的操作
                     Intent intent = null;
                     switch (comicChapter.getDownloadStatus()) {
@@ -177,6 +181,7 @@ public class DownloadingComicChapterAdapter extends RecyclerView.Adapter<Recycle
                             mContext.startService(intent);
                             break;
                     }
+                    mLastStartOrPausePressed = System.currentTimeMillis();
                 }
             }
         });
@@ -209,19 +214,17 @@ public class DownloadingComicChapterAdapter extends RecyclerView.Adapter<Recycle
         //进度
         holder.tv_progress.setText(comicChapter.getDownloadPosition() + "/" + comicChapter.getPageCount());
         holder.pb.setProgress(comicChapter.getDownloadPosition());
+        holder.pb.setMax(comicChapter.getPageCount());
     }
 
     private void isAllSelected() {
+        if (mControlListener == null) return;
         //判断是否全选
         if (mChapterCbChecked.size() == mUnfinishedChapterList.size()) {
             //全选
-            if (mControlListener != null) {
-                mControlListener.onAllSelected();
-            }
+            mControlListener.onAllSelected();
         } else {
-            if (mControlListener != null) {
-                mControlListener.onNoAllSelected();
-            }
+            mControlListener.onNoAllSelected();
         }
     }
 
@@ -268,6 +271,7 @@ public class DownloadingComicChapterAdapter extends RecyclerView.Adapter<Recycle
             }
         }
         notifyDataSetChanged();
+        isAllSelected();
     }
 
     public void deleteClick() {

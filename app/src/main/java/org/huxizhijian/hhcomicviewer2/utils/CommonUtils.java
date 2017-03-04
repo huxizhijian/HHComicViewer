@@ -39,8 +39,10 @@ import org.huxizhijian.hhcomicviewer2.HHApplication;
 import org.huxizhijian.hhcomicviewer2.model.Comic;
 import org.huxizhijian.hhcomicviewer2.model.ComicChapter;
 import org.huxizhijian.hhcomicviewer2.option.HHComicWebVariable;
+import org.huxizhijian.sdk.sharedpreferences.SharedPreferencesManager;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -338,13 +340,64 @@ public class CommonUtils {
         win.setAttributes(winParams);
     }
 
+    /**
+     * 根据页面规律组合出漫画url
+     *
+     * @param cid
+     * @return
+     */
     public static String getComicUrl(int cid) {
         HHComicWebVariable variable = HHApplication.getInstance().getHHWebVariable();
         return variable.getCsite() + variable.getPre() + cid + ".html";
     }
 
+    /**
+     * 根据页面规律组合出章节url
+     *
+     * @param cid
+     * @param chid
+     * @param serverId
+     * @return
+     */
     public static String getChapterUrl(int cid, long chid, int serverId) {
         HHComicWebVariable variable = HHApplication.getInstance().getHHWebVariable();
         return variable.getChsite() + cid + "/" + chid + variable.getBehind() + serverId;
     }
+
+    /**
+     * 实现业务：允许媒体扫描，默认已经在6.0的系统上获取到写sd卡权限
+     *
+     * @param context 用于获取sp
+     * @return 创建或者已经存在返回true，否则返回false
+     * @throws IOException 错误不进行处理
+     */
+    public static boolean createNomediaIfAllow(Context context) throws IOException {
+        //指示是否创建nomedia
+        boolean exist;
+
+        SharedPreferencesManager manager = new SharedPreferencesManager(context);
+        boolean allow = manager.getBoolean("allow_media", false);
+        String downloadPath = manager.getString("download_path", Constants.DEFAULT_DOWNLOAD_PATH);
+        File dir = new File(downloadPath);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+
+        File nomediaFile = new File(dir, ".nomedia");
+        exist = nomediaFile.exists();
+
+        if (allow) {
+            //如果存在则删除.nomedia文件
+            if (exist) {
+                exist = !nomediaFile.delete();
+            }
+        } else {
+            //创建.nomedia文件
+            if (!exist) {
+                exist = nomediaFile.createNewFile();
+            }
+        }
+        return exist;
+    }
+
 }

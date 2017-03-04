@@ -17,6 +17,7 @@
 package org.huxizhijian.hhcomicviewer2.ui.user;
 
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
@@ -70,7 +71,7 @@ public class DownloadSettingFragment extends PreferenceFragment implements
                     @Override
                     public void onPositiveActionClicked(DialogFragment fragment) {
                         PreferenceActivity activity = (PreferenceActivity) getActivity();
-                        activity.checkPermission();
+                        activity.checkPermission(PreferenceActivity.OPEN_DIALOG);
                         super.onPositiveActionClicked(fragment);
                     }
 
@@ -87,6 +88,13 @@ public class DownloadSettingFragment extends PreferenceFragment implements
                         .positiveAction("继续");
                 DialogFragment fragment = DialogFragment.newInstance(builder);
                 fragment.show(((PreferenceActivity) getActivity()).getSupportFragmentManager(), null);
+                return true;
+            case "allow_media":
+                CheckBoxPreference checkBoxPreference = (CheckBoxPreference) preference;
+                SharedPreferencesManager manager = new SharedPreferencesManager(getActivity());
+                manager.putBoolean("allow_media", checkBoxPreference.isChecked());
+                PreferenceActivity activity = (PreferenceActivity) getActivity();
+                activity.checkPermission(PreferenceActivity.MAKE_NO_MEDIA);
                 return true;
         }
         return super.onPreferenceTreeClick(preferenceScreen, preference);

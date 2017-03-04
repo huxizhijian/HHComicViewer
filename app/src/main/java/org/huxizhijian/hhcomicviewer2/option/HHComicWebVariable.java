@@ -24,6 +24,20 @@ public class HHComicWebVariable {
     private String picServer;
     private String searchUrl;
 
+    public HHComicWebVariable() {
+    }
+
+    public HHComicWebVariable(String csite, String pre, String chsite, String behind,
+                              String encodeKey, String picServer, String searchUrl) {
+        this.csite = csite;
+        this.pre = pre;
+        this.chsite = chsite;
+        this.behind = behind;
+        this.encodeKey = encodeKey;
+        this.picServer = picServer;
+        this.searchUrl = searchUrl;
+    }
+
     public HHComicWebVariable(Context context) {
         this.mContext = context;
         SharedPreferences sharedPreferences = context.getSharedPreferences("user", MODE_PRIVATE);
@@ -36,7 +50,7 @@ public class HHComicWebVariable {
         searchUrl = sharedPreferences.getString("search_url", Constants.SEARCH_URL);
     }
 
-    public void updatePrefrences() {
+    public void updatePreferences() {
         SharedPreferences sharedPreferences = mContext.getSharedPreferences("user", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("csite", csite);
@@ -49,59 +63,59 @@ public class HHComicWebVariable {
         editor.apply();
     }
 
-    public String getCsite() {
-        return csite;
-    }
-
     public void setCsite(String csite) {
         this.csite = csite;
     }
 
-    public String getPre() {
-        return pre;
+    public String getCsite() {
+        return this.csite;
     }
 
     public void setPre(String pre) {
         this.pre = pre;
     }
 
-    public String getChsite() {
-        return chsite;
+    public String getPre() {
+        return this.pre;
     }
 
     public void setChsite(String chsite) {
         this.chsite = chsite;
     }
 
-    public String getBehind() {
-        return behind;
+    public String getChsite() {
+        return this.chsite;
     }
 
     public void setBehind(String behind) {
         this.behind = behind;
     }
 
-    public String getEncodeKey() {
-        return encodeKey;
+    public String getBehind() {
+        return this.behind;
     }
 
     public void setEncodeKey(String encodeKey) {
         this.encodeKey = encodeKey;
     }
 
-    public String getPicServer() {
-        return picServer;
+    public String getEncodeKey() {
+        return this.encodeKey;
     }
 
     public void setPicServer(String picServer) {
         this.picServer = picServer;
     }
 
-    public String getSearchUrl() {
-        return searchUrl;
+    public String getPicServer() {
+        return this.picServer;
     }
 
     public void setSearchUrl(String searchUrl) {
         this.searchUrl = searchUrl;
+    }
+
+    public String getSearchUrl() {
+        return this.searchUrl;
     }
 }

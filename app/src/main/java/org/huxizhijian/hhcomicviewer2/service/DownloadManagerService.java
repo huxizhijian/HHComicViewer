@@ -197,7 +197,7 @@ public class DownloadManagerService extends Service implements DownloadManager.O
             ComicChapter comicChapter = (ComicChapter) intent.getSerializableExtra("comicChapter");
             Log.i("DownloadManagerService", "onStartCommand: delete");
             mDownloadManager.deleteChapter(comicChapter);
-        } else if (intent.getAction().equals(ACTION_DELETE)) {
+        } else if (intent.getAction().equals(ACTION_DELETE_COMIC)) {
             //删除一本漫画的下载任务
             Comic comic = (Comic) intent.getSerializableExtra("comic");
             List<ComicChapter> chapters = mComicChapterDBHelper.findByComicCid(comic.getCid());

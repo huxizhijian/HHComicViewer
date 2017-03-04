@@ -83,6 +83,7 @@ import org.huxizhijian.sdk.imageloader.listener.ImageLoaderManager;
 import org.huxizhijian.sdk.imageloader.listener.ImageRequestListener;
 import org.huxizhijian.sdk.util.StatusBarUtil;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -93,6 +94,7 @@ import cn.sharesdk.onekeyshare.OnekeyShare;
 
 public class ComicDetailsActivity extends AppCompatActivity implements View.OnClickListener, IComicDetailsActivity {
 
+    private static final int CHECK_SD_WRITE_PERMISSION = 0x00;
     private ActivityComicDetailsBinding mBinding = null;
 
     //数据操作
@@ -917,11 +919,13 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
                     Toast.makeText(this, "没有获得权限，无法下载！", Toast.LENGTH_SHORT).show();
                     mSelectedChapters = selectedChapters;
                     ActivityCompat.requestPermissions(this,
-                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            CHECK_SD_WRITE_PERMISSION);
                 } else {
                     mSelectedChapters = selectedChapters;
                     ActivityCompat.requestPermissions(this,
-                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            CHECK_SD_WRITE_PERMISSION);
                 }
                 return;
             }
@@ -952,7 +956,7 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
-            case 0:
+            case CHECK_SD_WRITE_PERMISSION:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // permission was granted, yay! Do the contacts-related task you need to do.
                     if (mSelectedChapters != null && mSelectedChapters.size() != 0) {
@@ -977,6 +981,12 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
                             mHandler.sendMessageDelayed(msg, 1000 * i);
                         }
                         mSelectedChapters = null;
+                    }
+                    //创建.nomedia文件
+                    try {
+                        CommonUtils.createNomediaIfAllow(getApplicationContext());
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
                 } else {
                     // permission denied, boo! Disable the functionality that depends on this permission.

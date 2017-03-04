@@ -15,10 +15,20 @@
  */
 package org.huxizhijian.hhcomicviewer2.utils;
 
+import android.util.Log;
+
+import org.huxizhijian.hhcomicviewer2.HHApplication;
+import org.huxizhijian.hhcomicviewer2.option.HHComicWebVariable;
 import org.huxizhijian.sdk.network.http.HttpMethod;
 import org.huxizhijian.sdk.network.service.NormalRequest;
 import org.huxizhijian.sdk.network.service.NormalResponse;
 import org.huxizhijian.sdk.network.service.WorkStation;
+import org.huxizhijian.sdk.network.service.WrapperResponse;
+import org.huxizhijian.sdk.network.service.convert.Convert;
+import org.huxizhijian.sdk.network.service.convert.JsonConvert;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 使用sdk中封装的网络连接方法
@@ -29,6 +39,11 @@ public class HHApiProvider {
 
     private static volatile HHApiProvider sInstance;
     private static WorkStation sWorkStation;
+    private static final List<Convert> sConvertList = new ArrayList<>();
+
+    static {
+        sConvertList.add(new JsonConvert());
+    }
 
     private HHApiProvider() {
         sWorkStation = new WorkStation();
@@ -53,4 +68,27 @@ public class HHApiProvider {
         sWorkStation.add(request);
     }
 
+    public void updateVariable() {
+        NormalRequest request = new NormalRequest();
+        request.setUrl(Constants.HH_VARIABLE_SITE);
+        request.setMethod(HttpMethod.GET);
+        //进行json转换
+        WrapperResponse wrapperResponse = new WrapperResponse(new NormalResponse<HHComicWebVariable>() {
+            @Override
+            public void success(NormalRequest request, HHComicWebVariable variable) {
+                //更新sp
+                variable.updatePreferences();
+                //更新application中的variable
+                HHApplication.getInstance().setHHWebVariable(variable);
+                Log.i("onSuccess", "update variable");
+            }
+
+            @Override
+            public void fail(int errorCode, String errorMsg) {
+                Log.e("onFail", errorCode + ":" + errorMsg);
+            }
+        }, sConvertList);
+        request.setResponse(wrapperResponse);
+        sWorkStation.add(request);
+    }
 }

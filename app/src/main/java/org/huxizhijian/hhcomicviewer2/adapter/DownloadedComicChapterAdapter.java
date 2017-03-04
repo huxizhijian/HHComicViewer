@@ -202,17 +202,14 @@ public class DownloadedComicChapterAdapter extends RecyclerView.Adapter<Recycler
     }
 
     private void isAllSelected() {
+        if (mControlListener == null) return;
         //判断是否全选
         if (mChapterCbChecked.size() == mComicChapterList.size()) {
             //全选
-            if (mControlListener != null) {
-                mControlListener.onAllSelected();
-            }
+            mControlListener.onAllSelected();
         } else {
             //没有全选
-            if (mControlListener != null) {
-                mControlListener.onNoAllSelected();
-            }
+            mControlListener.onNoAllSelected();
         }
     }
 
@@ -259,6 +256,7 @@ public class DownloadedComicChapterAdapter extends RecyclerView.Adapter<Recycler
             mChapterCbChecked.clear();
         }
         notifyDataSetChanged();
+        isAllSelected();
     }
 
     public void deleteClick() {

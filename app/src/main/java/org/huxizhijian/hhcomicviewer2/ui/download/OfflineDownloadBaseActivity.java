@@ -52,6 +52,8 @@ import org.huxizhijian.hhcomicviewer2.ui.user.PreferenceActivity;
 import org.huxizhijian.hhcomicviewer2.utils.CommonUtils;
 import org.huxizhijian.hhcomicviewer2.utils.Constants;
 
+import java.io.IOException;
+
 /**
  * 基础下载显示类，处理公有方法
  * Created by wei on 2017/2/6.
@@ -114,6 +116,12 @@ public abstract class OfflineDownloadBaseActivity extends AppCompatActivity impl
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // permission was granted, yay! Do the contacts-related task you need to do.
                     mHasWritePermission = true;
+                    //创建.nomedia文件
+                    try {
+                        CommonUtils.createNomediaIfAllow(getApplicationContext());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 } else {
                     // permission denied, boo! Disable the functionality that depends on this permission.
                     mHasWritePermission = false;
