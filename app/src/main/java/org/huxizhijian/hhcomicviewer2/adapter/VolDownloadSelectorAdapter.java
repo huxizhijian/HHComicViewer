@@ -142,7 +142,14 @@ public class VolDownloadSelectorAdapter extends RecyclerView.Adapter<VolDownload
     }
 
     private boolean checkAllSelected() {
-        if (mSelectedChapterNames.size() == (mVolName.size() - mComicChapterList.size())) {
+        int allSize;
+        //根据是否存在开始下载的章节，判断是否去掉开始下载的章节数
+        if (mComicChapterList == null || mComicChapterList.size() == 0) {
+            allSize = mVolName.size();
+        } else {
+            allSize = mVolName.size() - mComicChapterList.size();
+        }
+        if (mSelectedChapterNames.size() == allSize) {
             //全选
             if (mChangedListener != null) {
                 mChangedListener.onAllSelected();
