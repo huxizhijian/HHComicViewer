@@ -22,19 +22,18 @@ import org.huxizhijian.hhcomicviewer2.utils.CommonUtils;
 import org.huxizhijian.hhcomicviewer2.utils.HHApiProvider;
 import org.huxizhijian.sdk.network.service.NormalRequest;
 import org.huxizhijian.sdk.network.service.NormalResponse;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.UnsupportedEncodingException;
 
 /**
- * Created by wei on 2017/1/3.
+ * Created by huxizhijian on 2017/1/3.
  */
 
 public class ComicDetailsPresenter implements IComicDetailsPresenter {
 
     private IComicDetailsActivity mComicDetailsActivity;
 
-    public ComicDetailsPresenter(@NotNull IComicDetailsActivity activity) {
+    public ComicDetailsPresenter(IComicDetailsActivity activity) {
         this.mComicDetailsActivity = activity;
     }
 

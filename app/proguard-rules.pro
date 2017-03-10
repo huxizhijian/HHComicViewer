@@ -74,6 +74,28 @@
 -keep class autovalue.shaded.**{*;}
 -keep interface autovalue.shaded.**{*;}
 
+-dontwarn net.rdrei.android.dirchooser.**
+-keep class net.rdrei.android.dirchooser.**{*;}
+-keep interface net.rdrei.android.dirchooser.**{*;}
+
+#jsoup不混淆
+-dontwarn org.jsoup.**
+-keep class org.jsoup.**{*;}
+-keep interface org.jsoup.**{*;}
+
+#自己定义的model不混淆
+-dontwarn org.huxizhijian.sdk.**
+-keep class org.huxizhijian.sdk.**{*;}
+-keep interface org.huxizhijian.sdk.**{*;}
+
+#实体类不要混淆
+-dontwarn org.huxizhijian.hhcomicviewer2.model.**
+-dontwarn org.huxizhijian.hhcomicviewer2.adapter.entity.**
+-keep class org.huxizhijian.hhcomicviewer2.model.**{*;}
+-keep class org.huxizhijian.hhcomicviewer2.adapter.entity.**{*;}
+-keep interface org.huxizhijian.hhcomicviewer2.model.**{*;}
+-keep interface org.huxizhijian.hhcomicviewer2.adapter.entity.**{*;}
+
 #保持所有实现 Serializable 接口的类成员
 -keepclassmembers class * implements java.io.Serializable {
     static final long serialVersionUID;
@@ -141,8 +163,9 @@
   public static final android.os.Parcelable$Creator *;
 }
 
--optimizationpasses 5               # 指定代码的压缩级别
--dontusemixedcaseclassnames         # 是否使用大小写混合
--dontskipnonpubliclibraryclasses    # 是否混淆第三方jar
--dontpreverify                      # 混淆时是否做预校验
--verbose                            # 混淆时是否记录日志
+-optimizationpasses 5                   # 指定代码的压缩级别
+-dontusemixedcaseclassnames             # 是否使用大小写混合
+-dontpreverify                          # 混淆时是否做预校验
+-verbose                                # 混淆时是否记录日志
+-dontskipnonpubliclibraryclasses        # 指定不去忽略非公共的库的类
+-dontskipnonpubliclibraryclassmembers   # 指定不去忽略非公共的库的类的成员

@@ -7,7 +7,6 @@ import org.huxizhijian.hhcomicviewer2.persenter.viewinterface.IRankDetailsFragme
 import org.huxizhijian.hhcomicviewer2.utils.HHApiProvider;
 import org.huxizhijian.sdk.network.service.NormalRequest;
 import org.huxizhijian.sdk.network.service.NormalResponse;
-import org.jetbrains.annotations.NotNull;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -25,7 +24,7 @@ public class RankDetailsPresenterImpl implements IRankDetailsPresenter {
 
     private IRankDetailsFragment mFragment;
 
-    public RankDetailsPresenterImpl(@NotNull IRankDetailsFragment fragment) {
+    public RankDetailsPresenterImpl(IRankDetailsFragment fragment) {
         this.mFragment = fragment;
     }
 

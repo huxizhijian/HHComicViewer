@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tool="http://schemas.android.com/tools"
     android:layout_margin="4dp"
     app:cardCornerRadius="0dp"
     app:cardElevation="2dp">
@@ -64,6 +65,7 @@
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
+                    tool:text="下载了4个章节"
                     />
 
                 <TextView
