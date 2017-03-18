@@ -15,6 +15,7 @@ import org.huxizhijian.hhcomicviewer2.model.Comic;
 import org.huxizhijian.hhcomicviewer2.model.ComicChapter;
 import org.huxizhijian.hhcomicviewer2.utils.Constants;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ComicChapterDownloadActivity extends OfflineDownloadBaseActivity {
@@ -76,7 +77,13 @@ public class ComicChapterDownloadActivity extends OfflineDownloadBaseActivity {
 
     @Override
     protected void initData() {
-        mComicChapters = mComicChapterDBHelper.findByComicCid(mComic.getCid());
+        List<ComicChapter> allChapters = mComicChapterDBHelper.findByComicCid(mComic.getCid());
+        mComicChapters = new ArrayList<>();
+        for (ComicChapter chapter : allChapters) {
+            if (chapter.getDownloadStatus() == Constants.DOWNLOAD_FINISHED) {
+                mComicChapters.add(chapter);
+            }
+        }
     }
 
     @Override

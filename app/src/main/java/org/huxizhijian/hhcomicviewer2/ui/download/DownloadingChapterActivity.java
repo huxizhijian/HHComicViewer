@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.SparseArray;
@@ -15,8 +17,9 @@ import org.huxizhijian.hhcomicviewer2.databinding.ActivityDownloadingChapterBind
 import org.huxizhijian.hhcomicviewer2.model.Comic;
 import org.huxizhijian.hhcomicviewer2.model.ComicChapter;
 import org.huxizhijian.hhcomicviewer2.service.DownloadManagerService;
-import org.huxizhijian.hhcomicviewer2.utils.Constants;
+import org.huxizhijian.sdk.imagedownload.ImageDownloader;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 public class DownloadingChapterActivity extends OfflineDownloadBaseActivity {
@@ -33,6 +36,33 @@ public class DownloadingChapterActivity extends OfflineDownloadBaseActivity {
     public final static int ACTION_START = 0x02;
 
     private int mLastAction = NO_ACTION;
+
+    private long mLastAllStartOrStopTap;
+
+    //漫画下载类实例
+    private static ImageDownloader mImageDownloader = ImageDownloader.getInstance();
+
+    private static MyHandler mHandler;
+
+    private static class MyHandler extends Handler {
+
+        WeakReference<DownloadingChapterActivity> activity;
+
+        public MyHandler(WeakReference<DownloadingChapterActivity> activity) {
+            this.activity = activity;
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (activity != null && activity.get() != null) {
+                if (!activity.get().isEditModeOpen()) {
+                    activity.get().checkAllPause();
+                }
+                mHandler.sendEmptyMessageDelayed(0, 1000);
+            }
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,24 +91,31 @@ public class DownloadingChapterActivity extends OfflineDownloadBaseActivity {
                 if (isEditModeOpen()) {
                     mAdapter.deleteClick();
                 } else {
-                    if (mLastAction == NO_ACTION) {
-                        if (checkAllPause()) {
-                            startAll();
-                        } else {
-                            pauseAll();
+                    //操作间隔时间应大于1.5s
+                    if (System.currentTimeMillis() - mLastAllStartOrStopTap > 1500) {
+                        if (mLastAction == NO_ACTION) {
+                            if (checkAllPause()) {
+                                startAll();
+                            } else {
+                                pauseAll();
+                            }
+                        } else if (mLastAction == ACTION_PAUSE) {
+                            if (checkAllPause()) {
+                                startAll();
+                            }
+                        } else if (mLastAction == ACTION_START) {
+                            if (!checkAllPause()) {
+                                pauseAll();
+                            }
                         }
-                    } else if (mLastAction == ACTION_PAUSE) {
-                        if (checkAllPause()) {
-                            startAll();
-                        }
-                    } else if (mLastAction == ACTION_START) {
-                        if (!checkAllPause()) {
-                            pauseAll();
-                        }
+                        mLastAllStartOrStopTap = System.currentTimeMillis();
                     }
                 }
             }
         });
+        //开启定时更新
+        mHandler = new MyHandler(new WeakReference<>(this));
+        mHandler.sendEmptyMessageDelayed(0, 0);
     }
 
     private void startAll() {
@@ -179,26 +216,13 @@ public class DownloadingChapterActivity extends OfflineDownloadBaseActivity {
         mBinding.btnAllSelect.setText(getResources().getText(R.string.all_select));
     }
 
-    private boolean checkAllPause() {
-        if (mUnfinishedComicChapterList == null && mUnfinishedComicChapterList.size() == 0) {
+    public boolean checkAllPause() {
+        if (!mImageDownloader.isHasRequestActive() && mImageDownloader.isQueueEmpty()) {
             mBinding.btnDelete.setText(getResources().getText(R.string.all_start));
             return true;
+        } else {
+            mBinding.btnDelete.setText(getResources().getText(R.string.all_pause));
+            return false;
         }
-        for (ComicChapter comicChapter : mUnfinishedComicChapterList) {
-            switch (comicChapter.getDownloadStatus()) {
-                case Constants.DOWNLOAD_DOWNLOADING:
-                case Constants.DOWNLOAD_INIT:
-                case Constants.DOWNLOAD_IN_QUEUE:
-                case Constants.DOWNLOAD_START:
-                    mBinding.btnDelete.setText(getResources().getText(R.string.all_pause));
-                    return false;
-                case Constants.DOWNLOAD_ERROR:
-                case Constants.DOWNLOAD_PAUSE:
-                case Constants.DOWNLOAD_FINISHED:
-                    break;
-            }
-        }
-        mBinding.btnDelete.setText(getResources().getText(R.string.all_start));
-        return true;
     }
 }

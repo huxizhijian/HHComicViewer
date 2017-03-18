@@ -33,7 +33,12 @@ import org.huxizhijian.hhcomicviewer2.model.Comic;
 import org.huxizhijian.hhcomicviewer2.model.ComicChapter;
 import org.huxizhijian.hhcomicviewer2.service.DownloadManagerService;
 import org.huxizhijian.hhcomicviewer2.ui.download.listener.OnEditModeListener;
+import org.huxizhijian.hhcomicviewer2.utils.CommonUtils;
 import org.huxizhijian.hhcomicviewer2.utils.Constants;
+import org.huxizhijian.sdk.imagedownload.ImageDownloader;
+import org.huxizhijian.sdk.imagedownload.core.ImageDownloadRequest;
+import org.huxizhijian.sdk.imagedownload.core.Request;
+import org.huxizhijian.sdk.imagedownload.core.model.ImageEntity;
 import org.huxizhijian.sdk.imageloader.ImageLoaderOptions;
 import org.huxizhijian.sdk.imageloader.listener.ImageLoaderManager;
 
@@ -67,6 +72,8 @@ public class DownloadingComicChapterAdapter extends RecyclerView.Adapter<Recycle
     private boolean isEditModeOn;
 
     private ImageLoaderManager mImageLoader = ImageLoaderOptions.getImageLoaderManager();
+
+    private ImageDownloader mImageDownloader = ImageDownloader.getInstance();
 
     public DownloadingComicChapterAdapter(Activity context, List<ComicChapter> unfinishedChapterList,
                                           SparseArray<Comic> comics) {
@@ -163,23 +170,21 @@ public class DownloadingComicChapterAdapter extends RecyclerView.Adapter<Recycle
                     if (System.currentTimeMillis() - mLastStartOrPausePressed <= 1500) return;
                     //进行暂停，开始的操作
                     Intent intent = null;
-                    switch (comicChapter.getDownloadStatus()) {
-                        case Constants.DOWNLOAD_DOWNLOADING:
-                        case Constants.DOWNLOAD_INIT:
-                        case Constants.DOWNLOAD_IN_QUEUE:
-                        case Constants.DOWNLOAD_START:
-                            intent = new Intent(mContext, DownloadManagerService.class);
-                            intent.setAction(DownloadManagerService.ACTION_STOP);
-                            intent.putExtra("comicChapter", comicChapter);
-                            mContext.startService(intent);
-                            break;
-                        case Constants.DOWNLOAD_ERROR:
-                        case Constants.DOWNLOAD_PAUSE:
-                            intent = new Intent(mContext, DownloadManagerService.class);
-                            intent.setAction(DownloadManagerService.ACTION_START_RANGE);
-                            intent.putExtra("comicChapter", comicChapter);
-                            mContext.startService(intent);
-                            break;
+                    ImageEntity entity = new ImageEntity(comicChapter.getChid(),
+                            CommonUtils.getChapterUrl(comicChapter.getCid(),
+                                    comicChapter.getChid(), comicChapter.getServerId()),
+                            comicChapter.getSavePath(), comicChapter.getServerId());
+                    Request request = new ImageDownloadRequest(entity);
+                    if (mImageDownloader.isInQueueOrActive(request)) {
+                        intent = new Intent(mContext, DownloadManagerService.class);
+                        intent.setAction(DownloadManagerService.ACTION_STOP);
+                        intent.putExtra("comicChapter", comicChapter);
+                        mContext.startService(intent);
+                    } else {
+                        intent = new Intent(mContext, DownloadManagerService.class);
+                        intent.setAction(DownloadManagerService.ACTION_START_RANGE);
+                        intent.putExtra("comicChapter", comicChapter);
+                        mContext.startService(intent);
                     }
                     mLastStartOrPausePressed = System.currentTimeMillis();
                 }
@@ -192,7 +197,6 @@ public class DownloadingComicChapterAdapter extends RecyclerView.Adapter<Recycle
                 return true;
             }
         });
-
 
         //状态
         switch (comicChapter.getDownloadStatus()) {

@@ -98,7 +98,7 @@ public class OfflineComicDownloadActivity extends OfflineDownloadBaseActivity {
     protected void initData() {
         List<Comic> downloadComicList = mComicDBHelper.findDownloadedComics();
         mFinishedComicList = mComicChapterDBHelper.findFinishedComicList(downloadComicList);
-        mDownloadedChapterList = mComicChapterDBHelper.findDownloadChapterMap(downloadComicList);
+        mDownloadedChapterList = mComicChapterDBHelper.findDownloadedChapterMap(mFinishedComicList);
         mUnFinishedChapterList = mComicChapterDBHelper.findUnFinishedChapters();
     }
 

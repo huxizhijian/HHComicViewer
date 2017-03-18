@@ -92,8 +92,8 @@ public class HHApplication extends MultiDexApplication {
         synchronized (OkHttpClient.class) {
             if (mClient == null) {
                 mClient = new OkHttpClient.Builder()
-                        .connectTimeout(10000, TimeUnit.SECONDS)
-                        .readTimeout(180000, TimeUnit.SECONDS)
+                        .connectTimeout(10000, TimeUnit.MILLISECONDS)
+                        .readTimeout(180000, TimeUnit.MILLISECONDS)
                         .build();
             }
         }

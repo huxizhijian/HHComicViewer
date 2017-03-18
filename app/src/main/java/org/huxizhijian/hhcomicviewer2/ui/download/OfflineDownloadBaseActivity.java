@@ -45,7 +45,6 @@ import org.huxizhijian.hhcomicviewer2.R;
 import org.huxizhijian.hhcomicviewer2.db.ComicChapterDBHelper;
 import org.huxizhijian.hhcomicviewer2.db.ComicDBHelper;
 import org.huxizhijian.hhcomicviewer2.model.ComicChapter;
-import org.huxizhijian.hhcomicviewer2.service.DownloadManager;
 import org.huxizhijian.hhcomicviewer2.service.DownloadManagerService;
 import org.huxizhijian.hhcomicviewer2.ui.download.listener.OnEditModeListener;
 import org.huxizhijian.hhcomicviewer2.ui.user.PreferenceActivity;
@@ -66,7 +65,6 @@ public abstract class OfflineDownloadBaseActivity extends AppCompatActivity impl
 
     protected ComicDBHelper mComicDBHelper; //Comic数据库操作类
     protected ComicChapterDBHelper mComicChapterDBHelper; //ComicChapter数据库操作类
-    protected DownloadManager mDownloadManager; //下载管理类
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -77,7 +75,6 @@ public abstract class OfflineDownloadBaseActivity extends AppCompatActivity impl
         mDownloadPath = sharedPreferences.getString("download_path", Constants.DEFAULT_DOWNLOAD_PATH);
         mComicDBHelper = ComicDBHelper.getInstance(this);
         mComicChapterDBHelper = ComicChapterDBHelper.getInstance(this);
-        mDownloadManager = DownloadManager.getInstance(getApplicationContext());
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)

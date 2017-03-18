@@ -156,11 +156,6 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
      * 初始化滑动渐变
      */
     private void initSlideShapeTheme() {
-        /*// toolbar的高度
-        int toolbarHeight = mBinding.toolbarComicDetails.getLayoutParams().height;
-        // toolbar+状态栏的高度
-        final int headerBgHeight = toolbarHeight + getStatusBarHeight(this);
-
         // 使背景图向上移动到图片的最底端，保留toolbar+状态栏的高度*/
         mBinding.ivTitleHeadBg.setVisibility(View.VISIBLE);
 //        ViewGroup.LayoutParams params = mBinding.ivTitleHeadBg.getLayoutParams();
@@ -193,7 +188,7 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(getApplicationContext(), Constants.NO_NETWORK, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ComicDetailsActivity.this, Constants.NO_NETWORK, Toast.LENGTH_SHORT).show();
                     //没有网络，读取数据库中的信息
                     if (mComic != null) {
                         if (mComic.isMark() || mComic.isDownload()) {
@@ -212,7 +207,7 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
                 @Override
                 public void run() {
                     mBinding.loadingComicInfo.setVisibility(View.GONE);
-                    Toast.makeText(getApplicationContext(), "出错！", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ComicDetailsActivity.this, "出错！", Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -224,7 +219,7 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(getApplicationContext(), Constants.NO_NETWORK, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ComicDetailsActivity.this, Constants.NO_NETWORK, Toast.LENGTH_SHORT).show();
                     //没有网络，读取数据库中的信息
                     if (mComic != null) {
                         if (mComic.isMark() || mComic.isDownload()) {
@@ -243,7 +238,7 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
                 @Override
                 public void run() {
                     mBinding.loadingComicInfo.setVisibility(View.GONE);
-                    Toast.makeText(getApplicationContext(), "出错！", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ComicDetailsActivity.this, "出错！", Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -418,8 +413,16 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
             mBinding.loadingComicInfo.setVisibility(View.VISIBLE);
         }
         mComic = mComicDBHelper.findByCid(mCid);
-        IComicDetailsPresenter presenter = new ComicDetailsPresenter(this);
-        presenter.getComic(mCid, mComic);
+        if (CommonUtils.getAPNType(this) == CommonUtils.NONEWTWORK) {
+            mBinding.loadingComicInfo.setVisibility(View.GONE);
+            Toast.makeText(this, Constants.NO_NETWORK, Toast.LENGTH_SHORT).show();
+            if (mComic.getChapterName() != null) {
+                updateViews();
+            }
+        } else {
+            IComicDetailsPresenter presenter = new ComicDetailsPresenter(this);
+            presenter.getComic(mCid, mComic);
+        }
         mReceiver = new ComicChapterDownloadUpdateReceiver();
     }
 
@@ -695,7 +698,6 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
 
     @Override
     public void onClick(View v) {
-        Intent intent = null;
         switch (v.getId()) {
             case R.id.FAB_comic_details:
                 read();

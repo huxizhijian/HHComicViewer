@@ -54,6 +54,9 @@ public class ComicChapterPresenterImpl implements IComicChapterPreenter {
                 try {
                     final String content = new String(data, "gb2312");
                     comicChapter.updatePicList(comicChapter.getServerId(), content);
+                    for (int i = 0; i < comicChapter.getPicList().size(); i++) {
+                        System.out.println(comicChapter.getPicList().get(i));
+                    }
                     mListener.onSuccess(comicChapter);
                 } catch (UnsupportedEncodingException e) {
                     mListener.onException(e, comicChapter);

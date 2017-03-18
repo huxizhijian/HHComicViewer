@@ -57,6 +57,23 @@ public class ComicChapterDBHelper {
         return downloadedChapterMap;
     }
 
+    public SparseArray<List<ComicChapter>> findDownloadedChapterMap(List<Comic> finishedComics) {
+        if (finishedComics == null || finishedComics.size() == 0) return new SparseArray<>();
+        SparseArray<List<ComicChapter>> downloadedChapterMap = new SparseArray<>();
+        List<ComicChapter> comicChapters;
+        for (int i = 0; i < finishedComics.size(); i++) {
+            comicChapters = findByComicCid(finishedComics.get(i).getCid());
+            List<ComicChapter> downloadedChapters = new ArrayList<>();
+            for (ComicChapter chapter : comicChapters) {
+                if (chapter.getDownloadStatus() == Constants.DOWNLOAD_FINISHED) {
+                    downloadedChapters.add(chapter);
+                }
+            }
+            downloadedChapterMap.put(finishedComics.get(i).getCid(), downloadedChapters);
+        }
+        return downloadedChapterMap;
+    }
+
     public List<Comic> findFinishedComicList(List<Comic> downloadedComics) {
         if (downloadedComics == null || downloadedComics.size() == 0) return new ArrayList<>();
         List<Comic> finishedComics = new ArrayList<>();
