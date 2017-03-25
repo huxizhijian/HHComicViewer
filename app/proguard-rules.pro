@@ -83,6 +83,10 @@
 -keep class org.jsoup.**{*;}
 -keep interface org.jsoup.**{*;}
 
+#LRecyclerview_library
+-dontwarn com.github.jdsjlzx.**
+-keep class com.github.jdsjlzx.**{*;}
+
 #自己定义的model不混淆
 -dontwarn org.huxizhijian.sdk.**
 -keep class org.huxizhijian.sdk.**{*;}

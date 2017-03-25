@@ -10,6 +10,8 @@ import org.huxizhijian.sdk.imagedownload.listener.ImageDownloadListener;
 import org.huxizhijian.sdk.imagedownload.listener.RequestProgressListener;
 import org.huxizhijian.sdk.imagedownload.utils.Constants;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
@@ -21,7 +23,7 @@ import okhttp3.OkHttpClient;
 /**
  * @author huxizhijian 2017/3/15
  */
-public class ImageDownloader implements RequestProgressListener {
+public class ImageDownloader implements RequestProgressListener, Closeable {
 
     private OkHttpClient mClient;
     private DataBaseAdapter mAdapter;
@@ -163,9 +165,10 @@ public class ImageDownloader implements RequestProgressListener {
         if (mQueue.size() == 0 && isFinished) {
             mQueue.offer(request);
             mListener.onStart(request);
+            setFinished(false);
         } else {
             mRequestQueue.offer(request);
-            mListener.onInQueue(request);
+            mListener.onAddToQueue(request);
         }
     }
 
@@ -187,7 +190,8 @@ public class ImageDownloader implements RequestProgressListener {
      * @return 启动是否成功
      */
     public boolean start() {
-        if (isInit()) {
+        if (isInit() && !mDispatcher.isAlive()) {
+            mDispatcher = new ImageDownloadDispatcher(mThreadCount, mQueue, mAdapter);
             mDispatcher.start();
             return true;
         } else {
@@ -195,16 +199,14 @@ public class ImageDownloader implements RequestProgressListener {
         }
     }
 
+    public boolean isStarted() {
+        return isInit() && mDispatcher.isAlive();
+    }
+
     /**
      * 将dispatcher停止
      */
     public void stop() {
-        if (mDispatcher != null) {
-            if (mDispatcher.request != null && !isFinished) {
-                mDispatcher.request.pause();
-            }
-            mDispatcher.quit();
-        }
         for (int i = 0; i < mRequestQueue.size(); i++) {
             Request request = mRequestQueue.poll();
             mListener.onPaused(request, 0, 0);
@@ -215,10 +217,12 @@ public class ImageDownloader implements RequestProgressListener {
         }
         mRequestQueue.clear();
         mQueue.clear();
-    }
-
-    public boolean isStarted() {
-        return mDispatcher != null && mDispatcher.isAlive();
+        if (mDispatcher != null) {
+            if (mDispatcher.request != null && !isFinished) {
+                mDispatcher.request.pause();
+            }
+            mDispatcher.quit();
+        }
     }
 
     /**
@@ -263,7 +267,7 @@ public class ImageDownloader implements RequestProgressListener {
      *
      * @param request 请求
      */
-    public void cancelRequest(Request request) {
+    public synchronized void cancelRequest(Request request) {
         if (mRequestQueue.contains(request)) {
             mRequestQueue.remove(request);
         }
@@ -284,7 +288,7 @@ public class ImageDownloader implements RequestProgressListener {
      *
      * @param request 请求
      */
-    public void deleteRequest(Request request) {
+    public synchronized void deleteRequest(Request request) {
         cancelRequest(request);
         if (mAdapter.findByChid(request.getChid()) != null) {
             mAdapter.delete(request.getChid());
@@ -292,50 +296,70 @@ public class ImageDownloader implements RequestProgressListener {
         mListener.onDeleted(request);
     }
 
+    private synchronized void setFinished(boolean isFinished) {
+        this.isFinished = isFinished;
+    }
+
     @Override
     public void onProgress(long chid, int progress, int size) {
         mListener.onProgress(mDispatcher.request, progress, size);
-        isFinished = false;
+        setFinished(false);
     }
 
     @Override
     public void onFailure(long chid, Throwable throwable, int progress, int size) {
         mListener.onFailure(mDispatcher.request, throwable, progress, size);
-        isFinished = true;
-        if (mRequestQueue.size() != 0) {
-            Request request = mRequestQueue.poll();
-            mListener.onStart(request);
-            mQueue.offer(request);
-        } else {
-            mListener.onAllFinished();
+        synchronized (BlockingQueue.class) {
+            setFinished(true);
+            if (mRequestQueue.size() != 0) {
+                Request request = mRequestQueue.poll();
+                mListener.onStart(request);
+                mQueue.offer(request);
+            } else {
+                mListener.onAllFinished();
+            }
         }
     }
 
     @Override
     public void onCompleted(long chid, int progress, int size) {
         mListener.onCompleted(mDispatcher.request, progress, size);
-        isFinished = true;
-        mAdapter.delete(chid);
-        if (mRequestQueue.size() != 0) {
-            Request request = mRequestQueue.poll();
-            mListener.onStart(request);
-            mQueue.offer(request);
-        } else {
-            mListener.onAllFinished();
+        synchronized (BlockingQueue.class) {
+            setFinished(true);
+            mAdapter.delete(chid);
+            if (mRequestQueue.size() != 0) {
+                Request request = mRequestQueue.poll();
+                mListener.onStart(request);
+                mQueue.offer(request);
+            } else {
+                mListener.onAllFinished();
+            }
         }
     }
 
     @Override
     public void onPaused(long chid, int progress, int size) {
         mListener.onPaused(mDispatcher.request, progress, size);
-        isFinished = true;
-        if (mRequestQueue.size() != 0) {
-            Request request = mRequestQueue.poll();
-            mListener.onStart(request);
-            mQueue.offer(request);
-        } else {
-            mListener.onAllFinished();
+        synchronized (BlockingQueue.class) {
+            setFinished(true);
+            if (mRequestQueue.size() != 0) {
+                Request request = mRequestQueue.poll();
+                mListener.onStart(request);
+                mQueue.offer(request);
+            } else {
+                mListener.onAllFinished();
+            }
         }
+    }
+
+    @Override
+    public void close() throws IOException {
+        if (mDispatcher != null) {
+            mDispatcher.quit();
+        }
+        mDispatcher = null;
+        mRequestQueue.clear();
+        mQueue.clear();
     }
 
 }

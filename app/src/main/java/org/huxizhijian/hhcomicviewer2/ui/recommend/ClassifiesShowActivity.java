@@ -13,15 +13,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
-import com.jcodecraeer.xrecyclerview.ProgressStyle;
-import com.jcodecraeer.xrecyclerview.XRecyclerView;
+import com.github.jdsjlzx.interfaces.OnLoadMoreListener;
+import com.github.jdsjlzx.interfaces.OnNetWorkErrorListener;
 import com.rey.material.app.SimpleDialog;
-import com.rey.material.widget.EditText;
 
 import org.huxizhijian.hhcomicviewer2.R;
 import org.huxizhijian.hhcomicviewer2.adapter.StaggeredComicAdapter;
+import org.huxizhijian.hhcomicviewer2.adapter.StaggeredComicAdapterWrapper;
 import org.huxizhijian.hhcomicviewer2.databinding.ActivityClassifiesShowBinding;
 import org.huxizhijian.hhcomicviewer2.model.Comic;
 import org.huxizhijian.hhcomicviewer2.persenter.IClassifiesShowPresenter;
@@ -45,7 +46,8 @@ public class ClassifiesShowActivity extends AppCompatActivity implements IClassi
 
     private IClassifiesShowPresenter mPresenter = new ClassifiesShowPresenterImpl(this);
     private List<Comic> mComicList = new ArrayList<>();
-    private StaggeredComicAdapter mAdapter;
+    private StaggeredComicAdapter mInnerAdapter;
+    private StaggeredComicAdapterWrapper mAdapter;
 
     private View mNoResult;
 
@@ -93,8 +95,14 @@ public class ClassifiesShowActivity extends AppCompatActivity implements IClassi
                                     if (TextUtils.isEmpty(pageStr)) {
                                         Toast.makeText(ClassifiesShowActivity.this, "输入为空！",
                                                 Toast.LENGTH_SHORT).show();
+                                        return;
                                     }
                                     int page = Integer.parseInt(pageStr);
+                                    if (page < 1 || page > mMaxPage) {
+                                        Toast.makeText(ClassifiesShowActivity.this, "没有这一页",
+                                                Toast.LENGTH_SHORT).show();
+                                        return;
+                                    }
                                     mAdapter = null;
                                     mComicList = new ArrayList<>();
                                     mFirstPage = page;
@@ -149,12 +157,31 @@ public class ClassifiesShowActivity extends AppCompatActivity implements IClassi
     }
 
     private void initRecyclerView() {
+        //关闭下拉刷新功能
+        mBinding.recyclerView.setPullRefreshEnabled(false);
+        //设置上拉加载更多
+        mBinding.recyclerView.setOnLoadMoreListener(new OnLoadMoreListener() {
+            @Override
+            public void onLoadMore() {
+                if (mPage < mMaxPage) {
+                    mPage++;
+                    mPresenter.getComicList(mUrl, mPage);
+                }
+            }
+        });
+        //如果网络出现异常，重新加载代码
+        mBinding.recyclerView.setOnNetWorkErrorListener(new OnNetWorkErrorListener() {
+            @Override
+            public void reload() {
+                mPresenter.getComicList(mUrl, mPage);
+            }
+        });
         //首先加载第一页
         mPresenter.getComicList(mUrl, mFirstPage);
     }
 
     @Override
-    public void onSuccess(final int maxPage, List<Comic> comics) {
+    public void onSuccess(final int maxPage, final List<Comic> comics) {
         mMaxPage = maxPage;
         mComicList.addAll(comics);
         runOnUiThread(new Runnable() {
@@ -166,32 +193,18 @@ public class ClassifiesShowActivity extends AppCompatActivity implements IClassi
                     layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
                     mBinding.recyclerView.setLayoutManager(layoutManager);
                     mBinding.recyclerView.setItemAnimator(new DefaultItemAnimator());
-                    mBinding.recyclerView.setRefreshProgressStyle(ProgressStyle.BallSpinFadeLoader);
-                    mBinding.recyclerView.setLoadingMoreProgressStyle(ProgressStyle.BallRotate);
-                    mBinding.recyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
-                        @Override
-                        public void onRefresh() {
-                        }
-
-                        @Override
-                        public void onLoadMore() {
-                            if (mPage < mMaxPage) {
-                                mPage++;
-                                mPresenter.getComicList(mUrl, mPage);
-                            }
-                        }
-                    });
-                    mBinding.recyclerView.setPullRefreshEnabled(false);
-                    mAdapter = new StaggeredComicAdapter(ClassifiesShowActivity.this, null, mComicList);
+                    mInnerAdapter = new StaggeredComicAdapter(ClassifiesShowActivity.this, null, mComicList);
+                    mAdapter = new StaggeredComicAdapterWrapper(mInnerAdapter);
                     mBinding.recyclerView.setAdapter(mAdapter);
                     mBinding.recyclerView.setVisibility(View.VISIBLE);
                     mBinding.progressBar.setVisibility(View.GONE);
                 } else {
-                    mAdapter.updateComicList(mComicList);
+                    mInnerAdapter.updateComicList(mComicList);
                     if (mMaxPage == mPage) {
                         mBinding.recyclerView.setNoMore(true);
                     } else {
-                        mBinding.recyclerView.loadMoreComplete();
+                        //参数为每页加载数量
+                        mBinding.recyclerView.refreshComplete(comics.size());
                     }
                     mAdapter.notifyDataSetChanged();
                 }

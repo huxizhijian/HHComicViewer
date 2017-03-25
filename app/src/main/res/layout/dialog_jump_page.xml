@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.rey.material.widget.EditText
+<android.support.design.widget.TextInputLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/editText"
-    android:layout_width="160dp"
+    android:layout_width="200dp"
     android:layout_height="wrap_content"
-    android:layout_margin="4dp"
-    android:inputType="number"
-    android:hint="@string/enter_page_want_to_jump"
-    app:et_inputId="@+id/textfield_et_label_input"
-    app:et_supportMode="none"/>
+    android:layout_margin="4dp">
+
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/enter_page_want_to_jump"
+        android:inputType="number"/>
+
+</android.support.design.widget.TextInputLayout>

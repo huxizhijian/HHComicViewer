@@ -63,7 +63,7 @@ public class DataBaseAdapter {
     }
 
     //查询
-    public ArrayList<TaskInfo> findByChid(long chid) {
+    public synchronized ArrayList<TaskInfo> findByChid(long chid) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         Cursor c = db.query(true, TaskMetaData.TaskInfo.TABLE_NAME, null,
                 TaskMetaData.TaskInfo.CHID + "=?", new String[]{String.valueOf(chid)}, null, null, null, null);

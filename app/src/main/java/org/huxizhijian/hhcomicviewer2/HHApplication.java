@@ -18,6 +18,8 @@ package org.huxizhijian.hhcomicviewer2;
 
 import android.support.multidex.MultiDexApplication;
 
+import com.squareup.leakcanary.LeakCanary;
+
 import org.huxizhijian.hhcomicviewer2.option.HHComicWebVariable;
 import org.huxizhijian.sdk.SDKConstant;
 import org.huxizhijian.sdk.imageloader.ImageLoaderOptions;
@@ -102,11 +104,22 @@ public class HHApplication extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+        initLeakCanary();
         initXUtils();
         createClient();
         sApplication = this;
         mWebVariable = new HHComicWebVariable(this);
         initSDK();
+    }
+
+    private void initLeakCanary() {
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            // This process is dedicated to LeakCanary for heap analysis.
+            // You should not init your app in this process.
+            return;
+        }
+        LeakCanary.install(this);
+        // Normal app init code...
     }
 
     private void initSDK() {

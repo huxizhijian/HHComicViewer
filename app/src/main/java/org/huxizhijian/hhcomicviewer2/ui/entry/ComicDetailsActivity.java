@@ -112,6 +112,8 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
     private int mDetailsHeight;
     private int mBackHeight;
 
+    private static final int MSG_UPDATE_VIEW = 0x02;
+
     //图片加载工具类
     private ImageLoaderManager mImageLoader = ImageLoaderOptions.getImageLoaderManager();
 
@@ -128,6 +130,8 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
                 intent.setAction(DownloadManagerService.ACTION_START);
                 intent.putExtra("comicChapter", chapter);
                 startService(intent);
+            } else if (msg.what == MSG_UPDATE_VIEW) {
+                updateViews();
             }
         }
     };
@@ -148,8 +152,8 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
         preLoadingImageAndTitle();
         initSlideShapeTheme();
         initDBValues();
-        initData(savedInstanceState);
         setupAppBarListener();
+        initData(savedInstanceState);
     }
 
     /**
@@ -417,7 +421,7 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
             mBinding.loadingComicInfo.setVisibility(View.GONE);
             Toast.makeText(this, Constants.NO_NETWORK, Toast.LENGTH_SHORT).show();
             if (mComic.getChapterName() != null) {
-                updateViews();
+                mHandler.sendEmptyMessageDelayed(MSG_UPDATE_VIEW, 600);
             }
         } else {
             IComicDetailsPresenter presenter = new ComicDetailsPresenter(this);
@@ -444,7 +448,8 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
             public void onGlobalLayout() {
                 mDetailsHeight = mBinding.comicDescriptionComicDetails.getHeight();
                 //获得高度之后，移除监听
-                vto1.removeGlobalOnLayoutListener(this);
+                mBinding.comicDescriptionComicDetails
+                        .getViewTreeObserver().removeGlobalOnLayoutListener(this);
             }
         });
         //测量tv_back 的高度
@@ -949,7 +954,7 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
                 msg.what = Constants.MSG_DOWNLOAD;
                 msg.obj = Chapter;
                 //将任务按照顺序加入队伍，时间间隔1000ms
-                mHandler.sendMessageDelayed(msg, 1000 * i);
+                mHandler.sendMessageDelayed(msg, 10 * i);
             }
         }
     }
@@ -979,8 +984,8 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
                             Message msg = new Message();
                             msg.what = Constants.MSG_DOWNLOAD;
                             msg.obj = Chapter;
-                            //将任务按照顺序加入队伍，时间间隔1000ms
-                            mHandler.sendMessageDelayed(msg, 1000 * i);
+                            //将任务按照顺序加入队伍，时间间隔10ms
+                            mHandler.sendMessageDelayed(msg, 10 * i);
                         }
                         mSelectedChapters = null;
                     }

@@ -237,6 +237,7 @@ public class DownloadManagerService extends Service implements ImageDownloadList
     @Override
     public void onStart(Request request) {
         ComicChapter comicChapter = mComicChapterDBHelper.findByChapterId(request.getChid());
+        if (comicChapter == null) return;
         comicChapter.setDownloadStatus(Constants.DOWNLOAD_START);
         mComicChapterDBHelper.update(comicChapter);
         mNotificationUtil.showNotification(DownloadManagerService.this, comicChapter);
@@ -249,8 +250,10 @@ public class DownloadManagerService extends Service implements ImageDownloadList
 
     @Override
     public void onProgress(Request request, int progress, int size) {
+        if (request == null) return;
         init();
         ComicChapter comicChapter = mComicChapterDBHelper.findByChapterId(request.getChid());
+        if (comicChapter == null) return;
         comicChapter.setDownloadPosition(progress);
         comicChapter.setPageCount(size);
         comicChapter.setDownloadStatus(Constants.DOWNLOAD_DOWNLOADING);
@@ -265,7 +268,9 @@ public class DownloadManagerService extends Service implements ImageDownloadList
 
     @Override
     public void onFailure(Request request, Throwable throwable, int progress, int size) {
+        if (request == null) return;
         ComicChapter comicChapter = mComicChapterDBHelper.findByChapterId(request.getChid());
+        if (comicChapter == null) return;
         comicChapter.setDownloadPosition(progress);
         comicChapter.setPageCount(size);
         comicChapter.setDownloadStatus(Constants.DOWNLOAD_ERROR);
@@ -280,7 +285,9 @@ public class DownloadManagerService extends Service implements ImageDownloadList
 
     @Override
     public void onCompleted(Request request, int progress, int size) {
+        if (request == null) return;
         ComicChapter comicChapter = mComicChapterDBHelper.findByChapterId(request.getChid());
+        if (comicChapter == null) return;
         comicChapter.setDownloadPosition(progress);
         comicChapter.setPageCount(size);
         comicChapter.setDownloadStatus(Constants.DOWNLOAD_FINISHED);
@@ -295,7 +302,9 @@ public class DownloadManagerService extends Service implements ImageDownloadList
 
     @Override
     public void onPaused(Request request, int progress, int size) {
+        if (request == null) return;
         ComicChapter comicChapter = mComicChapterDBHelper.findByChapterId(request.getChid());
+        if (comicChapter == null) return;
         comicChapter.setDownloadPosition(progress);
         comicChapter.setPageCount(size);
         comicChapter.setDownloadStatus(Constants.DOWNLOAD_PAUSE);
@@ -319,8 +328,10 @@ public class DownloadManagerService extends Service implements ImageDownloadList
     }
 
     @Override
-    public void onInQueue(Request request) {
+    public void onAddToQueue(Request request) {
+        if (request == null) return;
         ComicChapter comicChapter = mComicChapterDBHelper.findByChapterId(request.getChid());
+        if (comicChapter == null) return;
         comicChapter.setDownloadStatus(Constants.DOWNLOAD_IN_QUEUE);
         mComicChapterDBHelper.update(comicChapter);
         //发送本地广播

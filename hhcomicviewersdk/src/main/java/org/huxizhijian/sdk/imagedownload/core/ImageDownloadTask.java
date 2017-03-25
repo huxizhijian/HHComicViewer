@@ -193,7 +193,7 @@ public class ImageDownloadTask extends Thread {
                 mTaskInfo.setLength(-1);
                 //将下载进度往前推一页
                 if (mImageDownloader.isDebug()) {
-                    Log.i(TAG, "run: thread-" + mTaskInfo.getTaskPosition() +
+                    Log.i(TAG, "chid-" + mTaskInfo.getChid() + "-thread-" + mTaskInfo.getTaskPosition() +
                             " finish page " + mTaskInfo.getDownloadPosition());
                 }
                 mTaskInfo.setDownloadPosition(mTaskInfo.getDownloadPosition() + 1);

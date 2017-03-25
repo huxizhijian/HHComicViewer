@@ -24,7 +24,7 @@
 
         </android.support.design.widget.AppBarLayout>
 
-        <com.jcodecraeer.xrecyclerview.XRecyclerView
+        <com.github.jdsjlzx.recyclerview.LRecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

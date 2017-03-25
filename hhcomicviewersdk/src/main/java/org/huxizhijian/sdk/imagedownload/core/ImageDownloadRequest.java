@@ -102,7 +102,7 @@ public class ImageDownloadRequest implements Request, TaskProgressListener, Comp
 
     @Override
     public void onError(Exception e) {
-        mListener.onFailure(mEntity.getChid(), e, getTotalProgress(), mEntity.getPicList().size());
+        mListener.onFailure(mEntity.getChid(), e, 0, 0);
     }
 
     @Override
@@ -188,4 +188,16 @@ public class ImageDownloadRequest implements Request, TaskProgressListener, Comp
         }
         return totalProgress;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        ImageDownloadRequest otherRequest = (ImageDownloadRequest) obj;
+        return mEntity.getChid() == otherRequest.getChid();
+    }
+
+    @Override
+    public int hashCode() {
+        return Long.valueOf(mEntity.getChid()).hashCode();
+    }
+
 }

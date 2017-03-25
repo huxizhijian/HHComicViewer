@@ -33,6 +33,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import org.huxizhijian.hhcomicviewer2.HHApplication;
 import org.huxizhijian.hhcomicviewer2.R;
 import org.huxizhijian.hhcomicviewer2.databinding.ActivityMainBinding;
 import org.huxizhijian.hhcomicviewer2.ui.download.OfflineComicDownloadActivity;
@@ -44,6 +45,7 @@ import org.huxizhijian.hhcomicviewer2.ui.user.PreferenceActivity;
 import org.huxizhijian.hhcomicviewer2.utils.CommonUtils;
 import org.huxizhijian.hhcomicviewer2.utils.Constants;
 import org.huxizhijian.sdk.sharedpreferences.SharedPreferencesManager;
+import org.huxizhijian.sdk.util.TKeyBord;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -169,6 +171,12 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
         return true;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        TKeyBord.fixFocusedViewLeak(HHApplication.getInstance());
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)

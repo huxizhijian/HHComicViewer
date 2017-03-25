@@ -21,6 +21,6 @@ public interface ImageDownloadListener {
 
     void onAllFinished();
 
-    void onInQueue(Request request);
+    void onAddToQueue(Request request);
 
 }
