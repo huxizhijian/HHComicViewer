@@ -2,6 +2,18 @@
 
 这是一个汗汗漫画android平台阅读软件
 
+# ScreenShot
+
+[Screenshot_1.png](https://github.com/huxizhijian/HHComicViewer/blob/master/art/Screenshot_1.png)
+
+[Screenshot_2.png](https://github.com/huxizhijian/HHComicViewer/blob/master/art/Screenshot_2.png)
+
+[Screenshot_3.png](https://github.com/huxizhijian/HHComicViewer/blob/master/art/Screenshot_3.png)
+
+# Download
+
+[HHComicViewer](https://github.com/huxizhijian/HHComicViewer/releases)
+
 
 # Thanks
 
@@ -31,9 +43,6 @@ Here is the libraries
 [Android-DirectoryChooser](https://github.com/passy/Android-DirectoryChooser)
 
 
-[XRecyclerView](https://github.com/jianghejie/XRecyclerView)
-
-
 [okhttp](https://github.com/square/okhttp)
 
 
@@ -41,6 +50,15 @@ Here is the libraries
 
 
 [gson](https://github.com/google/gson)
+
+
+[LRecyclerView](https://github.com/jdsjlzx/LRecyclerView)
+
+
+[materialsearchview](https://github.com/Mauker1/MaterialSearchView)
+
+
+[leakcanary](https://github.com/square/leakcanary)
 
 
 
