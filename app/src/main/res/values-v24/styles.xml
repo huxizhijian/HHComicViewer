@@ -7,7 +7,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowBackground">?android:attr/windowBackgroundFallback</item>
         <item name="android:textColor">@android:color/black</item>
-        <item name="android:textColorPrimary">@android:color/black</item>
+        <item name="android:textColorPrimary">@android:color/white</item>
         <item name="android:textColorPrimaryInverse">@android:color/background_dark</item>
         <item name="android:windowContentTransitions">true</item>
     </style>

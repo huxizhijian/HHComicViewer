@@ -49,6 +49,7 @@ import org.huxizhijian.hhcomicviewer2.model.Comic;
 import org.huxizhijian.hhcomicviewer2.persenter.ISearchPresenter;
 import org.huxizhijian.hhcomicviewer2.persenter.implpersenter.SearchPresenterImpl;
 import org.huxizhijian.hhcomicviewer2.persenter.viewinterface.ISearchActivity;
+import org.huxizhijian.hhcomicviewer2.utils.CommonUtils;
 import org.huxizhijian.hhcomicviewer2.utils.ViewHolder;
 import org.huxizhijian.sdk.util.ImeUtils;
 
@@ -103,6 +104,7 @@ public class SearchActivity extends AppCompatActivity implements ISearchActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_search);
+        CommonUtils.setStatusBarTint(this, getResources().getColor(R.color.colorPrimaryDark));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             setupEnterAnimations();
             setupExitAnimations();

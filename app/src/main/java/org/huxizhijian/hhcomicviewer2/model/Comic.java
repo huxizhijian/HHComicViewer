@@ -124,7 +124,7 @@ public class Comic implements Serializable, Comparable {
         this.cid = cid;
         //获取到网页内容时自动完善内容
         Document doc = Jsoup.parse(content);
-        Element comicInfoDiv = doc.select("div[id=permalink]").first();
+        Element comicInfoDiv = doc.select("div[class=product]").first();
 
         this.title = comicInfoDiv.getElementsByTag("h1").first().text();
         this.thumbnailUrl = comicInfoDiv.select("div[id=about_style]").first()

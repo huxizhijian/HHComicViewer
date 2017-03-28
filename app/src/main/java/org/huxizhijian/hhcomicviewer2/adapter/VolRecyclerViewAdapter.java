@@ -19,11 +19,11 @@ package org.huxizhijian.hhcomicviewer2.adapter;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -87,9 +87,9 @@ public class VolRecyclerViewAdapter extends RecyclerView.Adapter<VolRecyclerView
         holder.tv.setText(mVolName.get(position));
         if (mIsReaded && position == mChapterPosition) {
             //标记上次阅读的章节
-            holder.cv.setCardBackgroundColor(mContext.getResources().getColor(R.color.main_color));
+            holder.frame.setBackgroundColor(mContext.getResources().getColor(R.color.orange_500));
         } else {
-            holder.cv.setCardBackgroundColor(mContext.getResources().getColor(R.color.white));
+            holder.frame.setBackgroundColor(mContext.getResources().getColor(R.color.white));
         }
         if (mFinishedComicChapterList != null) {
             //标记下载好的章节
@@ -159,14 +159,14 @@ public class VolRecyclerViewAdapter extends RecyclerView.Adapter<VolRecyclerView
     class VolViewHolder extends RecyclerView.ViewHolder {
 
         TextView tv;
-        CardView cv;
+        FrameLayout frame;
         ImageView iv;
 
         public VolViewHolder(View itemView) {
             super(itemView);
 
             tv = (TextView) itemView.findViewById(R.id.tv_vol_name_item);
-            cv = (CardView) itemView.findViewById(R.id.cardView_vol_item);
+            frame = (FrameLayout) itemView.findViewById(R.id.frame_layout);
             iv = (ImageView) itemView.findViewById(R.id.imageView_vol_item);
         }
     }

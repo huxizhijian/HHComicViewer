@@ -20,6 +20,6 @@
         android:viewportWidth="24">
     <path
         android:pathData="@string/path_search"
-        android:strokeColor="#FF000000"
+        android:strokeColor="@color/white"
         android:strokeWidth="2"/>
 </vector>

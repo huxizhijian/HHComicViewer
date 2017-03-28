@@ -23,6 +23,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -56,9 +57,13 @@ public class PreferenceActivity extends AppCompatActivity {
 
         //toolbar的设置
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setNavigationIcon(R.mipmap.ic_arrow_back_black_24dp);
         //将其当成actionbar
         setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back_padded);
+        }
         CommonUtils.setStatusBarTint(this, getResources().getColor(R.color.colorPrimaryDark));
 
         String action = getIntent().getAction();

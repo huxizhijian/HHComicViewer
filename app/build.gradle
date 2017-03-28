@@ -69,7 +69,7 @@ dependencies {
     compile 'net.rdrei.android.dirchooser:library:3.2'
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.github.jdsjlzx:LRecyclerView:1.4.0'
-    compile 'com.android.support.constraint:constraint-layout:1.0.1'
+    compile 'br.com.mauker.materialsearchview:materialsearchview:1.2.2'
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
 }

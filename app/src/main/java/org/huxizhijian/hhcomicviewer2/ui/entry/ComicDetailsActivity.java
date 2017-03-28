@@ -432,6 +432,7 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
 
     private void updateViews() {
         //加载其他信息
+        mBinding.comicAuthorComicDetails.setVisibility(View.VISIBLE);
         mBinding.comicAuthorComicDetails.setText(mComic.getAuthor());
         mBinding.comicVolStatusComicDetails.setText(mComic.getComicStatus());
         mBinding.comicFavoriteNumberComicDetails.setText(mComic.getComicFavorite());

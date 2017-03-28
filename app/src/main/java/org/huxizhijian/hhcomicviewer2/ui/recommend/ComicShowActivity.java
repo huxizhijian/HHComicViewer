@@ -50,8 +50,8 @@ public class ComicShowActivity extends AppCompatActivity {
             mFragments.add(fragment);
         }
         mBinding.viewPager.setAdapter(new TabFragmentPagerAdapter(getSupportFragmentManager()));
-        mBinding.tabs.setTabTextColors(getResources().getColor(R.color.dark_icon),
-                getResources().getColor(R.color.colorAccent));
+        mBinding.tabs.setTabTextColors(getResources().getColor(R.color.gray_200),
+                getResources().getColor(R.color.white));
         mBinding.tabs.setupWithViewPager(mBinding.viewPager);
     }
 

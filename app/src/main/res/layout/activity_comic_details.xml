@@ -28,8 +28,7 @@
         <android.support.design.widget.AppBarLayout
             android:id="@+id/app_bar_comic_details"
             android:layout_width="match_parent"
-            android:layout_height="256dp"
-            android:theme="@style/ThemeOverlay.AppCompat.Light">
+            android:layout_height="256dp">
 
             <android.support.design.widget.CollapsingToolbarLayout
                 android:id="@+id/collapsing_tool_bar"
@@ -110,13 +109,15 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_margin="2dp"
+                                android:background="@drawable/card_background"
                                 android:clickable="true"
-                                android:gravity="center_horizontal"
+                                android:gravity="center"
                                 android:maxLines="1"
                                 android:paddingLeft="2dp"
                                 android:paddingRight="2dp"
-                                android:textColor="@color/colorAccent"
-                                android:textSize="16sp"/>
+                                android:textColor="@color/white"
+                                android:textSize="14sp"
+                                android:visibility="gone"/>
 
                             <TextView
                                 android:id="@+id/comic_vol_status_comic_details"

@@ -22,6 +22,7 @@
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
         android:theme="@style/AppTheme">
 
         <FrameLayout
@@ -52,9 +53,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginRight="@dimen/padding_normal"
+                    android:closeIcon="@drawable/ic_clear_24dp"
                     android:iconifiedByDefault="false"
+                    android:searchIcon="@drawable/ic_search_24dp"
                     android:transitionGroup="true"
-                    android:transitionName="@string/transition_search_back"/>
+                    android:transitionName="@string/transition_search_back"
+                    app:closeIcon="@drawable/ic_clear_24dp"
+                    app:searchIcon="@drawable/ic_search_24dp"/>
 
             </LinearLayout>
 

@@ -17,20 +17,22 @@
 package org.huxizhijian.hhcomicviewer2.ui.common;
 
 
-import android.annotation.TargetApi;
-import android.app.ActivityOptions;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Toast;
 
 import org.huxizhijian.hhcomicviewer2.HHApplication;
@@ -44,11 +46,13 @@ import org.huxizhijian.hhcomicviewer2.ui.search.SearchActivity;
 import org.huxizhijian.hhcomicviewer2.ui.user.PreferenceActivity;
 import org.huxizhijian.hhcomicviewer2.utils.CommonUtils;
 import org.huxizhijian.hhcomicviewer2.utils.Constants;
+import org.huxizhijian.hhcomicviewer2.utils.IMMLeaks;
 import org.huxizhijian.sdk.sharedpreferences.SharedPreferencesManager;
-import org.huxizhijian.sdk.util.TKeyBord;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import br.com.mauker.materialsearchview.MaterialSearchView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -66,6 +70,9 @@ public class MainActivity extends AppCompatActivity {
     private List<String> mTitles;
     private TabFragmentPagerAdapter mAdapter;
 
+    //搜索记录
+    private SharedPreferences mSharedPreferences;
+
     private long mLastBackPressedTime = 0; //用于用户不误操作退出键
 
     @Override
@@ -75,6 +82,13 @@ public class MainActivity extends AppCompatActivity {
         initView();
         initViewPager();
         checkFirstRun();
+        IMMLeaks.fixFocusedViewLeak(HHApplication.getInstance());
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mBinding.searchView.clearFocus();
     }
 
     private void initViewPager() {
@@ -94,8 +108,8 @@ public class MainActivity extends AppCompatActivity {
         mBinding.tabs.addTab(mBinding.tabs.newTab().setText(mTitles.get(2)), CLASSIFIES_PAGE);
         mBinding.tabs.addTab(mBinding.tabs.newTab().setText(mTitles.get(3)), RANK_PAGE);
 
-        mBinding.tabs.setTabTextColors(getResources().getColor(R.color.dark_icon),
-                getResources().getColor(R.color.colorAccent));
+        mBinding.tabs.setTabTextColors(getResources().getColor(R.color.gray_200),
+                getResources().getColor(R.color.white));
 
         MarkedFragment markedFragment = new MarkedFragment();
         RecommendFragment recommendFragment = new RecommendFragment();
@@ -133,6 +147,34 @@ public class MainActivity extends AppCompatActivity {
         //将其当成actionbar
         setSupportActionBar(mBinding.toolbar);
         CommonUtils.setStatusBarTint(this, getResources().getColor(R.color.colorPrimaryDark));
+        //绑定searchView事件
+        mBinding.searchView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String suggestion = mBinding.searchView.getSuggestionAtPosition(position);
+                mBinding.searchView.setQuery(suggestion, true);
+            }
+        });
+        mBinding.searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if (TextUtils.isEmpty(query)) {
+                    Toast.makeText(MainActivity.this, "搜索内容不能为空！", Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+                Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+                intent.setAction(Intent.ACTION_SEARCH);
+                intent.putExtra(SearchManager.QUERY, query);
+                startActivity(intent);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+        mBinding.searchView.setShouldKeepHistory(true);
     }
 
     @Override
@@ -146,10 +188,18 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = null;
         switch (item.getItemId()) {
             case R.id.menu_search:
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    openSearchActivity();
-                } else {
-                    startActivity(new Intent(this, SearchActivity.class));
+                //打开搜索列表
+                if (!mBinding.searchView.isOpen()) {
+                    mBinding.searchView.openSearch();
+                    if (mSharedPreferences == null) {
+                        mSharedPreferences = getSharedPreferences("history", Context.MODE_PRIVATE);
+                    }
+                    String group = mSharedPreferences.getString("keys", "");
+                    /*if (!TextUtils.isEmpty(group)) {
+                        //如果有历史记录，获取
+                        String[] history = group.split(":@");
+                        mBinding.searchView.addSuggestions(history);
+                    }*/
                 }
                 break;
             case R.id.menu_download_manager:
@@ -174,26 +224,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        TKeyBord.fixFocusedViewLeak(HHApplication.getInstance());
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private void openSearchActivity() {
-        View searchMenuView = mBinding.toolbar.findViewById(R.id.menu_search);
-        Bundle options = ActivityOptions.makeSceneTransitionAnimation(this, searchMenuView,
-                getString(R.string.transition_search_back)).toBundle();
-        startActivity(new Intent(this, SearchActivity.class), options);
-    }
-
-    @Override
     public void onBackPressed() {
-        if (System.currentTimeMillis() - mLastBackPressedTime <= 2000) {
-            super.onBackPressed();
+        if (mBinding.searchView.isOpen()) {
+            mBinding.searchView.closeSearch();
         } else {
-            mLastBackPressedTime = System.currentTimeMillis();
-            Toast.makeText(MainActivity.this, "再按一次退出", Toast.LENGTH_SHORT).show();
+            if (System.currentTimeMillis() - mLastBackPressedTime <= 2000) {
+                super.onBackPressed();
+            } else {
+                mLastBackPressedTime = System.currentTimeMillis();
+                Toast.makeText(MainActivity.this, "再按一次退出", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

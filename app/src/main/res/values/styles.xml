@@ -21,7 +21,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowBackground">@color/windowBackGround</item>
         <item name="android:textColor">@android:color/black</item>
-        <item name="android:textColorPrimary">@android:color/black</item>
+        <item name="android:textColorPrimary">@android:color/white</item>
         <item name="android:textColorPrimaryInverse">@android:color/background_dark</item>
     </style>
 
@@ -69,6 +69,19 @@
         <item name="progress_text_color">#FF3D7F</item>
         <item name="progress_reached_bar_height">20dp</item>
         <item name="progress_unreached_bar_height">20dp</item>
+    </style>
+
+    <!-- SearchView -->
+    <style name="MaterialSearchViewStyle">
+        <item name="searchBackground">@color/white_ish</item>
+        <item name="searchCloseIcon">@drawable/ic_action_navigation_close</item>
+        <item name="searchBackIcon">@drawable/ic_action_navigation_arrow_back</item>
+        <item name="searchSuggestionBackground">@color/search_layover_bg</item>
+        <item name="searchBarHeight">?attr/actionBarSize</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textColorHint">@color/gray_50</item>
+        <item name="android:hint">@string/search_hint</item>
+        <item name="android:inputType">textCapWords</item>
     </style>
 
 </resources>

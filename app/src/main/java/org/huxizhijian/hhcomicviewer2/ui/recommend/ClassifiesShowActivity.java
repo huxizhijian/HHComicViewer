@@ -129,6 +129,7 @@ public class ClassifiesShowActivity extends AppCompatActivity implements IClassi
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back_padded);
             actionBar.setTitle("分类 - " + mClassifiesName);
         }
     }

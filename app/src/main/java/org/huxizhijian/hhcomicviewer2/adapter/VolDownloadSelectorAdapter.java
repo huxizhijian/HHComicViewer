@@ -19,11 +19,11 @@ package org.huxizhijian.hhcomicviewer2.adapter;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -100,9 +100,9 @@ public class VolDownloadSelectorAdapter extends RecyclerView.Adapter<VolDownload
         }
         if (mSelectedChapterNames.contains(mVolName.get(position))) {
             //选择的章节
-            holder.cv.setCardBackgroundColor(mContext.getResources().getColor(R.color.green_color_download));
+            holder.frame.setBackgroundColor(mContext.getResources().getColor(R.color.green_color_download));
         } else {
-            holder.cv.setCardBackgroundColor(mContext.getResources().getColor(R.color.white));
+            holder.frame.setBackgroundColor(mContext.getResources().getColor(R.color.white));
         }
         setUpItemEvent(holder);
     }
@@ -218,14 +218,14 @@ public class VolDownloadSelectorAdapter extends RecyclerView.Adapter<VolDownload
     class VolViewHolder extends RecyclerView.ViewHolder {
 
         TextView tv;
-        CardView cv;
+        FrameLayout frame;
         ImageView iv;
 
         public VolViewHolder(View itemView) {
             super(itemView);
 
             tv = (TextView) itemView.findViewById(R.id.tv_vol_name_item);
-            cv = (CardView) itemView.findViewById(R.id.cardView_vol_item);
+            frame = (FrameLayout) itemView.findViewById(R.id.frame_layout);
             iv = (ImageView) itemView.findViewById(R.id.imageView_vol_item);
         }
     }
