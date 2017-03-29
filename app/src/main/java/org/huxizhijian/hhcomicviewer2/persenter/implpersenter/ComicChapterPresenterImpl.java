@@ -1,7 +1,7 @@
 package org.huxizhijian.hhcomicviewer2.persenter.implpersenter;
 
 import org.huxizhijian.hhcomicviewer2.model.ComicChapter;
-import org.huxizhijian.hhcomicviewer2.persenter.IComicChapterPreenter;
+import org.huxizhijian.hhcomicviewer2.persenter.IComicChapterPresenter;
 import org.huxizhijian.hhcomicviewer2.persenter.viewinterface.IComicChapterListener;
 import org.huxizhijian.hhcomicviewer2.utils.CommonUtils;
 import org.huxizhijian.hhcomicviewer2.utils.HHApiProvider;
@@ -9,17 +9,18 @@ import org.huxizhijian.sdk.network.service.NormalRequest;
 import org.huxizhijian.sdk.network.service.NormalResponse;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.ref.WeakReference;
 
 /**
  * Created by wei on 2017/1/7.
  */
 
-public class ComicChapterPresenterImpl implements IComicChapterPreenter {
+public class ComicChapterPresenterImpl implements IComicChapterPresenter {
 
-    private IComicChapterListener mListener;
+    private WeakReference<IComicChapterListener> mListenerWeakReference;
 
     public ComicChapterPresenterImpl(IComicChapterListener listener) {
-        mListener = listener;
+        mListenerWeakReference = new WeakReference<>(listener);
     }
 
     @Override
@@ -51,21 +52,29 @@ public class ComicChapterPresenterImpl implements IComicChapterPreenter {
                 comicChapter.getChid(), comicChapter.getServerId()), new NormalResponse<byte[]>() {
             @Override
             public void success(NormalRequest request, byte[] data) {
+                IComicChapterListener listener = mListenerWeakReference.get();
                 try {
                     final String content = new String(data, "gb2312");
                     comicChapter.updatePicList(comicChapter.getServerId(), content);
                     for (int i = 0; i < comicChapter.getPicList().size(); i++) {
                         System.out.println(comicChapter.getPicList().get(i));
                     }
-                    mListener.onSuccess(comicChapter);
+                    if (listener != null) {
+                        listener.onSuccess(comicChapter);
+                    }
                 } catch (UnsupportedEncodingException e) {
-                    mListener.onException(e, comicChapter);
+                    if (listener != null) {
+                        listener.onException(e, comicChapter);
+                    }
                 }
             }
 
             @Override
             public void fail(int errorCode, String errorMsg) {
-                mListener.onFail(errorCode, errorMsg, comicChapter);
+                IComicChapterListener listener = mListenerWeakReference.get();
+                if (listener != null) {
+                    listener.onFail(errorCode, errorMsg, comicChapter);
+                }
             }
         });
     }

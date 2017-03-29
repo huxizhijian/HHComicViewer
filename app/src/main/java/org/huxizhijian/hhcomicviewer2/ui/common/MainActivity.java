@@ -81,6 +81,8 @@ public class MainActivity extends AppCompatActivity {
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         initView();
         initViewPager();
+        //转到推荐界面
+        mBinding.viewPager.setCurrentItem(1);
         checkFirstRun();
         IMMLeaks.fixFocusedViewLeak(HHApplication.getInstance());
     }
@@ -140,8 +142,6 @@ public class MainActivity extends AppCompatActivity {
             PreferenceManager.setDefaultValues(this, R.xml.download_preferences, false);
             PreferenceManager.setDefaultValues(this, R.xml.reading_preferences, false);
             preferencesManager.putBoolean("isFirstRun", false);
-            //第一次会自动转到推荐界面
-            mBinding.viewPager.setCurrentItem(1);
         }
     }
 
