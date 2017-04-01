@@ -73,7 +73,7 @@ public class HistoryFragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 //封装intent
                 Intent intent = new Intent(getActivity(), ComicDetailsActivity.class);
-                intent.putExtra("url", mComics.get(position).getCid());
+                intent.putExtra("cid", mComics.get(position).getCid());
                 intent.putExtra("thumbnailUrl", mComics.get(position).getThumbnailUrl());
                 intent.putExtra("title", mComics.get(position).getTitle());
 
@@ -109,7 +109,7 @@ public class HistoryFragment extends Fragment {
     }
 
     //自定义adapter
-    class HistoryListViewAdapter extends CommonAdapter<Comic> {
+    private class HistoryListViewAdapter extends CommonAdapter<Comic> {
 
         HistoryListViewAdapter(Context context, List<Comic> comic, int layoutResId) {
             super(context, comic, layoutResId);
@@ -126,4 +126,5 @@ public class HistoryFragment extends Fragment {
                     R.mipmap.blank, 165, 220);
         }
     }
+
 }

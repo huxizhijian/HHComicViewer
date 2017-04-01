@@ -6,4 +6,5 @@ package org.huxizhijian.hhcomicviewer2.persenter;
 
 public interface IRankDetailsPresenter {
     void getRankList(String url);
+    void removeListener();
 }

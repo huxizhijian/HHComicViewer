@@ -84,16 +84,26 @@ public class ComicDetailsPresenter implements IComicDetailsPresenter {
                         comic = oldComic;
                         comic.checkUpdate(content);
                     }
-                    mComicDetailsActivity.onResponse(comic);
+                    if (mComicDetailsActivity != null)
+                        mComicDetailsActivity.onResponse(comic);
                 } catch (UnsupportedEncodingException e) {
-                    mComicDetailsActivity.onException(e);
+                    if (mComicDetailsActivity != null)
+                        mComicDetailsActivity.onException(e);
                 }
             }
 
             @Override
             public void fail(int errorCode, String errorMsg) {
-                mComicDetailsActivity.onFailure(errorCode, errorMsg);
+                if (mComicDetailsActivity != null)
+                    mComicDetailsActivity.onFailure(errorCode, errorMsg);
             }
         });
     }
+
+    @Override
+    public void removeListener() {
+        mComicDetailsActivity = null;
+    }
+
+
 }

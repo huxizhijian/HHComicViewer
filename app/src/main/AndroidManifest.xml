@@ -45,7 +45,7 @@
         <activity
             android:name=".ui.common.MainActivity"
             android:label="@string/app_name_short"
-            android:launchMode="singleTask"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait">
         </activity>
         <activity
@@ -127,17 +127,20 @@
 
         <activity
             android:name=".ui.download.OfflineComicDownloadActivity"
-            android:launchMode="singleTop">
+            android:excludeFromRecents="true"
+            android:launchMode="singleTask">
         </activity>
 
         <activity
             android:name=".ui.download.ComicChapterDownloadActivity"
-            android:launchMode="singleTop">
+            android:excludeFromRecents="true"
+            android:launchMode="singleTask">
         </activity>
 
         <activity
             android:name=".ui.download.DownloadingChapterActivity"
-            android:launchMode="singleTop">
+            android:excludeFromRecents="true"
+            android:launchMode="singleTask">
         </activity>
 
     </application>

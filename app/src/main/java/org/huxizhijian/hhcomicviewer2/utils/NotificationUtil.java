@@ -28,6 +28,8 @@ import android.support.v4.app.NotificationCompat;
 import org.huxizhijian.hhcomicviewer2.R;
 import org.huxizhijian.hhcomicviewer2.model.ComicChapter;
 import org.huxizhijian.hhcomicviewer2.service.DownloadManagerService;
+import org.huxizhijian.hhcomicviewer2.ui.common.MainActivity;
+import org.huxizhijian.hhcomicviewer2.ui.download.DownloadingChapterActivity;
 import org.huxizhijian.hhcomicviewer2.ui.download.OfflineComicDownloadActivity;
 
 /**
@@ -73,10 +75,14 @@ public class NotificationUtil {
         //设置通知消息
         CharSequence contentTitle = comicChapter.getChapterName() + " - 开始下载"; // 通知栏标题
         CharSequence contentText = 0 + "/" + comicChapter.getPageCount(); // 通知栏内容
+        //设置跳转到主界面
+        Intent intent0 = new Intent(mContext, MainActivity.class);
         //设置点击通知栏之后的操作
-        Intent intent = new Intent(mContext, OfflineComicDownloadActivity.class);
+        Intent intent1 = new Intent(mContext, DownloadingChapterActivity.class);
+        //封装到一起
+        Intent[] intents = {intent0, intent1};
         //封装到PendingIntent中
-        PendingIntent contentIntent = PendingIntent.getActivity(mContext, 0, intent, 0);
+        PendingIntent contentIntent = PendingIntent.getActivities(mContext, 0, intents, 0);
         //统一设置
         builder.setContentTitle(contentTitle)
                 .setContentText(contentText)
@@ -109,11 +115,15 @@ public class NotificationUtil {
                 .setAutoCancel(true);
         //设置通知消息
         CharSequence contentTitle = comicChapter.getComicTitle(); // 通知栏标题
-        CharSequence contentText = comicChapter.getChapterName() + " 等 - 下载完毕"; // 通知栏内容
+        CharSequence contentText = comicChapter.getChapterName() + " - 下载完毕"; // 通知栏内容
+        //设置跳转到主界面
+        Intent intent0 = new Intent(mContext, MainActivity.class);
         //设置点击通知栏之后的操作
-        Intent intent = new Intent(mContext, OfflineComicDownloadActivity.class);
+        Intent intent1 = new Intent(mContext, OfflineComicDownloadActivity.class);
+        //封装到一起
+        Intent[] intents = {intent0, intent1};
         //封装到PendingIntent中
-        PendingIntent contentIntent = PendingIntent.getActivity(mContext, 0, intent, 0);
+        PendingIntent contentIntent = PendingIntent.getActivities(mContext, 0, intents, 0);
         //统一设置
         builder.setContentTitle(contentTitle)
                 .setContentText(contentText)
@@ -145,10 +155,14 @@ public class NotificationUtil {
         //设置通知消息
         CharSequence contentTitle = comicChapter.getChapterName() + " - 正在下载"; // 通知栏标题
         CharSequence contentText = comicChapter.getDownloadPosition() + "/" + comicChapter.getPageCount(); // 通知栏内容
+        //设置跳转到主界面
+        Intent intent0 = new Intent(mContext, MainActivity.class);
         //设置点击通知栏之后的操作
-        Intent intent = new Intent(mContext, OfflineComicDownloadActivity.class);
+        Intent intent1 = new Intent(mContext, DownloadingChapterActivity.class);
+        //封装到一起
+        Intent[] intents = {intent0, intent1};
         //封装到PendingIntent中
-        PendingIntent contentIntent = PendingIntent.getActivity(mContext, 0, intent, 0);
+        PendingIntent contentIntent = PendingIntent.getActivities(mContext, 0, intents, 0);
         //统一设置
         builder.setContentTitle(contentTitle)
                 .setContentText(contentText)

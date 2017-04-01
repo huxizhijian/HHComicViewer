@@ -116,19 +116,26 @@ public class ClassifiesShowPresenterImpl implements IClassifiesShowPresenter {
                                         comic.setThumbnailUrl(imgsSrc.get(i).attr("src"));
                                         comics.add(comic);
                                     }
-
-                                    mActivity.onSuccess(maxPage, comics);
+                                    if (mActivity != null)
+                                        mActivity.onSuccess(maxPage, comics);
                                 } catch (UnsupportedEncodingException e) {
-                                    mActivity.onException(e);
+                                    if (mActivity != null)
+                                        mActivity.onException(e);
                                     e.printStackTrace();
                                 }
                             }
 
                             @Override
                             public void fail(int errorCode, String errorMsg) {
-                                mActivity.onFailure(errorCode, errorMsg);
+                                if (mActivity != null)
+                                    mActivity.onFailure(errorCode, errorMsg);
                             }
                         });
+    }
+
+    @Override
+    public void removeListener() {
+        mActivity = null;
     }
 
 }

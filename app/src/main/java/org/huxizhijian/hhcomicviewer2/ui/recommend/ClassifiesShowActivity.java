@@ -243,4 +243,11 @@ public class ClassifiesShowActivity extends AppCompatActivity implements IClassi
             }
         });
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mPresenter != null)
+            mPresenter.removeListener();
+    }
 }

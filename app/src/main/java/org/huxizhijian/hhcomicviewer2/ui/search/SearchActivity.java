@@ -194,6 +194,7 @@ public class SearchActivity extends AppCompatActivity implements ISearchActivity
         mBinding.searchView.setInputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS);
         mBinding.searchView.setImeOptions(EditorInfo.IME_ACTION_SEARCH |
                 EditorInfo.IME_FLAG_NO_EXTRACT_UI | EditorInfo.IME_FLAG_NO_FULLSCREEN);
+        //设置搜索数据监听接口
         mBinding.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -238,7 +239,11 @@ public class SearchActivity extends AppCompatActivity implements ISearchActivity
 
     //clear for start a new search
     void clearResults() {
+        if (mSearchPresenter.isSearching()) {
+            mSearchPresenter.cancel(mQuery);
+        }
         mBinding.searchResults.setVisibility(View.GONE);
+        mBinding.searchingProgress.setVisibility(View.GONE);
         setupSearchHistory();
         if (mBinding.stubNoSearchResults.isInflated() && mNoResults.getVisibility() == View.VISIBLE) {
             mNoResults.setVisibility(View.GONE);
@@ -284,13 +289,7 @@ public class SearchActivity extends AppCompatActivity implements ISearchActivity
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (mBinding.stubNoSearchResults.isInflated()) {
-                    mNoResults.setVisibility(View.VISIBLE);
-                } else {
-                    mNoResults = mBinding.stubNoSearchResults.getViewStub().inflate();
-                    mNoResults.setVisibility(View.VISIBLE);
-                }
-                mBinding.searchingProgress.setVisibility(View.GONE);
+                showNoResults();
             }
         });
         saveSearchHistory();
@@ -301,16 +300,34 @@ public class SearchActivity extends AppCompatActivity implements ISearchActivity
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (mBinding.stubNoSearchResults.isInflated()) {
-                    mNoResults.setVisibility(View.VISIBLE);
-                } else {
-                    mNoResults = mBinding.stubNoSearchResults.getViewStub().inflate();
-                    mNoResults.setVisibility(View.VISIBLE);
-                }
-                mBinding.searchingProgress.setVisibility(View.GONE);
+                showNoResults();
             }
         });
         saveSearchHistory();
+    }
+
+    private void showNoResults() {
+        if (mBinding.stubNoSearchResults.isInflated()) {
+            mNoResults.setVisibility(View.VISIBLE);
+        } else {
+            mNoResults = mBinding.stubNoSearchResults.getViewStub().inflate();
+            //绑定重试方法
+            View view = mNoResults.findViewById(R.id.btn_retry);
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            clearResults();
+                            searchFor(mQuery);
+                        }
+                    });
+                }
+            });
+            mNoResults.setVisibility(View.VISIBLE);
+        }
+        mBinding.searchingProgress.setVisibility(View.GONE);
     }
 
     private void saveSearchHistory() {
@@ -406,5 +423,13 @@ public class SearchActivity extends AppCompatActivity implements ISearchActivity
             public void onTransitionResume(Transition transition) {
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //移除回调防止内存泄露
+        if (mSearchPresenter != null)
+            mSearchPresenter.removeListener();
     }
 }

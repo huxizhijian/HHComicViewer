@@ -25,15 +25,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.huxizhijian.hhcomicviewer2.R;
 import org.huxizhijian.hhcomicviewer2.adapter.RecommendAdapter;
-import org.huxizhijian.hhcomicviewer2.ui.common.RefreshBaseFragment;
 import org.huxizhijian.hhcomicviewer2.adapter.entity.ComicTabList;
 import org.huxizhijian.hhcomicviewer2.persenter.IComicRecommendPresenter;
 import org.huxizhijian.hhcomicviewer2.persenter.implpersenter.ComicRecommendPresenter;
 import org.huxizhijian.hhcomicviewer2.persenter.viewinterface.IComicRecommendFragment;
+import org.huxizhijian.hhcomicviewer2.ui.common.RefreshBaseFragment;
+import org.huxizhijian.hhcomicviewer2.utils.CommonUtils;
 
 import java.util.List;
 
@@ -50,6 +53,8 @@ public class RecommendFragment extends RefreshBaseFragment implements IComicReco
     private RecommendAdapter mAdapter;
 
     private List<ComicTabList> mComicTabLists;
+    private View mNoResults;
+    private ViewStub mViewStub;
 
     @Override
     public View initView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -57,6 +62,7 @@ public class RecommendFragment extends RefreshBaseFragment implements IComicReco
         View view = inflater.inflate(R.layout.fragment_recommend, container, false);
         mRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_recommend);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_recommend);
+        mViewStub = (ViewStub) view.findViewById(R.id.stub_no_results);
         mRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.pink_500,
                 R.color.purple_500, R.color.blue_500);
         return view;
@@ -68,20 +74,44 @@ public class RecommendFragment extends RefreshBaseFragment implements IComicReco
         mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (mPresenter == null) {
-                    mPresenter = new ComicRecommendPresenter(RecommendFragment.this);
-                }
-                if (!mPresenter.isConnecting()) {
-                    mPresenter.getRecommendList();
-                    Log.i("Recommend", "onRefresh: reset");
-                }
+                requestData();
             }
         });
+        requestData();
+    }
+
+    private void requestData() {
+        if (mNoResults != null) {
+            mNoResults.setVisibility(View.GONE);
+        }
+        if (CommonUtils.getAPNType(getActivity().getApplicationContext()) == CommonUtils.NONEWTWORK) {
+            if (mRefreshLayout.isRefreshing()) {
+                mRefreshLayout.setRefreshing(false);
+            }
+            if (mNoResults == null) {
+                mNoResults = mViewStub.inflate();
+                View view = mNoResults.findViewById(R.id.btn_retry);
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (!mRefreshLayout.isRefreshing()) {
+                            mRefreshLayout.setRefreshing(true);
+                        }
+                        requestData();
+                    }
+                });
+            }
+            mNoResults.setVisibility(View.VISIBLE);
+            mRecyclerView.setVisibility(View.GONE);
+            TextView textView = (TextView) mNoResults.findViewById(R.id.no_result_text);
+            textView.setText(getString(R.string.no_network_please_retry));
+        }
         if (mPresenter == null) {
-            mPresenter = new ComicRecommendPresenter(this);
+            mPresenter = new ComicRecommendPresenter(RecommendFragment.this);
         }
         if (!mPresenter.isConnecting()) {
             mPresenter.getRecommendList();
+            Log.i("Recommend", "onRefresh: reset");
         }
     }
 
@@ -106,6 +136,7 @@ public class RecommendFragment extends RefreshBaseFragment implements IComicReco
                 mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                 mRecyclerView.setItemAnimator(new DefaultItemAnimator());
                 mRecyclerView.setAdapter(mAdapter);
+                mRecyclerView.setVisibility(View.VISIBLE);
                 mRefreshLayout.setRefreshing(false);
             }
         });
@@ -121,6 +152,23 @@ public class RecommendFragment extends RefreshBaseFragment implements IComicReco
                 if (mRefreshLayout.isRefreshing()) {
                     mRefreshLayout.setRefreshing(false);
                 }
+                if (mNoResults == null) {
+                    mNoResults = mViewStub.inflate();
+                    View view = mNoResults.findViewById(R.id.btn_retry);
+                    view.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (!mRefreshLayout.isRefreshing()) {
+                                mRefreshLayout.setRefreshing(true);
+                            }
+                            requestData();
+                        }
+                    });
+                }
+                mNoResults.setVisibility(View.VISIBLE);
+                mRecyclerView.setVisibility(View.GONE);
+                TextView textView = (TextView) mNoResults.findViewById(R.id.no_result_text);
+                textView.setText(getString(R.string.no_result));
             }
         });
     }
@@ -134,6 +182,23 @@ public class RecommendFragment extends RefreshBaseFragment implements IComicReco
                 if (mRefreshLayout.isRefreshing()) {
                     mRefreshLayout.setRefreshing(false);
                 }
+                if (mNoResults == null) {
+                    mNoResults = mViewStub.inflate();
+                    View view = mNoResults.findViewById(R.id.btn_retry);
+                    view.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (!mRefreshLayout.isRefreshing()) {
+                                mRefreshLayout.setRefreshing(true);
+                            }
+                            requestData();
+                        }
+                    });
+                }
+                mNoResults.setVisibility(View.VISIBLE);
+                mRecyclerView.setVisibility(View.GONE);
+                TextView textView = (TextView) mNoResults.findViewById(R.id.no_result_text);
+                textView.setText(getString(R.string.no_result));
             }
         });
     }

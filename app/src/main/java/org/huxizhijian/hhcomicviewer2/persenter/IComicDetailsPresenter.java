@@ -25,4 +25,6 @@ public interface IComicDetailsPresenter {
 
     void getComic(int cid, Comic oldComic);
 
+    void removeListener();
+
 }

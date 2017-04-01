@@ -143,18 +143,20 @@ public class ComicRecommendPresenter implements IComicRecommendPresenter {
                             //推荐
                             ComicTabList recommendTab = getComicTabList(doc, RECOMMEND_COMIC, RECOMMEND_COMIC_TITLE);
                             tabLists.add(recommendTab);
-
-                            mFragment.onSuccess(tabLists);
+                            if (mFragment != null)
+                                mFragment.onSuccess(tabLists);
                             isConnecting = false;
                         } catch (UnsupportedEncodingException e) {
-                            mFragment.onException(e);
+                            if (mFragment != null)
+                                mFragment.onException(e);
                             isConnecting = false;
                         }
                     }
 
                     @Override
                     public void fail(int errorCode, String errorMsg) {
-                        mFragment.onFailure(errorCode, errorMsg);
+                        if (mFragment != null)
+                            mFragment.onFailure(errorCode, errorMsg);
                         isConnecting = false;
                     }
                 });
@@ -185,5 +187,10 @@ public class ComicRecommendPresenter implements IComicRecommendPresenter {
     @Override
     public boolean isConnecting() {
         return isConnecting;
+    }
+
+    @Override
+    public void removeListener() {
+        mFragment = null;
     }
 }

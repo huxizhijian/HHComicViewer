@@ -10,4 +10,6 @@ public interface IComicRecommendPresenter {
 
     boolean isConnecting();
 
+    void removeListener();
+
 }

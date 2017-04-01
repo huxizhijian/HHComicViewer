@@ -89,7 +89,7 @@
                 android:id="@+id/stub_no_search_results"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout="@layout/no_search_results"/>
+                android:layout="@layout/no_results"/>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/search_results"

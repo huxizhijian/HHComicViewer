@@ -14,15 +14,30 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<android.support.v4.widget.SwipeRefreshLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/swipe_refresh_recommend"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view_recommend"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+    <android.support.v4.widget.SwipeRefreshLayout
 
-</android.support.v4.widget.SwipeRefreshLayout>
+        android:id="@+id/swipe_refresh_recommend"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view_recommend"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <ViewStub
+        android:id="@+id/stub_no_results"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout="@layout/no_results"/>
+
+</FrameLayout>

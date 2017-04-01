@@ -61,7 +61,7 @@
     <string name="search_comic" translatable="false">搜索漫画：</string>
     <string name="classified_list" translatable="false">分类列表：</string>
     <string name="search_author" translatable="false">搜作者</string>
-    <string name="none_marked" translatable="false">你没有收藏漫画，快去搜索吧。</string>
+    <string name="none_marked" translatable="false">你还没有收藏漫画，快去搜索吧。</string>
     <string name="comic_chapter_list" translatable="false">漫画目录列表：</string>
     <string name="app_github" translatable="false">https://github.com/huxizhijian/HHComicViewer</string>
     <string name="comic_info" translatable="false">漫画简介</string>
@@ -87,6 +87,7 @@
     <string name="transition_search_back" translatable="false">transition_search_back</string>
     <string name="error">发生错误</string>
     <string name="no_result">没有获取到漫画</string>
+    <string name="no_network_please_retry">没有网络，请开启网络后再点击重试</string>
     <string name="clear_search_history">清除搜索历史</string>
     <string name="enter_page_want_to_jump">请输入想跳转的页数</string>
     <string name="ensure_delete_mark">是否确定删除收藏？</string>
@@ -97,5 +98,6 @@
 
     <string name="app_version" translatable="false">汗汗漫画阅读器  v1.07</string>
     <string name="loading">加载中…</string>
+    <string name="retry">重试</string>
 
 </resources>

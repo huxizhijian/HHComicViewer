@@ -6,4 +6,5 @@ package org.huxizhijian.hhcomicviewer2.persenter;
 
 public interface IClassifiesShowPresenter {
     void getComicList(String url, int page);
+    void removeListener();
 }

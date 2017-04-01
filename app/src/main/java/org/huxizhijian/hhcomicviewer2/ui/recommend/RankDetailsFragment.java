@@ -90,4 +90,11 @@ public class RankDetailsFragment extends RefreshBaseFragment implements IRankDet
     public void onFailure(int errorCode, String errorMsg) {
 
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mPresenter != null)
+            mPresenter.removeListener();
+    }
 }

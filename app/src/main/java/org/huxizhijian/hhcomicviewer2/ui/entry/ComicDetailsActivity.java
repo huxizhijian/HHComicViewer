@@ -54,13 +54,13 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.rey.material.app.BottomSheetDialog;
 
+import org.huxizhijian.hhcomicviewer2.HHApplication;
 import org.huxizhijian.hhcomicviewer2.R;
 import org.huxizhijian.hhcomicviewer2.adapter.VolDownloadSelectorAdapter;
 import org.huxizhijian.hhcomicviewer2.adapter.VolRecyclerViewAdapter;
@@ -77,6 +77,7 @@ import org.huxizhijian.hhcomicviewer2.ui.search.SearchActivity;
 import org.huxizhijian.hhcomicviewer2.utils.CommonUtils;
 import org.huxizhijian.hhcomicviewer2.utils.Constants;
 import org.huxizhijian.hhcomicviewer2.utils.CustomChangeBounds;
+import org.huxizhijian.hhcomicviewer2.utils.IMMLeaks;
 import org.huxizhijian.hhcomicviewer2.view.FullyGridLayoutManager;
 import org.huxizhijian.sdk.imageloader.ImageLoaderOptions;
 import org.huxizhijian.sdk.imageloader.listener.ImageLoaderManager;
@@ -84,7 +85,6 @@ import org.huxizhijian.sdk.imageloader.listener.ImageRequestListener;
 import org.huxizhijian.sdk.util.StatusBarUtil;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -119,6 +119,8 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
 
     //章节列表adapter
     private VolRecyclerViewAdapter mVolAdapter;
+
+    private IComicDetailsPresenter mPresenter;
 
     //Handler，用于开启下载任务
     private Handler mHandler = new Handler() {
@@ -424,8 +426,8 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
                 mHandler.sendEmptyMessageDelayed(MSG_UPDATE_VIEW, 600);
             }
         } else {
-            IComicDetailsPresenter presenter = new ComicDetailsPresenter(this);
-            presenter.getComic(mCid, mComic);
+            mPresenter = new ComicDetailsPresenter(this);
+            mPresenter.getComic(mCid, mComic);
         }
         mReceiver = new ComicChapterDownloadUpdateReceiver();
     }
@@ -641,46 +643,9 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        fixInputMethodManagerLeak(this);
-    }
-
-    public static void fixInputMethodManagerLeak(Context destContext) {
-        if (destContext == null) {
-            return;
-        }
-
-        InputMethodManager imm = (InputMethodManager) destContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (imm == null) {
-            return;
-        }
-
-        String[] arr = new String[]{"mCurRootView", "mServedView", "mNextServedView"};
-        Field f = null;
-        Object obj_get = null;
-        for (int i = 0; i < arr.length; i++) {
-            String param = arr[i];
-            try {
-                f = imm.getClass().getDeclaredField(param);
-                if (!f.isAccessible()) {
-                    f.setAccessible(true);
-                } // author: sodino mail:sodino@qq.com
-                obj_get = f.get(imm);
-                if (obj_get != null && obj_get instanceof View) {
-                    View v_get = (View) obj_get;
-                    if (v_get.getContext() == destContext) { // 被InputMethodManager持有引用的context是想要目标销毁的
-                        f.set(imm, null); // 置空，破坏掉path to gc节点
-                    } else {
-                        // 不是想要目标销毁的，即为又进了另一层界面了，不要处理，避免影响原逻辑,也就不用继续for循环了
-                        /*if (QLog.isColorLevel()) {
-                            QLog.d(ReflecterHelper.class.getSimpleName(), QLog.CLR, "fixInputMethodManagerLeak break, context is not suitable, get_context=" + v_get.getContext()+" dest_context=" + destContext);
-                        }*/
-                        break;
-                    }
-                }
-            } catch (Throwable t) {
-                t.printStackTrace();
-            }
-        }
+        IMMLeaks.fixFocusedViewLeak(HHApplication.getInstance());
+        if (mPresenter != null)
+            mPresenter.removeListener();
     }
 
     @Override
@@ -906,15 +871,15 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
             //如果在数据库中，更新
             mComic.setLastReadTime(System.currentTimeMillis());
             mComicDBHelper.update(mComic);
-        } else if (mComic != null) {
+        } else if (mComic == null) {
+            Toast.makeText(ComicDetailsActivity.this, "还没有加载完成，请耐心等待~", Toast.LENGTH_SHORT).show();
+            return;
+        } else {
             //如果该漫画不在数据库中
             mComic.setLastReadTime(System.currentTimeMillis());
             //加入数据库
             mComicDBHelper.add(mComic);
             mComic.setId(mComicDBHelper.findByCid(mComic.getCid()).getId());
-        } else if (mComic == null) {
-            Toast.makeText(ComicDetailsActivity.this, "还没有加载完成，请耐心等待~", Toast.LENGTH_SHORT).show();
-            return;
         }
 
         //开始下载

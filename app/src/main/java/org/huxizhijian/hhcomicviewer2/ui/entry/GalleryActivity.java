@@ -541,6 +541,14 @@ public class GalleryActivity extends Activity implements View.OnClickListener,
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mPresenter != null) {
+            mPresenter.removeListener();
+        }
+    }
+
+    @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (useVolButtonChangePage) {
             //截取音量键事件

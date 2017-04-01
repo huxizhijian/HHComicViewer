@@ -30,38 +30,8 @@ public class RankDetailsPresenterImpl implements IRankDetailsPresenter {
 
     @Override
     public void getRankList(String url) {
-        /*Request request = new Request.Builder().get()
-                .url(HHApplication.getInstance().getHHWebVariable().getCsite() + url)
-                .build();
-        HHApplication.getInstance().getClient().newCall(request)
-                .enqueue(new Callback() {
-                    @Override
-                    public void onFailure(Call call, IOException e) {
-                        mFragment.onFailure(e);
-                    }
-
-                    @Override
-                    public void onResponse(Call call, Response response) throws IOException {
-                        String content = new String(response.body().bytes(), "utf-8");
-                        Document doc = Jsoup.parse(content);
-                        Elements comicSrcs = doc.select("div[class=cComicItem]");
-                        List<Comic> comics = new ArrayList<>();
-                        for (Element comicSrc : comicSrcs) {
-                            Comic comic = new Comic();
-                            String comicUrl = comicSrc.select("a").first().attr("href");
-                            String end = comicUrl.substring(HHApplication.getInstance()
-                                    .getHHWebVariable().getPre().length());
-                            comic.setCid(Integer.parseInt(end.split("\\.")[0]));
-                            comic.setThumbnailUrl(comicSrc.select("img").first().attr("src"));
-                            comic.setTitle(comicSrc.select("span[class=cComicTitle]").first().text());
-                            comic.setAuthor(comicSrc.select("span[class=cComicAuthor").first().text());
-                            comic.setComicStatus(comicSrc.select("span[class=cComicRating").first().text());
-                            comics.add(comic);
-                        }
-                        mFragment.onSuccess(comics);
-                    }
-                });*/
-        HHApiProvider.getInstance().getWebContentAsyn(HHApplication.getInstance().getHHWebVariable().getCsite() + url,
+        HHApiProvider.getInstance().getWebContentAsyn(HHApplication.getInstance()
+                        .getHHWebVariable().getCsite() + url,
                 new NormalResponse<byte[]>() {
                     @Override
                     public void success(NormalRequest request, byte[] data) {
@@ -83,17 +53,25 @@ public class RankDetailsPresenterImpl implements IRankDetailsPresenter {
                                 comic.setComicStatus(comicSrc.select("span[class=cComicRating").first().text());
                                 comics.add(comic);
                             }
-                            mFragment.onSuccess(comics);
+                            if (mFragment != null)
+                                mFragment.onSuccess(comics);
                         } catch (UnsupportedEncodingException e) {
                             e.printStackTrace();
-                            mFragment.onException(e);
+                            if (mFragment != null)
+                                mFragment.onException(e);
                         }
                     }
 
                     @Override
                     public void fail(int errorCode, String errorMsg) {
-                        mFragment.onFailure(errorCode, errorMsg);
+                        if (mFragment != null)
+                            mFragment.onFailure(errorCode, errorMsg);
                     }
                 });
+    }
+
+    @Override
+    public void removeListener() {
+        mFragment = null;
     }
 }

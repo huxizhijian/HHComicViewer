@@ -9,7 +9,6 @@ import org.huxizhijian.sdk.network.service.NormalRequest;
 import org.huxizhijian.sdk.network.service.NormalResponse;
 
 import java.io.UnsupportedEncodingException;
-import java.lang.ref.WeakReference;
 
 /**
  * Created by wei on 2017/1/7.
@@ -17,10 +16,10 @@ import java.lang.ref.WeakReference;
 
 public class ComicChapterPresenterImpl implements IComicChapterPresenter {
 
-    private WeakReference<IComicChapterListener> mListenerWeakReference;
+    IComicChapterListener mListener;
 
     public ComicChapterPresenterImpl(IComicChapterListener listener) {
-        mListenerWeakReference = new WeakReference<>(listener);
+        mListener = listener;
     }
 
     @Override
@@ -52,30 +51,33 @@ public class ComicChapterPresenterImpl implements IComicChapterPresenter {
                 comicChapter.getChid(), comicChapter.getServerId()), new NormalResponse<byte[]>() {
             @Override
             public void success(NormalRequest request, byte[] data) {
-                IComicChapterListener listener = mListenerWeakReference.get();
                 try {
                     final String content = new String(data, "gb2312");
                     comicChapter.updatePicList(comicChapter.getServerId(), content);
                     for (int i = 0; i < comicChapter.getPicList().size(); i++) {
                         System.out.println(comicChapter.getPicList().get(i));
                     }
-                    if (listener != null) {
-                        listener.onSuccess(comicChapter);
+                    if (mListener != null) {
+                        mListener.onSuccess(comicChapter);
                     }
                 } catch (UnsupportedEncodingException e) {
-                    if (listener != null) {
-                        listener.onException(e, comicChapter);
+                    if (mListener != null) {
+                        mListener.onException(e, comicChapter);
                     }
                 }
             }
 
             @Override
             public void fail(int errorCode, String errorMsg) {
-                IComicChapterListener listener = mListenerWeakReference.get();
-                if (listener != null) {
-                    listener.onFail(errorCode, errorMsg, comicChapter);
+                if (mListener != null) {
+                    mListener.onFail(errorCode, errorMsg, comicChapter);
                 }
             }
         });
+    }
+
+    @Override
+    public void removeListener() {
+        mListener = null;
     }
 }
