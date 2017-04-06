@@ -152,7 +152,9 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
             setMotion();
         }
         preLoadingImageAndTitle();
-        initSlideShapeTheme();
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            initSlideShapeTheme();
+        }
         initDBValues();
         setupAppBarListener();
         initData(savedInstanceState);
@@ -168,7 +170,6 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
         ViewGroup.MarginLayoutParams ivTitleHeadBgParams = (ViewGroup.MarginLayoutParams)
                 mBinding.ivTitleHeadBg.getLayoutParams();
 //        int marginTop = params.height - headerBgHeight;
-
         ivTitleHeadBgParams.setMargins(0, 0, 0, 0);
         // 为头部是View的界面设置状态栏透明
         StatusBarUtil.setTranslucentImageHeader(this, 59, mBinding.toolbarComicDetails);

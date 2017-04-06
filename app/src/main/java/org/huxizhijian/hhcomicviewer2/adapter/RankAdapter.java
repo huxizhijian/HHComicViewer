@@ -35,7 +35,7 @@ public class RankAdapter extends RecyclerView.Adapter<RankAdapter.HeaderViewHold
 
     @Override
     public HeaderViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new HeaderViewHolder(mInflater.inflate(R.layout.item_recommend_title, parent, false));
+        return new HeaderViewHolder(mInflater.inflate(R.layout.item_rank_title, parent, false));
     }
 
     @Override
@@ -73,13 +73,12 @@ public class RankAdapter extends RecyclerView.Adapter<RankAdapter.HeaderViewHold
 
     class HeaderViewHolder extends RecyclerView.ViewHolder {
 
-        TextView tv_title, btn_more;
+        TextView tv_title;
         ImageView iv_title;
 
         HeaderViewHolder(View itemView) {
             super(itemView);
             tv_title = (TextView) itemView.findViewById(R.id.tv_title);
-            btn_more = (TextView) itemView.findViewById(R.id.btn_more);
             iv_title = (ImageView) itemView.findViewById(R.id.iv_title);
         }
     }

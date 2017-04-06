@@ -26,7 +26,7 @@ import android.widget.AutoCompleteTextView;
  * Created by wei on 2016/10/3.
  */
 
-public class InstantAutoCompleteTextView extends AutoCompleteTextView {
+public class InstantAutoCompleteTextView extends android.support.v7.widget.AppCompatAutoCompleteTextView {
 
     private int myThreshold;
 
