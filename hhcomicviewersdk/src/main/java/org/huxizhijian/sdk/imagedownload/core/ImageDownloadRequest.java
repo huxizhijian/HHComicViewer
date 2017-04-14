@@ -81,7 +81,7 @@ public class ImageDownloadRequest implements Request, TaskProgressListener, Comp
                             task.interrupt();
                         }
                         mIsAllPause = true;
-                        mListener.onPaused(mEntity.getChid(), getTotalProgress(), mEntity.getPicList().size());
+                        mListener.onPaused(mEntity.getChid(), getTotalProgress(), 0);
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();

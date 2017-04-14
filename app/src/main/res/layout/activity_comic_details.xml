@@ -225,14 +225,6 @@
             app:layout_anchor="@id/app_bar_comic_details"
             app:layout_anchorGravity="bottom|right|end"/>
 
-        <ProgressBar
-            android:id="@+id/loading_comic_info"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:theme="@style/Widget.AppCompat.ProgressBar"
-            android:visibility="gone"/>
-
         <android.support.v4.widget.NestedScrollView
             android:id="@+id/nest_scroll_view_comic_details"
             android:layout_width="match_parent"

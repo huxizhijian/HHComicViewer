@@ -30,6 +30,7 @@
     <color name="dark_icon">#99000000</color> <!-- 60% black-->
     <color name="text_primary_light">#ffffffff</color>
     <color name="gray_200">#eeeeee</color>
+    <color name="grey_ripple">#9ccc</color>
 
     <color name="background_dark">#ff333333</color>
     <color name="scrim">#99323232</color>

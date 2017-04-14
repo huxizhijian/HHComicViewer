@@ -269,12 +269,18 @@ public class DownloadManagerService extends Service implements ImageDownloadList
     @Override
     public void onFailure(Request request, Throwable throwable, int progress, int size) {
         if (request == null) return;
+        if (mComicChapterDBHelper == null) {
+            mComicChapterDBHelper = ComicChapterDBHelper.getInstance(HHApplication.getInstance());
+        }
         ComicChapter comicChapter = mComicChapterDBHelper.findByChapterId(request.getChid());
         if (comicChapter == null) return;
         comicChapter.setDownloadPosition(progress);
         comicChapter.setPageCount(size);
         comicChapter.setDownloadStatus(Constants.DOWNLOAD_ERROR);
         mComicChapterDBHelper.update(comicChapter);
+        if (mNotificationUtil == null) {
+            mNotificationUtil = NotificationUtil.getInstance(HHApplication.getInstance());
+        }
         mNotificationUtil.cancelNotification(this, comicChapter.getId());
         //发送本地广播
         Intent intent = new Intent(DownloadManagerService.ACTION_RECEIVER);
@@ -286,12 +292,18 @@ public class DownloadManagerService extends Service implements ImageDownloadList
     @Override
     public void onCompleted(Request request, int progress, int size) {
         if (request == null) return;
+        if (mComicChapterDBHelper == null) {
+            mComicChapterDBHelper = ComicChapterDBHelper.getInstance(HHApplication.getInstance());
+        }
         ComicChapter comicChapter = mComicChapterDBHelper.findByChapterId(request.getChid());
         if (comicChapter == null) return;
         comicChapter.setDownloadPosition(progress);
         comicChapter.setPageCount(size);
         comicChapter.setDownloadStatus(Constants.DOWNLOAD_FINISHED);
         mComicChapterDBHelper.update(comicChapter);
+        if (mNotificationUtil == null) {
+            mNotificationUtil = NotificationUtil.getInstance(HHApplication.getInstance());
+        }
         mNotificationUtil.finishedNotification(comicChapter);
         //发送本地广播
         Intent intent = new Intent(DownloadManagerService.ACTION_RECEIVER);
@@ -303,12 +315,18 @@ public class DownloadManagerService extends Service implements ImageDownloadList
     @Override
     public void onPaused(Request request, int progress, int size) {
         if (request == null) return;
+        if (mComicChapterDBHelper == null) {
+            mComicChapterDBHelper = ComicChapterDBHelper.getInstance(HHApplication.getInstance());
+        }
         ComicChapter comicChapter = mComicChapterDBHelper.findByChapterId(request.getChid());
         if (comicChapter == null) return;
         comicChapter.setDownloadPosition(progress);
         comicChapter.setPageCount(size);
         comicChapter.setDownloadStatus(Constants.DOWNLOAD_PAUSE);
         mComicChapterDBHelper.update(comicChapter);
+        if (mNotificationUtil == null) {
+            mNotificationUtil = NotificationUtil.getInstance(HHApplication.getInstance());
+        }
         mNotificationUtil.cancelNotification(this, comicChapter.getId());
         //发送本地广播
         Intent intent = new Intent(DownloadManagerService.ACTION_RECEIVER);
@@ -330,6 +348,9 @@ public class DownloadManagerService extends Service implements ImageDownloadList
     @Override
     public void onAddToQueue(Request request) {
         if (request == null) return;
+        if (mComicChapterDBHelper == null) {
+            mComicChapterDBHelper = ComicChapterDBHelper.getInstance(HHApplication.getInstance());
+        }
         ComicChapter comicChapter = mComicChapterDBHelper.findByChapterId(request.getChid());
         if (comicChapter == null) return;
         comicChapter.setDownloadStatus(Constants.DOWNLOAD_IN_QUEUE);

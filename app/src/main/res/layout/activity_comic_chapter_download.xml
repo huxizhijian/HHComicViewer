@@ -67,7 +67,9 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="2dp"
                 android:layout_weight="1"
-                android:text="@string/all_select"/>
+                android:background="@drawable/btn_background_final"
+                android:text="@string/all_select"
+                android:textColor="@color/white"/>
 
             <Button
                 android:id="@+id/btn_delete"
@@ -75,7 +77,9 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="2dp"
                 android:layout_weight="1"
-                android:text="@string/delete"/>
+                android:background="@drawable/btn_background_final"
+                android:text="@string/delete"
+                android:textColor="@color/white"/>
 
         </LinearLayout>
 

@@ -115,10 +115,9 @@ public class ImageDownloadTask extends Thread {
                     //获得文件长度
                     if (response.isSuccessful()) {
                         length = response.body().contentLength();
-                    }
-                    if (length <= 0) {
+                    } else {
                         if (mImageDownloader.isDebug()) {
-                            Log.i(TAG, "run: 获取文件长度错误！");
+                            Log.i(TAG, "run: 从网络获取文件错误！");
                         }
                         throw new IOException();
                     }
@@ -129,7 +128,9 @@ public class ImageDownloadTask extends Thread {
                     //可以在任意位置进行写入的输出流
                     raf = new RandomAccessFile(file, "rwd");
                     //设置本地文件的长度
-                    raf.setLength(length);
+                    if (length > 0) {
+                        raf.setLength(length);
+                    }
                     raf.seek(0);
                     int finished = mTaskInfo.getFinished();
                     InputStream input = response.body().byteStream();

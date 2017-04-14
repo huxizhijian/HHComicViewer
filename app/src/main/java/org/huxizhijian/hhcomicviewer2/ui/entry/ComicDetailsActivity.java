@@ -25,6 +25,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.os.Build;
@@ -157,7 +158,7 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
         }
         initDBValues();
         setupAppBarListener();
-        initData(savedInstanceState);
+        initData();
     }
 
     /**
@@ -213,7 +214,8 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    mBinding.loadingComicInfo.setVisibility(View.GONE);
+                    mBinding.FABComicDetails.setBackgroundTintList(ColorStateList
+                            .valueOf(getResources().getColor(R.color.colorAccent)));
                     Toast.makeText(ComicDetailsActivity.this, "出错！", Toast.LENGTH_SHORT).show();
                 }
             });
@@ -244,7 +246,8 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    mBinding.loadingComicInfo.setVisibility(View.GONE);
+                    mBinding.FABComicDetails.setBackgroundTintList(ColorStateList
+                            .valueOf(getResources().getColor(R.color.colorAccent)));
                     Toast.makeText(ComicDetailsActivity.this, "出错！", Toast.LENGTH_SHORT).show();
                 }
             });
@@ -346,6 +349,7 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
             public void onTransitionStart(Transition transition) {
                 //移除监听
                 transition.removeListener(this);
+                mBinding.FABComicDetails.setVisibility(View.INVISIBLE);
             }
 
             @Override
@@ -374,7 +378,8 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
         arcMotion.setMinimumHorizontalAngle(50f);
         arcMotion.setMinimumVerticalAngle(50f);
         //插值器，控制速度
-        Interpolator interpolator = AnimationUtils.loadInterpolator(this, android.R.interpolator.fast_out_slow_in);
+        Interpolator interpolator = AnimationUtils
+                .loadInterpolator(this, android.R.interpolator.fast_out_slow_in);
         //实例化自定义的ChangeBounds
         CustomChangeBounds changeBounds = new CustomChangeBounds();
         changeBounds.setPathMotion(arcMotion);
@@ -415,13 +420,14 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
                 });
     }
 
-    private void initData(Bundle savedInstanceState) {
-        if (savedInstanceState == null) {
-            mBinding.loadingComicInfo.setVisibility(View.VISIBLE);
+    private void initData() {
+        if (mComic == null) {
+            mBinding.FABComicDetails.setBackgroundTintList(ColorStateList.valueOf(Color.GRAY));
         }
         mComic = mComicDBHelper.findByCid(mCid);
         if (CommonUtils.getAPNType(this) == CommonUtils.NONEWTWORK) {
-            mBinding.loadingComicInfo.setVisibility(View.GONE);
+            mBinding.FABComicDetails.setBackgroundTintList(ColorStateList
+                    .valueOf(getResources().getColor(R.color.colorAccent)));
             Toast.makeText(this, Constants.NO_NETWORK, Toast.LENGTH_SHORT).show();
             if (mComic.getChapterName() != null) {
                 mHandler.sendEmptyMessageDelayed(MSG_UPDATE_VIEW, 600);
@@ -514,6 +520,9 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
             }
         });
         mBinding.recyclerViewComicDetails.setAdapter(mVolAdapter);
+        mBinding.recyclerViewComicDetails.setFocusable(false);
+        mBinding.nestScrollViewComicDetails.setFocusable(true);
+        mBinding.nestScrollViewComicDetails.smoothScrollBy(0, 0);
 
         //设定收藏状态
         if (mComic.isMark()) {
@@ -534,7 +543,8 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
         mBinding.comicDescriptionComicDetailsLl.setOnClickListener(this);
 
         //读取完毕显示数据
-        mBinding.loadingComicInfo.setVisibility(View.GONE);
+        mBinding.FABComicDetails.setBackgroundTintList(ColorStateList
+                .valueOf(getResources().getColor(R.color.colorAccent)));
         mBinding.linearLayoutComicDetails.setVisibility(View.VISIBLE);
         Animation alpha = AnimationUtils.loadAnimation(this, R.anim.alpha_in);
         //加速度插值器

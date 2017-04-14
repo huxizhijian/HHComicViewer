@@ -135,7 +135,7 @@ public class SearchActivity extends AppCompatActivity implements ISearchActivity
                         SharedPreferences.Editor editor = mSharedPreferences.edit();
                         editor.putString("keys", "");
                         editor.apply();
-                        Toast.makeText(SearchActivity.this, "成功清除！", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SearchActivity.this, R.string.clear_successful, Toast.LENGTH_SHORT).show();
                         mBinding.searchHistory.setVisibility(View.GONE);
                     }
                 });

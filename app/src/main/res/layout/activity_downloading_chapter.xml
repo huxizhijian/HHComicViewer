@@ -63,7 +63,9 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="2dp"
                 android:layout_weight="1"
-                android:text="@string/edit"/>
+                android:background="@drawable/btn_background_final"
+                android:text="@string/edit"
+                android:textColor="@color/white"/>
 
             <Button
                 android:id="@+id/btn_delete"
@@ -71,7 +73,9 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="2dp"
                 android:layout_weight="1"
-                android:text="@string/all_start"/>
+                android:background="@drawable/btn_background_final"
+                android:text="@string/all_start"
+                android:textColor="@color/white"/>
 
         </LinearLayout>
 

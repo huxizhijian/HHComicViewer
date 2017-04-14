@@ -98,7 +98,7 @@ public class RankAndClassifiesFragment extends RefreshBaseFragment {
         rankTitleEntities.add(new RankTitleEntity(R.drawable.ic_thumb_up_black_24dp,
                 "评分最高的漫画 TOP100", "/top/toprating.aspx"));
         rankTitleEntities.add(new RankTitleEntity(R.drawable.ic_textsms_black_24dp,
-                "最多人评论的画 TOP100", "/top/hoorating.aspx"));
+                "最多人评论的漫画 TOP100", "/top/hoorating.aspx"));
         rankTitleEntities.add(new RankTitleEntity(R.drawable.ic_stars_black_24dp,
                 "汗妹推荐的漫画", "/comic/best_1.html"));
         rankTitleEntities.add(new RankTitleEntity(R.drawable.ic_view_module_black_24dp,
