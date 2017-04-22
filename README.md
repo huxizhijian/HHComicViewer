@@ -49,7 +49,7 @@ Here is the libraries
 [recyclerview-animators](https://github.com/wasabeef/recyclerview-animators)
 
 # License
-<div class="codehilite"><pre>Copyright (C) 2016 huxizhijian<br>
+<div class="codehilite"><pre>Copyright (C) 2017 huxizhijian<br>
 Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at<br>
