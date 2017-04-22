@@ -13,7 +13,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
-import java.net.HttpURLConnection;
 import java.util.List;
 
 import okhttp3.OkHttpClient;
@@ -163,7 +162,7 @@ public class ImageDownloadTask extends Thread {
                     raf.seek(start);
                     int finished = mTaskInfo.getFinished();
                     //开始下载，由于设置了range，返回代码为部分下载(partial)
-                    if (response.code() == HttpURLConnection.HTTP_PARTIAL) {
+                    if (response.isSuccessful()) {
                         //读取数据
                         InputStream input = response.body().byteStream();
                         byte[] buffer = new byte[1024];
@@ -184,6 +183,11 @@ public class ImageDownloadTask extends Thread {
                                 return;
                             }
                         }
+                    } else {
+                        if (mImageDownloader.isDebug()) {
+                            Log.i(TAG, "run: 从网络获取文件错误！");
+                        }
+                        throw new IOException();
                     }
                 }
 
@@ -255,4 +259,5 @@ public class ImageDownloadTask extends Thread {
             }
         };
     }
+
 }

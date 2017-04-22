@@ -14,6 +14,8 @@ import org.huxizhijian.hhcomicviewer2.R;
 import org.huxizhijian.hhcomicviewer2.adapter.RecommendDetailsAdapter;
 import org.huxizhijian.hhcomicviewer2.adapter.entity.ComicTabList;
 
+import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -35,7 +37,7 @@ public class RecommendDetailsFragment extends Fragment {
             RecommendDetailsAdapter adapter = new RecommendDetailsAdapter(getActivity(), comicTabList);
             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
             recyclerView.setItemAnimator(new DefaultItemAnimator());
-            recyclerView.setAdapter(adapter);
+            recyclerView.setAdapter(new ScaleInAnimationAdapter(adapter));
         }
         return view;
     }

@@ -12,10 +12,7 @@
         android:id="@+id/cv_hot0"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="4dp"
+        android:layout_margin="@dimen/normal_margin"
         android:layout_weight="1"
         app:cardCornerRadius="@dimen/card_radius"
         app:cardElevation="2dp">
@@ -38,19 +35,10 @@
                 android:id="@+id/tv_hot0"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="2dp"
-                android:layout_marginTop="2dp"
+                android:layout_margin="@dimen/normal_margin"
                 android:gravity="center"
-                android:maxLines="2"/>
-
-            <TextView
-                android:id="@+id/tv_data_hot0"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:gravity="center"
-                android:maxLines="2"
-                android:textColor="@color/dark_alpha"/>
+                android:singleLine="true"
+                android:textSize="14sp"/>
 
         </LinearLayout>
 
@@ -60,10 +48,7 @@
         android:id="@+id/cv_hot1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="4dp"
+        android:layout_margin="@dimen/normal_margin"
         android:layout_weight="1"
         app:cardCornerRadius="@dimen/card_radius"
         app:cardElevation="2dp">
@@ -86,19 +71,10 @@
                 android:id="@+id/tv_hot1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="2dp"
-                android:layout_marginTop="2dp"
+                android:layout_margin="@dimen/normal_margin"
                 android:gravity="center"
-                android:maxLines="2"/>
-
-            <TextView
-                android:id="@+id/tv_data_hot1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:gravity="center"
-                android:maxLines="2"
-                android:textColor="@color/dark_alpha"/>
+                android:singleLine="true"
+                android:textSize="14sp"/>
 
         </LinearLayout>
 
@@ -108,10 +84,7 @@
         android:id="@+id/cv_hot2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="4dp"
+        android:layout_margin="@dimen/normal_margin"
         android:layout_weight="1"
         app:cardCornerRadius="@dimen/card_radius"
         app:cardElevation="2dp">
@@ -134,19 +107,10 @@
                 android:id="@+id/tv_hot2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="2dp"
-                android:layout_marginTop="2dp"
+                android:layout_margin="@dimen/normal_margin"
                 android:gravity="center"
-                android:maxLines="2"/>
-
-            <TextView
-                android:id="@+id/tv_data_hot2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:gravity="center"
-                android:maxLines="2"
-                android:textColor="@color/dark_alpha"/>
+                android:singleLine="true"
+                android:textSize="14sp"/>
 
         </LinearLayout>
 

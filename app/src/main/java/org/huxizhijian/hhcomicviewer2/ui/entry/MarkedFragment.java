@@ -37,9 +37,9 @@ import com.rey.material.app.SimpleDialog;
 import org.huxizhijian.hhcomicviewer2.R;
 import org.huxizhijian.hhcomicviewer2.adapter.StaggeredComicAdapter;
 import org.huxizhijian.hhcomicviewer2.db.ComicDBHelper;
-import org.huxizhijian.hhcomicviewer2.ui.common.RefreshBaseFragment;
 import org.huxizhijian.hhcomicviewer2.model.Comic;
 import org.huxizhijian.hhcomicviewer2.service.DownloadManagerService;
+import org.huxizhijian.hhcomicviewer2.ui.base.RefreshBaseFragment;
 
 import java.util.List;
 

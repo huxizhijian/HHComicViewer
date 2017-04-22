@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="4dp"
         android:adjustViewBounds="true"
-        android:scaleType="fitCenter"
+        android:scaleType="centerCrop"
         android:src="@drawable/moe"/>
 
     <TextView

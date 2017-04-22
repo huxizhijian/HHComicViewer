@@ -16,10 +16,12 @@ import org.huxizhijian.hhcomicviewer2.adapter.ClassifiesAdapter;
 import org.huxizhijian.hhcomicviewer2.adapter.RankAdapter;
 import org.huxizhijian.hhcomicviewer2.adapter.entity.ClassifiesEntity;
 import org.huxizhijian.hhcomicviewer2.adapter.entity.RankTitleEntity;
-import org.huxizhijian.hhcomicviewer2.ui.common.RefreshBaseFragment;
+import org.huxizhijian.hhcomicviewer2.ui.base.RefreshBaseFragment;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -122,18 +124,18 @@ public class RankAndClassifiesFragment extends RefreshBaseFragment {
         classifiesEntities.add(getClassifiedEntity("校园", 10, "http://pic.huo80.com/comicui2/7688a.JPG"));
         classifiesEntities.add(getClassifiedEntity("惊栗", 11, "http://pic.huo80.com/comicui/7556.JPG"));
         classifiesEntities.add(getClassifiedEntity("厨艺", 12, "http://pic.huo80.com/comicui/27782.JPG"));
-        classifiesEntities.add(getClassifiedEntity("伪娘", 13, "http://img.99mh.com/comicui/23584.JPG"));
+        classifiesEntities.add(getClassifiedEntity("伪娘", 13, "http://pic.huo80.com/comicui/31342.JPG"));
         classifiesEntities.add(getClassifiedEntity("冒险", 15, "http://pic.huo80.com/comicui/20512.JPG"));
         classifiesEntities.add(getClassifiedEntity("小说", 19, "http://pic.huo80.com/comicui/31149.JPG"));
         classifiesEntities.add(getClassifiedEntity("港漫", 20, "http://pic.huo80.com/upload/up200804/a195.jpg"));
         classifiesEntities.add(getClassifiedEntity("耽美", 21, "http://pic.huo80.com/comicui/11616.JPG"));
-        classifiesEntities.add(getClassifiedEntity("经典", 22, "http://img.99mh.com/upload/up200801/x372.jpg"));
+        classifiesEntities.add(getClassifiedEntity("经典", 22, "http://pic.huo80.com/comicui/15553.JPG"));
         classifiesEntities.add(getClassifiedEntity("欧美", 23, "http://pic.huo80.com/comicui/30267.JPG"));
         classifiesEntities.add(getClassifiedEntity("日文", 24, "http://pic.huo80.com/comicui/24318.JPG"));
         classifiesEntities.add(getClassifiedEntity("亲情", 25, "http://pic.huo80.com/comicui/29176.JPG"));
         ClassifiesAdapter adapter = new ClassifiesAdapter(getActivity(), classifiesEntities);
         mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
-        mRecyclerView.setAdapter(adapter);
+        mRecyclerView.setAdapter(new AlphaInAnimationAdapter(adapter));
     }
 
     private ClassifiesEntity getClassifiedEntity(String name, int page, String picUrl) {

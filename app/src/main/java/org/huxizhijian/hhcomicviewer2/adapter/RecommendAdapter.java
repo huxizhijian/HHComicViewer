@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 推荐视图的适配器
  * Created by wei on 2017/1/4.
  */
 
@@ -87,7 +88,7 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof NewViewHolder) {
             final NewViewHolder vh = (NewViewHolder) holder;
             final Comic comic = mTabLists.get(1).getComics().get(position - 3);
@@ -123,33 +124,34 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 }
             });
         } else if (holder instanceof HeaderViewHolder) {
+            HeaderViewHolder vh = (HeaderViewHolder) holder;
             if (position == 0) {
-                HeaderViewHolder vh = (HeaderViewHolder) holder;
                 vh.iv_title.setImageResource(R.drawable.ic_comic);
-                vh.tv_title.setText(mTabLists.get(0).getTabName());
-                vh.btn_more.setVisibility(View.VISIBLE);
-                vh.btn_more.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(mContext, ComicShowActivity.class);
-                        for (int i = 0; i < 5; i++) {
-                            intent.putExtra("tab_list_" + i, mTabLists.get(i));
-                        }
-                        mContext.startActivity(intent);
-                    }
-                });
-                //加载更多
+                vh.itemView.setPadding(8, 16, 8, 8);
             } else {
-                HeaderViewHolder vh = (HeaderViewHolder) holder;
                 vh.iv_title.setImageResource(R.drawable.ic_toys_black_24dp);
-                vh.tv_title.setText(mTabLists.get(1).getTabName());
             }
+            vh.tv_title.setText(mTabLists.get(0).getTabName());
+            vh.btn_more.setVisibility(View.VISIBLE);
+            //加载更多
+            vh.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(mContext, ComicShowActivity.class);
+                    for (int i = 0; i < 5; i++) {
+                        intent.putExtra("tab_list_" + i, mTabLists.get(i));
+                    }
+                    if (position != 0) {
+                        intent.putExtra("page", 1);
+                    }
+                    mContext.startActivity(intent);
+                }
+            });
         } else if (holder instanceof HotViewHolder) {
             final HotViewHolder vh = (HotViewHolder) holder;
             final List<Comic> comics = mTabLists.get(0).getComics();
             for (int i = 0; i < vh.ivs.size(); i++) {
                 vh.titles.get(i).setText(comics.get(i).getTitle());
-                vh.datas.get(i).setText(comics.get(i).getComicStatus());
                 mImageLoader.displayThumbnail(mContext, comics.get(i).getThumbnailUrl(), vh.ivs.get(i),
                         R.mipmap.blank, R.mipmap.blank, 165, 220);
                 final int finalI = i;
@@ -191,7 +193,7 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private class HotViewHolder extends RecyclerView.ViewHolder {
 
         List<ImageView> ivs = new ArrayList<>();
-        List<TextView> titles = new ArrayList<>(), datas = new ArrayList<>();
+        List<TextView> titles = new ArrayList<>();
         List<CardView> cvs = new ArrayList<>();
 
         public HotViewHolder(View itemView) {
@@ -202,9 +204,6 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             titles.add((TextView) itemView.findViewById(R.id.tv_hot0));
             titles.add((TextView) itemView.findViewById(R.id.tv_hot1));
             titles.add((TextView) itemView.findViewById(R.id.tv_hot2));
-            datas.add((TextView) itemView.findViewById(R.id.tv_data_hot0));
-            datas.add((TextView) itemView.findViewById(R.id.tv_data_hot1));
-            datas.add((TextView) itemView.findViewById(R.id.tv_data_hot2));
             cvs.add((CardView) itemView.findViewById(R.id.cv_hot0));
             cvs.add((CardView) itemView.findViewById(R.id.cv_hot1));
             cvs.add((CardView) itemView.findViewById(R.id.cv_hot2));

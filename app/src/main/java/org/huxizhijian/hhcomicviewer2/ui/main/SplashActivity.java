@@ -1,4 +1,4 @@
-package org.huxizhijian.hhcomicviewer2.ui.common;
+package org.huxizhijian.hhcomicviewer2.ui.main;
 
 import android.content.Intent;
 import android.os.Bundle;

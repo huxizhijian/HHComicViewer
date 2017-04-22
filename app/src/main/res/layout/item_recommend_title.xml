@@ -55,7 +55,7 @@
         android:layout_alignParentRight="true"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:background="@drawable/card_background"
+        android:background="@drawable/card_background_accent"
         android:padding="2dp"
         android:text="@string/more"
         android:textColor="#fff"

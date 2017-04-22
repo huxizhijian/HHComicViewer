@@ -37,7 +37,7 @@
             android:id="@+id/imageView_staggered"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
+            android:layout_margin="@dimen/normal_margin"
             android:adjustViewBounds="true"
             android:src="@mipmap/blank"
             android:transitionName="@string/image_transition_name"/>
@@ -46,9 +46,9 @@
             android:id="@+id/textView_staggered"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            android:layout_marginLeft="4dp"
-            android:layout_marginRight="4dp"
+            android:layout_marginBottom="@dimen/small_margin"
+            android:layout_marginLeft="@dimen/small_margin"
+            android:layout_marginRight="@dimen/small_margin"
             android:gravity="center"
             android:text="@string/comic_title"
             android:textSize="14sp"/>

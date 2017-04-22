@@ -52,6 +52,7 @@ import org.huxizhijian.hhcomicviewer2.persenter.viewinterface.ISearchActivity;
 import org.huxizhijian.hhcomicviewer2.utils.CommonUtils;
 import org.huxizhijian.hhcomicviewer2.utils.ViewHolder;
 import org.huxizhijian.sdk.util.ImeUtils;
+import org.huxizhijian.sdk.util.TransitionLeakFixUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -431,5 +432,7 @@ public class SearchActivity extends AppCompatActivity implements ISearchActivity
         //移除回调防止内存泄露
         if (mSearchPresenter != null)
             mSearchPresenter.removeListener();
+        //防止transition内存泄露
+        TransitionLeakFixUtil.removeActivityFromTransitionManager(this);
     }
 }

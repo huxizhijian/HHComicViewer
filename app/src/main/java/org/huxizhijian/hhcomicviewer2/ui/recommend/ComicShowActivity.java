@@ -35,7 +35,6 @@ public class ComicShowActivity extends AppCompatActivity {
 
     private void initViews() {
         mBinding.tabs.setTabMode(TabLayout.MODE_SCROLLABLE);
-
         mTabLists = new ArrayList<>();
         mFragments = new ArrayList<>();
         Intent intent = getIntent();
@@ -53,6 +52,7 @@ public class ComicShowActivity extends AppCompatActivity {
         mBinding.tabs.setTabTextColors(getResources().getColor(R.color.gray_200),
                 getResources().getColor(R.color.white));
         mBinding.tabs.setupWithViewPager(mBinding.viewPager);
+        mBinding.viewPager.setCurrentItem(intent.getIntExtra("page", 0), false);
     }
 
     private void setToolBar() {

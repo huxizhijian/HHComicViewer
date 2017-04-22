@@ -28,7 +28,7 @@ import android.support.v4.app.NotificationCompat;
 import org.huxizhijian.hhcomicviewer2.R;
 import org.huxizhijian.hhcomicviewer2.model.ComicChapter;
 import org.huxizhijian.hhcomicviewer2.service.DownloadManagerService;
-import org.huxizhijian.hhcomicviewer2.ui.common.MainActivity;
+import org.huxizhijian.hhcomicviewer2.ui.main.MainActivity;
 import org.huxizhijian.hhcomicviewer2.ui.download.DownloadingChapterActivity;
 import org.huxizhijian.hhcomicviewer2.ui.download.OfflineComicDownloadActivity;
 

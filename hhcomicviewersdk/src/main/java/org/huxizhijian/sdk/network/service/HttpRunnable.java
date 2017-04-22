@@ -37,6 +37,8 @@ public class HttpRunnable implements Runnable {
                 if (mRequest.getResponse() != null) {
                     mRequest.getResponse().success(mRequest, getData(response));
                 }
+            } else {
+                throw new IOException();
             }
         } catch (IOException e) {
             e.printStackTrace();

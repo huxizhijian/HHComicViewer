@@ -63,7 +63,7 @@ public class HHApplication extends MultiDexApplication {
     private volatile OkHttpClient mClient;
 
     public DbManager.DaoConfig getDaoConfig() {
-        //初始化数据库
+        //初始化数据库o
         DbManager.DaoConfig daoConfig = new DbManager.DaoConfig()
                 .setDbName("comic_db")
                 .setDbVersion(1)

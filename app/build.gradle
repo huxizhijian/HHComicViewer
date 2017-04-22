@@ -8,8 +8,8 @@ android {
         applicationId "org.huxizhijian.hhcomicviewer2"
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 107
-        versionName "1.07"
+        versionCode 108
+        versionName "1.08"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
     }
@@ -42,6 +42,10 @@ android {
     }
 }
 
+ext {
+    supportLibVersion = "25.3.1"
+}
+
 dependencies {
     compile project(':hhcomicviewersdk')
     compile files('libs/jsoup-1.9.2.jar')
@@ -59,17 +63,18 @@ dependencies {
     compile files('libs/ShareSDK-Wechat-Moments-2.7.10.jar')
     compile 'junit:junit:4.12'
     compile 'org.xutils:xutils:3.3.38'
-    compile 'com.android.support:support-v4:25.2.0'
-    compile 'com.android.support:appcompat-v7:25.2.0'
-    compile 'com.android.support:recyclerview-v7:25.2.0'
-    compile 'com.android.support:cardview-v7:25.2.0'
-    compile 'com.android.support:design:25.2.0'
+    compile "com.android.support:support-v4:${supportLibVersion}"
+    compile "com.android.support:appcompat-v7:${supportLibVersion}"
+    compile "com.android.support:recyclerview-v7:${supportLibVersion}"
+    compile "com.android.support:cardview-v7:${supportLibVersion}"
+    compile "com.android.support:design:${supportLibVersion}"
     compile 'com.readystatesoftware.systembartint:systembartint:1.0.4'
     compile 'com.github.rey5137:material:1.2.4'
     compile 'net.rdrei.android.dirchooser:library:3.2'
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.github.jdsjlzx:LRecyclerView:1.4.0'
     compile 'br.com.mauker.materialsearchview:materialsearchview:1.2.2'
+    compile 'jp.wasabeef:recyclerview-animators:2.2.6'
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
 }

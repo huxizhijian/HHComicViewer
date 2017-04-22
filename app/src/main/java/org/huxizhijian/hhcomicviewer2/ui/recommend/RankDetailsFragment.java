@@ -12,13 +12,15 @@ import android.view.ViewGroup;
 
 import org.huxizhijian.hhcomicviewer2.R;
 import org.huxizhijian.hhcomicviewer2.adapter.RankDetailsAdapter;
-import org.huxizhijian.hhcomicviewer2.ui.common.RefreshBaseFragment;
+import org.huxizhijian.hhcomicviewer2.ui.base.RefreshBaseFragment;
 import org.huxizhijian.hhcomicviewer2.model.Comic;
 import org.huxizhijian.hhcomicviewer2.persenter.IRankDetailsPresenter;
 import org.huxizhijian.hhcomicviewer2.persenter.implpersenter.RankDetailsPresenterImpl;
 import org.huxizhijian.hhcomicviewer2.persenter.viewinterface.IRankDetailsFragment;
 
 import java.util.List;
+
+import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
 
 /**
  * 排行榜详情
@@ -76,7 +78,7 @@ public class RankDetailsFragment extends RefreshBaseFragment implements IRankDet
             @Override
             public void run() {
                 mRefreshLayout.setRefreshing(false);
-                mRecyclerView.setAdapter(adapter);
+                mRecyclerView.setAdapter(new ScaleInAnimationAdapter(adapter));
             }
         });
     }

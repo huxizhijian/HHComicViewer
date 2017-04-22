@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.huxizhijian.hhcomicviewer2.ui.common;
+package org.huxizhijian.hhcomicviewer2.ui.main;
 
 
 import android.app.SearchManager;
@@ -99,6 +99,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        if (mBinding.searchView.isOpen()) {
+            if (mHistoryPop != null && mHistoryPop.isShowing()) {
+                mHistoryPop.dismiss();
+            }
+            showHistory();
+        }
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         mBinding.searchView.clearFocus();
@@ -126,15 +137,15 @@ public class MainActivity extends AppCompatActivity {
 
         MarkedFragment markedFragment = new MarkedFragment();
         RecommendFragment recommendFragment = new RecommendFragment();
-        RankAndClassifiesFragment fragment_classifies =
+        RankAndClassifiesFragment classifiesFragment =
                 RankAndClassifiesFragment.newInstance(RankAndClassifiesFragment.MODE_CLASSIFIES);
-        RankAndClassifiesFragment fragment_rank =
+        RankAndClassifiesFragment rankFragment =
                 RankAndClassifiesFragment.newInstance(RankAndClassifiesFragment.MODE_RANK);
 
         mFragments.add(markedFragment);
         mFragments.add(recommendFragment);
-        mFragments.add(fragment_classifies);
-        mFragments.add(fragment_rank);
+        mFragments.add(classifiesFragment);
+        mFragments.add(rankFragment);
 
         mAdapter = new TabFragmentPagerAdapter(getSupportFragmentManager(), mFragments);
         mBinding.viewPager.setAdapter(mAdapter);
@@ -192,84 +203,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSearchViewOpened() {
                 //搜索历史查询
-                if (mSharedPreferences == null) {
-                    mSharedPreferences = getSharedPreferences("history", Context.MODE_PRIVATE);
-                }
-                String group = mSharedPreferences.getString("keys", "");
-                if (!TextUtils.isEmpty(group)) {
-                    //如果有历史记录
-                    String[] history = group.split(":@");
-                    mSearchHistory = new ArrayList<>();
-                    if (history.length > 6) {
-                        //大于六条记录的话，由于输入法限制的高度限制等只取六条
-                        for (int i = history.length - 1; i >= history.length - 6; i--) {
-                            mSearchHistory.add(history[i]);
-                        }
-                    } else {
-                        for (int i = history.length - 1; i >= 0; i--) {
-                            mSearchHistory.add(history[i]);
-                        }
-                    }
-                    if (mHistoryListView == null || mHistoryAdapter == null) {
-                        //初始化并设置list view
-                        mHistoryListView = new ListView(MainActivity.this);
-                        mHistoryAdapter = new CommonAdapter<String>(MainActivity.this, mSearchHistory,
-                                R.layout.item_search_history_white) {
-                            @Override
-                            public void convert(ViewHolder vh, String s) {
-                                final TextView tv = vh.getView(R.id.tv_search_history);
-                                tv.setText(s);
-                                vh.getView(R.id.ll_search_history).setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        String query = (String) tv.getText();
-                                        if (!TextUtils.isEmpty(query)) {
-                                            mBinding.searchView.setQuery(query, true);
-                                        }
-                                    }
-                                });
-                                vh.getView(R.id.btn_search_text_set)
-                                        .setOnClickListener(new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-                                                mBinding.searchView.setQuery(tv.getText(), false);
-                                            }
-                                        });
-                            }
-                        };
-                        mHistoryListView.setBackgroundColor(R.color.white);
-                        mHistoryListView.setAdapter(mHistoryAdapter);
-                        if (mHistoryListView.getFooterViewsCount() == 0 && mSearchHistory.size() != 0) {
-                            final View footerView = LayoutInflater.from(MainActivity.this)
-                                    .inflate(R.layout.item_search_history_footview_white,
-                                            mHistoryListView, false);
-                            footerView.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    SharedPreferences.Editor editor = mSharedPreferences.edit();
-                                    editor.putString("keys", "");
-                                    editor.apply();
-                                    Toast.makeText(MainActivity.this, R.string.clear_successful, Toast.LENGTH_SHORT).show();
-                                    mHistoryPop.dismiss();
-                                }
-                            });
-                            mHistoryListView.addFooterView(footerView);
-                        }
-                        mHistoryListView.setDividerHeight(0);
-                        mHistoryListView.setPadding(0, 1, 0, 0);
-                    } else {
-                        mHistoryAdapter.setDatas(mSearchHistory);
-                        mHistoryAdapter.notifyDataSetChanged();
-                    }
-                    if (mHistoryPop == null) {
-                        //初始化popup window
-                        mHistoryPop = new PopupWindow(mHistoryListView, mBinding.searchView.getWidth(),
-                                ViewGroup.LayoutParams.WRAP_CONTENT);
-                        mHistoryPop.setFocusable(false);
-                        mHistoryPop.setOutsideTouchable(false);
-                    }
-                    mHistoryPop.showAsDropDown(mBinding.searchView);
-                }
+                showHistory();
             }
 
             @Override
@@ -279,6 +213,87 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void showHistory() {
+        if (mSharedPreferences == null) {
+            mSharedPreferences = getSharedPreferences("history", Context.MODE_PRIVATE);
+        }
+        String group = mSharedPreferences.getString("keys", "");
+        if (!TextUtils.isEmpty(group)) {
+            //如果有历史记录
+            String[] history = group.split(":@");
+            mSearchHistory = new ArrayList<>();
+            if (history.length > 6) {
+                //大于8条记录的话，根据最新搜索的顺序只取8条
+                for (int i = history.length - 1; i >= history.length - 8; i--) {
+                    mSearchHistory.add(history[i]);
+                }
+            } else {
+                for (int i = history.length - 1; i >= 0; i--) {
+                    mSearchHistory.add(history[i]);
+                }
+            }
+            if (mHistoryListView == null || mHistoryAdapter == null) {
+                //初始化并设置list view
+                mHistoryListView = new ListView(MainActivity.this);
+                mHistoryAdapter = new CommonAdapter<String>(MainActivity.this, mSearchHistory,
+                        R.layout.item_search_history_white) {
+                    @Override
+                    public void convert(ViewHolder vh, String s) {
+                        final TextView tv = vh.getView(R.id.tv_search_history);
+                        tv.setText(s);
+                        vh.getView(R.id.ll_search_history).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                String query = (String) tv.getText();
+                                if (!TextUtils.isEmpty(query)) {
+                                    mBinding.searchView.setQuery(query, true);
+                                }
+                            }
+                        });
+                        vh.getView(R.id.btn_search_text_set)
+                                .setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        mBinding.searchView.setQuery(tv.getText(), false);
+                                    }
+                                });
+                    }
+                };
+                mHistoryListView.setBackgroundColor(R.color.white);
+                mHistoryListView.setAdapter(mHistoryAdapter);
+                if (mHistoryListView.getFooterViewsCount() == 0 && mSearchHistory.size() != 0) {
+                    final View footerView = LayoutInflater.from(MainActivity.this)
+                            .inflate(R.layout.item_search_history_footview_white,
+                                    mHistoryListView, false);
+                    footerView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            SharedPreferences.Editor editor = mSharedPreferences.edit();
+                            editor.putString("keys", "");
+                            editor.apply();
+                            Toast.makeText(MainActivity.this, R.string.clear_successful, Toast.LENGTH_SHORT).show();
+                            mHistoryPop.dismiss();
+                        }
+                    });
+                    mHistoryListView.addFooterView(footerView);
+                }
+                mHistoryListView.setDividerHeight(0);
+                mHistoryListView.setPadding(0, 1, 0, 0);
+            } else {
+                mHistoryAdapter.setDatas(mSearchHistory);
+                mHistoryAdapter.notifyDataSetChanged();
+            }
+            if (mHistoryPop == null) {
+                //初始化popup window
+                mHistoryPop = new PopupWindow(mHistoryListView, mBinding.searchView.getWidth(),
+                        ViewGroup.LayoutParams.WRAP_CONTENT);
+                mHistoryPop.setFocusable(false);
+                mHistoryPop.setOutsideTouchable(false);
+            }
+            mHistoryPop.showAsDropDown(mBinding.searchView);
+        }
     }
 
     @Override

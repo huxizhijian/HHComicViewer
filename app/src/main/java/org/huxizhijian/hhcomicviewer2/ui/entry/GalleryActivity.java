@@ -103,7 +103,7 @@ public class GalleryActivity extends Activity implements View.OnClickListener,
     //使用handler循环更新时间
     private static final int UPDATE_TIME = 0x9;
 
-    static class MyHandler extends Handler {
+    private static class MyHandler extends Handler {
         //使用弱引用，并且声明为静态内部类，否则会造成leak
         WeakReference<TextView> mOut;
 

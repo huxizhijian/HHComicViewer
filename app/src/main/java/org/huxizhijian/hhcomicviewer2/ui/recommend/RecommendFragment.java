@@ -35,10 +35,12 @@ import org.huxizhijian.hhcomicviewer2.adapter.entity.ComicTabList;
 import org.huxizhijian.hhcomicviewer2.persenter.IComicRecommendPresenter;
 import org.huxizhijian.hhcomicviewer2.persenter.implpersenter.ComicRecommendPresenter;
 import org.huxizhijian.hhcomicviewer2.persenter.viewinterface.IComicRecommendFragment;
-import org.huxizhijian.hhcomicviewer2.ui.common.RefreshBaseFragment;
+import org.huxizhijian.hhcomicviewer2.ui.base.RefreshBaseFragment;
 import org.huxizhijian.hhcomicviewer2.utils.CommonUtils;
 
 import java.util.List;
+
+import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
 
 /**
  * 推荐界面
@@ -135,7 +137,7 @@ public class RecommendFragment extends RefreshBaseFragment implements IComicReco
                 mAdapter = new RecommendAdapter(getActivity(), mComicTabLists);
                 mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                 mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-                mRecyclerView.setAdapter(mAdapter);
+                mRecyclerView.setAdapter(new ScaleInAnimationAdapter(mAdapter));
                 mRecyclerView.setVisibility(View.VISIBLE);
                 mRefreshLayout.setRefreshing(false);
             }
