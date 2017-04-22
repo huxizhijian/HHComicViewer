@@ -1,8 +1,10 @@
 # HHComicViewer
+-------
 
 这是一个汗汗漫画android平台阅读软件
 
 # ScreenShot
+-------
 
 [Screenshot_1.png](https://github.com/huxizhijian/HHComicViewer/blob/master/art/Screenshot_1.png)
 
@@ -11,15 +13,16 @@
 [Screenshot_3.png](https://github.com/huxizhijian/HHComicViewer/blob/master/art/Screenshot_3.png)
 
 # Download
+-------
 
 [HHComicViewer](https://github.com/huxizhijian/HHComicViewer/releases)
 
 # Thanks
+-------
 
 本项目受到了诸多开源项目的帮助
 
 Here is the libraries
-
 
 [glide](https://github.com/bumptech/glide)
 
@@ -49,8 +52,8 @@ Here is the libraries
 
 [recyclerview-animators](https://github.com/wasabeef/recyclerview-animators)
 
-# Licens
-    
+# License
+-------
 
     Copyright 2016 huxizhijian
 
