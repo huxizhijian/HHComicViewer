@@ -32,7 +32,7 @@ Here is the libraries
 [LRecyclerView](https://github.com/jdsjlzx/LRecyclerView)<br>
 [materialsearchview](https://github.com/Mauker1/MaterialSearchView)<br>
 [leakcanary](https://github.com/square/leakcanary)<br>
-[recyclerview-animators](https://github.com/wasabeef/recyclerview-animators)<br>
+[RecyclerView Animators](https://github.com/wasabeef/recyclerview-animators)<br>
 
 # TODO
 
