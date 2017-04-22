@@ -16,7 +16,7 @@
 
 # Thanks
 
-本项目受到了诸多开源项目的帮助
+本项目受到了诸多开源项目的帮助<br>
 Here is the libraries
 
 [glide](https://github.com/bumptech/glide)<br>
