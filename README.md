@@ -1,13 +1,14 @@
 # HHComicViewer
 
-这是一个汗汗漫画android平台阅读软件
+这是一个汗汗漫画android平台阅读软件<br>
+本项目禁止商用<br>
 
 # ScreenShot
 
-[Screenshot_1.png](https://github.com/huxizhijian/HHComicViewer/blob/master/art/Screenshot_1.png)
-[Screenshot_2.png](https://github.com/huxizhijian/HHComicViewer/blob/master/art/Screenshot_2.png)
-[Screenshot_3.png](https://github.com/huxizhijian/HHComicViewer/blob/master/art/Screenshot_3.png)
-[Screenshot_4.png](https://github.com/huxizhijian/HHComicViewer/blob/master/art/Screenshot_4.png)
+[Screenshot_1.png](https://github.com/huxizhijian/HHComicViewer/blob/master/art/Screenshot_1.png)<br>
+[Screenshot_2.png](https://github.com/huxizhijian/HHComicViewer/blob/master/art/Screenshot_2.png)<br>
+[Screenshot_3.png](https://github.com/huxizhijian/HHComicViewer/blob/master/art/Screenshot_3.png)<br>
+[Screenshot_4.png](https://github.com/huxizhijian/HHComicViewer/blob/master/art/Screenshot_4.png)<br>
 
 # Download
 
@@ -18,26 +19,26 @@
 本项目受到了诸多开源项目的帮助
 Here is the libraries
 
-[glide](https://github.com/bumptech/glide)
-[jsoup](https://jsoup.org/)
-[ShareSDK](http://www.mob.com/)
-[xutils3](https://github.com/wyouflf/xUtils3)
-[SystemBarTint](https://github.com/jgilfelt/SystemBarTint)
-[material](https://github.com/rey5137/material)
-[Android-DirectoryChooser](https://github.com/passy/Android-DirectoryChooser)
-[okhttp](https://github.com/square/okhttp)
-[glide-transformations](https://github.com/wasabeef/glide-transformations)
-[gson](https://github.com/google/gson)
-[LRecyclerView](https://github.com/jdsjlzx/LRecyclerView)
-[materialsearchview](https://github.com/Mauker1/MaterialSearchView)
-[leakcanary](https://github.com/square/leakcanary)
-[recyclerview-animators](https://github.com/wasabeef/recyclerview-animators)
+[glide](https://github.com/bumptech/glide)<br>
+[jsoup](https://jsoup.org/)<br>
+[ShareSDK](http://www.mob.com/)<br>
+[xutils3](https://github.com/wyouflf/xUtils3)<br>
+[SystemBarTint](https://github.com/jgilfelt/SystemBarTint)<br>
+[material](https://github.com/rey5137/material)<br>
+[Android-DirectoryChooser](https://github.com/passy/Android-DirectoryChooser)<br>
+[okhttp](https://github.com/square/okhttp)<br>
+[glide-transformations](https://github.com/wasabeef/glide-transformations)<br>
+[gson](https://github.com/google/gson)<br>
+[LRecyclerView](https://github.com/jdsjlzx/LRecyclerView)<br>
+[materialsearchview](https://github.com/Mauker1/MaterialSearchView)<br>
+[leakcanary](https://github.com/square/leakcanary)<br>
+[recyclerview-animators](https://github.com/wasabeef/recyclerview-animators)<br>
 
 # TODO
 
-收藏页面漫画更新提醒
-引导页
-应用检测更新
+收藏页面漫画更新提醒<br>
+引导页<br>
+应用检测更新<br>
 
 # License
 <div class="codehilite"><pre>Copyright (C) 2017 huxizhijian<br>
