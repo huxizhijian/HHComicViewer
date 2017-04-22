@@ -225,8 +225,8 @@ public class MainActivity extends AppCompatActivity {
             String[] history = group.split(":@");
             mSearchHistory = new ArrayList<>();
             if (history.length > 6) {
-                //大于8条记录的话，根据最新搜索的顺序只取8条
-                for (int i = history.length - 1; i >= history.length - 8; i--) {
+                //大于6条记录的话，根据最新搜索的顺序只取6条（由于输入法影响）
+                for (int i = history.length - 1; i >= history.length - 6; i--) {
                     mSearchHistory.add(history[i]);
                 }
             } else {

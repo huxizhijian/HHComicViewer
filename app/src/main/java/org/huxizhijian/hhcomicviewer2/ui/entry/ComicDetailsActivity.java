@@ -91,7 +91,6 @@ import java.util.Collections;
 import java.util.List;
 
 import cn.sharesdk.onekeyshare.OnekeyShare;
-import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter;
 
 import static org.huxizhijian.sdk.util.TransitionLeakFixUtil.removeActivityFromTransitionManager;
 
@@ -522,7 +521,7 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
             public void onItemLongClick(View view, int position) {
             }
         });
-        mBinding.recyclerViewComicDetails.setAdapter(new AlphaInAnimationAdapter(mVolAdapter));
+        mBinding.recyclerViewComicDetails.setAdapter(mVolAdapter);
         mBinding.recyclerViewComicDetails.setFocusable(false);
         mBinding.nestScrollViewComicDetails.setFocusable(true);
         mBinding.nestScrollViewComicDetails.smoothScrollBy(0, 0);

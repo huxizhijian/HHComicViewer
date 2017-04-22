@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import org.huxizhijian.hhcomicviewer2.R;
 import org.huxizhijian.hhcomicviewer2.databinding.ActivityComicShowBinding;
 import org.huxizhijian.hhcomicviewer2.utils.CommonUtils;
+import org.huxizhijian.sdk.util.TransitionLeakFixUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -100,6 +101,12 @@ public class RankShowActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        TransitionLeakFixUtil.removeActivityFromTransitionManager(this);
     }
 
     private class TabFragmentPagerAdapter extends FragmentPagerAdapter {

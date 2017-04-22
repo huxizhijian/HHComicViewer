@@ -30,6 +30,7 @@ import org.huxizhijian.hhcomicviewer2.persenter.implpersenter.ClassifiesShowPres
 import org.huxizhijian.hhcomicviewer2.persenter.viewinterface.IClassifiesShowActivity;
 import org.huxizhijian.hhcomicviewer2.utils.CommonUtils;
 import org.huxizhijian.hhcomicviewer2.view.MyStaggerLayoutManager;
+import org.huxizhijian.sdk.util.TransitionLeakFixUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -249,5 +250,6 @@ public class ClassifiesShowActivity extends AppCompatActivity implements IClassi
         super.onDestroy();
         if (mPresenter != null)
             mPresenter.removeListener();
+        TransitionLeakFixUtil.removeActivityFromTransitionManager(this);
     }
 }
