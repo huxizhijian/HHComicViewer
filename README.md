@@ -61,6 +61,8 @@ Here is the libraries
 [leakcanary](https://github.com/square/leakcanary)
 
 
+[recyclerview-animators](https://github.com/wasabeef/recyclerview-animators)
+
 
 # License
 <div class="codehilite"><pre>Copyright (C) 2016 huxizhijian
