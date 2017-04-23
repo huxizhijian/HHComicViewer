@@ -90,8 +90,9 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof NewViewHolder) {
+            //改为人气榜漫
             final NewViewHolder vh = (NewViewHolder) holder;
-            final Comic comic = mTabLists.get(1).getComics().get(position - 3);
+            final Comic comic = mTabLists.get(2).getComics().get(position - 3);
             vh.title.setText(comic.getTitle());
             vh.desc.setText(comic.getAuthor());
             vh.info.setText(comic.getComicStatus());
@@ -124,14 +125,15 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 }
             });
         } else if (holder instanceof HeaderViewHolder) {
+            //列表头
             HeaderViewHolder vh = (HeaderViewHolder) holder;
             if (position == 0) {
                 vh.iv_title.setImageResource(R.drawable.ic_comic);
-                vh.itemView.setPadding(8, 16, 8, 8);
+                vh.tv_title.setText(mTabLists.get(0).getTabName());
             } else {
                 vh.iv_title.setImageResource(R.drawable.ic_toys_black_24dp);
+                vh.tv_title.setText(mTabLists.get(2).getTabName());
             }
-            vh.tv_title.setText(mTabLists.get(0).getTabName());
             vh.btn_more.setVisibility(View.VISIBLE);
             //加载更多
             vh.itemView.setOnClickListener(new View.OnClickListener() {
@@ -148,6 +150,7 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 }
             });
         } else if (holder instanceof HotViewHolder) {
+            //热点漫画
             final HotViewHolder vh = (HotViewHolder) holder;
             final List<Comic> comics = mTabLists.get(0).getComics();
             for (int i = 0; i < vh.ivs.size(); i++) {

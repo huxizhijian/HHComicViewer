@@ -31,6 +31,7 @@ public class Constants {
     public static final String ENCODE_KEY = "tazsicoewrn"; //解码关键字
     public static final String PIC_SERVICE_URL = "http://104.237.55.123:9393/dm"; //图片服务器
     public static final String SEARCH_URL = "http://ssooff.com/"; //搜索网站
+
     public static final String ACTION_CLASSIFIES = "action_classifies"; //标记为获取分类列表行
     public static final String NO_NETWORK = "没有网络!";
 

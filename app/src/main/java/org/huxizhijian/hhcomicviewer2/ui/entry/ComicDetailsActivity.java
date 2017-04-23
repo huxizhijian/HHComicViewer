@@ -36,6 +36,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -142,7 +143,8 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
     };
 
     //广播接收器
-    ComicChapterDownloadUpdateReceiver mReceiver;
+    private ComicChapterDownloadUpdateReceiver mReceiver;
+    private LocalBroadcastManager mManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -611,8 +613,11 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
         super.onResume();
         //注册receiver
         IntentFilter filter = new IntentFilter(DownloadManagerService.ACTION_RECEIVER);
-        registerReceiver(mReceiver, filter);
-
+//        registerReceiver(mReceiver, filter);
+        if (mManager == null) {
+            mManager = LocalBroadcastManager.getInstance(this);
+        }
+        mManager.registerReceiver(mReceiver, filter);
         //如果有下载内容更新界面
         if (mVolAdapter != null && mComicChapterDBHelper != null) {
             mDownloadedComicChapters = mComicChapterDBHelper.findByComicCid(mComic.getCid());
@@ -649,7 +654,11 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
 
         //注销receiver
         if (mReceiver != null) {
-            unregisterReceiver(mReceiver);
+            if (mManager == null) {
+                mManager = LocalBroadcastManager.getInstance(this);
+            }
+            mManager.unregisterReceiver(mReceiver);
+//            unregisterReceiver(mReceiver);
         }
     }
 

@@ -131,6 +131,7 @@ public class DownloadingComicChapterAdapter extends RecyclerView.Adapter<Recycle
         mImageLoader.displayThumbnail(mContext, comic.getThumbnailUrl(), holder.iv, R.mipmap.blank,
                 R.mipmap.blank, 165, 220);
 
+        //标题
         holder.tv_title.setText(comic.getTitle());
         holder.tv_chapter_title.setText(comicChapter.getChapterName());
 
