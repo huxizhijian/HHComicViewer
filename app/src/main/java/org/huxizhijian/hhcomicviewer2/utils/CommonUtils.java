@@ -35,7 +35,7 @@ import android.view.inputmethod.InputMethodManager;
 
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
-import org.huxizhijian.hhcomicviewer2.HHApplication;
+import org.huxizhijian.hhcomicviewer2.app.HHApplication;
 import org.huxizhijian.hhcomicviewer2.model.Comic;
 import org.huxizhijian.hhcomicviewer2.model.ComicChapter;
 import org.huxizhijian.hhcomicviewer2.option.HHComicWebVariable;

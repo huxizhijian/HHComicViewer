@@ -23,7 +23,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
-import org.huxizhijian.hhcomicviewer2.HHApplication;
+import org.huxizhijian.hhcomicviewer2.app.AppOperator;
+import org.huxizhijian.hhcomicviewer2.app.HHApplication;
 import org.huxizhijian.hhcomicviewer2.db.ComicChapterDBHelper;
 import org.huxizhijian.hhcomicviewer2.db.ComicDBHelper;
 import org.huxizhijian.hhcomicviewer2.model.Comic;
@@ -181,17 +182,27 @@ public class DownloadManagerService extends Service implements ImageDownloadList
             mImageDownloader.stop();
         } else if (intent.getAction().equals(ACTION_DELETE)) {
             //删除一个下载任务
-            ComicChapter comicChapter = (ComicChapter) intent.getSerializableExtra("comicChapter");
+            final ComicChapter comicChapter = (ComicChapter) intent.getSerializableExtra("comicChapter");
             Log.i("DownloadManagerService", "onStartCommand: delete");
-            deleteChapter(comicChapter);
+            AppOperator.runOnThread(new Runnable() {
+                @Override
+                public void run() {
+                    deleteChapter(comicChapter);
+                }
+            });
         } else if (intent.getAction().equals(ACTION_DELETE_COMIC)) {
             //删除一本漫画的下载任务
             Comic comic = (Comic) intent.getSerializableExtra("comic");
-            List<ComicChapter> chapters = mComicChapterDBHelper.findByComicCid(comic.getCid());
+            final List<ComicChapter> chapters = mComicChapterDBHelper.findByComicCid(comic.getCid());
             if (chapters != null) {
-                for (ComicChapter c : chapters) {
-                    deleteChapter(c);
-                }
+                AppOperator.runOnThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        for (ComicChapter chapter : chapters) {
+                            deleteChapter(chapter);
+                        }
+                    }
+                });
             }
         }
         return START_REDELIVER_INTENT;

@@ -16,7 +16,7 @@
 
 package org.huxizhijian.hhcomicviewer2.utils;
 
-import org.huxizhijian.hhcomicviewer2.HHApplication;
+import org.huxizhijian.hhcomicviewer2.app.HHApplication;
 
 import java.util.ArrayList;
 import java.util.regex.Matcher;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.huxizhijian.hhcomicviewer2;
+package org.huxizhijian.hhcomicviewer2.app;
 
 import android.support.multidex.MultiDexApplication;
 

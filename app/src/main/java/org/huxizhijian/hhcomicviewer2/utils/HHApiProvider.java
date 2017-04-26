@@ -17,7 +17,7 @@ package org.huxizhijian.hhcomicviewer2.utils;
 
 import android.util.Log;
 
-import org.huxizhijian.hhcomicviewer2.HHApplication;
+import org.huxizhijian.hhcomicviewer2.app.HHApplication;
 import org.huxizhijian.hhcomicviewer2.option.HHComicWebVariable;
 import org.huxizhijian.sdk.network.http.HttpMethod;
 import org.huxizhijian.sdk.network.service.NormalRequest;

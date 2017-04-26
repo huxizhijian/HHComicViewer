@@ -18,7 +18,7 @@ package org.huxizhijian.hhcomicviewer2.db;
 
 import android.content.Context;
 
-import org.huxizhijian.hhcomicviewer2.HHApplication;
+import org.huxizhijian.hhcomicviewer2.app.HHApplication;
 import org.huxizhijian.hhcomicviewer2.model.ThreadInfo;
 import org.xutils.DbManager;
 import org.xutils.db.sqlite.SqlInfo;

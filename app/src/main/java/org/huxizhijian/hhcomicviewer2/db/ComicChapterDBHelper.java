@@ -19,7 +19,7 @@ package org.huxizhijian.hhcomicviewer2.db;
 import android.content.Context;
 import android.util.SparseArray;
 
-import org.huxizhijian.hhcomicviewer2.HHApplication;
+import org.huxizhijian.hhcomicviewer2.app.HHApplication;
 import org.huxizhijian.hhcomicviewer2.model.Comic;
 import org.huxizhijian.hhcomicviewer2.model.ComicChapter;
 import org.huxizhijian.hhcomicviewer2.model.ThreadInfo;

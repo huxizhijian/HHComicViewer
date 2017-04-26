@@ -33,7 +33,7 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
 
     <application
-        android:name=".HHApplication"
+        android:name=".app.HHApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -113,11 +113,12 @@
 
         <!-- 微信分享回调 -->
         <activity
-            android:name=".wxapi.WXEntryActivity"
+            android:name="org.huxizhijian.hhcomicviewer2.wxapi.WXEntryActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+
         <activity android:name=".ui.recommend.ComicShowActivity">
         </activity>
         <activity android:name=".ui.recommend.RankShowActivity">

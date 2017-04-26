@@ -10,9 +10,11 @@
 [Screenshot_3.png](https://github.com/huxizhijian/HHComicViewer/blob/master/art/Screenshot_3.png)<br>
 [Screenshot_4.png](https://github.com/huxizhijian/HHComicViewer/blob/master/art/Screenshot_4.png)<br>
 
-# Download
+# Feature
 
-[HHComicViewer](https://github.com/huxizhijian/HHComicViewer/releases)
+1.MVP架构，Matrial Design风格的界面<br>
+2.使用jsoup抓取网页内容<br>
+3.自己完成的下载框架<br>
 
 # Thanks
 
@@ -33,6 +35,12 @@ Here is the libraries
 [materialsearchview](https://github.com/Mauker1/MaterialSearchView)<br>
 [leakcanary](https://github.com/square/leakcanary)<br>
 [RecyclerView Animators](https://github.com/wasabeef/recyclerview-animators)<br>
+
+# Download
+
+[github release](https://github.com/huxizhijian/HHComicViewer/releases)<br>
+[fir.im download](https://fir.im/hvdk)<br>
+![二维码](https://github.com/huxizhijian/HHComicViewer/blob/master/art/download.png)  
 
 # TODO
 

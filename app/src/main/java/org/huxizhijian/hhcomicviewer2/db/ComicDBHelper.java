@@ -18,7 +18,7 @@ package org.huxizhijian.hhcomicviewer2.db;
 
 import android.content.Context;
 
-import org.huxizhijian.hhcomicviewer2.HHApplication;
+import org.huxizhijian.hhcomicviewer2.app.HHApplication;
 import org.huxizhijian.hhcomicviewer2.model.Comic;
 import org.xutils.DbManager;
 import org.xutils.ex.DbException;

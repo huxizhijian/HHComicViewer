@@ -15,7 +15,7 @@
  */
 package org.huxizhijian.hhcomicviewer2.persenter.implpersenter;
 
-import org.huxizhijian.hhcomicviewer2.HHApplication;
+import org.huxizhijian.hhcomicviewer2.app.HHApplication;
 import org.huxizhijian.hhcomicviewer2.adapter.entity.ComicTabList;
 import org.huxizhijian.hhcomicviewer2.model.Comic;
 import org.huxizhijian.hhcomicviewer2.persenter.IComicRecommendPresenter;

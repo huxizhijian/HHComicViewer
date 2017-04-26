@@ -62,7 +62,7 @@ import android.widget.Toast;
 
 import com.rey.material.app.BottomSheetDialog;
 
-import org.huxizhijian.hhcomicviewer2.HHApplication;
+import org.huxizhijian.hhcomicviewer2.app.HHApplication;
 import org.huxizhijian.hhcomicviewer2.R;
 import org.huxizhijian.hhcomicviewer2.adapter.VolDownloadSelectorAdapter;
 import org.huxizhijian.hhcomicviewer2.adapter.VolRecyclerViewAdapter;
