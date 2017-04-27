@@ -83,6 +83,11 @@
 -keep class org.jsoup.**{*;}
 -keep interface org.jsoup.**{*;}
 
+#bugly混淆设置
+-dontwarn com.tencent.bugly.**
+-keep public class com.tencent.bugly.**{*;}
+-keep class android.support.**{*;}
+
 #LRecyclerview_library
 -dontwarn com.github.jdsjlzx.**
 -keep class com.github.jdsjlzx.**{*;}

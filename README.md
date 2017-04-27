@@ -24,6 +24,7 @@ Here is the libraries
 [glide](https://github.com/bumptech/glide)<br>
 [jsoup](https://jsoup.org/)<br>
 [ShareSDK](http://www.mob.com/)<br>
+[Bugly](https://bugly.qq.com/v2/index)<br>
 [xutils3](https://github.com/wyouflf/xUtils3)<br>
 [SystemBarTint](https://github.com/jgilfelt/SystemBarTint)<br>
 [material](https://github.com/rey5137/material)<br>
@@ -40,6 +41,7 @@ Here is the libraries
 
 [github release](https://github.com/huxizhijian/HHComicViewer/releases)<br>
 [fir.im download](https://fir.im/hvdk)<br>
+
 ![二维码](https://github.com/huxizhijian/HHComicViewer/blob/master/art/download.png)  
 
 # TODO

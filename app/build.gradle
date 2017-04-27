@@ -12,6 +12,10 @@ android {
         versionName "1.08"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
+        ndk {
+            //设置支持的SO库架构
+            abiFilters 'armeabi' , 'x86', 'armeabi-v7a', 'x86_64', 'arm64-v8a'
+        }
     }
     buildTypes {
         debug {
@@ -77,4 +81,6 @@ dependencies {
     compile 'jp.wasabeef:recyclerview-animators:2.2.6'
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
+    compile 'com.tencent.bugly:crashreport_upgrade:latest.release'
+    compile 'com.tencent.bugly:nativecrashreport:latest.release'
 }

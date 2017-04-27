@@ -16,10 +16,14 @@
 
 package org.huxizhijian.hhcomicviewer2.app;
 
+import android.os.Environment;
 import android.support.multidex.MultiDexApplication;
 
 import com.squareup.leakcanary.LeakCanary;
+import com.tencent.bugly.Bugly;
+import com.tencent.bugly.beta.Beta;
 
+import org.huxizhijian.hhcomicviewer2.R;
 import org.huxizhijian.hhcomicviewer2.option.HHComicWebVariable;
 import org.huxizhijian.sdk.SDKConstant;
 import org.huxizhijian.sdk.imageloader.ImageLoaderOptions;
@@ -110,6 +114,16 @@ public class HHApplication extends MultiDexApplication {
         sApplication = this;
         mWebVariable = new HHComicWebVariable(this);
         initSDK();
+        initBugly();
+    }
+
+    //初始化腾讯bugly
+    private void initBugly() {
+        Beta.largeIconId = R.mipmap.ic_launcher;
+        Beta.smallIconId = R.mipmap.ic_launcher;
+        //设置SD卡中的Download为默认的更新目录
+        Beta.storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        Bugly.init(getApplicationContext(), "e436df84f4", org.huxizhijian.sdk.util.Utils.isApkDebugable(this));
     }
 
     private void initLeakCanary() {
