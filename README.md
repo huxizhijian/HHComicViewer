@@ -48,7 +48,7 @@ Here is the libraries
 
 收藏页面漫画更新提醒<br>
 引导页<br>
-应用检测更新<br>
+~~应用检测更新~~<br>
 
 # License
 <div class="codehilite"><pre>Copyright (C) 2017 huxizhijian<br>
