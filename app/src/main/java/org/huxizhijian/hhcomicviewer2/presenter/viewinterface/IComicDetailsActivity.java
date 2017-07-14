@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.huxizhijian.hhcomicviewer2.persenter;
+package org.huxizhijian.hhcomicviewer2.presenter.viewinterface;
 
 import org.huxizhijian.hhcomicviewer2.model.Comic;
 
@@ -21,10 +21,12 @@ import org.huxizhijian.hhcomicviewer2.model.Comic;
  * Created by wei on 2017/1/3.
  */
 
-public interface IComicDetailsPresenter {
+public interface IComicDetailsActivity {
 
-    void getComic(int cid, Comic oldComic);
+    void onResponse(Comic comic);
 
-    void removeListener();
+    void onException(Throwable e);
+
+    void onFailure(int errorCode, String errorMsg);
 
 }

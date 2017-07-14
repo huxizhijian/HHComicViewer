@@ -1,4 +1,4 @@
-package org.huxizhijian.hhcomicviewer2.persenter;
+package org.huxizhijian.hhcomicviewer2.presenter;
 
 import org.huxizhijian.hhcomicviewer2.model.ComicChapter;
 

@@ -24,7 +24,7 @@ import android.os.Environment;
  */
 
 public class Constants {
-    public static final String HHCOMIC_URL = "http://www.hhssee.com"; //主站网址
+    public static final String HHCOMIC_URL = "http://www.hhmmoo.com/"; //主站网址
     public static final String HHCOMIC_PRE_ID = "/manhua";
     public static final String COMIC_VOL_PAGE = "http://www.huhudm.com/mh/hu"; //漫画章节网址
     public static final String COMIC_VOL_BEHIND_ID = ".htm?s=";

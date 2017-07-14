@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.huxizhijian.hhcomicviewer2.persenter.implpersenter;
+package org.huxizhijian.hhcomicviewer2.presenter.implpersenter;
 
 import org.huxizhijian.hhcomicviewer2.app.HHApplication;
 import org.huxizhijian.hhcomicviewer2.adapter.entity.ComicTabList;
 import org.huxizhijian.hhcomicviewer2.model.Comic;
-import org.huxizhijian.hhcomicviewer2.persenter.IComicRecommendPresenter;
-import org.huxizhijian.hhcomicviewer2.persenter.viewinterface.IComicRecommendFragment;
+import org.huxizhijian.hhcomicviewer2.presenter.IComicRecommendPresenter;
+import org.huxizhijian.hhcomicviewer2.presenter.viewinterface.IComicRecommendFragment;
 import org.huxizhijian.hhcomicviewer2.utils.HHApiProvider;
 import org.huxizhijian.sdk.network.service.NormalRequest;
 import org.huxizhijian.sdk.network.service.NormalResponse;

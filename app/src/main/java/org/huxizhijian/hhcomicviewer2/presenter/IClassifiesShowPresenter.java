@@ -1,4 +1,4 @@
-package org.huxizhijian.hhcomicviewer2.persenter;
+package org.huxizhijian.hhcomicviewer2.presenter;
 
 /**
  * Created by wei on 2017/1/20.

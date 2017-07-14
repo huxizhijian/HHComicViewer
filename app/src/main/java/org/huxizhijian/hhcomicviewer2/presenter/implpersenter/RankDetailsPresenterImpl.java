@@ -1,9 +1,9 @@
-package org.huxizhijian.hhcomicviewer2.persenter.implpersenter;
+package org.huxizhijian.hhcomicviewer2.presenter.implpersenter;
 
 import org.huxizhijian.hhcomicviewer2.app.HHApplication;
 import org.huxizhijian.hhcomicviewer2.model.Comic;
-import org.huxizhijian.hhcomicviewer2.persenter.IRankDetailsPresenter;
-import org.huxizhijian.hhcomicviewer2.persenter.viewinterface.IRankDetailsFragment;
+import org.huxizhijian.hhcomicviewer2.presenter.IRankDetailsPresenter;
+import org.huxizhijian.hhcomicviewer2.presenter.viewinterface.IRankDetailsFragment;
 import org.huxizhijian.hhcomicviewer2.utils.HHApiProvider;
 import org.huxizhijian.sdk.network.service.NormalRequest;
 import org.huxizhijian.sdk.network.service.NormalResponse;

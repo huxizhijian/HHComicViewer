@@ -14,9 +14,9 @@ import org.huxizhijian.hhcomicviewer2.R;
 import org.huxizhijian.hhcomicviewer2.adapter.RankDetailsAdapter;
 import org.huxizhijian.hhcomicviewer2.ui.base.RefreshBaseFragment;
 import org.huxizhijian.hhcomicviewer2.model.Comic;
-import org.huxizhijian.hhcomicviewer2.persenter.IRankDetailsPresenter;
-import org.huxizhijian.hhcomicviewer2.persenter.implpersenter.RankDetailsPresenterImpl;
-import org.huxizhijian.hhcomicviewer2.persenter.viewinterface.IRankDetailsFragment;
+import org.huxizhijian.hhcomicviewer2.presenter.IRankDetailsPresenter;
+import org.huxizhijian.hhcomicviewer2.presenter.implpersenter.RankDetailsPresenterImpl;
+import org.huxizhijian.hhcomicviewer2.presenter.viewinterface.IRankDetailsFragment;
 
 import java.util.List;
 

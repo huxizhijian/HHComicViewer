@@ -1,8 +1,8 @@
-package org.huxizhijian.hhcomicviewer2.persenter.implpersenter;
+package org.huxizhijian.hhcomicviewer2.presenter.implpersenter;
 
 import org.huxizhijian.hhcomicviewer2.model.ComicChapter;
-import org.huxizhijian.hhcomicviewer2.persenter.IComicChapterPresenter;
-import org.huxizhijian.hhcomicviewer2.persenter.viewinterface.IComicChapterListener;
+import org.huxizhijian.hhcomicviewer2.presenter.IComicChapterPresenter;
+import org.huxizhijian.hhcomicviewer2.presenter.viewinterface.IComicChapterListener;
 import org.huxizhijian.hhcomicviewer2.utils.CommonUtils;
 import org.huxizhijian.hhcomicviewer2.utils.HHApiProvider;
 import org.huxizhijian.sdk.network.service.NormalRequest;

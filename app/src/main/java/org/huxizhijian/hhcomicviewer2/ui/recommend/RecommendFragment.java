@@ -32,9 +32,9 @@ import android.widget.Toast;
 import org.huxizhijian.hhcomicviewer2.R;
 import org.huxizhijian.hhcomicviewer2.adapter.RecommendAdapter;
 import org.huxizhijian.hhcomicviewer2.adapter.entity.ComicTabList;
-import org.huxizhijian.hhcomicviewer2.persenter.IComicRecommendPresenter;
-import org.huxizhijian.hhcomicviewer2.persenter.implpersenter.ComicRecommendPresenter;
-import org.huxizhijian.hhcomicviewer2.persenter.viewinterface.IComicRecommendFragment;
+import org.huxizhijian.hhcomicviewer2.presenter.IComicRecommendPresenter;
+import org.huxizhijian.hhcomicviewer2.presenter.implpersenter.ComicRecommendPresenter;
+import org.huxizhijian.hhcomicviewer2.presenter.viewinterface.IComicRecommendFragment;
 import org.huxizhijian.hhcomicviewer2.ui.base.RefreshBaseFragment;
 import org.huxizhijian.hhcomicviewer2.utils.CommonUtils;
 
