@@ -1,3 +1,19 @@
+<!--
+  ~ Copyright 2017 huxizhijian
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
 <vector android:height="24dp" android:viewportHeight="1024.0"
     android:viewportWidth="1024.0" android:width="24dp" xmlns:android="http://schemas.android.com/apk/res/android">
     <path android:fillColor="@color/blue_500" android:pathData="M686.9,240c49.1,0 89.1,41.3 89.1,92.1l0,99.3c0,1.8 0,4 -0,6.1L232,534.4c0,-1.2 0,-2.3 0,-3.4l2.7,-199c0,-50.8 40,-92.1 89.1,-92.1L686.9,240M686.9,208 L323.7,208c-66.9,0 -121.1,55.6 -121.1,124.1L200,530.6c0,27.4 0.1,37.2 26.9,37.2l556.8,-99.3c24.1,-4.8 24.3,-9.8 24.3,-37.2l0,-99.3C808,263.6 753.8,208 686.9,208L686.9,208z"/>

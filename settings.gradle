@@ -1,1 +1,1 @@
-include ':app', ':hhcomicviewersdk'
+include ':app', ':hh-core', ':hh-comic'

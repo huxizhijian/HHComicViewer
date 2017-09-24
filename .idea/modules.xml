@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/HHComicViewer2.iml" filepath="$PROJECT_DIR$/HHComicViewer2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hh-comic/hh-comic.iml" filepath="$PROJECT_DIR$/hh-comic/hh-comic.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hh-core/hh-core.iml" filepath="$PROJECT_DIR$/hh-core/hh-core.iml" />
+    </modules>
+  </component>
+</project>

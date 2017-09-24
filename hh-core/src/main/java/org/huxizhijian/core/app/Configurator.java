@@ -1,0 +1,111 @@
+/*
+ * Copyright 2017 huxizhijian
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.huxizhijian.core.app;
+
+import android.app.Application;
+import android.os.Handler;
+
+import com.blankj.utilcode.util.Utils;
+import com.joanzapata.iconify.IconFontDescriptor;
+import com.joanzapata.iconify.Iconify;
+import com.orhanobut.logger.AndroidLogAdapter;
+import com.orhanobut.logger.Logger;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import okhttp3.Interceptor;
+
+/**
+ * 配置器，根据配置类型{@link ConfigKeys}保存配置并对第三方库进行初始化
+ *
+ * @author huxizhijian 2017/9/17
+ */
+public class Configurator {
+
+    private static final HashMap<Object, Object> HH_CONFIGS = new HashMap<>();
+    private static final Handler HANDLER = new Handler();
+    private static final List<IconFontDescriptor> ICONS = new ArrayList<>();
+    private static final List<Interceptor> INTERCEPTORS = new ArrayList<>();
+
+    private Configurator() {
+        // 开始配置，标记为未完成配置
+        HH_CONFIGS.put(ConfigKeys.CONFIG_READY, false);
+        HH_CONFIGS.put(ConfigKeys.HANDLER, HANDLER);
+    }
+
+    final HashMap<Object, Object> getHHConfigs() {
+        return HH_CONFIGS;
+    }
+
+    // 静态内部类的单例模式
+    static Configurator getInstance() {
+        return Holder.INSTANCE;
+    }
+
+    private static class Holder {
+        private static final Configurator INSTANCE = new Configurator();
+    }
+
+    public final void configure() {
+        Utils.init((Application) HHEngine.getApplicationContext());
+        initIcons();
+        Logger.addLogAdapter(new AndroidLogAdapter());
+        HH_CONFIGS.put(ConfigKeys.CONFIG_READY, true);
+    }
+
+    private void initIcons() {
+        if (ICONS.size() > 0) {
+            final Iconify.IconifyInitializer initializer = Iconify.with(ICONS.get(0));
+            for (int i = 1; i < ICONS.size(); i++) {
+                initializer.with(ICONS.get(i));
+            }
+        }
+    }
+
+    public final Configurator withIcon(IconFontDescriptor icon) {
+        ICONS.add(icon);
+        return this;
+    }
+
+    public final Configurator withInterceptor(Interceptor interceptor) {
+        INTERCEPTORS.add(interceptor);
+        HH_CONFIGS.put(ConfigKeys.INTERCEPTOR, INTERCEPTORS);
+        return this;
+    }
+
+    public final Configurator withInterceptors(ArrayList<Interceptor> interceptors) {
+        INTERCEPTORS.addAll(interceptors);
+        HH_CONFIGS.put(ConfigKeys.INTERCEPTOR, INTERCEPTORS);
+        return this;
+    }
+
+    private void checkConfiguration() {
+        final boolean isReady = (boolean) HH_CONFIGS.get(ConfigKeys.CONFIG_READY);
+        if (!isReady) {
+            throw new RuntimeException("Configurations is not ready, call configure()");
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    final <T> T getConfiguration(Object key) {
+        checkConfiguration();
+        return (T) HH_CONFIGS.get(key);
+    }
+
+}

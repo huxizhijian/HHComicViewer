@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 huxizhijian
+ * Copyright 2017 huxizhijian
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,10 +19,12 @@ package org.huxizhijian.hhcomicviewer2.app;
 import android.os.Environment;
 import android.support.multidex.MultiDexApplication;
 
+import com.joanzapata.iconify.fonts.FontAwesomeModule;
 import com.squareup.leakcanary.LeakCanary;
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
 
+import org.huxizhijian.core.app.HHEngine;
 import org.huxizhijian.hhcomicviewer2.R;
 import org.huxizhijian.hhcomicviewer2.option.HHComicWebVariable;
 import org.huxizhijian.sdk.SDKConstant;
@@ -115,6 +117,10 @@ public class HHApplication extends MultiDexApplication {
         mWebVariable = new HHComicWebVariable(this);
         initSDK();
         initBugly();
+        // 初始化第三方库（核心包含的库）
+        HHEngine.init(this)
+                .withIcon(new FontAwesomeModule())
+                .configure();
     }
 
     //初始化腾讯bugly
