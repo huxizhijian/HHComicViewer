@@ -21,7 +21,7 @@ package org.huxizhijian.hhcomic.comic;
  *
  * @author huxizhijian 2017/9/21
  */
-public class ComicRepository{
+public class ComicRepository {
 
     public ComicRepository() {
 

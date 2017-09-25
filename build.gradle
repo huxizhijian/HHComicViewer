@@ -18,7 +18,16 @@ allprojects {
 }
 
 ext {
+    // Sdk and tools
+    minSdkVersion = 16
+    targetSdkVersion = 26
+    compileSdkVersion = 26
+    buildToolsVersion = '26.0.1'
+
+    // App dependencies
     supportLibVersion = "26.0.0-alpha1"
+    junitVersion = '4.12'
+    espressoVersion = '2.2.2'
 }
 
 task clean(type: Delete) {

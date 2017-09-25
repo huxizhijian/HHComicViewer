@@ -113,7 +113,7 @@ public class GlideUtils implements ImageLoaderManager {
                                  final ImageRequestListener listener) {
 
         RequestOptions options = RequestOptions.overrideOf(165, 220)
-                .bitmapTransform(new BlurTransformation(context, 14, 3)); // 设置高斯模糊
+                .bitmapTransform(new BlurTransformation(14, 3)); // 设置高斯模糊
 
         Glide.with(context)
                 .load(url)

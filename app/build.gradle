@@ -1,20 +1,20 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion "26.0.1"
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
         applicationId "org.huxizhijian.hhcomicviewer2"
-        minSdkVersion 15
-        targetSdkVersion 26
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 108
         versionName "1.08"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
         ndk {
             //设置支持的SO库架构
-            abiFilters 'armeabi' , 'x86', 'armeabi-v7a', 'x86_64', 'arm64-v8a'
+            abiFilters 'armeabi', 'x86', 'armeabi-v7a', 'x86_64', 'arm64-v8a'
         }
     }
     buildTypes {
@@ -54,7 +54,9 @@ ext {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile project(':hh-comic')
+    // jsoup DOM解析库依赖
     compile files('libs/jsoup-1.9.2.jar')
+    // Mob的ShareSDK依赖
     compile files('libs/MobCommons-2016.1107.1809.jar')
     compile files('libs/MobTools-2016.1107.1809.jar')
     compile files('libs/ShareSDK-Core-2.7.10.jar')
@@ -67,16 +69,26 @@ dependencies {
     compile files('libs/ShareSDK-Wechat-Core-2.7.10.jar')
     compile files('libs/ShareSDK-Wechat-Favorite-2.7.10.jar')
     compile files('libs/ShareSDK-Wechat-Moments-2.7.10.jar')
+    // xUtils依赖（用于DB）
     compile 'org.xutils:xutils:3.3.38'
+    // statusBar依赖
     compile 'com.readystatesoftware.systembartint:systembartint:1.0.4'
+    // material控件库的依赖
     compile 'com.github.rey5137:material:1.2.4'
+    // 文件夹选择器依赖
     compile 'net.rdrei.android.dirchooser:library:3.2'
+    // 多dex文件依赖
     compile 'com.android.support:multidex:1.0.1'
+    // Recycler封装库依赖
     compile 'com.github.jdsjlzx:LRecyclerView:1.4.0'
+    // searchbar依赖
     compile 'br.com.mauker.materialsearchview:materialsearchview:1.2.2'
+    // recycler加载动画依赖
     compile 'jp.wasabeef:recyclerview-animators:2.2.6'
+    // leak canary依赖
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
+    // 腾讯bugly依赖
     compile 'com.tencent.bugly:crashreport_upgrade:latest.release'
     compile 'com.tencent.bugly:nativecrashreport:latest.release'
 }
