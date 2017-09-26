@@ -20,4 +20,4 @@
     android:id="@+id/recycler_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="org.huxizhijian.hhcomicviewer2.ui.recommend.RecommendDetailsFragment"/>
+    tools:context="org.huxizhijian.hhcomicviewer.ui.recommend.RecommendDetailsFragment"/>

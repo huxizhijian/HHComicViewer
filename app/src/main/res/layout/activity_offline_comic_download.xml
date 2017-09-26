@@ -86,7 +86,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom">
 
-            <org.huxizhijian.hhcomicviewer2.view.NumberProgressBar
+            <org.huxizhijian.hhcomicviewer.view.NumberProgressBar
                 android:id="@+id/progress_bar"
                 style="@style/NumberProgressBar_Beauty_Red"
                 android:layout_width="match_parent"

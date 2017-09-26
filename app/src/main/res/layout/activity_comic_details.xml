@@ -23,7 +23,7 @@
         android:id="@+id/comic_details_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="org.huxizhijian.hhcomicviewer2.ui.entry.ComicDetailsActivity">
+        tools:context="org.huxizhijian.hhcomicviewer.ui.entry.ComicDetailsActivity">
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/app_bar_comic_details"

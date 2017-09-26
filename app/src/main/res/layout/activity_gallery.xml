@@ -18,7 +18,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         tools:context=".ui.entry.GalleryActivity">
 
-    <org.huxizhijian.hhcomicviewer2.view.OpenMenuFrameLayout
+    <org.huxizhijian.hhcomicviewer.view.OpenMenuFrameLayout
         android:id="@+id/frame_gallery"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -38,7 +38,7 @@
             android:layout_height="match_parent"
             android:visibility="gone"/>
 
-        <org.huxizhijian.hhcomicviewer2.view.ZoomableListView
+        <org.huxizhijian.hhcomicviewer.view.ZoomableListView
             android:id="@+id/list_view_gallery"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -153,6 +153,6 @@
 
         </RelativeLayout>
 
-    </org.huxizhijian.hhcomicviewer2.view.OpenMenuFrameLayout>
+    </org.huxizhijian.hhcomicviewer.view.OpenMenuFrameLayout>
 </layout>
 
