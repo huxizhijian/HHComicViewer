@@ -18,6 +18,7 @@ package org.huxizhijian.hhcomic.comic;
 
 import org.huxizhijian.hhcomic.comic.bean.Comic;
 import org.huxizhijian.hhcomic.comic.parser.BaseParser;
+import org.huxizhijian.hhcomic.comic.parser.MangaSource;
 import org.huxizhijian.hhcomic.comic.type.ComicDataState;
 
 import java.util.List;
@@ -50,21 +51,23 @@ public interface ComicDataSource {
     /**
      * 获取单个Comic
      *
-     * @param sComicId    来源网站唯一编号+来源网站标识的唯一id
+     * @param source      漫画来源
+     * @param comicId     来源网站标识的唯一id
      * @param checkUpdate 是否使用网络检查其更新（如果有DB保存亦不立即返回）
      * @param callback    回调
      */
-    void getComic(long sComicId, boolean checkUpdate, GetComicCallback callback);
+    void getComic(MangaSource source, long comicId, boolean checkUpdate, GetComicCallback callback);
 
     /**
      * 从网络或者本地获取到Comic的集合
      *
+     * @param source   漫画来源
      * @param type     ComicDataSourceType或者其子类标注的常量值，通常为来源网站类{@link BaseParser}的子类的内部类实现
      * @param page     页码
      * @param size     每页返回的Comic数，通常不管用
      * @param callback 回调
      */
-    void getComics(int type, int page, int size, GetComicsCallback callback);
+    void getComics(MangaSource source, int type, int page, int size, GetComicsCallback callback);
 
     /**
      * 保存一个Comic到DB或者云端中，如果已经存在，改变其状态
@@ -77,10 +80,11 @@ public interface ComicDataSource {
     /**
      * 将一个Comic从DB或者云端中删除
      *
-     * @param sComicId 来源网站唯一编号+来源网站标识的唯一id
-     * @param state    回调
+     * @param source  漫画来源
+     * @param comicId 来源网站标识的唯一id
+     * @param state   回调
      */
-    void deleteComic(long sComicId, ComicDataState state);
+    void deleteComic(MangaSource source, long comicId, ComicDataState state);
 
     /**
      * 将一个Comic从DB或者云端中删除
@@ -93,10 +97,11 @@ public interface ComicDataSource {
     /**
      * 从DB或者云端中删除多个Comic
      *
-     * @param sComicIds 需要删除的Comic的来源网站唯一编号+来源网站标识的唯一id
-     * @param state     删除的Comic的保存状态
+     * @param source   漫画来源
+     * @param comicIds 需要删除的Comic的来源网站唯一编号+来源网站标识的唯一id
+     * @param state    删除的Comic的保存状态
      */
-    void deleteComicsRange(long[] sComicIds, ComicDataState state);
+    void deleteComicsRange(MangaSource source, long[] comicIds, ComicDataState state);
 
     /**
      * 从DB或者远端中删除多个Comic

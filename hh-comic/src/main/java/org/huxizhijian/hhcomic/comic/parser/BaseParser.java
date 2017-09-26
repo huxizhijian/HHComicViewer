@@ -17,6 +17,7 @@
 package org.huxizhijian.hhcomic.comic.parser;
 
 
+import org.huxizhijian.hhcomic.comic.bean.Chapter;
 import org.huxizhijian.hhcomic.comic.bean.Comic;
 
 import java.util.List;
@@ -66,5 +67,12 @@ public interface BaseParser {
      * @param cid  网站指定的漫画唯一id
      */
     Request buildChapterRequest(String data, String cid);
+
+    /**
+     * 解析章节列表
+     *
+     * @param data html页面或者json源代码
+     */
+    List<Chapter> parseChapter(String data);
 
 }
