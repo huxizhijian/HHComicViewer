@@ -36,5 +36,13 @@ captures/
 *.iml
 
 /build
-local.properties
 /projectFilesBackup
+/.idea/compiler.xml
+/.idea/copyright/profiles_settings.xml
+/.idea/gradle.xml
+/.idea/runConfigurations.xml
+/.idea/misc.xml
+/.idea/vcs.xml
+/.idea/workspace.xml
+/.idea/libraries
+.idea/modules.xml
