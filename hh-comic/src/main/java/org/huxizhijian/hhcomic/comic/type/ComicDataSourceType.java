@@ -25,4 +25,6 @@ public interface ComicDataSourceType {
     public static final int DB_HISTORY = 0x0;
     public static final int DB_FAVORITE = 0x1;
     public static final int DB_DOWNLOADED = 0x2;
+    public static final int WEB_SEARCH = 0x3;
+    public static final int WEB_DETAIL = 0x4;
 }

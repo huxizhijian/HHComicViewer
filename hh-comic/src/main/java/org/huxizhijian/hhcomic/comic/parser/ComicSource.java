@@ -2,6 +2,7 @@ package org.huxizhijian.hhcomic.comic.parser;
 
 import org.huxizhijian.hhcomic.comic.bean.Comic;
 import org.huxizhijian.hhcomic.comic.db.DBHelper;
+import org.huxizhijian.hhcomic.comic.type.ComicDataSourceType;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ import okhttp3.Request;
  *
  * @Author huxizhijian on 2017/9/25.
  */
-public abstract class MangaSource implements BaseParser, DBHelper {
+public abstract class ComicSource implements BaseParser, DBHelper, ComicDataSourceType {
 
     @Override
     public Request buildSearchRequest(String keyword, int page) {
@@ -58,8 +59,6 @@ public abstract class MangaSource implements BaseParser, DBHelper {
 
     @Override
     public Comic get(long comicId) {
-        String sComicId = getSourceTag() + comicId;
-        // 查找DB数据库
         return null;
     }
 

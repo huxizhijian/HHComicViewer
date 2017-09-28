@@ -25,7 +25,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 线程调度器，本质封装了一个线程池
+ * 线程调度器，封装了一个线程池
  *
  * @author huxizhijian 2017/9/17
  */

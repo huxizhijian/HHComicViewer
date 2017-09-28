@@ -18,7 +18,7 @@ package org.huxizhijian.hhcomic.comic;
 
 import org.huxizhijian.hhcomic.comic.bean.Comic;
 import org.huxizhijian.hhcomic.comic.parser.BaseParser;
-import org.huxizhijian.hhcomic.comic.parser.MangaSource;
+import org.huxizhijian.hhcomic.comic.parser.ComicSource;
 import org.huxizhijian.hhcomic.comic.type.ComicDataState;
 
 import java.util.List;
@@ -56,7 +56,7 @@ public interface ComicDataSource {
      * @param checkUpdate 是否使用网络检查其更新（如果有DB保存亦不立即返回）
      * @param callback    回调
      */
-    void getComic(MangaSource source, long comicId, boolean checkUpdate, GetComicCallback callback);
+    void getComic(ComicSource source, String comicId, boolean checkUpdate, GetComicCallback callback);
 
     /**
      * 从网络或者本地获取到Comic的集合
@@ -67,7 +67,7 @@ public interface ComicDataSource {
      * @param size     每页返回的Comic数，通常不管用
      * @param callback 回调
      */
-    void getComics(MangaSource source, int type, int page, int size, GetComicsCallback callback);
+    void getComics(ComicSource source, int type, int page, int size, GetComicsCallback callback);
 
     /**
      * 保存一个Comic到DB或者云端中，如果已经存在，改变其状态
@@ -84,7 +84,7 @@ public interface ComicDataSource {
      * @param comicId 来源网站标识的唯一id
      * @param state   回调
      */
-    void deleteComic(MangaSource source, long comicId, ComicDataState state);
+    void deleteComic(ComicSource source, String comicId, ComicDataState state);
 
     /**
      * 将一个Comic从DB或者云端中删除
@@ -101,7 +101,7 @@ public interface ComicDataSource {
      * @param comicIds 需要删除的Comic的来源网站唯一编号+来源网站标识的唯一id
      * @param state    删除的Comic的保存状态
      */
-    void deleteComicsRange(MangaSource source, long[] comicIds, ComicDataState state);
+    void deleteComicsRange(ComicSource source, String[] comicIds, ComicDataState state);
 
     /**
      * 从DB或者远端中删除多个Comic
