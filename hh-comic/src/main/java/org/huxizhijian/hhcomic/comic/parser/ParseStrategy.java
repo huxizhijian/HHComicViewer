@@ -16,11 +16,19 @@
 
 package org.huxizhijian.hhcomic.comic.parser;
 
+import org.huxizhijian.hhcomic.usecase.base.UseCase;
+import org.huxizhijian.sdk.imagedownload.core.Request;
+
 /**
- * 解析任务拦截器
+ * 解析策略
  *
  * @author huxizhijian 2017/9/29
  */
-public interface PaserIntercepter {
+public interface ParseStrategy {
+
+    public Request buildRequest(UseCase.RequestValues values);
+
+    public UseCase.ResponseValue parseData(UseCase.RequestValues values, String data);
 
 }
+    
