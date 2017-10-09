@@ -26,5 +26,6 @@ public enum ConfigKeys {
     CONFIG_READY,
     ICON,
     HANDLER,
+    OKHTTP_CLIENT,
     INTERCEPTOR
 }

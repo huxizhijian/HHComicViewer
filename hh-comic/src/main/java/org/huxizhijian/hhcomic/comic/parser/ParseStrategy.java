@@ -16,8 +16,12 @@
 
 package org.huxizhijian.hhcomic.comic.parser;
 
-import org.huxizhijian.hhcomic.usecase.base.UseCase;
-import org.huxizhijian.sdk.imagedownload.core.Request;
+import org.huxizhijian.hhcomic.comic.value.IHHComicRequest;
+import org.huxizhijian.hhcomic.comic.value.IHHComicResponse;
+
+import java.io.IOException;
+
+import okhttp3.Request;
 
 /**
  * 解析策略
@@ -26,9 +30,8 @@ import org.huxizhijian.sdk.imagedownload.core.Request;
  */
 public interface ParseStrategy {
 
-    public Request buildRequest(UseCase.RequestValues values);
+    public Request buildRequest(IHHComicRequest comicRequest);
 
-    public UseCase.ResponseValue parseData(UseCase.RequestValues values, String data);
+    public IHHComicResponse parseData(IHHComicResponse comicResponse, byte[] data) throws IOException;
 
 }
-    

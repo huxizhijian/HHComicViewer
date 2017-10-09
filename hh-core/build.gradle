@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'org.greenrobot.greendao'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -57,5 +58,7 @@ dependencies {
     compile 'com.joanzapata.iconify:android-iconify-fontawesome:2.2.2'
     // 阿里巴巴fastjson库
     compile 'com.alibaba:fastjson:1.2.38'
+    // greenDAO库
+    compile 'org.greenrobot:greendao:3.2.2'
     androidTestCompile 'junit:junit:4.12'
 }

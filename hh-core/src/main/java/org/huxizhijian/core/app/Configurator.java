@@ -18,6 +18,7 @@ package org.huxizhijian.core.app;
 
 import android.app.Application;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 
 import com.blankj.utilcode.util.Utils;
 import com.joanzapata.iconify.IconFontDescriptor;
@@ -28,8 +29,10 @@ import com.orhanobut.logger.Logger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
 
 /**
  * 配置器，根据配置类型{@link ConfigKeys}保存配置并对第三方库进行初始化
@@ -42,6 +45,7 @@ public class Configurator {
     private static final Handler HANDLER = new Handler();
     private static final List<IconFontDescriptor> ICONS = new ArrayList<>();
     private static final List<Interceptor> INTERCEPTORS = new ArrayList<>();
+    private static final OkHttpClient.Builder builder = new OkHttpClient.Builder();
 
     private Configurator() {
         // 开始配置，标记为未完成配置
@@ -63,8 +67,19 @@ public class Configurator {
     }
 
     public final void configure() {
+        //初始化OkHttpClient
+        if (HH_CONFIGS.get(ConfigKeys.OKHTTP_CLIENT) == null) {
+            //添加interceptor
+            for (Interceptor interceptor : INTERCEPTORS) {
+                builder.addInterceptor(interceptor);
+            }
+            HH_CONFIGS.put(ConfigKeys.OKHTTP_CLIENT, builder.build());
+        }
+        //初始化Utils库
         Utils.init((Application) HHEngine.getApplicationContext());
+        //初始化icon库
         initIcons();
+        //初始化logger库
         Logger.addLogAdapter(new AndroidLogAdapter());
         HH_CONFIGS.put(ConfigKeys.CONFIG_READY, true);
     }
@@ -82,6 +97,17 @@ public class Configurator {
         ICONS.add(icon);
         return this;
     }
+
+    public final Configurator withConnectTimeOut(long timeOut, @NonNull TimeUnit unit) {
+        builder.connectTimeout(timeOut, unit);
+        return this;
+    }
+
+    public final Configurator withOkHttpClient(OkHttpClient client) {
+        HH_CONFIGS.put(ConfigKeys.OKHTTP_CLIENT, client);
+        return this;
+    }
+
 
     public final Configurator withInterceptor(Interceptor interceptor) {
         INTERCEPTORS.add(interceptor);
