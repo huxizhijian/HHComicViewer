@@ -53,6 +53,7 @@ public abstract class UseCase<Q extends UseCase.RequestValues, P extends UseCase
      * 传入参数，RequestValues
      */
     public interface RequestValues {
+        int getSourceType();
     }
 
     /**

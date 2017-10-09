@@ -17,18 +17,16 @@
 package org.huxizhijian.hhcomic.comic.type;
 
 /**
- * Comic获取来源类型
+ * 加载请求时传入的参数key
  *
- * @author huxizhijian 2017/9/21
+ * @author huxizhijian 2017/10/1
  */
-public class ComicDataSourceType {
-    public static final int DB_HISTORY = 0x0;
-    public static final int DB_FAVORITE = 0x1;
-    public static final int DB_DOWNLOADED = 0x2;
-    public static final int WEB_SEARCH = 0x3;
-    public static final int WEB_DETAIL = 0x4;
-    public static final int WEB_RECOMMENDED = 0x5;
-    public static final int WEB_RANK = 0x5;
-    public static final int WEB_CATEGORY = 0x6;
-    public static final int WEB_GET_CHAPTER = 0x7;
+public class RequestFieldType {
+    public static final int KEY_WORD = 0x0;
+    public static final int PAGE = 0x1;
+    public static final int SIZE = 0x2;
+    public static final int DATA = 0x3;
+    public static final int COMIC_ID = 0x4;
+    public static final int COMIC = 0x5;
+    public static final int SOURCE_TYPE = 0x6;
 }
