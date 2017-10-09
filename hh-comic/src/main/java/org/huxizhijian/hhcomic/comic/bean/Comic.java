@@ -60,7 +60,7 @@ public class Comic {
     private Long history;
     // 下载
     private Long download;
-    // 最后一次阅读
+    // 最后一次阅读时间
     private String last;
     // 阅读到的页数
     private Integer page;
