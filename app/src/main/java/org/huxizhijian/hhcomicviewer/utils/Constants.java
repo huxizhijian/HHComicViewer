@@ -39,7 +39,7 @@ public class Constants {
 
     public static final int FINISHED_NOTIFICATION_ID = 0x1024;
 
-    public static final String DEFAULT_DOWNLOAD_PATH = Environment.getExternalStorageDirectory().getPath() + "/HHComic";
+    public static final String DEFAULT_DOWNLOAD_PATH = Environment.getExternalStorageDirectory().getPath() + "/HHManHua";
 
     public static final String CLASSIFIES_CONTENT = " <div>\n" +
             "<span><a href='/comic/class_1.html'>萌系</a></span><span><a href='/comic/class_2.html'>搞笑</a></span><span><a href='/comic/class_3.html'>格斗</a></span><span><a href='/comic/class_4.html'>科幻</a></span><span><a href='/comic/class_5.html'>剧情</a></span><span><a href='/comic/class_6.html'>侦探</a></span><span><a href='/comic/class_7.html'>竞技</a></span>" +

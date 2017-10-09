@@ -18,7 +18,7 @@ package org.huxizhijian.hhcomic.comic;
 
 import org.huxizhijian.hhcomic.comic.bean.Comic;
 import org.huxizhijian.hhcomic.comic.parser.BaseParser;
-import org.huxizhijian.hhcomic.comic.parser.ComicSource;
+import org.huxizhijian.hhcomic.comic.source.ComicSource;
 import org.huxizhijian.hhcomic.comic.type.ComicDataState;
 
 import java.util.List;

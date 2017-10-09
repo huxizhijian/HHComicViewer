@@ -120,6 +120,7 @@ public class HHApplication extends MultiDexApplication {
         // 初始化第三方库（核心包含的库）
         HHEngine.init(this)
                 .withIcon(new FontAwesomeModule())
+                .withConnectTimeOut(30000, TimeUnit.MILLISECONDS)
                 .configure();
     }
 

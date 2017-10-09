@@ -50,13 +50,13 @@ public abstract class UseCase<Q extends UseCase.RequestValues, P extends UseCase
     protected abstract void executeUseCase(Q requestValues);
 
     /**
-     * 传入参数，RequestValues
+     * 传入参数，IHHComicRequest
      */
     public interface RequestValues {
     }
 
     /**
-     * 返回参数，ResponseValues
+     * 返回参数，IHHComicResponse
      */
     public interface ResponseValue {
     }
