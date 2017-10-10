@@ -54,6 +54,8 @@ public class HHManHua extends ComicSource {
         RANK_TYPE_MAP.put(RankType.HH_TOP_READER, new TypeContent("最多人看", "/top/hotrating.aspx"));
         RANK_TYPE_MAP.put(RankType.HH_TOP_RATING, new TypeContent("评分最高", "/top/toprating.aspx"));
         RANK_TYPE_MAP.put(RankType.HH_HOT_COMMIT, new TypeContent("最多人评论", "/top/hoorating.aspx"));
+        // TODO: 2017/10/10 支持的分类类别
+        // TODO: 2017/10/10 支持的推荐类别
     }
 
     /**
