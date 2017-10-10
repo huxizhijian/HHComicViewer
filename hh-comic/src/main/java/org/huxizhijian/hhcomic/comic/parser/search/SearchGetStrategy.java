@@ -2,6 +2,7 @@ package org.huxizhijian.hhcomic.comic.parser.search;
 
 import org.huxizhijian.hhcomic.comic.bean.Comic;
 import org.huxizhijian.hhcomic.comic.parser.BaseParseStrategy;
+import org.huxizhijian.hhcomic.comic.type.RequestFieldType;
 import org.huxizhijian.hhcomic.comic.value.IHHComicRequest;
 import org.huxizhijian.hhcomic.comic.value.IHHComicResponse;
 
@@ -32,14 +33,18 @@ public abstract class SearchGetStrategy extends BaseParseStrategy {
      */
     protected abstract String getSearchUrl(String key, int page, int size);
 
-    /**
-     * 请求解锁解析
+    /**-
+     * 解析网络请求结果
      */
     protected abstract List<Comic> parseSearchResult(byte[] data);
 
     @Override
     public Request buildRequest(IHHComicRequest comicRequest) {
-        //省略从comicRequest中获取到key
+        //从comicRequest中获取到key
+        mKey = comicRequest.getField(RequestFieldType.KEY_WORD);
+        mPage = 0;
+        mPage = comicRequest.getField(RequestFieldType.PAGE);
+        mSize = comicRequest.getField(RequestFieldType.SIZE);
         return getRequestGetAndWithUrl(getSearchUrl(mKey, mPage, mSize));
     }
 

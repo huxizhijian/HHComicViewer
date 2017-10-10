@@ -16,7 +16,7 @@
 
 package org.huxizhijian.hhcomic.comic;
 
-import org.huxizhijian.hhcomic.comic.parser.ComicSource;
+import org.huxizhijian.hhcomic.comic.source.ComicSource;
 
 import java.util.ArrayList;
 import java.util.HashMap;

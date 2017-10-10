@@ -5,6 +5,8 @@ import org.huxizhijian.core.app.HHEngine;
 import org.huxizhijian.hhcomic.comic.bean.Chapter;
 import org.huxizhijian.hhcomic.comic.bean.Comic;
 import org.huxizhijian.hhcomic.comic.parser.BaseParseStrategy;
+import org.huxizhijian.hhcomic.comic.type.RequestFieldType;
+import org.huxizhijian.hhcomic.comic.type.ResponseFieldType;
 import org.huxizhijian.hhcomic.comic.value.IHHComicRequest;
 import org.huxizhijian.hhcomic.comic.value.IHHComicResponse;
 
@@ -61,13 +63,18 @@ public abstract class DetailStrategy extends BaseParseStrategy {
 
     @Override
     public Request buildRequest(IHHComicRequest comicRequest) {
-        // 省略，从request中取出cid的操作
+        // 取出cid，该值为必要
+        if (comicRequest.getField(RequestFieldType.COMIC_ID) == null) {
+            throw new NullPointerException("comic_id should not be null!");
+        }
+        mComicId = comicRequest.getField(RequestFieldType.COMIC_ID);
         return getRequestGetAndWithUrl(getDetailUrl(mComicId));
     }
 
     @Override
     public IHHComicResponse parseData(IHHComicResponse comicResponse, byte[] data) throws IOException {
         Comic comic = parseComic(data, mComicId);
+        // 添加返回结果
         comicResponse.setResponse(comic);
         List<Chapter> chapters = null;
         if (shouldNotRequestToParseChapter()) {
@@ -82,7 +89,8 @@ public abstract class DetailStrategy extends BaseParseStrategy {
             }
         }
         if (chapters != null) {
-            // 添加
+            // 添加结果
+            comicResponse.addField(ResponseFieldType.CHAPTER_LIST, chapters);
         }
         return comicResponse;
     }

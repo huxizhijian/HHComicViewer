@@ -14,6 +14,6 @@ public interface IHHComicRequest {
 
     void addField(int key, Object field);
 
-    Object getField(int key);
+    <T> T getField(int key);
 
 }

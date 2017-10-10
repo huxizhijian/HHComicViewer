@@ -20,9 +20,8 @@ package org.huxizhijian.hhcomic.comic.type;
  * @author huxizhijian 2017/10/2
  */
 public class ResponseFieldType {
-    public static final int COMIC = 0x0;
-    public static final int COMIC_LIST = 0x1;
-    public static final int PAGE = 0x2;
-    public static final int SIZE = 0x3;
-    public static final int CHAPTER_LIST = 0x4;
+    public static final int COMIC_RESPONSE = 0x0;
+    public static final int PAGE = 0x1;
+    public static final int SIZE = 0x2;
+    public static final int CHAPTER_LIST = 0x3;
 }

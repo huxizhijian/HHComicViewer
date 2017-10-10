@@ -16,6 +16,7 @@
 
 package org.huxizhijian.hhcomic.comic.db;
 
+import org.greenrobot.greendao.Property;
 import org.greenrobot.greendao.database.Database;
 import org.greenrobot.greendao.query.QueryBuilder;
 import org.huxizhijian.core.app.HHEngine;
@@ -80,17 +81,54 @@ public class ComicDBHelper implements IComicDBHelper {
 
     @Override
     public List<Comic> getHistoryList(int order) {
-        return null;
+        QueryBuilder<Comic> qb = sComicDao.queryBuilder();
+        qb.where(ComicDao.Properties.History.notEq(null));
+        order(order, qb, ComicDao.Properties.History);
+        return qb.list();
     }
 
     @Override
     public List<Comic> getFavoriteList(int order, boolean highLight) {
-        return null;
+        QueryBuilder<Comic> qb = sComicDao.queryBuilder();
+        qb.where(ComicDao.Properties.Favorite.notEq(null));
+        if (highLight) {
+            // 将有高亮标记的排在前面
+            qb.orderDesc(ComicDao.Properties.Highlight);
+        }
+        order(order, qb, ComicDao.Properties.Favorite);
+        return qb.list();
     }
 
     @Override
     public List<Comic> getDownloadList(int order) {
-        return null;
+        QueryBuilder<Comic> qb = sComicDao.queryBuilder();
+        qb.where(ComicDao.Properties.Download.notEq(null));
+        order(order, qb, ComicDao.Properties.Download);
+        return qb.list();
+    }
+
+    private void order(int order, QueryBuilder<Comic> qb, Property property) {
+        switch (order) {
+            case ORDER_LAST_ASC:
+                qb.orderAsc(ComicDao.Properties.Last);
+                break;
+            case ORDER_LAST_DESC:
+                qb.orderDesc(ComicDao.Properties.Last);
+                break;
+            case ORDER_UPDATE_ASC:
+                qb.orderAsc(ComicDao.Properties.Update);
+                break;
+            case ORDER_UPDATE_DESC:
+                qb.orderDesc(ComicDao.Properties.Update);
+                break;
+            case ORDER_CORRESPOND_ASC:
+                qb.orderAsc(property);
+                break;
+            case ORDER_CORRESPOND_DESC:
+                qb.orderDesc(property);
+            default:
+                break;
+        }
     }
 
 }
