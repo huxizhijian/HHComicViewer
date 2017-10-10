@@ -2,6 +2,9 @@ package org.huxizhijian.hhcomic.comic.source;
 
 import org.huxizhijian.hhcomic.comic.ComicDataSource;
 import org.huxizhijian.hhcomic.comic.parser.ParseStrategy;
+import org.huxizhijian.hhcomic.comic.type.CategoryType;
+import org.huxizhijian.hhcomic.comic.type.RankType;
+import org.huxizhijian.hhcomic.comic.type.RecommendType;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -20,9 +23,15 @@ public abstract class ComicSource {
     private String mBaseUrl;
 
     private final Map<Integer, ParseStrategy> STRATEGY_MAP;
+    protected final Map<Enum<RankType>, TypeContent> RANK_TYPE_MAP;
+    protected final Map<Enum<CategoryType>, TypeContent> CATEGORY_TYPE_MAP;
+    protected final Map<Enum<RecommendType>, TypeContent> RECOMMEND_TYPE_MAP;
 
     ComicSource() {
         STRATEGY_MAP = new LinkedHashMap<>();
+        RANK_TYPE_MAP = new LinkedHashMap<>();
+        CATEGORY_TYPE_MAP = new LinkedHashMap<>();
+        RECOMMEND_TYPE_MAP = new LinkedHashMap<>();
         mSourceName = setSourceName();
         mBaseUrl = setBaseUrl();
     }
@@ -66,6 +75,32 @@ public abstract class ComicSource {
             strategies.add(entry.getValue());
         }
         return strategies;
+    }
+
+    public Map<Enum<RankType>, TypeContent> getRankTypeMap() {
+        return RANK_TYPE_MAP;
+    }
+
+    public Map<Enum<CategoryType>, TypeContent> getCategoryTypeMap() {
+        return CATEGORY_TYPE_MAP;
+    }
+
+    public Map<Enum<RecommendType>, TypeContent> getRecommendTypeMap() {
+        return RECOMMEND_TYPE_MAP;
+    }
+
+    public class TypeContent {
+        String title;
+        String urlKey;
+
+        public TypeContent() {
+        }
+
+        public TypeContent(String title, String urlKey) {
+            this.title = title;
+            this.urlKey = urlKey;
+        }
+
     }
 
     public ParseStrategy getStragey(int strategyKey) {

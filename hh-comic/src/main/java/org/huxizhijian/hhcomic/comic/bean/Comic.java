@@ -45,10 +45,10 @@ public class Comic {
     private String cover;
     // 是否高亮显示
     @NotNull
-    private boolean highlight;
+    private boolean highlight = false;
     // 是否来自本地
     @NotNull
-    private boolean local;
+    private boolean local = false;
 
     // 更新时间
     private String update;
@@ -80,12 +80,14 @@ public class Comic {
     private String newChapter;
     // 评分
     private Float rate;
+    // 评分人数
+    private Integer ratePeopleCount;
     // 收藏数
     private Float favoriteCount;
 
     public Comic(int source, String cid, String title, String cover, String update, String author) {
         this(null, source, cid, title, cover == null ? "" : cover, false, false, update,
-                null, null, null, null, null, null, null, null, null, null, null, null, null);
+                null, null, null, null, null, null, null, null, null, null, null, null, null, null);
         this.author = author;
     }
 
@@ -96,15 +98,15 @@ public class Comic {
 
     public Comic(int source, String cid, String title, String cover, long download) {
         this(null, source, cid, title, cover == null ? "" : cover, false, false, null,
-                null, null, null, download, null, null, null, null, null, null, null, null, null);
+                null, null, null, download, null, null, null, null, null, null, null, null, null, null);
     }
 
-    @Generated(hash = 1289672600)
-    public Comic(Long id, int source, @NotNull String cid, @NotNull String title,
-                 @NotNull String cover, boolean highlight, boolean local, String update,
-                 Boolean finish, Long favorite, Long history, Long download, String last,
-                 Integer page, String chapter, Integer chapterCount, String intro,
-                 String author, String newChapter, Float rate, Float favoriteCount) {
+    @Generated(hash = 349236900)
+    public Comic(Long id, int source, @NotNull String cid, @NotNull String title, @NotNull String cover,
+                 boolean highlight, boolean local, String update, Boolean finish, Long favorite,
+                 Long history, Long download, String last, Integer page, String chapter,
+                 Integer chapterCount, String intro, String author, String newChapter, Float rate,
+                 Integer ratePeopleCount, Float favoriteCount) {
         this.id = id;
         this.source = source;
         this.cid = cid;
@@ -125,6 +127,7 @@ public class Comic {
         this.author = author;
         this.newChapter = newChapter;
         this.rate = rate;
+        this.ratePeopleCount = ratePeopleCount;
         this.favoriteCount = favoriteCount;
     }
 
@@ -298,6 +301,14 @@ public class Comic {
 
     public void setFavoriteCount(Float favoriteCount) {
         this.favoriteCount = favoriteCount;
+    }
+
+    public Integer getRatePeopleCount() {
+        return this.ratePeopleCount;
+    }
+
+    public void setRatePeopleCount(Integer ratePeopleCount) {
+        this.ratePeopleCount = ratePeopleCount;
     }
 
 }

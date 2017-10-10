@@ -3,10 +3,12 @@ package org.huxizhijian.hhcomic.comic.parser.search;
 import org.huxizhijian.hhcomic.comic.bean.Comic;
 import org.huxizhijian.hhcomic.comic.parser.BaseParseStrategy;
 import org.huxizhijian.hhcomic.comic.type.RequestFieldType;
+import org.huxizhijian.hhcomic.comic.type.ResponseFieldType;
 import org.huxizhijian.hhcomic.comic.value.IHHComicRequest;
 import org.huxizhijian.hhcomic.comic.value.IHHComicResponse;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import okhttp3.Request;
@@ -31,15 +33,23 @@ public abstract class SearchGetStrategy extends BaseParseStrategy {
      * @param size 每页展示的Comic数量，需要看网站支不支持这个，不一定有用
      * @return 构建出的搜索网址
      */
-    protected abstract String getSearchUrl(String key, int page, int size);
+    protected abstract String getSearchUrl(String key, int page, int size) throws UnsupportedEncodingException;
 
-    /**-
+    /**
+     * -
      * 解析网络请求结果
      */
-    protected abstract List<Comic> parseSearchResult(byte[] data);
+    protected abstract List<Comic> parseSearchResult(byte[] data) throws UnsupportedEncodingException;
+
+    /**
+     * 获取搜索结果页数
+     *
+     * @return 页数
+     */
+    protected abstract int getPageCount(byte[] data);
 
     @Override
-    public Request buildRequest(IHHComicRequest comicRequest) {
+    public Request buildRequest(IHHComicRequest comicRequest) throws UnsupportedEncodingException {
         //从comicRequest中获取到key
         mKey = comicRequest.getField(RequestFieldType.KEY_WORD);
         mPage = 0;
@@ -52,6 +62,8 @@ public abstract class SearchGetStrategy extends BaseParseStrategy {
     public IHHComicResponse parseData(IHHComicResponse comicResponse, byte[] data) throws IOException {
         List<Comic> comics = parseSearchResult(data);
         comicResponse.setResponse(comics);
+        int pageCount = getPageCount(data);
+        comicResponse.addField(ResponseFieldType.PAGE_COUNT, pageCount);
         return comicResponse;
     }
 

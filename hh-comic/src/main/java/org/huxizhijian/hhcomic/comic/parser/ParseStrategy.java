@@ -20,6 +20,7 @@ import org.huxizhijian.hhcomic.comic.value.IHHComicRequest;
 import org.huxizhijian.hhcomic.comic.value.IHHComicResponse;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 import okhttp3.Request;
 
@@ -30,7 +31,7 @@ import okhttp3.Request;
  */
 public interface ParseStrategy {
 
-    public Request buildRequest(IHHComicRequest comicRequest);
+    public Request buildRequest(IHHComicRequest comicRequest) throws UnsupportedEncodingException;
 
     public IHHComicResponse parseData(IHHComicResponse comicResponse, byte[] data) throws IOException;
 

@@ -22,6 +22,7 @@ package org.huxizhijian.hhcomic.comic.type;
 public class ResponseFieldType {
     public static final int COMIC_RESPONSE = 0x0;
     public static final int PAGE = 0x1;
-    public static final int SIZE = 0x2;
+    public static final int PAGE_COUNT = 0x2;
     public static final int CHAPTER_LIST = 0x3;
+    public static final int RESULT_NAME = 0x4;
 }

@@ -59,7 +59,7 @@ public abstract class DetailStrategy extends BaseParseStrategy {
      *
      * @param data 获取到的网页内容
      */
-    protected abstract List<Chapter> parseChapter(byte[] data);
+    protected abstract List<Chapter> parseChapter(byte[] data) throws UnsupportedEncodingException;
 
     @Override
     public Request buildRequest(IHHComicRequest comicRequest) {
@@ -91,6 +91,7 @@ public abstract class DetailStrategy extends BaseParseStrategy {
         if (chapters != null) {
             // 添加结果
             comicResponse.addField(ResponseFieldType.CHAPTER_LIST, chapters);
+            comic.setChapterCount(chapters.size());
         }
         return comicResponse;
     }
