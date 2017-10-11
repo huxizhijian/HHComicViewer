@@ -30,12 +30,12 @@ import java.util.Map;
  */
 public class ComicRouter {
 
-    private final static HashMap<String, ComicSource> SOURCE_MAP = new HashMap<>();
+    private final static HashMap<Integer, ComicSource> SOURCE_MAP = new HashMap<>();
 
     private ComicRouter() {
     }
 
-    public ComicRouter getInstance() {
+    public static ComicRouter getInstance() {
         return Holder.INSTANCE;
     }
 
@@ -43,27 +43,27 @@ public class ComicRouter {
         private static final ComicRouter INSTANCE = new ComicRouter();
     }
 
-    public void addSource(String key, ComicSource comicSource) {
+    public void addSource(int key, ComicSource comicSource) {
         SOURCE_MAP.put(key, comicSource);
     }
 
-    public void removeSource(String key) {
+    public void removeSource(int key) {
         SOURCE_MAP.remove(key);
     }
 
-    public ComicSource getSource(String key) {
+    public ComicSource getSource(int key) {
         return SOURCE_MAP.get(key);
     }
 
     public List<ComicSource> getAllSource() {
         List<ComicSource> sourceList = new ArrayList<>();
-        for (Map.Entry<String, ComicSource> entry : SOURCE_MAP.entrySet()) {
+        for (Map.Entry<Integer, ComicSource> entry : SOURCE_MAP.entrySet()) {
             sourceList.add(entry.getValue());
         }
         return sourceList;
     }
 
-    public HashMap<String, ComicSource> getSourceMap() {
+    public HashMap<Integer, ComicSource> getSourceMap() {
         return SOURCE_MAP;
     }
 

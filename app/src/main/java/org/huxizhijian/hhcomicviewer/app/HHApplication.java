@@ -25,6 +25,9 @@ import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
 
 import org.huxizhijian.core.app.HHEngine;
+import org.huxizhijian.hhcomic.comic.ComicRouter;
+import org.huxizhijian.hhcomic.comic.source.HHManHua;
+import org.huxizhijian.hhcomic.comic.source.Source;
 import org.huxizhijian.hhcomicviewer.R;
 import org.huxizhijian.hhcomicviewer.option.HHComicWebVariable;
 import org.huxizhijian.sdk.SDKConstant;
@@ -39,7 +42,8 @@ import okhttp3.OkHttpClient;
 
 /**
  * 本工程的application
- * Created by wei on 2016/8/23.
+ *
+ * @Author wei on 2016/8/23.
  */
 public class HHApplication extends MultiDexApplication {
 
@@ -122,6 +126,8 @@ public class HHApplication extends MultiDexApplication {
                 .withIcon(new FontAwesomeModule())
                 .withConnectTimeOut(30000, TimeUnit.MILLISECONDS)
                 .configure();
+        ComicRouter.getInstance()
+                .addSource(Source.HHManHua, new HHManHua().defaultConfig());
     }
 
     //初始化腾讯bugly

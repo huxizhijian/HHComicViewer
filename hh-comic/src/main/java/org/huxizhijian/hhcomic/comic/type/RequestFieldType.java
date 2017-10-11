@@ -31,4 +31,5 @@ public class RequestFieldType {
     public static final int SOURCE_TYPE = 0x6;
     public static final int CATEGORY = 0x7;
     public static final int RANK_TYPE = 0x8;
+    public static final int RECOMMEND_TYPE = 0x9;
 }

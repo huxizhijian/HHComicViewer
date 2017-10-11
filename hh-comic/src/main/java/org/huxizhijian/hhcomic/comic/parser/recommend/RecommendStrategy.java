@@ -1,8 +1,8 @@
-package org.huxizhijian.hhcomic.comic.parser.rank;
+package org.huxizhijian.hhcomic.comic.parser.recommend;
 
 import org.huxizhijian.hhcomic.comic.bean.Comic;
 import org.huxizhijian.hhcomic.comic.parser.BaseParseStrategy;
-import org.huxizhijian.hhcomic.comic.type.RankType;
+import org.huxizhijian.hhcomic.comic.type.RecommendType;
 import org.huxizhijian.hhcomic.comic.type.RequestFieldType;
 import org.huxizhijian.hhcomic.comic.type.ResponseFieldType;
 import org.huxizhijian.hhcomic.comic.value.IHHComicRequest;
@@ -15,19 +15,21 @@ import java.util.List;
 import okhttp3.Request;
 
 /**
- * @Author huxizhijian on 2017/10/10.
+ * 主页推荐的策略
+ *
+ * @Author huxizhijian on 2017/10/11.
  */
 
-public abstract class RankStrategy extends BaseParseStrategy {
+public abstract class RecommendStrategy extends BaseParseStrategy {
 
     /**
-     * 获取排行url
+     * 获取推荐url
      *
-     * @param rankType 排行榜类别，如人气榜、更新榜等等
-     * @param page     本页页数
-     * @param size     一页展示的Comic
+     * @param recommendType 推荐类别，首页推荐等等
+     * @param page          本页页数
+     * @param size          一页展示的Comic
      */
-    protected abstract String getRankUrl(Enum<RankType> rankType, int page, int size);
+    protected abstract String getRecommendUrl(Enum<RecommendType> recommendType, int page, int size);
 
     /**
      * 获取总页数
@@ -39,25 +41,25 @@ public abstract class RankStrategy extends BaseParseStrategy {
     /**
      * 解析Rank的Comic
      */
-    protected abstract List<Comic> parseRankComics(byte[] data) throws UnsupportedEncodingException;
+    protected abstract List<Comic> parseRecommendComics(byte[] data, Enum<RecommendType> recommendType) throws UnsupportedEncodingException;
 
-    private Enum<RankType> mRankType;
+    private Enum<RecommendType> mRecommendType;
     private int mPage;
     private int mSize;
 
     @Override
     public Request buildRequest(IHHComicRequest comicRequest) throws UnsupportedEncodingException {
-        mRankType = comicRequest.getField(RequestFieldType.RANK_TYPE);
+        mRecommendType = comicRequest.getField(RequestFieldType.RECOMMEND_TYPE);
         mPage = comicRequest.getField(RequestFieldType.PAGE);
         mSize = comicRequest.getField(RequestFieldType.SIZE);
-        return getRequestGetAndWithUrl(getRankUrl(mRankType, mPage, mSize));
+        return getRequestGetAndWithUrl(getRecommendUrl(mRecommendType, mPage, mSize));
     }
 
     @Override
     public IHHComicResponse parseData(IHHComicResponse comicResponse, byte[] data) throws IOException {
         comicResponse.addField(ResponseFieldType.PAGE_COUNT, getPageCount(data));
         comicResponse.addField(ResponseFieldType.PAGE, mPage);
-        comicResponse.setResponse(parseRankComics(data));
+        comicResponse.setResponse(parseRecommendComics(data, mRecommendType));
         return comicResponse;
     }
 
