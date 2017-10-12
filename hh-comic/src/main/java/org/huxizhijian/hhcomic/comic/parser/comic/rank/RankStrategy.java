@@ -1,7 +1,7 @@
-package org.huxizhijian.hhcomic.comic.parser.rank;
+package org.huxizhijian.hhcomic.comic.parser.comic.rank;
 
 import org.huxizhijian.hhcomic.comic.bean.Comic;
-import org.huxizhijian.hhcomic.comic.parser.BaseComicParseStrategy;
+import org.huxizhijian.hhcomic.comic.parser.comic.BaseComicParseStrategy;
 import org.huxizhijian.hhcomic.comic.type.RankType;
 import org.huxizhijian.hhcomic.comic.type.RequestFieldType;
 import org.huxizhijian.hhcomic.comic.type.ResponseFieldType;

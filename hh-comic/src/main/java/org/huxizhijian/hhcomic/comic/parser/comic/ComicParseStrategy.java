@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.huxizhijian.hhcomic.comic.parser;
+package org.huxizhijian.hhcomic.comic.parser.comic;
 
 import org.huxizhijian.hhcomic.comic.value.IComicRequest;
 import org.huxizhijian.hhcomic.comic.value.IComicResponse;

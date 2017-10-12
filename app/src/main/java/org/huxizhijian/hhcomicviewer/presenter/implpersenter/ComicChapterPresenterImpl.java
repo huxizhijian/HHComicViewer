@@ -27,7 +27,7 @@ import org.huxizhijian.sdk.network.service.NormalResponse;
 import java.io.UnsupportedEncodingException;
 
 /**
- * Created by wei on 2017/1/7.
+ * @Author wei on 2017/1/7.
  */
 
 public class ComicChapterPresenterImpl implements IComicChapterPresenter {

@@ -1,10 +1,10 @@
-package org.huxizhijian.hhcomic.comic.parser.detail;
+package org.huxizhijian.hhcomic.comic.parser.comic.detail;
 
 import org.huxizhijian.core.app.ConfigKeys;
 import org.huxizhijian.core.app.HHEngine;
 import org.huxizhijian.hhcomic.comic.bean.Chapter;
 import org.huxizhijian.hhcomic.comic.bean.Comic;
-import org.huxizhijian.hhcomic.comic.parser.BaseComicParseStrategy;
+import org.huxizhijian.hhcomic.comic.parser.comic.BaseComicParseStrategy;
 import org.huxizhijian.hhcomic.comic.type.RequestFieldType;
 import org.huxizhijian.hhcomic.comic.type.ResponseFieldType;
 import org.huxizhijian.hhcomic.comic.value.IComicRequest;

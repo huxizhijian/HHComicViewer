@@ -1,7 +1,7 @@
 package org.huxizhijian.hhcomic.comic.source.base;
 
 import org.huxizhijian.hhcomic.comic.ComicDataSource;
-import org.huxizhijian.hhcomic.comic.parser.ComicParseStrategy;
+import org.huxizhijian.hhcomic.comic.parser.comic.ComicParseStrategy;
 import org.huxizhijian.hhcomic.comic.type.CategoryType;
 import org.huxizhijian.hhcomic.comic.type.RankType;
 import org.huxizhijian.hhcomic.comic.type.RecommendType;

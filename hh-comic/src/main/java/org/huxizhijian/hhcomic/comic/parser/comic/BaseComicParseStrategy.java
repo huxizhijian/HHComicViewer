@@ -1,4 +1,4 @@
-package org.huxizhijian.hhcomic.comic.parser;
+package org.huxizhijian.hhcomic.comic.parser.comic;
 
 import okhttp3.Request;
 

@@ -2,11 +2,11 @@ package org.huxizhijian.hhcomic.comic.source;
 
 import org.huxizhijian.hhcomic.comic.bean.Chapter;
 import org.huxizhijian.hhcomic.comic.bean.Comic;
-import org.huxizhijian.hhcomic.comic.parser.category.CategoryStrategy;
-import org.huxizhijian.hhcomic.comic.parser.detail.DetailStrategy;
-import org.huxizhijian.hhcomic.comic.parser.rank.RankStrategy;
-import org.huxizhijian.hhcomic.comic.parser.recommend.RecommendStrategy;
-import org.huxizhijian.hhcomic.comic.parser.search.SearchGetStrategy;
+import org.huxizhijian.hhcomic.comic.parser.comic.category.CategoryStrategy;
+import org.huxizhijian.hhcomic.comic.parser.comic.detail.DetailStrategy;
+import org.huxizhijian.hhcomic.comic.parser.comic.rank.RankStrategy;
+import org.huxizhijian.hhcomic.comic.parser.comic.recommend.RecommendStrategy;
+import org.huxizhijian.hhcomic.comic.parser.comic.search.SearchGetStrategy;
 import org.huxizhijian.hhcomic.comic.source.base.ComicSource;
 import org.huxizhijian.hhcomic.comic.source.base.Source;
 import org.huxizhijian.hhcomic.comic.type.CategoryType;
@@ -103,7 +103,7 @@ public class HHManHua extends ComicSource {
     }
 
     /**
-     * 获取Comic详情策略
+     * 获取Comic详情信息策略
      */
     public class HHDetailStrategy extends DetailStrategy {
 
@@ -118,9 +118,11 @@ public class HHManHua extends ComicSource {
             String content = new String(data, "utf-8");
             //初始化comic
             Comic comic = new Comic();
+            //添加来源
             comic.setSource(SOURCE_TYPE);
+            //添加ComicID
             comic.setCid(comicId);
-            //获取到网页内容时自动完善内容
+            //解析网页内容，将解析到的数据添加到Comic实例中
             Document doc = Jsoup.parse(content);
             Element comicInfoDiv = doc.select("div[class=product]").first();
 
@@ -246,7 +248,7 @@ public class HHManHua extends ComicSource {
 
         @Override
         protected int getPageCount(byte[] data) {
-            // 由于网站限制，永远只有一页
+            // 由于搜索网站的限制，永远只有一页
             return 1;
         }
     }
