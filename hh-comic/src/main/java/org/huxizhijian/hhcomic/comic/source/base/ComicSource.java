@@ -1,7 +1,7 @@
-package org.huxizhijian.hhcomic.comic.source;
+package org.huxizhijian.hhcomic.comic.source.base;
 
 import org.huxizhijian.hhcomic.comic.ComicDataSource;
-import org.huxizhijian.hhcomic.comic.parser.ParseStrategy;
+import org.huxizhijian.hhcomic.comic.parser.ComicParseStrategy;
 import org.huxizhijian.hhcomic.comic.type.CategoryType;
 import org.huxizhijian.hhcomic.comic.type.RankType;
 import org.huxizhijian.hhcomic.comic.type.RecommendType;
@@ -22,12 +22,12 @@ public abstract class ComicSource {
     private String mSourceName;
     private String mBaseUrl;
 
-    private final Map<Integer, ParseStrategy> STRATEGY_MAP;
+    private final Map<Integer, ComicParseStrategy> STRATEGY_MAP;
     protected final Map<Enum<RankType>, TypeContent> RANK_TYPE_MAP;
     protected final Map<Enum<CategoryType>, TypeContent> CATEGORY_TYPE_MAP;
     protected final Map<Enum<RecommendType>, TypeContent> RECOMMEND_TYPE_MAP;
 
-    ComicSource() {
+    public ComicSource() {
         STRATEGY_MAP = new LinkedHashMap<>();
         RANK_TYPE_MAP = new LinkedHashMap<>();
         CATEGORY_TYPE_MAP = new LinkedHashMap<>();
@@ -42,36 +42,36 @@ public abstract class ComicSource {
 
     public abstract int getSourceType();
 
-    public ComicSource addAllStraegy(Map<Integer, ParseStrategy> strategyMap) {
+    public ComicSource addAllStrategy(Map<Integer, ComicParseStrategy> strategyMap) {
         if (strategyMap != null) {
             STRATEGY_MAP.putAll(strategyMap);
         }
         return this;
     }
 
-    public ComicSource addStragegy(int strategyKey, ParseStrategy strategy) {
+    public ComicSource addStrategy(int strategyKey, ComicParseStrategy strategy) {
         STRATEGY_MAP.put(strategyKey, strategy);
         return this;
     }
 
-    public ComicSource removeStragegy(int strategyKey) {
+    public ComicSource removeStrategy(int strategyKey) {
         STRATEGY_MAP.remove(strategyKey);
         return this;
     }
 
-    public List<Integer> getAllStragegyKey() {
+    public List<Integer> getAllStrategyKey() {
         List<Integer> keys = new ArrayList<>();
-        Set<Map.Entry<Integer, ParseStrategy>> entrySet = STRATEGY_MAP.entrySet();
-        for (Map.Entry<Integer, ParseStrategy> entry : entrySet) {
+        Set<Map.Entry<Integer, ComicParseStrategy>> entrySet = STRATEGY_MAP.entrySet();
+        for (Map.Entry<Integer, ComicParseStrategy> entry : entrySet) {
             keys.add(entry.getKey());
         }
         return keys;
     }
 
-    public List<ParseStrategy> getAllStragegy() {
-        List<ParseStrategy> strategies = new ArrayList<>();
-        Set<Map.Entry<Integer, ParseStrategy>> entrySet = STRATEGY_MAP.entrySet();
-        for (Map.Entry<Integer, ParseStrategy> entry : entrySet) {
+    public List<ComicParseStrategy> getAllStrategy() {
+        List<ComicParseStrategy> strategies = new ArrayList<>();
+        Set<Map.Entry<Integer, ComicParseStrategy>> entrySet = STRATEGY_MAP.entrySet();
+        for (Map.Entry<Integer, ComicParseStrategy> entry : entrySet) {
             strategies.add(entry.getValue());
         }
         return strategies;
@@ -90,8 +90,8 @@ public abstract class ComicSource {
     }
 
     public class TypeContent {
-        String title;
-        String urlKey;
+        public String title;
+        public String urlKey;
 
         public TypeContent() {
         }
@@ -103,7 +103,7 @@ public abstract class ComicSource {
 
     }
 
-    public ParseStrategy getStragey(int strategyKey) {
+    public ComicParseStrategy getStrategy(int strategyKey) {
         return STRATEGY_MAP.get(strategyKey);
     }
 

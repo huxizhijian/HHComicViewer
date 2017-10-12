@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.huxizhijian.hhcomic.usecase.base;
+package org.huxizhijian.hhcomic.usecase;
 
 import android.os.Handler;
 

@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-package org.huxizhijian.hhcomic.usecase.base;
+package org.huxizhijian.hhcomic.usecase;
+
+import org.huxizhijian.hhcomic.comic.value.IComicRequest;
+import org.huxizhijian.hhcomic.comic.value.IComicResponse;
 
 /**
  * 用例（UseCase）类的基础类，这是DomianLayer的基本
@@ -50,16 +53,17 @@ public abstract class UseCase<Q extends UseCase.RequestValues, P extends UseCase
     protected abstract void executeUseCase(Q requestValues);
 
     /**
-     * 传入参数，IHHComicRequest
+     * 传入参数，IComicRequest
      */
     public interface RequestValues {
-        int getSourceType();
+        IComicRequest getValues();
     }
 
     /**
-     * 返回参数，IHHComicResponse
+     * 返回参数，IComicResponse
      */
     public interface ResponseValue {
+        IComicResponse getValues();
     }
 
     public interface UseCaseCallback<R> {

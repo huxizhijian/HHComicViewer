@@ -1,12 +1,12 @@
 package org.huxizhijian.hhcomic.comic.parser.category;
 
 import org.huxizhijian.hhcomic.comic.bean.Comic;
-import org.huxizhijian.hhcomic.comic.parser.BaseParseStrategy;
+import org.huxizhijian.hhcomic.comic.parser.BaseComicParseStrategy;
 import org.huxizhijian.hhcomic.comic.type.CategoryType;
 import org.huxizhijian.hhcomic.comic.type.RequestFieldType;
 import org.huxizhijian.hhcomic.comic.type.ResponseFieldType;
-import org.huxizhijian.hhcomic.comic.value.IHHComicRequest;
-import org.huxizhijian.hhcomic.comic.value.IHHComicResponse;
+import org.huxizhijian.hhcomic.comic.value.IComicRequest;
+import org.huxizhijian.hhcomic.comic.value.IComicResponse;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -20,7 +20,7 @@ import okhttp3.Request;
  * @Author huxizhijian on 2017/10/11.
  */
 
-public abstract class CategoryStrategy extends BaseParseStrategy {
+public abstract class CategoryStrategy extends BaseComicParseStrategy {
 
     private Enum<CategoryType> mCategoryType;
     private int mPage;
@@ -43,7 +43,7 @@ public abstract class CategoryStrategy extends BaseParseStrategy {
     protected abstract List<Comic> parseRecommend(byte[] data) throws UnsupportedEncodingException;
 
     @Override
-    public Request buildRequest(IHHComicRequest comicRequest) throws UnsupportedEncodingException {
+    public Request buildRequest(IComicRequest comicRequest) throws UnsupportedEncodingException {
         mCategoryType = comicRequest.getField(RequestFieldType.CATEGORY);
         mPage = comicRequest.getField(RequestFieldType.PAGE);
         mSize = comicRequest.getField(RequestFieldType.SIZE);
@@ -51,7 +51,7 @@ public abstract class CategoryStrategy extends BaseParseStrategy {
     }
 
     @Override
-    public IHHComicResponse parseData(IHHComicResponse comicResponse, byte[] data) throws IOException {
+    public IComicResponse parseData(IComicResponse comicResponse, byte[] data) throws IOException {
         comicResponse.addField(ResponseFieldType.PAGE, mPage);
         mPageCount = getPageCount(data);
         comicResponse.addField(ResponseFieldType.PAGE_COUNT, mPageCount);

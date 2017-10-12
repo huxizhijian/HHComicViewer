@@ -1,11 +1,11 @@
 package org.huxizhijian.hhcomic.comic.parser.search;
 
 import org.huxizhijian.hhcomic.comic.bean.Comic;
-import org.huxizhijian.hhcomic.comic.parser.BaseParseStrategy;
+import org.huxizhijian.hhcomic.comic.parser.BaseComicParseStrategy;
 import org.huxizhijian.hhcomic.comic.type.RequestFieldType;
 import org.huxizhijian.hhcomic.comic.type.ResponseFieldType;
-import org.huxizhijian.hhcomic.comic.value.IHHComicRequest;
-import org.huxizhijian.hhcomic.comic.value.IHHComicResponse;
+import org.huxizhijian.hhcomic.comic.value.IComicRequest;
+import org.huxizhijian.hhcomic.comic.value.IComicResponse;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -19,7 +19,7 @@ import okhttp3.Request;
  * @Author huxizhijian on 2017/10/9.
  */
 
-public abstract class SearchGetStrategy extends BaseParseStrategy {
+public abstract class SearchGetStrategy extends BaseComicParseStrategy {
 
     private String mKey;
     private int mPage;
@@ -49,7 +49,7 @@ public abstract class SearchGetStrategy extends BaseParseStrategy {
     protected abstract int getPageCount(byte[] data);
 
     @Override
-    public Request buildRequest(IHHComicRequest comicRequest) throws UnsupportedEncodingException {
+    public Request buildRequest(IComicRequest comicRequest) throws UnsupportedEncodingException {
         //从comicRequest中获取到key
         mKey = comicRequest.getField(RequestFieldType.KEY_WORD);
         mPage = 0;
@@ -59,7 +59,7 @@ public abstract class SearchGetStrategy extends BaseParseStrategy {
     }
 
     @Override
-    public IHHComicResponse parseData(IHHComicResponse comicResponse, byte[] data) throws IOException {
+    public IComicResponse parseData(IComicResponse comicResponse, byte[] data) throws IOException {
         List<Comic> comics = parseSearchResult(data);
         comicResponse.setResponse(comics);
         int pageCount = getPageCount(data);

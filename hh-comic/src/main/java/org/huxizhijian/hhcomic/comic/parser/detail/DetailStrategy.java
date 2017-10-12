@@ -4,11 +4,11 @@ import org.huxizhijian.core.app.ConfigKeys;
 import org.huxizhijian.core.app.HHEngine;
 import org.huxizhijian.hhcomic.comic.bean.Chapter;
 import org.huxizhijian.hhcomic.comic.bean.Comic;
-import org.huxizhijian.hhcomic.comic.parser.BaseParseStrategy;
+import org.huxizhijian.hhcomic.comic.parser.BaseComicParseStrategy;
 import org.huxizhijian.hhcomic.comic.type.RequestFieldType;
 import org.huxizhijian.hhcomic.comic.type.ResponseFieldType;
-import org.huxizhijian.hhcomic.comic.value.IHHComicRequest;
-import org.huxizhijian.hhcomic.comic.value.IHHComicResponse;
+import org.huxizhijian.hhcomic.comic.value.IComicRequest;
+import org.huxizhijian.hhcomic.comic.value.IComicResponse;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -22,7 +22,7 @@ import okhttp3.Response;
  * @Author huxizhijian on 2017/10/9.
  */
 
-public abstract class DetailStrategy extends BaseParseStrategy {
+public abstract class DetailStrategy extends BaseComicParseStrategy {
 
     // Comic id
     private String mComicId;
@@ -62,7 +62,7 @@ public abstract class DetailStrategy extends BaseParseStrategy {
     protected abstract List<Chapter> parseChapter(byte[] data) throws UnsupportedEncodingException;
 
     @Override
-    public Request buildRequest(IHHComicRequest comicRequest) {
+    public Request buildRequest(IComicRequest comicRequest) {
         // 取出cid，该值为必要
         if (comicRequest.getField(RequestFieldType.COMIC_ID) == null) {
             throw new NullPointerException("comic_id should not be null!");
@@ -72,7 +72,7 @@ public abstract class DetailStrategy extends BaseParseStrategy {
     }
 
     @Override
-    public IHHComicResponse parseData(IHHComicResponse comicResponse, byte[] data) throws IOException {
+    public IComicResponse parseData(IComicResponse comicResponse, byte[] data) throws IOException {
         Comic comic = parseComic(data, mComicId);
         // 添加返回结果
         comicResponse.setResponse(comic);

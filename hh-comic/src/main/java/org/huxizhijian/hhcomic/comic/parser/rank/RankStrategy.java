@@ -1,12 +1,12 @@
 package org.huxizhijian.hhcomic.comic.parser.rank;
 
 import org.huxizhijian.hhcomic.comic.bean.Comic;
-import org.huxizhijian.hhcomic.comic.parser.BaseParseStrategy;
+import org.huxizhijian.hhcomic.comic.parser.BaseComicParseStrategy;
 import org.huxizhijian.hhcomic.comic.type.RankType;
 import org.huxizhijian.hhcomic.comic.type.RequestFieldType;
 import org.huxizhijian.hhcomic.comic.type.ResponseFieldType;
-import org.huxizhijian.hhcomic.comic.value.IHHComicRequest;
-import org.huxizhijian.hhcomic.comic.value.IHHComicResponse;
+import org.huxizhijian.hhcomic.comic.value.IComicRequest;
+import org.huxizhijian.hhcomic.comic.value.IComicResponse;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -18,7 +18,7 @@ import okhttp3.Request;
  * @Author huxizhijian on 2017/10/10.
  */
 
-public abstract class RankStrategy extends BaseParseStrategy {
+public abstract class RankStrategy extends BaseComicParseStrategy {
 
     /**
      * 获取排行url
@@ -46,7 +46,7 @@ public abstract class RankStrategy extends BaseParseStrategy {
     private int mSize;
 
     @Override
-    public Request buildRequest(IHHComicRequest comicRequest) throws UnsupportedEncodingException {
+    public Request buildRequest(IComicRequest comicRequest) throws UnsupportedEncodingException {
         mRankType = comicRequest.getField(RequestFieldType.RANK_TYPE);
         mPage = comicRequest.getField(RequestFieldType.PAGE);
         mSize = comicRequest.getField(RequestFieldType.SIZE);
@@ -54,7 +54,7 @@ public abstract class RankStrategy extends BaseParseStrategy {
     }
 
     @Override
-    public IHHComicResponse parseData(IHHComicResponse comicResponse, byte[] data) throws IOException {
+    public IComicResponse parseData(IComicResponse comicResponse, byte[] data) throws IOException {
         comicResponse.addField(ResponseFieldType.PAGE_COUNT, getPageCount(data));
         comicResponse.addField(ResponseFieldType.PAGE, mPage);
         comicResponse.setResponse(parseRankComics(data));

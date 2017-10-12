@@ -17,9 +17,10 @@
 package org.huxizhijian.hhcomic.comic;
 
 import org.huxizhijian.hhcomic.comic.bean.Comic;
-import org.huxizhijian.hhcomic.comic.parser.BaseParser;
-import org.huxizhijian.hhcomic.comic.source.ComicSource;
+import org.huxizhijian.hhcomic.comic.source.base.ComicSource;
 import org.huxizhijian.hhcomic.comic.type.ComicDataState;
+import org.huxizhijian.hhcomic.comic.value.IComicRequest;
+import org.huxizhijian.hhcomic.comic.value.IComicResponse;
 
 import java.util.List;
 
@@ -31,43 +32,24 @@ import java.util.List;
 public interface ComicDataSource {
 
     /**
-     * 单个Comic获取回调
+     * 结果获取回调
      */
-    interface GetComicCallback {
-        void onComicLoaded(Comic comic);
+    interface ComicDataCallback {
+        void onComicsLoaded(IComicResponse responseValues);
+
+        void onError(Throwable throwable);
 
         void onDataNotAvailable();
     }
 
     /**
-     * Comic集合获取回调
-     */
-    interface GetComicsCallback {
-        void onComicsLoaded(List<Comic> comics, int page, int size);
-
-        void onDataNotAvailable();
-    }
-
-    /**
-     * 获取单个Comic
+     * 获取单个或者多个Comic，具体根据{@link IComicRequest}的实现类封装的参数决定
      *
-     * @param source      漫画来源
-     * @param comicId     来源网站标识的唯一id
-     * @param checkUpdate 是否使用网络检查其更新（如果有DB保存亦不立即返回）
-     * @param callback    回调
+     * @param source        漫画来源
+     * @param requestValues 请求参数
+     * @param callback      回调
      */
-    void getComic(ComicSource source, String comicId, boolean checkUpdate, GetComicCallback callback);
-
-    /**
-     * 从网络或者本地获取到Comic的集合
-     *
-     * @param source   漫画来源
-     * @param type     ComicDataSourceType或者其子类标注的常量值，通常为来源网站类{@link BaseParser}的子类的内部类实现
-     * @param page     页码
-     * @param size     每页返回的Comic数，通常不管用
-     * @param callback 回调
-     */
-    void getComics(ComicSource source, int type, int page, int size, GetComicsCallback callback);
+    void get(ComicSource source, IComicRequest requestValues, ComicDataCallback callback);
 
     /**
      * 保存一个Comic到DB或者云端中，如果已经存在，改变其状态
@@ -116,6 +98,6 @@ public interface ComicDataSource {
      *
      * @param callback 回调
      */
-    void checkMarkComicUpdate(GetComicsCallback callback);
+    void checkMarkComicUpdate(ComicDataCallback callback);
 
 }

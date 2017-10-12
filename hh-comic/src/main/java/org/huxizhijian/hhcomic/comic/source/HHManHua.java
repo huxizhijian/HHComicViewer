@@ -7,6 +7,8 @@ import org.huxizhijian.hhcomic.comic.parser.detail.DetailStrategy;
 import org.huxizhijian.hhcomic.comic.parser.rank.RankStrategy;
 import org.huxizhijian.hhcomic.comic.parser.recommend.RecommendStrategy;
 import org.huxizhijian.hhcomic.comic.parser.search.SearchGetStrategy;
+import org.huxizhijian.hhcomic.comic.source.base.ComicSource;
+import org.huxizhijian.hhcomic.comic.source.base.Source;
 import org.huxizhijian.hhcomic.comic.type.CategoryType;
 import org.huxizhijian.hhcomic.comic.type.ComicDataSourceType;
 import org.huxizhijian.hhcomic.comic.type.RankType;
@@ -93,11 +95,11 @@ public class HHManHua extends ComicSource {
      */
     public ComicSource defaultConfig() {
         return this
-                .addStragegy(ComicDataSourceType.WEB_DETAIL, new HHDetailStrategy())
-                .addStragegy(ComicDataSourceType.WEB_SEARCH, new HHSearchStrategy())
-                .addStragegy(ComicDataSourceType.WEB_RANK, new HHRankStrategy())
-                .addStragegy(ComicDataSourceType.WEB_RECOMMENDED, new HHRecommendStrategy())
-                .addStragegy(ComicDataSourceType.WEB_CATEGORY, new HHCategoryStrategy());
+                .addStrategy(ComicDataSourceType.WEB_DETAIL, new HHDetailStrategy())
+                .addStrategy(ComicDataSourceType.WEB_SEARCH, new HHSearchStrategy())
+                .addStrategy(ComicDataSourceType.WEB_RANK, new HHRankStrategy())
+                .addStrategy(ComicDataSourceType.WEB_RECOMMENDED, new HHRecommendStrategy())
+                .addStrategy(ComicDataSourceType.WEB_CATEGORY, new HHCategoryStrategy());
     }
 
     /**

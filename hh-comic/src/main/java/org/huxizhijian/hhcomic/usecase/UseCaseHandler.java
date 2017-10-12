@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.huxizhijian.hhcomic.usecase.base;
+package org.huxizhijian.hhcomic.usecase;
 
 /**
  * 使用线程调度器{@link UseCaseScheduler}来运行用例{@link UseCase}

@@ -1,4 +1,4 @@
-package org.huxizhijian.hhcomic.comic.source;
+package org.huxizhijian.hhcomic.comic.source.base;
 
 /**
  * @Author huxizhijian on 2017/10/9.

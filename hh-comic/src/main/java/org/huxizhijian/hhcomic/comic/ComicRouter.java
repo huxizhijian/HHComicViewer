@@ -16,10 +16,10 @@
 
 package org.huxizhijian.hhcomic.comic;
 
-import org.huxizhijian.hhcomic.comic.source.ComicSource;
+import org.huxizhijian.hhcomic.comic.source.base.ComicSource;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,7 +30,7 @@ import java.util.Map;
  */
 public class ComicRouter {
 
-    private final static HashMap<Integer, ComicSource> SOURCE_MAP = new HashMap<>();
+    private final static Map<Integer, ComicSource> SOURCE_MAP = new LinkedHashMap<>();
 
     private ComicRouter() {
     }
@@ -63,7 +63,7 @@ public class ComicRouter {
         return sourceList;
     }
 
-    public HashMap<Integer, ComicSource> getSourceMap() {
+    public Map<Integer, ComicSource> getSourceMap() {
         return SOURCE_MAP;
     }
 

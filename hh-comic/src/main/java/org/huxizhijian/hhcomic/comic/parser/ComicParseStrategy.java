@@ -14,19 +14,25 @@
  * limitations under the License.
  */
 
-package org.huxizhijian.hhcomic.usecase.base;
+package org.huxizhijian.hhcomic.comic.parser;
+
+import org.huxizhijian.hhcomic.comic.value.IComicRequest;
+import org.huxizhijian.hhcomic.comic.value.IComicResponse;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+
+import okhttp3.Request;
 
 /**
- * @author huxizhijian 2017/9/17
+ * 解析策略
+ *
+ * @author huxizhijian 2017/9/29
  */
-public interface UseCaseScheduler {
+public interface ComicParseStrategy {
 
-    void execute(Runnable runnable);
+    public Request buildRequest(IComicRequest comicRequest) throws UnsupportedEncodingException;
 
-    <V extends UseCase.ResponseValue> void notifyResponse(final V response,
-                                                          final UseCase.UseCaseCallback<V> useCaseCallback);
-
-    <V extends UseCase.ResponseValue> void onError(
-            final UseCase.UseCaseCallback<V> useCaseCallback);
+    public IComicResponse parseData(IComicResponse comicResponse, byte[] data) throws IOException;
 
 }
