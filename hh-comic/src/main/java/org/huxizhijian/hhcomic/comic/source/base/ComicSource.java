@@ -1,10 +1,7 @@
 package org.huxizhijian.hhcomic.comic.source.base;
 
-import org.huxizhijian.hhcomic.comic.ComicDataSource;
+import org.huxizhijian.hhcomic.comic.repository.ComicDataSource;
 import org.huxizhijian.hhcomic.comic.parser.comic.ComicParseStrategy;
-import org.huxizhijian.hhcomic.comic.type.CategoryType;
-import org.huxizhijian.hhcomic.comic.type.RankType;
-import org.huxizhijian.hhcomic.comic.type.RecommendType;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -23,9 +20,9 @@ public abstract class ComicSource {
     private String mBaseUrl;
 
     private final Map<Integer, ComicParseStrategy> STRATEGY_MAP;
-    protected final Map<Enum<RankType>, TypeContent> RANK_TYPE_MAP;
-    protected final Map<Enum<CategoryType>, TypeContent> CATEGORY_TYPE_MAP;
-    protected final Map<Enum<RecommendType>, TypeContent> RECOMMEND_TYPE_MAP;
+    protected final Map<String, String> RANK_TYPE_MAP;
+    protected final Map<String, String> CATEGORY_TYPE_MAP;
+    protected final Map<String, String> RECOMMEND_TYPE_MAP;
 
     public ComicSource() {
         STRATEGY_MAP = new LinkedHashMap<>();
@@ -77,15 +74,15 @@ public abstract class ComicSource {
         return strategies;
     }
 
-    public Map<Enum<RankType>, TypeContent> getRankTypeMap() {
+    public Map<String, String> getRankTypeMap() {
         return RANK_TYPE_MAP;
     }
 
-    public Map<Enum<CategoryType>, TypeContent> getCategoryTypeMap() {
+    public Map<String, String> getCategoryTypeMap() {
         return CATEGORY_TYPE_MAP;
     }
 
-    public Map<Enum<RecommendType>, TypeContent> getRecommendTypeMap() {
+    public Map<String, String> getRecommendTypeMap() {
         return RECOMMEND_TYPE_MAP;
     }
 

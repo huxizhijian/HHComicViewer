@@ -72,7 +72,7 @@ public abstract class DetailStrategy extends BaseComicParseStrategy {
     }
 
     @Override
-    public IComicResponse parseData(IComicResponse comicResponse, byte[] data) throws IOException {
+    public IComicResponse parseData(IComicResponse comicResponse, byte[] data) throws IOException, NullPointerException {
         Comic comic = parseComic(data, mComicId);
         // 添加返回结果
         comicResponse.setResponse(comic);
@@ -83,9 +83,11 @@ public abstract class DetailStrategy extends BaseComicParseStrategy {
             Request request = buildChapterRequest(mComicId);
             OkHttpClient client = HHEngine.getConfiguration(ConfigKeys.OKHTTP_CLIENT);
             Response response = client.newCall(request).execute();
-            if (response.isSuccessful()) {
+            if (response.isSuccessful() && response.code() > 199 && response.code() < 300) {
                 byte[] html = response.body().bytes();
                 chapters = parseChapter(html);
+            } else {
+                throw new IOException("OKHttp connect no successful");
             }
         }
         if (chapters != null) {

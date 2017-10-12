@@ -28,7 +28,7 @@ public class ComicDataSourceType {
     public static final int WEB_SEARCH = 0x3;
     public static final int WEB_DETAIL = 0x4;
     public static final int WEB_RECOMMENDED = 0x5;
-    public static final int WEB_RANK = 0x5;
-    public static final int WEB_CATEGORY = 0x6;
-    public static final int WEB_GET_CHAPTER = 0x7;
+    public static final int WEB_RANK = 0x6;
+    public static final int WEB_CATEGORY = 0x7;
+    public static final int WEB_GET_CHAPTER = 0x8;
 }

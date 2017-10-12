@@ -2,7 +2,6 @@ package org.huxizhijian.hhcomic.comic.parser.comic.recommend;
 
 import org.huxizhijian.hhcomic.comic.bean.Comic;
 import org.huxizhijian.hhcomic.comic.parser.comic.BaseComicParseStrategy;
-import org.huxizhijian.hhcomic.comic.type.RecommendType;
 import org.huxizhijian.hhcomic.comic.type.RequestFieldType;
 import org.huxizhijian.hhcomic.comic.type.ResponseFieldType;
 import org.huxizhijian.hhcomic.comic.value.IComicRequest;
@@ -29,7 +28,7 @@ public abstract class RecommendStrategy extends BaseComicParseStrategy {
      * @param page          本页页数
      * @param size          一页展示的Comic
      */
-    protected abstract String getRecommendUrl(Enum<RecommendType> recommendType, int page, int size);
+    protected abstract String getRecommendUrl(String recommendType, int page, int size);
 
     /**
      * 获取总页数
@@ -41,9 +40,9 @@ public abstract class RecommendStrategy extends BaseComicParseStrategy {
     /**
      * 解析Rank的Comic
      */
-    protected abstract List<Comic> parseRecommendComics(byte[] data, Enum<RecommendType> recommendType) throws UnsupportedEncodingException;
+    protected abstract List<Comic> parseRecommendComics(byte[] data, String recommendType) throws UnsupportedEncodingException;
 
-    private Enum<RecommendType> mRecommendType;
+    private String mRecommendType;
     private int mPage;
     private int mSize;
 

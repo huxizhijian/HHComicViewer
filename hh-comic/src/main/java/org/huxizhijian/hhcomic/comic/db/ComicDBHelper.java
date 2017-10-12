@@ -43,7 +43,7 @@ public class ComicDBHelper implements IComicDBHelper {
         sComicDao = daoSession.getComicDao();
     }
 
-    public ComicDBHelper getInstance() {
+    public static ComicDBHelper getInstance() {
         return Holder.INSTANCE;
     }
 
@@ -67,7 +67,7 @@ public class ComicDBHelper implements IComicDBHelper {
     }
 
     @Override
-    public synchronized Comic get(int source, long comicId) {
+    public synchronized Comic get(int source, String comicId) {
         QueryBuilder<Comic> qb = sComicDao.queryBuilder();
         qb.and(ComicDao.Properties.Source.eq(source), ComicDao.Properties.Cid.eq(comicId));
         return qb.list().get(0);

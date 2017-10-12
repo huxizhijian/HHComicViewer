@@ -9,10 +9,7 @@ import org.huxizhijian.hhcomic.comic.parser.comic.recommend.RecommendStrategy;
 import org.huxizhijian.hhcomic.comic.parser.comic.search.SearchGetStrategy;
 import org.huxizhijian.hhcomic.comic.source.base.ComicSource;
 import org.huxizhijian.hhcomic.comic.source.base.Source;
-import org.huxizhijian.hhcomic.comic.type.CategoryType;
 import org.huxizhijian.hhcomic.comic.type.ComicDataSourceType;
-import org.huxizhijian.hhcomic.comic.type.RankType;
-import org.huxizhijian.hhcomic.comic.type.RecommendType;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -56,38 +53,38 @@ public class HHManHua extends ComicSource {
 
     public HHManHua() {
         // 支持的排行类别
-        RANK_TYPE_MAP.put(RankType.HH_NEW_RATING, new TypeContent("最近更新", "/top/newrating.aspx"));
-        RANK_TYPE_MAP.put(RankType.HH_TOP_READER, new TypeContent("最多人看", "/top/hotrating.aspx"));
-        RANK_TYPE_MAP.put(RankType.HH_TOP_RATING, new TypeContent("评分最高", "/top/toprating.aspx"));
-        RANK_TYPE_MAP.put(RankType.HH_HOT_COMMIT, new TypeContent("最多人评论", "/top/hoorating.aspx"));
+        RANK_TYPE_MAP.put("最近更新", "/top/newrating.aspx");
+        RANK_TYPE_MAP.put("最多人看", "/top/hotrating.aspx");
+        RANK_TYPE_MAP.put("评分最高", "/top/toprating.aspx");
+        RANK_TYPE_MAP.put("最多人评论", "/top/hoorating.aspx");
         // 支持的分类类别
-        CATEGORY_TYPE_MAP.put(CategoryType.HH_MENGXI, new TypeContent("萌系", "1"));
-        CATEGORY_TYPE_MAP.put(CategoryType.HH_GAOXIAO, new TypeContent("搞笑", "2"));
-        CATEGORY_TYPE_MAP.put(CategoryType.HH_GEDOU, new TypeContent("格斗", "3"));
-        CATEGORY_TYPE_MAP.put(CategoryType.HH_KEHUAN, new TypeContent("科幻", "4"));
-        CATEGORY_TYPE_MAP.put(CategoryType.HH_JUQING, new TypeContent("剧情", "5"));
-        CATEGORY_TYPE_MAP.put(CategoryType.HH_ZHENTAN, new TypeContent("侦探", "6"));
-        CATEGORY_TYPE_MAP.put(CategoryType.HH_JINGJI, new TypeContent("竞技", "7"));
-        CATEGORY_TYPE_MAP.put(CategoryType.HH_MOFA, new TypeContent("魔法", "8"));
-        CATEGORY_TYPE_MAP.put(CategoryType.HH_SHENGUI, new TypeContent("神鬼", "9"));
-        CATEGORY_TYPE_MAP.put(CategoryType.HH_XIAOYUAN, new TypeContent("校园", "10"));
-        CATEGORY_TYPE_MAP.put(CategoryType.HH_JINGSONG, new TypeContent("惊栗", "11"));
-        CATEGORY_TYPE_MAP.put(CategoryType.HH_CHUYI, new TypeContent("厨艺", "12"));
-        CATEGORY_TYPE_MAP.put(CategoryType.HH_WEINIANG, new TypeContent("伪娘", "13"));
-        CATEGORY_TYPE_MAP.put(CategoryType.HH_MAOXIAN, new TypeContent("冒险", "15"));
-        CATEGORY_TYPE_MAP.put(CategoryType.HH_XIAOSHUO, new TypeContent("小说", "19"));
-        CATEGORY_TYPE_MAP.put(CategoryType.HH_GANGMAN, new TypeContent("港漫", "20"));
-        CATEGORY_TYPE_MAP.put(CategoryType.HH_DANMEI, new TypeContent("耽美", "21"));
-        CATEGORY_TYPE_MAP.put(CategoryType.HH_JINGDIAN, new TypeContent("经典", "22"));
-        CATEGORY_TYPE_MAP.put(CategoryType.HH_OUMEI, new TypeContent("欧美", "23"));
-        CATEGORY_TYPE_MAP.put(CategoryType.HH_RIWEN, new TypeContent("日文", "24"));
-        CATEGORY_TYPE_MAP.put(CategoryType.HH_QINQING, new TypeContent("亲情", "25"));
+        CATEGORY_TYPE_MAP.put("萌系", "1");
+        CATEGORY_TYPE_MAP.put("搞笑", "2");
+        CATEGORY_TYPE_MAP.put("格斗", "3");
+        CATEGORY_TYPE_MAP.put("科幻", "4");
+        CATEGORY_TYPE_MAP.put("剧情", "5");
+        CATEGORY_TYPE_MAP.put("侦探", "6");
+        CATEGORY_TYPE_MAP.put("竞技", "7");
+        CATEGORY_TYPE_MAP.put("魔法", "8");
+        CATEGORY_TYPE_MAP.put("神鬼", "9");
+        CATEGORY_TYPE_MAP.put("校园", "10");
+        CATEGORY_TYPE_MAP.put("惊栗", "11");
+        CATEGORY_TYPE_MAP.put("厨艺", "12");
+        CATEGORY_TYPE_MAP.put("伪娘", "13");
+        CATEGORY_TYPE_MAP.put("冒险", "15");
+        CATEGORY_TYPE_MAP.put("小说", "19");
+        CATEGORY_TYPE_MAP.put("港漫", "20");
+        CATEGORY_TYPE_MAP.put("耽美", "21");
+        CATEGORY_TYPE_MAP.put("经典", "22");
+        CATEGORY_TYPE_MAP.put("欧美", "23");
+        CATEGORY_TYPE_MAP.put("日文", "24");
+        CATEGORY_TYPE_MAP.put("亲情", "25");
         // 支持的推荐类别
-        RECOMMEND_TYPE_MAP.put(RecommendType.HH_NEW_COMIC, new TypeContent("新加漫画", "iTabHotHtm0"));
-        RECOMMEND_TYPE_MAP.put(RecommendType.HH_HOT_COMIC, new TypeContent("热点漫画", "iTabHotHtm2"));
-        RECOMMEND_TYPE_MAP.put(RecommendType.HH_POP_COMIC, new TypeContent("人气榜漫", "iTabHotHtm1"));
-        RECOMMEND_TYPE_MAP.put(RecommendType.HH_MUST_COMIC, new TypeContent("必看漫画", "iTabHotHtm3"));
-        RECOMMEND_TYPE_MAP.put(RecommendType.HH_RECOMMEND_COMIC, new TypeContent("漫迷推荐", "iTabHotHtm4"));
+        RECOMMEND_TYPE_MAP.put("新加漫画", "iTabHotHtm0");
+        RECOMMEND_TYPE_MAP.put("热点漫画", "iTabHotHtm2");
+        RECOMMEND_TYPE_MAP.put("人气榜漫", "iTabHotHtm1");
+        RECOMMEND_TYPE_MAP.put("必看漫画", "iTabHotHtm3");
+        RECOMMEND_TYPE_MAP.put("漫迷推荐", "iTabHotHtm4");
     }
 
     /**
@@ -259,9 +256,9 @@ public class HHManHua extends ComicSource {
     public class HHRankStrategy extends RankStrategy {
 
         @Override
-        protected String getRankUrl(Enum<RankType> rankType, int page, int size) {
-            TypeContent content = RANK_TYPE_MAP.get(rankType);
-            return HH_BASE_URL + content.urlKey;
+        protected String getRankUrl(String rankType, int page, int size) {
+            String urlKey = RANK_TYPE_MAP.get(rankType);
+            return HH_BASE_URL + urlKey;
         }
 
         @Override
@@ -298,7 +295,7 @@ public class HHManHua extends ComicSource {
     public class HHRecommendStrategy extends RecommendStrategy {
 
         @Override
-        protected String getRecommendUrl(Enum<RecommendType> recommendType, int page, int size) {
+        protected String getRecommendUrl(String recommendType, int page, int size) {
             // 首页推荐只需要首页
             return HH_BASE_URL;
         }
@@ -310,11 +307,11 @@ public class HHManHua extends ComicSource {
         }
 
         @Override
-        protected List<Comic> parseRecommendComics(byte[] data, Enum<RecommendType> recommendType) throws UnsupportedEncodingException {
+        protected List<Comic> parseRecommendComics(byte[] data, String recommendType) throws UnsupportedEncodingException {
             String content = new String(data, "utf-8");
             Document doc = Jsoup.parse(content);
-            TypeContent typeContent = RECOMMEND_TYPE_MAP.get(recommendType);
-            return getComicList(doc, typeContent.urlKey);
+            String urlKey = RECOMMEND_TYPE_MAP.get(recommendType);
+            return getComicList(doc, urlKey);
         }
 
         private List<Comic> getComicList(Document doc, String divId) {
@@ -346,9 +343,9 @@ public class HHManHua extends ComicSource {
     public class HHCategoryStrategy extends CategoryStrategy {
 
         @Override
-        protected String getCategoryUrl(Enum<CategoryType> categoryType, int page, int size) {
-            TypeContent typeContent = CATEGORY_TYPE_MAP.get(categoryType);
-            return HH_BASE_URL + "/comic/class_" + typeContent.urlKey + "/" + page + ".html";
+        protected String getCategoryUrl(String categoryType, int page, int size) {
+            String urlKey = CATEGORY_TYPE_MAP.get(categoryType);
+            return HH_BASE_URL + "/comic/class_" + urlKey + "/" + page + ".html";
         }
 
         @Override

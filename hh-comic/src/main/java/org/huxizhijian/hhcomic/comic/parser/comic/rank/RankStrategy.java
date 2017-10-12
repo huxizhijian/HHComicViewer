@@ -2,7 +2,6 @@ package org.huxizhijian.hhcomic.comic.parser.comic.rank;
 
 import org.huxizhijian.hhcomic.comic.bean.Comic;
 import org.huxizhijian.hhcomic.comic.parser.comic.BaseComicParseStrategy;
-import org.huxizhijian.hhcomic.comic.type.RankType;
 import org.huxizhijian.hhcomic.comic.type.RequestFieldType;
 import org.huxizhijian.hhcomic.comic.type.ResponseFieldType;
 import org.huxizhijian.hhcomic.comic.value.IComicRequest;
@@ -27,7 +26,7 @@ public abstract class RankStrategy extends BaseComicParseStrategy {
      * @param page     本页页数
      * @param size     一页展示的Comic
      */
-    protected abstract String getRankUrl(Enum<RankType> rankType, int page, int size);
+    protected abstract String getRankUrl(String rankType, int page, int size);
 
     /**
      * 获取总页数
@@ -41,7 +40,7 @@ public abstract class RankStrategy extends BaseComicParseStrategy {
      */
     protected abstract List<Comic> parseRankComics(byte[] data) throws UnsupportedEncodingException;
 
-    private Enum<RankType> mRankType;
+    private String mRankType;
     private int mPage;
     private int mSize;
 

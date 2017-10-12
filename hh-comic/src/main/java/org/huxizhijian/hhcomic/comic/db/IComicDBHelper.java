@@ -29,7 +29,7 @@ public interface IComicDBHelper {
 
     void delete(Comic comic);
 
-    Comic get(int source, long comicId);
+    Comic get(int source, String comicId);
 
     List<Comic> getAll();
 

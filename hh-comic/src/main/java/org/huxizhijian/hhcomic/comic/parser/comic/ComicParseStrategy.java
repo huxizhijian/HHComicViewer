@@ -33,6 +33,6 @@ public interface ComicParseStrategy {
 
     public Request buildRequest(IComicRequest comicRequest) throws UnsupportedEncodingException;
 
-    public IComicResponse parseData(IComicResponse comicResponse, byte[] data) throws IOException;
+    public IComicResponse parseData(IComicResponse comicResponse, byte[] data) throws IOException, NullPointerException;
 
 }

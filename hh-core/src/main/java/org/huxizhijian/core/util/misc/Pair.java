@@ -1,4 +1,4 @@
-package org.huxizhijian.hhcomic.comic.misc;
+package org.huxizhijian.core.util.misc;
 
 /**
  * 展示一个关系

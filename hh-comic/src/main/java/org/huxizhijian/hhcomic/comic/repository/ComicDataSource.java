@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.huxizhijian.hhcomic.comic;
+package org.huxizhijian.hhcomic.comic.repository;
 
 import org.huxizhijian.hhcomic.comic.bean.Comic;
 import org.huxizhijian.hhcomic.comic.source.base.ComicSource;
@@ -35,7 +35,7 @@ public interface ComicDataSource {
      * 结果获取回调
      */
     interface ComicDataCallback {
-        void onComicsLoaded(IComicResponse responseValues);
+        void onSuccess(IComicResponse responseValues);
 
         void onError(Throwable throwable);
 
