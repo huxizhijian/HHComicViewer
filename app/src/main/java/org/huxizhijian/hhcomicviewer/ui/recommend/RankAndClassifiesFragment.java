@@ -128,15 +128,15 @@ public class RankAndClassifiesFragment extends RefreshBaseFragment {
 
     private void initClassifiesData() {
         List<ClassifiesEntity> classifiesEntities = new ArrayList<>();
-        classifiesEntities.add(getClassifiedEntity("萌系", 1, "http://pic.huo80.com/comicui/21301.JPG"));
-        classifiesEntities.add(getClassifiedEntity("搞笑", 2, "http://pic.huo80.com/comicui/28545.JPG"));
-        classifiesEntities.add(getClassifiedEntity("格斗", 3, "http://pic.huo80.com/comicui/28906.JPG"));
-        classifiesEntities.add(getClassifiedEntity("科幻", 4, "http://pic.huo80.com/comicui/30298.JPG"));
-        classifiesEntities.add(getClassifiedEntity("剧情", 5, "http://pic.huo80.com/comicui/30589.JPG"));
-        classifiesEntities.add(getClassifiedEntity("侦探", 6, "http://pic.huo80.com/upload/up200802/a104.jpg"));
-        classifiesEntities.add(getClassifiedEntity("竞技", 7, "http://pic.huo80.com/upload/up200806/a198.jpg"));
-        classifiesEntities.add(getClassifiedEntity("魔法", 8, "http://pic.huo80.com/upload/up200912/a130.jpg"));
-        classifiesEntities.add(getClassifiedEntity("神鬼", 9, "http://pic.huo80.com/upload/up201003/a164.jpg"));
+        classifiesEntities.add(getClassifiedEntity("萌系", 1,  "http://pic.huo80.com/comicui/21301.JPG"));
+        classifiesEntities.add(getClassifiedEntity("搞笑", 2,  "http://pic.huo80.com/comicui/28545.JPG"));
+        classifiesEntities.add(getClassifiedEntity("格斗", 3,  "http://pic.huo80.com/comicui/28906.JPG"));
+        classifiesEntities.add(getClassifiedEntity("科幻", 4,  "http://pic.huo80.com/comicui/30298.JPG"));
+        classifiesEntities.add(getClassifiedEntity("剧情", 5,  "http://pic.huo80.com/comicui/30589.JPG"));
+        classifiesEntities.add(getClassifiedEntity("侦探", 6,  "http://pic.huo80.com/upload/up200802/a104.jpg"));
+        classifiesEntities.add(getClassifiedEntity("竞技", 7,  "http://pic.huo80.com/upload/up200806/a198.jpg"));
+        classifiesEntities.add(getClassifiedEntity("魔法", 8,  "http://pic.huo80.com/upload/up200912/a130.jpg"));
+        classifiesEntities.add(getClassifiedEntity("神鬼", 9,  "http://pic.huo80.com/upload/up201003/a164.jpg"));
         classifiesEntities.add(getClassifiedEntity("校园", 10, "http://pic.huo80.com/comicui2/7688a.JPG"));
         classifiesEntities.add(getClassifiedEntity("惊栗", 11, "http://pic.huo80.com/comicui/7556.JPG"));
         classifiesEntities.add(getClassifiedEntity("厨艺", 12, "http://pic.huo80.com/comicui/27782.JPG"));

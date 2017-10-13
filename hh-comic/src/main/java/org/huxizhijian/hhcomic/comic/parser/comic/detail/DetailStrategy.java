@@ -25,7 +25,7 @@ import okhttp3.Response;
 public abstract class DetailStrategy extends BaseComicParseStrategy {
 
     // Comic id
-    private String mComicId;
+    protected String mComicId;
 
     /**
      * 获取请求的网址
