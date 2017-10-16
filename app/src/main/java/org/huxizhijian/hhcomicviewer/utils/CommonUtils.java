@@ -258,7 +258,7 @@ public class CommonUtils {
         }
         int nType = networkInfo.getType();
         if (nType == ConnectivityManager.TYPE_MOBILE) {
-            if (networkInfo.getExtraInfo().toLowerCase().equals("cmnet")) {
+            if ("cmnet".equals(networkInfo.getExtraInfo().toLowerCase())) {
                 netType = CMNET;
             } else {
                 netType = CMWAP;

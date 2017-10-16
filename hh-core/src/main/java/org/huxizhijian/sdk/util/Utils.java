@@ -104,8 +104,8 @@ public class Utils {
 
     public static boolean isApkDebugable(Context context) {
         try {
-            ApplicationInfo info= context.getApplicationInfo();
-            return (info.flags&ApplicationInfo.FLAG_DEBUGGABLE)!=0;
+            ApplicationInfo info = context.getApplicationInfo();
+            return (info.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
         } catch (Exception e) {
 
         }
@@ -149,7 +149,7 @@ public class Utils {
 
     public static boolean containString(String source, String destation) {
 
-        if (source.equals("") || destation.equals("")) {
+        if ("".equals(source) || "".equals(destation)) {
             return false;
         }
 

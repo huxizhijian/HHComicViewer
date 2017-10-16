@@ -62,10 +62,10 @@ public class ComicDBHelper {
     public synchronized void add(Comic comic) {
         try {
             if (comic.isMark() || comic.isDownload()) {
-                if (comic.getChapterNameList() == null || comic.getChapterNameList().equals("")) {
+                if (comic.getChapterNameList() == null || "".equals(comic.getChapterNameList())) {
                     comic.saveChapterNameList();
                 }
-                if (comic.getChapterIdList() == null || comic.getChapterIdList().equals("")) {
+                if (comic.getChapterIdList() == null || "".equals(comic.getChapterIdList())) {
                     comic.saveChapterIdList();
                 }
             }
@@ -82,10 +82,10 @@ public class ComicDBHelper {
     public synchronized void update(Comic comic) {
         try {
             if (comic.isMark() || comic.isDownload()) {
-                if (comic.getChapterNameList() == null || comic.getChapterNameList().equals("")) {
+                if (comic.getChapterNameList() == null || "".equals(comic.getChapterNameList())) {
                     comic.saveChapterNameList();
                 }
-                if (comic.getChapterIdList() == null || comic.getChapterIdList().equals("")) {
+                if (comic.getChapterIdList() == null || "".equals(comic.getChapterIdList())) {
                     comic.saveChapterIdList();
                 }
             }

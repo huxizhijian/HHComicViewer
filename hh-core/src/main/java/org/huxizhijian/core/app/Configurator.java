@@ -45,7 +45,7 @@ public class Configurator {
     private static final Handler HANDLER = new Handler();
     private static final List<IconFontDescriptor> ICONS = new ArrayList<>();
     private static final List<Interceptor> INTERCEPTORS = new ArrayList<>();
-    private static final OkHttpClient.Builder builder = new OkHttpClient.Builder();
+    private static final OkHttpClient.Builder BUILDER = new OkHttpClient.Builder();
 
     private Configurator() {
         // 开始配置，标记为未完成配置
@@ -57,8 +57,8 @@ public class Configurator {
         return HH_CONFIGS;
     }
 
-    // 静态内部类的单例模式
     static Configurator getInstance() {
+        // 采用静态内部类实现的单例模式
         return Holder.INSTANCE;
     }
 
@@ -71,9 +71,9 @@ public class Configurator {
         if (HH_CONFIGS.get(ConfigKeys.OKHTTP_CLIENT) == null) {
             //添加interceptor
             for (Interceptor interceptor : INTERCEPTORS) {
-                builder.addInterceptor(interceptor);
+                BUILDER.addInterceptor(interceptor);
             }
-            HH_CONFIGS.put(ConfigKeys.OKHTTP_CLIENT, builder.build());
+            HH_CONFIGS.put(ConfigKeys.OKHTTP_CLIENT, BUILDER.build());
         }
         //初始化Utils库
         Utils.init((Application) HHEngine.getApplicationContext());
@@ -99,7 +99,7 @@ public class Configurator {
     }
 
     public final Configurator withConnectTimeOut(long timeOut, @NonNull TimeUnit unit) {
-        builder.connectTimeout(timeOut, unit);
+        BUILDER.connectTimeout(timeOut, unit);
         return this;
     }
 

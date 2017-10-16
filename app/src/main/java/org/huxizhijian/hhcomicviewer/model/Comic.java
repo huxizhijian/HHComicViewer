@@ -83,7 +83,7 @@ public class Comic implements Serializable, Comparable {
     // 离线时解析出章节名，章节url
     public void initChapterNameAndList() {
         if (chapterNameList == null || chapterIdList == null ||
-                chapterNameList.equals("") || chapterIdList.equals("")) {
+                "".equals(chapterNameList) || "".equals(chapterIdList)) {
             return;
         }
         String[] names = chapterNameList.split("@");

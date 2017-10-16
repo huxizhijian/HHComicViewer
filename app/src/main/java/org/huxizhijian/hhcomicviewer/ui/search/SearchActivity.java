@@ -335,7 +335,7 @@ public class SearchActivity extends AppCompatActivity implements ISearchActivity
         //保存搜索记录
         String group = mSharedPreferences.getString("keys", "");
         String newGroup = null;
-        if (group.equals("")) {
+        if ("".equals(group)) {
             newGroup = mQuery;
         } else {
             newGroup = group + ":@" + mQuery;

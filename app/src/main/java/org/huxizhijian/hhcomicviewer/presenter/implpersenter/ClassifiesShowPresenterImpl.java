@@ -61,7 +61,7 @@ public class ClassifiesShowPresenterImpl implements IClassifiesShowPresenter {
                                     Element pageInfo = doc.select("div[class=cComicPageChange]").first();
                                     Elements pages = pageInfo.select("a");
                                     for (Element page : pages) {
-                                        if (page.text().equals("尾页")) {
+                                        if ("尾页".equals(page.text())) {
                                             String pageSize = page.attr("href").split("\\.")[0];
                                             if (pageSize.matches("/[^']*")) {
                                                 pageSize = pageSize.split("/")[3];

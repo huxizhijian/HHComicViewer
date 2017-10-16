@@ -421,12 +421,12 @@ public class GalleryActivity extends Activity implements View.OnClickListener,
         useVolButtonChangePage = preferencesManager.getBoolean("use_volume_key", false);
 
         String rotate = preferencesManager.getString("reading_screen_rotate", "none");
-        if (rotate.equals("portrait")) {
+        if ("portrait".equals(rotate)) {
             //设置屏幕方向为竖屏
             if (getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             }
-        } else if (rotate.equals("landscape")) {
+        } else if ("landscape".equals(rotate)) {
             //设置屏幕方向为横屏
             if (getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
@@ -435,9 +435,9 @@ public class GalleryActivity extends Activity implements View.OnClickListener,
 
         //使用的控件
         String directionValue = preferencesManager.getString("reading_direction", "view_pager");
-        if (directionValue.equals("view_pager")) {
+        if ("view_pager".equals(directionValue)) {
             mReadingDirection = VIEW_PAGER;
-        } else if (directionValue.equals("list_view")) {
+        } else if ("list_view".equals(directionValue)) {
             mReadingDirection = LIST_VIEW;
             mTv_position.setVisibility(View.GONE);
         }
