@@ -27,7 +27,8 @@ import okhttp3.Request;
 /**
  * 汗汗漫画网站解析类
  *
- * @Author huxizhijian on 2017/10/9.
+ * @author huxizhijian
+ * @date 2017/10/9.
  */
 public class HHManHua extends ComicSource {
 
@@ -36,7 +37,7 @@ public class HHManHua extends ComicSource {
     private static final String HH_COMIC_PRE = "/manhua";
     private static final String HH_SEARCH_URL = "http://ssooff.com/";   //漫画搜索网站
 
-    private static final int SOURCE_TYPE = Source.HHManHua;
+    private static final int SOURCE_TYPE = Source.HHManHua.hashCode();
 
     @Override
     public String setSourceName() {
@@ -157,6 +158,8 @@ public class HHManHua extends ComicSource {
                         break;
                     case "简介":
                         comic.setIntro(comicInfo.text());
+                        break;
+                    default:
                         break;
                 }
             }
@@ -345,7 +348,10 @@ public class HHManHua extends ComicSource {
     public class HHCategoryStrategy extends CategoryStrategy {
 
         @Override
-        protected String getCategoryUrl(String categoryType, int page, int size) {
+        protected String getCategoryUrl(String categoryType, int page, int size) throws NullPointerException {
+            if (categoryType == null) {
+                throw new NullPointerException("category type should not be null!");
+            }
             return HH_BASE_URL + String.format(Locale.CHINESE, "/comic/class_%s/%d.html", categoryType, page);
         }
 

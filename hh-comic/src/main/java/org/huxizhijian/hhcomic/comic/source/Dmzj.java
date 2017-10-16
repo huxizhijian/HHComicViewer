@@ -25,21 +25,43 @@ import okhttp3.Request;
  * TODO 动漫之家解析类
  * 图片的请求需要加入Header("Referer", "http://images.dmzj.com/")，否则会403
  *
- * @Author huxizhijian on 2017/10/12.
+ * @author huxizhijian
+ * @date 2017/10/12
  */
 
-public class DMZJ extends ComicSource {
+public class Dmzj extends ComicSource {
 
     private static final String SOURCE_NAME = "动漫之家";
+    /**
+     * 主站API网址
+     */
     private static final String DMZJ_BASE_URL = "v2.api.dmzj.com";
+    /**
+     * Comic详情 -- 参数：ComicId
+     */
     private static final String DMZJ_COMIC_URL = "/comic/%s.json";
-    private static final String DMZJ_CHAPTER_URL = "/chapter/%s/%s.json";       //chapter获取接口，第一个参数cid，第二个参数chapterId
-    private static final String DMZJ_CATEGORY_URL = "/0/category.json";         //获取支持的分类id列表及cover
-    private static final String DMZJ_SEARCH_URL = "/search/show/%d/%s/%d.json"; //Search接口参数为：搜索类别id，搜索关键字，结果页码
-    private static final String DMZJ_CLASSIFY_URL = " /classify/%d/0/%d.json";  //获取类别的Comic列表，参数：类别id，结果页码
-    private static final String DMZJ_RANK_URL = "/rank/0/0/0/%d.json";          //获取排行榜内容，参数：页码
+    /**
+     * Chapter获取接口 -- 参数：ComicId, ChapterId
+     */
+    private static final String DMZJ_CHAPTER_URL = "/chapter/%s/%s.json";
+    /**
+     * 获取分类id接口 -- 参数：除了0其他可能都为废弃的category
+     */
+    private static final String DMZJ_CATEGORY_URL = "/0/category.json";
+    /**
+     * 搜索接口 -- 参数：分类id，关键字，页码
+     */
+    private static final String DMZJ_SEARCH_URL = "/search/show/%d/%s/%d.json";
+    /**
+     * 分类列表 -- 参数：分类id，页码
+     */
+    private static final String DMZJ_CLASSIFY_URL = "/classify/%d/0/%d.json";
+    /**
+     * 排行榜内容 -- 参数：分类（根据分类id），时间（日，周，月，总），排行类别（人气、吐槽、订阅），页码
+     */
+    private static final String DMZJ_RANK_URL = "/rank/%d/%d/%d/%d.json";
 
-    private static final int SOURCE_TYPE = Source.DMZJ;
+    private static final int SOURCE_TYPE = Source.Dmzj.hashCode();
 
     @Override
     public String setSourceName() {
@@ -56,7 +78,7 @@ public class DMZJ extends ComicSource {
         return SOURCE_TYPE;
     }
 
-    public DMZJ() {
+    public Dmzj() {
         // 解析json文件，添加分类信息
         JSONArray array = JSON.parseArray(HHEngine.getApplicationContext().getResources().getString(R.string.dmzj_category));
         int size = array.size();
@@ -72,7 +94,7 @@ public class DMZJ extends ComicSource {
      * 默认添加所有策略，也可以自行添加
      */
     public ComicSource defaultConfig() {
-        return new DMZJ()
+        return new Dmzj()
                 .addStrategy(ComicDataSourceType.WEB_DETAIL, new DMZJDetailStrategy());
     }
 

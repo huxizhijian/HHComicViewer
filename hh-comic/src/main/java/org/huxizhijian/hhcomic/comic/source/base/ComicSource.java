@@ -13,7 +13,8 @@ import java.util.Set;
 /**
  * 提供来源插件的基础，整合各种策略并提供给{@link ComicDataSource}使用
  *
- * @Author huxizhijian on 2017/9/25.
+ * @author huxizhijian
+ * @date 2017/9/25.
  */
 public abstract class ComicSource {
 
@@ -34,10 +35,25 @@ public abstract class ComicSource {
         mBaseUrl = setBaseUrl();
     }
 
+    /**
+     * 来源网站的名称
+     *
+     * @return 名称
+     */
     public abstract String setSourceName();
 
+    /**
+     * 来源网站的主站url
+     *
+     * @return 主站url
+     */
     public abstract String setBaseUrl();
 
+    /**
+     * 来源网站的{@link Source}枚举类的hashcode
+     *
+     * @return {@link Source}hashcode
+     */
     public abstract int getSourceType();
 
     public ComicSource addAllStrategy(Map<Integer, ComicParseStrategy> strategyMap) {
@@ -85,20 +101,6 @@ public abstract class ComicSource {
 
     public Map<String, String> getRecommendTypeMap() {
         return RECOMMEND_TYPE_MAP;
-    }
-
-    public class TypeContent {
-        public String title;
-        public String urlKey;
-
-        public TypeContent() {
-        }
-
-        public TypeContent(String title, String urlKey) {
-            this.title = title;
-            this.urlKey = urlKey;
-        }
-
     }
 
     public ComicParseStrategy getStrategy(int strategyKey) {

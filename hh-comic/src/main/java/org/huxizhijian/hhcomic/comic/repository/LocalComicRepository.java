@@ -15,9 +15,9 @@ import java.util.List;
 /**
  * 本地仓库，本质为Comic的数据库操作
  *
- * @Author huxizhijian on 2017/10/12.
+ * @author huxizhijian
+ * @date 2017/10/12.
  */
-
 public class LocalComicRepository implements ComicDataSource {
 
     private ComicDBHelper mComicDBHelper = ComicDBHelper.getInstance();

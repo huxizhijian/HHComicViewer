@@ -21,9 +21,9 @@ import okhttp3.Response;
  * 远程仓库，实现从远程拉取Comic的操作
  * 由于没有把数据放在网络上备份，不实现部分功能
  *
- * @Author huxizhijian on 2017/10/12.
+ * @author huxizhijian
+ * @date 2017/10/12
  */
-
 public class RemoteComicRepository implements ComicDataSource {
 
     @Override

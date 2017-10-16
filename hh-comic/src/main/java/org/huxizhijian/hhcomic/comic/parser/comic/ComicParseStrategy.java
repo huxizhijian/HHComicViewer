@@ -27,12 +27,30 @@ import okhttp3.Request;
 /**
  * 解析策略
  *
- * @author huxizhijian 2017/9/29
+ * @author huxizhijian
+ * @date 2017/9/29
  */
 public interface ComicParseStrategy {
 
-    public Request buildRequest(IComicRequest comicRequest) throws UnsupportedEncodingException;
+    /**
+     * 构建Request
+     *
+     * @param comicRequest 请求参数
+     * @return request
+     * @throws UnsupportedEncodingException 字符串转换时可能会产生的异常
+     * @throws NullPointerException         请求参数不全时产生的异常
+     */
+    Request buildRequest(IComicRequest comicRequest) throws UnsupportedEncodingException, NullPointerException;
 
-    public IComicResponse parseData(IComicResponse comicResponse, byte[] data) throws IOException, NullPointerException;
+    /**
+     * 解析并返回参数
+     *
+     * @param comicResponse 返回参数
+     * @param data          请求得到的data
+     * @return 返回参数
+     * @throws IOException          OkHttp请求时可能产生的异常
+     * @throws NullPointerException 请求时可能产生的异常
+     */
+    IComicResponse parseData(IComicResponse comicResponse, byte[] data) throws IOException, NullPointerException;
 
 }

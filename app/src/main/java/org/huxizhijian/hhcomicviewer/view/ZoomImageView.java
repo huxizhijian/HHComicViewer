@@ -101,8 +101,9 @@ public class ZoomImageView extends ImageView implements OnScaleGestureListener,
                     public boolean onSingleTapConfirmed(MotionEvent event) {
                         //单击屏幕中心开启菜单功能
                         //如果没有设置listener则直接略过
-                        if (onCenterTapListener == null && onLeftOrRightTapListener == null)
+                        if (onCenterTapListener == null && onLeftOrRightTapListener == null) {
                             return false;
+                        }
 
                         float x_up, y_up;
                         x_up = event.getX();
@@ -134,8 +135,9 @@ public class ZoomImageView extends ImageView implements OnScaleGestureListener,
 
                     @Override
                     public boolean onDoubleTap(MotionEvent e) {
-                        if (isAutoScale)
+                        if (isAutoScale) {
                             return true;
+                        }
 
                         float x = e.getX();
                         float y = e.getY();
@@ -228,8 +230,9 @@ public class ZoomImageView extends ImageView implements OnScaleGestureListener,
         float scale = getScale();
         float scaleFactor = detector.getScaleFactor();
 
-        if (getDrawable() == null)
+        if (getDrawable() == null) {
             return true;
+        }
 
         /**
          * 缩放的范围控制
@@ -325,8 +328,9 @@ public class ZoomImageView extends ImageView implements OnScaleGestureListener,
     @Override
     public boolean onTouch(View v, MotionEvent event) {
 
-        if (mGestureDetector.onTouchEvent(event))
+        if (mGestureDetector.onTouchEvent(event)) {
             return true;
+        }
         mScaleGestureDetector.onTouchEvent(event);
 
         float x = 0, y = 0;
@@ -410,6 +414,8 @@ public class ZoomImageView extends ImageView implements OnScaleGestureListener,
                 Log.d(TAG, "ACTION_UP");
                 lastPointerCount = 0;
                 break;
+            default:
+                break;
         }
         return true;
     }
@@ -447,8 +453,9 @@ public class ZoomImageView extends ImageView implements OnScaleGestureListener,
     private void initImage() {
         System.out.println("initImage:" + this.toString());
         Drawable d = getDrawable();
-        if (d == null)
+        if (d == null) {
             return;
+        }
         Log.i(TAG, d.getIntrinsicWidth() + " , " + d.getIntrinsicHeight());
         int width = getWidth();
         int height = getHeight();

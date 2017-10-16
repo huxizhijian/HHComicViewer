@@ -31,6 +31,7 @@ import java.util.List;
  * 保存于数据库的实体Comic类
  * Created by wei on 2016/8/23.
  */
+@Deprecated
 @Table(name = "comic")
 public class Comic implements Serializable, Comparable {
     @Column(name = "id", isId = true)
@@ -74,15 +75,17 @@ public class Comic implements Serializable, Comparable {
     @Column(name = "is_update")
     private boolean isUpdate = false; //是否有更新(章节数变化)
 
-    //无法保存在数据库里，如果isDownload为true将会创建数个实体类保存在download表里
+    // 无法保存在数据库里，如果isDownload为true将会创建数个实体类保存在download表里
     private List<String> chapterName; //章节名
     private List<Long> chapterId; //章节Id
     private int serverId; //章节服务器Id
 
-    //离线时解析出章节名，章节url
+    // 离线时解析出章节名，章节url
     public void initChapterNameAndList() {
         if (chapterNameList == null || chapterIdList == null ||
-                chapterNameList.equals("") || chapterIdList.equals("")) return;
+                chapterNameList.equals("") || chapterIdList.equals("")) {
+            return;
+        }
         String[] names = chapterNameList.split("@");
         String[] ids = chapterIdList.split("@");
         List<String> chapterName = new ArrayList<>();
@@ -97,7 +100,9 @@ public class Comic implements Serializable, Comparable {
 
     //存储章节名
     public void saveChapterNameList() {
-        if (chapterName == null) return;
+        if (chapterName == null) {
+            return;
+        }
         StringBuilder nameList = new StringBuilder();
         String splitString = "@";
         for (String splitchapterName : chapterName) {

@@ -30,7 +30,8 @@ import java.util.List;
 /**
  * 工具类
  *
- * @author huxizhijian 2017/10/10
+ * @author huxizhijian
+ * @date 2017/10/10
  */
 public class ComicDBHelper implements IComicDBHelper {
 

@@ -19,7 +19,8 @@ package org.huxizhijian.hhcomic.usecase;
 /**
  * 使用线程调度器{@link UseCaseScheduler}来运行用例{@link UseCase}
  *
- * @author huxizhijian 2017/9/17
+ * @author huxizhijian
+ * @date 2017/9/17
  */
 public class UseCaseHandler {
 
@@ -61,6 +62,7 @@ public class UseCaseHandler {
             mUseCaseHandler = useCaseHandler;
         }
 
+        @Override
         public void onSuccess(V response) {
             mUseCaseHandler.notifyResponse(response, mCallback);
         }
@@ -79,5 +81,4 @@ public class UseCaseHandler {
     private static class Holder {
         private static final UseCaseHandler INSTANCE = new UseCaseHandler(new UseCaseThreadPoolScheduler());
     }
-
 }

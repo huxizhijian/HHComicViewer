@@ -127,7 +127,7 @@ public class HHApplication extends MultiDexApplication {
                 .withConnectTimeOut(30000, TimeUnit.MILLISECONDS)
                 .configure();
         ComicRouter.getInstance()
-                .addSource(Source.HHManHua, new HHManHua().defaultConfig());
+                .addSource(Source.HHManHua.hashCode(), new HHManHua().defaultConfig());
     }
 
     //初始化腾讯bugly

@@ -5,9 +5,9 @@ import org.huxizhijian.hhcomic.comic.bean.Comic;
 import java.util.List;
 
 /**
- * @Author huxizhijian on 2017/9/26.
+ * @author huxizhijian
+ * @date 2017/9/26.
  */
-
 public interface IComicDBHelper {
 
     // 最后阅读时间倒序

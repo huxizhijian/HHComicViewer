@@ -30,6 +30,9 @@ import org.huxizhijian.sdk.SDKConstant;
 import org.huxizhijian.sdk.imageloader.ImageLoaderOptions;
 import org.huxizhijian.sdk.sharedpreferences.SharedPreferencesManager;
 
+/**
+ * @author huxizhijian
+ */
 public class AdvanceSettingFragment extends PreferenceFragment {
 
     SharedPreferencesManager mPreferencesManager;
@@ -68,9 +71,10 @@ public class AdvanceSettingFragment extends PreferenceFragment {
                 Toast.makeText(getActivity(), "清除缓存成功", Toast.LENGTH_SHORT).show();
                 return true;
             case "update_variable":
-//                HHApiProvider.getInstance().updateVariable();
                 Toast.makeText(getActivity(), "本功能暂未实装", Toast.LENGTH_SHORT).show();
                 return true;
+            default:
+                break;
         }
         return super.onPreferenceTreeClick(preferenceScreen, preference);
     }

@@ -27,7 +27,8 @@ import java.util.List;
 /**
  * 将远程{@link LocalComicRepository}、本地{@link RemoteComicRepository}两个实现类整合起来，根据设定的策略使用不同的来源
  *
- * @author huxizhijian 2017/9/21
+ * @author huxizhijian
+ * @date 2017/9/21
  */
 public class ComicRepository implements ComicDataSource {
 

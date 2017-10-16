@@ -24,7 +24,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * @author huxizhijian 2017/10/2
+ * @author huxizhijian
+ * @date 2017/10/2
  */
 public class ComicResponseValues implements IComicResponse {
 
@@ -36,6 +37,7 @@ public class ComicResponseValues implements IComicResponse {
     public ComicResponseValues() {
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public final <T> T getField(int key) {
         return (T) FIELDS_REFERENCE.get().get(key);
@@ -47,10 +49,12 @@ public class ComicResponseValues implements IComicResponse {
         return this;
     }
 
+    @Override
     public final LinkedHashMap<?, ?> getFields() {
         return FIELDS_REFERENCE.get();
     }
 
+    @Override
     public final ComicResponseValues addField(int key, Object value) {
         FIELDS_REFERENCE.get().put(key, value);
         return this;

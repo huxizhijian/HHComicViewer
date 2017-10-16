@@ -97,9 +97,10 @@ public class GlideUtils implements ImageLoaderManager {
     @Override
     public void displayGalleryFit(Context context, String url, ImageView imageView) {
 
+        //跳过内存缓存
         RequestOptions options = RequestOptions.fitCenterTransform()
                 .dontAnimate()
-                .skipMemoryCache(true); //跳过内存缓存
+                .skipMemoryCache(true);
 
         Glide.with(context)
                 .load(url)
@@ -111,13 +112,14 @@ public class GlideUtils implements ImageLoaderManager {
     public void displayBlurImage(Context context, String url, ImageView imageView,
                                  int width, int height, int radius, int sampling,
                                  final ImageRequestListener listener) {
+        // 设置高斯模糊
+        RequestOptions options = RequestOptions
+                .bitmapTransform(new BlurTransformation(14, 3))
+                .override(165, 220);
 
-        RequestOptions options = RequestOptions.overrideOf(165, 220)
-                .bitmapTransform(new BlurTransformation(14, 3)); // 设置高斯模糊
 
         Glide.with(context)
                 .load(url)
-                //.placeholder(R.drawable.stackblur_default)
                 .apply(options)
                 .listener(new RequestListener<Drawable>() {
                     @Override

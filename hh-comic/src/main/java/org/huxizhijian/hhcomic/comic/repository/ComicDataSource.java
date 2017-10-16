@@ -27,7 +27,8 @@ import java.util.List;
 /**
  * Comic数据仓库接口，实现类见{@link ComicRepository}，Comic实体类{@link Comic}
  *
- * @author huxizhijian 2017/9/21
+ * @author huxizhijian
+ * @date 2017/9/21
  */
 public interface ComicDataSource {
 

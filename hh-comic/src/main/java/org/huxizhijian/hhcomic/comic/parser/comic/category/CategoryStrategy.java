@@ -29,10 +29,14 @@ public abstract class CategoryStrategy extends BaseComicParseStrategy {
     /**
      * 获取分类真实网址
      */
-    protected abstract String getCategoryUrl(String categoryType, int page, int size);
+    protected abstract String getCategoryUrl(String categoryType, int page, int size) throws NullPointerException;
 
     /**
      * 获取页数上限
+     *
+     * @param data 网页内容
+     * @return 页数上线，-1表示没法获取
+     * @throws UnsupportedEncodingException 编码转换时可能产生的异常
      */
     protected abstract int getPageCount(byte[] data) throws UnsupportedEncodingException;
 
@@ -42,7 +46,7 @@ public abstract class CategoryStrategy extends BaseComicParseStrategy {
     protected abstract List<Comic> parseRecommend(byte[] data) throws UnsupportedEncodingException;
 
     @Override
-    public Request buildRequest(IComicRequest comicRequest) throws UnsupportedEncodingException {
+    public Request buildRequest(IComicRequest comicRequest) throws UnsupportedEncodingException, NullPointerException {
         mCategoryType = comicRequest.getField(RequestFieldType.CATEGORY);
         mPage = comicRequest.getField(RequestFieldType.PAGE);
         mSize = comicRequest.getField(RequestFieldType.SIZE);

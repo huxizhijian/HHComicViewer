@@ -33,7 +33,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by wei on 2017/1/20.
+ * @author wei
+ * @date 2017/1/20
  */
 
 public class ClassifiesShowPresenterImpl implements IClassifiesShowPresenter {
@@ -46,54 +47,6 @@ public class ClassifiesShowPresenterImpl implements IClassifiesShowPresenter {
 
     @Override
     public void getComicList(String url, int page) {
-        /*Request request = new Request.Builder().get()
-                .url(HHApplication.getInstance().getHHWebVariable().getCsite() + url + page + ".html")
-                .build();
-        HHApplication.getInstance().getClient().newCall(request)
-                .enqueue(new Callback() {
-                    @Override
-                    public void onFailure(Call call, IOException e) {
-                        mActivity.onException(e);
-                    }
-
-                    @Override
-                    public void onResponse(Call call, Response response) throws IOException {
-                        String content = new String(response.body().bytes(), "utf-8");
-                        Document doc = Jsoup.parse(content);
-
-                        int maxPage = 1;
-                        Element pageInfo = doc.select("div[class=cComicPageChange]").first();
-                        Elements pages = pageInfo.select("a");
-                        for (Element page : pages) {
-                            if (page.text().equals("尾页")) {
-                                String pageSize = page.attr("href").split("\\.")[0];
-                                if (pageSize.matches("/[^']*")) {
-                                    pageSize = pageSize.split("/")[3];
-                                }
-                                maxPage = Integer.valueOf(pageSize);
-//                                System.out.println(mPageSize);
-                            }
-                        }
-
-                        Element comicsSrc = doc.select("div[class=cComicList]").first();
-                        Elements urlsSrc = comicsSrc.select("a");
-                        Elements imgsSrc = comicsSrc.select("img");
-                        List<Comic> comics = new ArrayList<>();
-                        for (int i = 0; i < urlsSrc.size(); i++) {
-                            Comic comic = new Comic();
-                            comic.setTitle(urlsSrc.get(i).attr("title"));
-                            String url = urlsSrc.get(i).attr("href");
-                            String end = url.substring(HHApplication.getInstance()
-                                    .getHHWebVariable().getPre().length());
-                            comic.setCid(Integer.parseInt(end.split("\\.")[0]));
-                            comic.setThumbnailUrl(imgsSrc.get(i).attr("src"));
-                            comics.add(comic);
-                        }
-
-                        mActivity.onSuccess(maxPage, comics);
-                    }
-                });*/
-
         HHApiProvider.getInstance()
                 .getWebContentAsyn(HHApplication.getInstance().getHHWebVariable().getCsite() + url + page + ".html"
                         , new NormalResponse<byte[]>() {
@@ -114,7 +67,6 @@ public class ClassifiesShowPresenterImpl implements IClassifiesShowPresenter {
                                                 pageSize = pageSize.split("/")[3];
                                             }
                                             maxPage = Integer.valueOf(pageSize);
-//                                System.out.println(mPageSize);
                                         }
                                     }
 

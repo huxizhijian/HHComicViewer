@@ -22,7 +22,8 @@ import org.huxizhijian.hhcomic.comic.value.IComicResponse;
 /**
  * 用例（UseCase）类的基础类，这是DomianLayer的基本
  *
- * @author huxizhijian 2017/9/17
+ * @author huxizhijian
+ * @date 2017/9/17
  */
 public abstract class UseCase<Q extends UseCase.RequestValues, P extends UseCase.ResponseValue> {
 

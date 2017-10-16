@@ -47,7 +47,10 @@ public abstract class RecommendStrategy extends BaseComicParseStrategy {
     private int mSize;
 
     @Override
-    public Request buildRequest(IComicRequest comicRequest) throws UnsupportedEncodingException {
+    public Request buildRequest(IComicRequest comicRequest) throws UnsupportedEncodingException, NullPointerException {
+        if (comicRequest.getField(RequestFieldType.RECOMMEND_TYPE) == null) {
+            throw new NullPointerException("recommend type should not be null!");
+        }
         mRecommendType = comicRequest.getField(RequestFieldType.RECOMMEND_TYPE);
         mPage = comicRequest.getField(RequestFieldType.PAGE);
         mSize = comicRequest.getField(RequestFieldType.SIZE);

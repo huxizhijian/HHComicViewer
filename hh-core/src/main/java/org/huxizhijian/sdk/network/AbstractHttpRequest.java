@@ -39,10 +39,12 @@ public abstract class AbstractHttpRequest implements HttpRequest {
 
     private boolean executed;
 
+    @Override
     public HttpHeader getHeaders() {
         return mHeader;
     }
 
+    @Override
     public OutputStream getBody() {
         OutputStream body = getBodyOutputStream();
         if (isGzip()) {
@@ -68,6 +70,7 @@ public abstract class AbstractHttpRequest implements HttpRequest {
         return false;
     }
 
+    @Override
     public HttpResponse execute() throws IOException {
         if (mZip != null) {
             mZip.close();

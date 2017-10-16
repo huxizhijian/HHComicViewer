@@ -27,7 +27,8 @@ import java.util.concurrent.TimeUnit;
 /**
  * 线程调度器，封装了一个线程池
  *
- * @author huxizhijian 2017/9/17
+ * @author huxizhijian
+ * @date 2017/9/17
  */
 public class UseCaseThreadPoolScheduler implements UseCaseScheduler {
 
@@ -39,11 +40,11 @@ public class UseCaseThreadPoolScheduler implements UseCaseScheduler {
 
     public static final int TIMEOUT = 30;
 
-    ThreadPoolExecutor mThreadPoolExecutor;
+    private ThreadPoolExecutor mThreadPoolExecutor;
 
     public UseCaseThreadPoolScheduler() {
         mThreadPoolExecutor = new ThreadPoolExecutor(POOL_SIZE, MAX_POOL_SIZE, TIMEOUT,
-                TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(POOL_SIZE));
+                TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(POOL_SIZE), new ThreadPoolExecutor.AbortPolicy());
     }
 
     @Override

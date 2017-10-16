@@ -36,7 +36,6 @@ public abstract class SearchGetStrategy extends BaseComicParseStrategy {
     protected abstract String getSearchUrl(String key, int page, int size) throws UnsupportedEncodingException;
 
     /**
-     * -
      * 解析网络请求结果
      */
     protected abstract List<Comic> parseSearchResult(byte[] data) throws UnsupportedEncodingException;
@@ -54,7 +53,6 @@ public abstract class SearchGetStrategy extends BaseComicParseStrategy {
         mKey = comicRequest.getField(RequestFieldType.KEY_WORD);
         mPage = 0;
         mPage = comicRequest.getField(RequestFieldType.PAGE);
-        mSize = comicRequest.getField(RequestFieldType.SIZE);
         return getRequestGetAndWithUrl(getSearchUrl(mKey, mPage, mSize));
     }
 

@@ -62,7 +62,7 @@ public abstract class DetailStrategy extends BaseComicParseStrategy {
     protected abstract List<Chapter> parseChapter(byte[] data) throws UnsupportedEncodingException;
 
     @Override
-    public Request buildRequest(IComicRequest comicRequest) {
+    public Request buildRequest(IComicRequest comicRequest) throws NullPointerException {
         // 取出cid，该值为必要
         if (comicRequest.getField(RequestFieldType.COMIC_ID) == null) {
             throw new NullPointerException("comic_id should not be null!");

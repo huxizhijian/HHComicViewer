@@ -26,7 +26,8 @@ import java.util.Map;
 /**
  * 传入参数
  *
- * @author huxizhijian 2017/10/2
+ * @author huxizhijian
+ * @date 2017/10/2
  */
 public class ComicRequestValues implements IComicRequest {
 
@@ -39,6 +40,7 @@ public class ComicRequestValues implements IComicRequest {
 
     }
 
+    @Override
     public ComicRequestValues addAllField(Map<Integer, Object> fields) {
         FIELDS_REFERENCE.get().putAll(fields);
         return this;
@@ -61,11 +63,13 @@ public class ComicRequestValues implements IComicRequest {
         return this;
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public final <T> T getField(int key) {
         return (T) FIELDS_REFERENCE.get().get(key);
     }
 
+    @Override
     public final Map<?, ?> getFields() {
         return FIELDS_REFERENCE.get();
     }
