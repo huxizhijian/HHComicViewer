@@ -24,9 +24,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Comic路由，通过注册ComicSource，让ui知道加载什么source
- *
- * @author huxizhijian 2017/10/1
+ * @author huxizhijian
+ * @date 2017/10/1
+ * @deprecated Comic路由，通过注册ComicSource，让ui知道加载什么source
  */
 public class ComicRouter {
 

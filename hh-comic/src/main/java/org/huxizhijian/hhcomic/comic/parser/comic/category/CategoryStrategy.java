@@ -16,9 +16,9 @@ import okhttp3.Request;
 /**
  * 分类策略
  *
- * @Author huxizhijian on 2017/10/11.
+ * @author huxizhijian
+ * @date 2017/10/11
  */
-
 public abstract class CategoryStrategy extends BaseComicParseStrategy {
 
     private String mCategoryType;
@@ -28,6 +28,12 @@ public abstract class CategoryStrategy extends BaseComicParseStrategy {
 
     /**
      * 获取分类真实网址
+     *
+     * @param categoryType 分类id之类能帮助构造url的值
+     * @param page         页码
+     * @param size         一页展示个数
+     * @return url
+     * @throws NullPointerException 分类id一般不能为空，抛出空指针异常
      */
     protected abstract String getCategoryUrl(String categoryType, int page, int size) throws NullPointerException;
 
@@ -35,13 +41,17 @@ public abstract class CategoryStrategy extends BaseComicParseStrategy {
      * 获取页数上限
      *
      * @param data 网页内容
-     * @return 页数上线，-1表示没法获取
+     * @return 页数上限，-1表示没法获取，此时将会根据返回集合是否为null判断到达最后
      * @throws UnsupportedEncodingException 编码转换时可能产生的异常
      */
     protected abstract int getPageCount(byte[] data) throws UnsupportedEncodingException;
 
     /**
      * 解析
+     *
+     * @param data 网页请求response body内容
+     * @return 结果集合
+     * @throws UnsupportedEncodingException 编码转换可能产生的异常
      */
     protected abstract List<Comic> parseRecommend(byte[] data) throws UnsupportedEncodingException;
 
