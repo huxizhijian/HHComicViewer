@@ -32,20 +32,35 @@ import java.util.List;
  */
 public class ComicRepository implements ComicDataSource {
 
+    /**
+     * 依赖注入
+     */
     private final ComicDataSource mLocalRepository;
     private final ComicDataSource mRemoteRepository;
 
-    private ComicRepository() {
-        mLocalRepository = new LocalComicRepository();
-        mRemoteRepository = new RemoteComicRepository();
+    private static ComicRepository sInstance;
+
+    private ComicRepository(ComicDataSource localRepository, ComicDataSource remoteRepository) {
+        mLocalRepository = localRepository;
+        mRemoteRepository = remoteRepository;
     }
 
-    public static ComicRepository getInstance() {
-        return Holder.INSTANCE;
-    }
-
-    private static final class Holder {
-        private static final ComicRepository INSTANCE = new ComicRepository();
+    /**
+     * Double check 方式实现的单例模式
+     *
+     * @param localRepository  本地仓库
+     * @param remoteRepository 网络仓库
+     * @return 实例
+     */
+    public static ComicRepository getInstance(ComicDataSource localRepository, ComicDataSource remoteRepository) {
+        if (sInstance == null) {
+            synchronized (ComicRepository.class) {
+                if (sInstance == null) {
+                    sInstance = new ComicRepository(localRepository, remoteRepository);
+                }
+            }
+        }
+        return sInstance;
     }
 
     @Override

@@ -14,7 +14,8 @@ import java.util.List;
 import okhttp3.Request;
 
 /**
- * @Author huxizhijian on 2017/10/10.
+ * @author huxizhijian
+ * @date 2017/10/10
  */
 
 public abstract class RankStrategy extends BaseComicParseStrategy {

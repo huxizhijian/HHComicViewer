@@ -19,26 +19,32 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 /**
- * @Author huxizhijian on 2017/10/9.
+ * @author huxizhijian
+ * @date 2017/10/9.
  */
 
 public abstract class DetailStrategy extends BaseComicParseStrategy {
 
-    // Comic id
+    /**
+     * Comic id
+     */
     protected String mComicId;
 
     /**
      * 获取请求的网址
      *
      * @param comicId Comic来源网站标识Id
+     * @return 网址
      */
     protected abstract String getDetailUrl(String comicId);
 
     /**
      * 解析内容
      *
-     * @param data 网页请求返回的内容
+     * @param data    网页请求返回的内容
+     * @param comicId comic网站标识
      * @return Comic
+     * @throws UnsupportedEncodingException 解析时可能会抛出的异常
      */
     protected abstract Comic parseComic(byte[] data, String comicId) throws UnsupportedEncodingException;
 

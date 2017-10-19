@@ -35,11 +35,6 @@ public abstract class BaseChapterParser implements IChapterParser {
         return null;
     }
 
-    @Override
-    public int size() {
-        return 0;
-    }
-
     private byte[] getWebContent(String url) throws IOException {
         Request request = new Request.Builder()
                 .url(url)

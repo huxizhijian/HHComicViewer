@@ -33,13 +33,26 @@ import java.util.List;
 public interface ComicDataSource {
 
     /**
-     * 结果获取回调
+     * 结果回调接口
      */
     interface ComicDataCallback {
+        /**
+         * 完成回调
+         *
+         * @param responseValues 结果
+         */
         void onSuccess(IComicResponse responseValues);
 
+        /**
+         * 异常回调
+         *
+         * @param throwable 异常信息
+         */
         void onError(Throwable throwable);
 
+        /**
+         * 资源不存在回调
+         */
         void onDataNotAvailable();
     }
 
