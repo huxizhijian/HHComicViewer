@@ -57,6 +57,9 @@ public abstract class DetailStrategy extends BaseComicParseStrategy {
 
     /**
      * 当shouldNotRequestToParseChapter()返回true时才调用，返回章节列表网络请求的Request
+     *
+     * @param comicId ComicId
+     * @return request
      */
     protected abstract Request buildChapterRequest(String comicId);
 
@@ -64,6 +67,8 @@ public abstract class DetailStrategy extends BaseComicParseStrategy {
      * Chapter网址列表解析
      *
      * @param data 获取到的网页内容
+     * @return result
+     * @throws UnsupportedEncodingException 异常
      */
     protected abstract List<Chapter> parseChapter(byte[] data) throws UnsupportedEncodingException;
 

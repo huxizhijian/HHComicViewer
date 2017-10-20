@@ -12,7 +12,8 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 /**
- * @Author huxizhijian on 2017/10/12.
+ * @author huxizhijian
+ * @date 2017/10/12
  */
 
 public abstract class BaseChapterParser implements IChapterParser {

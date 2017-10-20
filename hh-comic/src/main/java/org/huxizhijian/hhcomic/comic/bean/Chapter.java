@@ -22,20 +22,21 @@ import android.os.Parcelable;
 /**
  * 章节的实体类
  *
- * @author huxizhijian 2017/9/24
+ * @author huxizhijian
+ * @date 2017/9/24
  */
 public class Chapter implements Parcelable {
 
-    private String title;
-    private String path;
-    private int count;
-    private boolean complete;
-    private boolean download;
-    private long tid;
+    public String title;
+    public String chapterId;
+    public int count;
+    public boolean complete;
+    public boolean download;
+    public long tid;
 
-    public Chapter(String title, String path, int count, boolean complete, boolean download, long tid) {
+    public Chapter(String title, String chapterId, int count, boolean complete, boolean download, long tid) {
         this.title = title;
-        this.path = path;
+        this.chapterId = chapterId;
         this.count = count;
         this.complete = complete;
         this.download = download;
@@ -59,8 +60,8 @@ public class Chapter implements Parcelable {
         return title;
     }
 
-    public String getPath() {
-        return path;
+    public String getChapterId() {
+        return chapterId;
     }
 
     public int getCount() {
@@ -97,12 +98,12 @@ public class Chapter implements Parcelable {
 
     @Override
     public boolean equals(Object o) {
-        return o instanceof Chapter && ((Chapter) o).path.equals(path);
+        return o instanceof Chapter && ((Chapter) o).chapterId.equals(chapterId);
     }
 
     @Override
     public int hashCode() {
-        return path.hashCode();
+        return chapterId.hashCode();
     }
 
     @Override
@@ -113,7 +114,7 @@ public class Chapter implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(title);
-        dest.writeString(path);
+        dest.writeString(chapterId);
         dest.writeInt(count);
         dest.writeByte((byte) (complete ? 1 : 0));
         dest.writeByte((byte) (download ? 1 : 0));
