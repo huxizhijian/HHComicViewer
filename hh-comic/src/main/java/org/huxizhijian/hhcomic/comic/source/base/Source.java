@@ -6,5 +6,5 @@ package org.huxizhijian.hhcomic.comic.source.base;
  */
 public enum Source {
     HHManHua,
-    Dmzj
+    Dmzj,
 }
