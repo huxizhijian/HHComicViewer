@@ -99,7 +99,7 @@ public class DownloadManager {
         if (!mWaitList.isEmpty()) {
             DownloadInfo info = mWaitList.removeFirst();
             // 创建一个解析下载类的实例
-            SpiderQueen spider = new SpiderQueen();
+            SpiderQueen spider = new SpiderQueen(info);
             mCurrentTask = info;
             mCurrentSpider = spider;
             // 添加监听事件
