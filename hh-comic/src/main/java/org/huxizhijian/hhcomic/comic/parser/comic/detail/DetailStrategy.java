@@ -53,7 +53,7 @@ public abstract class DetailStrategy extends BaseComicParseStrategy {
      *
      * @return false不需要，true需要进行网络请求
      */
-    protected abstract boolean shouldNotRequestToParseChapter();
+    protected abstract boolean needMoreRequestGetChapterList();
 
     /**
      * 当shouldNotRequestToParseChapter()返回true时才调用，返回章节列表网络请求的Request
@@ -61,7 +61,7 @@ public abstract class DetailStrategy extends BaseComicParseStrategy {
      * @param comicId ComicId
      * @return request
      */
-    protected abstract Request buildChapterRequest(String comicId);
+    protected abstract Request buildChapterListRequest(String comicId);
 
     /**
      * Chapter网址列表解析
@@ -88,10 +88,10 @@ public abstract class DetailStrategy extends BaseComicParseStrategy {
         // 添加返回结果
         comicResponse.setResponse(comic);
         List<Chapter> chapters = null;
-        if (shouldNotRequestToParseChapter()) {
+        if (needMoreRequestGetChapterList()) {
             chapters = parseChapter(data);
         } else {
-            Request request = buildChapterRequest(mComicId);
+            Request request = buildChapterListRequest(mComicId);
             OkHttpClient client = HHEngine.getConfiguration(ConfigKeys.OKHTTP_CLIENT);
             Response response = client.newCall(request).execute();
             if (response.isSuccessful() && response.code() > 199 && response.code() < 300) {

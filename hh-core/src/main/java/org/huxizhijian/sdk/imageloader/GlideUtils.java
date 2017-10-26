@@ -21,17 +21,21 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
+import com.sunfusheng.glideimageview.GlideImageLoader;
+import com.sunfusheng.glideimageview.progress.OnGlideImageViewListener;
 
 import org.huxizhijian.sdk.imageloader.listener.ImageLoaderManager;
+import org.huxizhijian.sdk.imageloader.listener.ImageLoaderProgressListener;
 import org.huxizhijian.sdk.imageloader.listener.ImageRequestListener;
+import org.huxizhijian.sdk.imageloader.options.GlideApp;
 
 import java.io.File;
 
@@ -48,7 +52,7 @@ public class GlideUtils implements ImageLoaderManager {
 
     @Override
     public void displayImage(Context context, ImageView imageView, String url) {
-        Glide.with(context).load(url).into(imageView);
+        GlideApp.with(context).load(url).into(imageView);
     }
 
     @Override
@@ -62,7 +66,7 @@ public class GlideUtils implements ImageLoaderManager {
                 .fitCenter()
                 .dontAnimate();
 
-        Glide.with(context)
+        GlideApp.with(context)
                 .load(url)
                 .apply(options)
                 .into(imageView);
@@ -70,7 +74,7 @@ public class GlideUtils implements ImageLoaderManager {
 
     @Override
     public void displayGallery(Context context, File file, final ImageView imageView) {
-        Glide.with(context)
+        GlideApp.with(context)
                 .load(file)
                 .apply(GALLERY_REQUEST_OPTIONS)
                 .into(new SimpleTarget<Drawable>() {
@@ -82,8 +86,25 @@ public class GlideUtils implements ImageLoaderManager {
     }
 
     @Override
+    public void displayGalleryFull(Context context, String url, ImageView imageView, final ImageLoaderProgressListener listener) {
+        // 创建一个Loader
+        GlideImageLoader loader = GlideImageLoader.create(imageView);
+        // 设置监听
+        loader.setOnGlideImageViewListener(url, new OnGlideImageViewListener() {
+            @Override
+            public void onProgress(int percent, boolean isDone, GlideException exception) {
+                listener.onProgress(percent, isDone, exception);
+            }
+        });
+        // 设置渐变，并且加载到ImageView中
+        loader.requestBuilder(url, GALLERY_REQUEST_OPTIONS)
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .into(imageView);
+    }
+
+    @Override
     public void displayGalleryFull(Context context, String url, final ImageView imageView) {
-        Glide.with(context)
+        GlideApp.with(context)
                 .load(url)
                 .apply(GALLERY_REQUEST_OPTIONS)
                 .into(new SimpleTarget<Drawable>() {
@@ -102,7 +123,7 @@ public class GlideUtils implements ImageLoaderManager {
                 .dontAnimate()
                 .skipMemoryCache(true);
 
-        Glide.with(context)
+        GlideApp.with(context)
                 .load(url)
                 .apply(options)
                 .into(imageView);
@@ -118,7 +139,7 @@ public class GlideUtils implements ImageLoaderManager {
                 .override(165, 220);
 
 
-        Glide.with(context)
+        GlideApp.with(context)
                 .load(url)
                 .apply(options)
                 .listener(new RequestListener<Drawable>() {
@@ -144,12 +165,12 @@ public class GlideUtils implements ImageLoaderManager {
 
     @Override
     public void clearDiskCache(Context context) {
-        Glide.get(context).clearDiskCache();
+        GlideApp.get(context).clearDiskCache();
     }
 
     @Override
     public void clearMemoryCache(Context context) {
-        Glide.get(context).clearMemory();
+        GlideApp.get(context).clearMemory();
     }
 
 }

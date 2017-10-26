@@ -45,6 +45,11 @@ public interface ImageLoaderManager {
     void displayGallery(Context context, File file, ImageView imageView);
 
     /**
+     * Gallery中加载在线图片，带有下载进度监听
+     */
+    void displayGalleryFull(Context context, String url, ImageView imageView, ImageLoaderProgressListener listener);
+
+    /**
      * Gallery中在线加载全尺寸图片
      */
     void displayGalleryFull(Context context, String url, ImageView imageView);

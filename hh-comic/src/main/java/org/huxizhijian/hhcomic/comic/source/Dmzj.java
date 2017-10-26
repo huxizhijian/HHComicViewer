@@ -95,13 +95,13 @@ public class Dmzj extends ComicSource {
      */
     public ComicSource defaultConfig() {
         return new Dmzj()
-                .addStrategy(ComicDataSourceType.WEB_DETAIL, new DMZJDetailStrategy());
+                .addStrategy(ComicDataSourceType.WEB_DETAIL, new DmzjDetailStrategy());
     }
 
     /**
      * Comic详情策略
      */
-    public class DMZJDetailStrategy extends DetailStrategy {
+    public class DmzjDetailStrategy extends DetailStrategy {
 
         @Override
         protected String getDetailUrl(String comicId) {
@@ -131,12 +131,12 @@ public class Dmzj extends ComicSource {
         }
 
         @Override
-        protected boolean shouldNotRequestToParseChapter() {
+        protected boolean needMoreRequestGetChapterList() {
             return false;
         }
 
         @Override
-        protected Request buildChapterRequest(String comicId) {
+        protected Request buildChapterListRequest(String comicId) {
             return null;
         }
 

@@ -29,9 +29,12 @@ import java.util.List;
 
 /**
  * 保存于数据库的实体Comic类
- * Created by wei on 2016/8/23.
+ * will deprecated see {@link org.huxizhijian.hhcomic.comic.bean.Comic}
+ *
+ * @author huxizhijian
+ * @date 2016/8/23
+ * @deprecated 在下个版本将被替代
  */
-@Deprecated
 @Table(name = "comic")
 public class Comic implements Serializable, Comparable {
     @Column(name = "id", isId = true)

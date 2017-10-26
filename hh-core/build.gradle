@@ -42,10 +42,12 @@ dependencies {
     compile "com.android.support:support-v13:${supportLibVersion}"
     compile "com.android.support:design:${supportLibVersion}"
     // glide 图片加载库
-    compile 'com.github.bumptech.glide:glide:4.1.1'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.1.1'
+    compile 'com.github.bumptech.glide:glide:4.2.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.2.0'
     // glide 变换
     compile 'jp.wasabeef:glide-transformations:3.0.1'
+    // 一个封装了glide加载进度监听的库
+    compile 'com.sunfusheng:glideimageview:1.1.0'
     // gson JSON解析库
     compile 'com.google.code.gson:gson:2.8.0'
     // okhttp3 网络请求库

@@ -130,8 +130,8 @@ public class HHManHua extends ComicSource {
             comic.setCover(comicInfoDiv.select("div[id=about_style]").first()
                     .getElementsByTag("img").first().attr("src"));
 
-            Element about_kit = comicInfoDiv.select("div[id=about_kit]").first();
-            Elements comicInfoList = about_kit.select("li");
+            Element aboutKit = comicInfoDiv.select("div[id=about_kit]").first();
+            Elements comicInfoList = aboutKit.select("li");
             comicInfoList.remove(0);
             for (Element comicInfo : comicInfoList) {
                 switch (comicInfo.getElementsByTag("b").first().text()) {
@@ -167,12 +167,12 @@ public class HHManHua extends ComicSource {
         }
 
         @Override
-        protected boolean shouldNotRequestToParseChapter() {
+        protected boolean needMoreRequestGetChapterList() {
             return false;
         }
 
         @Override
-        protected Request buildChapterRequest(String comicId) {
+        protected Request buildChapterListRequest(String comicId) {
             return null;
         }
 
