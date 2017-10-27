@@ -11,7 +11,11 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
+        javaCompileOptions {
+            annotationProcessorOptions {
+                includeCompileClasspath false
+            }
+        }
     }
     buildTypes {
         release {
@@ -26,6 +30,10 @@ android {
         mavenCentral()
         maven { url 'https://jitpack.io' }
         maven { url 'https://maven.google.com' }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
@@ -44,12 +52,12 @@ dependencies {
     // glide 图片加载库
     compile 'com.github.bumptech.glide:glide:4.2.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.2.0'
-    // glide 变换
+//     glide 变换
     compile 'jp.wasabeef:glide-transformations:3.0.1'
     // 一个封装了glide加载进度监听的库
-    compile 'com.sunfusheng:glideimageview:1.1.0'
+//    compile 'com.sunfusheng:glideimageview:1.1.0'
     // gson JSON解析库
-    compile 'com.google.code.gson:gson:2.8.0'
+    compile 'com.google.code.gson:gson:2.8.2'
     // okhttp3 网络请求库
     compile 'com.squareup.okhttp3:okhttp:3.9.0'
     // Android工具类库
@@ -59,7 +67,7 @@ dependencies {
     // 字体图标库，使用fontawesome开源图标库
     compile 'com.joanzapata.iconify:android-iconify-fontawesome:2.2.2'
     // 阿里巴巴fastjson库
-    compile 'com.alibaba:fastjson:1.2.38'
+    compile 'com.alibaba:fastjson:1.2.39'
     // greenDAO库
     compile 'org.greenrobot:greendao:3.2.2'
     androidTestCompile 'junit:junit:4.12'

@@ -25,10 +25,14 @@ android {
         maven { url 'https://jitpack.io' }
         maven { url 'https://maven.google.com' }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':hh-core')
     // test
     compile "com.android.support.test.espresso:espresso-idling-resource:${espressoVersion}"
