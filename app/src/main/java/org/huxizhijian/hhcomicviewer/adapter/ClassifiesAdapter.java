@@ -35,7 +35,9 @@ import java.util.List;
 
 /**
  * 分类，排行榜显示适配器
- * Created by wei on 2017/1/8.
+ *
+ * @author huxizhijian
+ * @date 2017/1/8
  */
 
 public class ClassifiesAdapter extends RecyclerView.Adapter<ClassifiesAdapter.ClassifiesViewHolder> {
@@ -63,14 +65,11 @@ public class ClassifiesAdapter extends RecyclerView.Adapter<ClassifiesAdapter.Cl
         mImageLoader.displayThumbnail(mContext, mClassifiesEntities.get(position).getClassifiesPicUrl(), holder.iv,
                 R.mipmap.blank, R.mipmap.blank, 165, 220);
         holder.tv.setText(mClassifiesEntities.get(position).getClassifiesName());
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(mContext, ClassifiesShowActivity.class);
-                intent.putExtra("url", mClassifiesEntities.get(position).getClassifiesUrl());
-                intent.putExtra("classifies_name", mClassifiesEntities.get(position).getClassifiesName());
-                mContext.startActivity(intent);
-            }
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(mContext, ClassifiesShowActivity.class);
+            intent.putExtra("url", mClassifiesEntities.get(position).getClassifiesUrl());
+            intent.putExtra("classifies_name", mClassifiesEntities.get(position).getClassifiesName());
+            mContext.startActivity(intent);
         });
     }
 
@@ -86,8 +85,8 @@ public class ClassifiesAdapter extends RecyclerView.Adapter<ClassifiesAdapter.Cl
 
         ClassifiesViewHolder(View itemView) {
             super(itemView);
-            iv = (ImageView) itemView.findViewById(R.id.imageView_classifies);
-            tv = (TextView) itemView.findViewById(R.id.textView_classifies);
+            iv = itemView.findViewById(R.id.imageView_classifies);
+            tv = itemView.findViewById(R.id.textView_classifies);
         }
     }
 
