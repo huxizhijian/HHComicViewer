@@ -53,7 +53,7 @@ public abstract class CategoryStrategy extends BaseComicParseStrategy {
      * @return 结果集合
      * @throws UnsupportedEncodingException 编码转换可能产生的异常
      */
-    protected abstract List<Comic> parseRecommend(byte[] data) throws UnsupportedEncodingException;
+    protected abstract List<Comic> parseCategory(byte[] data) throws UnsupportedEncodingException;
 
     @Override
     public Request buildRequest(IComicRequest comicRequest) throws UnsupportedEncodingException, NullPointerException {
@@ -68,7 +68,7 @@ public abstract class CategoryStrategy extends BaseComicParseStrategy {
         comicResponse.addField(ResponseFieldType.PAGE, mPage);
         mPageCount = getPageCount(data);
         comicResponse.addField(ResponseFieldType.PAGE_COUNT, mPageCount);
-        comicResponse.setResponse(parseRecommend(data));
+        comicResponse.setResponse(parseCategory(data));
         return comicResponse;
     }
 

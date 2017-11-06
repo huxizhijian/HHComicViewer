@@ -29,7 +29,7 @@ public abstract class SearchGetStrategy extends BaseComicParseStrategy {
      * 构建搜索网址(get形式)
      *
      * @param key  搜索关键词
-     * @param page 当前请求的页面
+     * @param page 当前请求的页面，默认从0开始请求，如果页码为1开始，请自行+1
      * @param size 每页展示的Comic数量，需要看网站支不支持这个，不一定有用
      * @return 构建出的搜索网址
      */
@@ -43,7 +43,8 @@ public abstract class SearchGetStrategy extends BaseComicParseStrategy {
     /**
      * 获取搜索结果页数
      *
-     * @return 页数
+     * @param data html
+     * @return 页数，返回-1表示不清楚
      */
     protected abstract int getPageCount(byte[] data);
 

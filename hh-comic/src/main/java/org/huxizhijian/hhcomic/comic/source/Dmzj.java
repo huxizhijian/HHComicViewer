@@ -9,12 +9,15 @@ import org.huxizhijian.core.util.misc.Pair;
 import org.huxizhijian.hhcomic.R;
 import org.huxizhijian.hhcomic.comic.bean.Chapter;
 import org.huxizhijian.hhcomic.comic.bean.Comic;
+import org.huxizhijian.hhcomic.comic.parser.comic.category.CategoryStrategy;
 import org.huxizhijian.hhcomic.comic.parser.comic.detail.DetailStrategy;
+import org.huxizhijian.hhcomic.comic.parser.comic.search.SearchGetStrategy;
 import org.huxizhijian.hhcomic.comic.source.base.ComicSource;
 import org.huxizhijian.hhcomic.comic.source.base.Source;
 import org.huxizhijian.hhcomic.comic.type.ComicDataSourceType;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -95,7 +98,8 @@ public class Dmzj extends ComicSource {
      */
     public ComicSource defaultConfig() {
         return new Dmzj()
-                .addStrategy(ComicDataSourceType.WEB_DETAIL, new DmzjDetailStrategy());
+                .addStrategy(ComicDataSourceType.WEB_DETAIL, new DmzjDetailStrategy())
+                .addStrategy(ComicDataSourceType.WEB_SEARCH, new DmzjSearchStrategy());
     }
 
     /**
@@ -110,7 +114,7 @@ public class Dmzj extends ComicSource {
 
         @Override
         protected Comic parseComic(byte[] data, String comicId) throws UnsupportedEncodingException {
-            String html = new String(data, "utf-8");
+            String html = new String(data, Charset.forName("gb2312"));
             JSONObject object = JSON.parseObject(html);
             String title = object.getString("title");
             String cover = object.getString("cover");
@@ -159,5 +163,81 @@ public class Dmzj extends ComicSource {
             return chapters;
         }
     }
+
+    /**
+     * Comic搜索策略
+     */
+    public class DmzjSearchStrategy extends SearchGetStrategy {
+
+        @Override
+        protected String getSearchUrl(String key, int page, int size) throws UnsupportedEncodingException {
+            return String.format(Locale.CHINESE, DMZJ_SEARCH_URL, 0, key, page);
+        }
+
+        @Override
+        protected List<Comic> parseSearchResult(byte[] data) throws UnsupportedEncodingException {
+            String html = new String(data, Charset.forName("gb2312"));
+            JSONArray array = JSON.parseArray(html);
+            int size = array.size();
+            List<Comic> comicList = new ArrayList<>();
+            Comic comic;
+            for (int i = 0; i < size; i++) {
+                JSONObject object = array.getJSONObject(i);
+                String cid = object.getString("id");
+                String title = object.getString("title");
+                String cover = object.getString("cover");
+                String author = object.getString("authors");
+                comic = new Comic(SOURCE_TYPE, cid, title, cover, null, author);
+                comicList.add(comic);
+            }
+            return comicList;
+        }
+
+        @Override
+        protected int getPageCount(byte[] data) {
+            return -1;
+        }
+    }
+
+    /**
+     * Comic分类策略
+     */
+    public class DmzjCategoryStrategy extends CategoryStrategy {
+
+        @Override
+        protected String getCategoryUrl(String categoryType, int page, int size) throws NullPointerException {
+            if (categoryType == null) {
+                throw new NullPointerException("category type should not be null!");
+            }
+            return String.format(Locale.CHINESE, DMZJ_CLASSIFY_URL, Integer.parseInt(categoryType), page);
+        }
+
+        @Override
+        protected int getPageCount(byte[] data) throws UnsupportedEncodingException {
+            return -1;
+        }
+
+        @Override
+        protected List<Comic> parseCategory(byte[] data) throws UnsupportedEncodingException {
+            String html = new String(data, Charset.forName("gb2312"));
+            JSONArray array = JSON.parseArray(html);
+            int size = array.size();
+            JSONObject object;
+            Comic comic;
+            List<Comic> comicList = new ArrayList<>();
+            for (int i = 0; i < size; i++) {
+                object = array.getJSONObject(i);
+                String cid = object.getString("id");
+                String title = object.getString("title");
+                String author = object.getString("authors");
+                String cover = object.getString("cover");
+                String update = object.getString("last_updatetime");
+                comic = new Comic(SOURCE_TYPE, cid, title, cover, update, author);
+                comicList.add(comic);
+            }
+            return comicList;
+        }
+    }
+
 
 }

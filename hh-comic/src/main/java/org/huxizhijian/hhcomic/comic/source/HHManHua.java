@@ -33,9 +33,9 @@ import okhttp3.Request;
 public class HHManHua extends ComicSource {
 
     private static final String HH_NAME = "汗汗漫画";
-    private static final String HH_BASE_URL = "http://www.hhmmoo.com";  //漫画主站点
+    private static final String HH_BASE_URL = "http://www.hhmmoo.com";
     private static final String HH_COMIC_PRE = "/manhua";
-    private static final String HH_SEARCH_URL = "http://ssooff.com/";   //漫画搜索网站
+    private static final String HH_SEARCH_URL = "http://ssooff.com/";
 
     private static final int SOURCE_TYPE = Source.HHManHua.hashCode();
 
@@ -375,7 +375,7 @@ public class HHManHua extends ComicSource {
         }
 
         @Override
-        protected List<Comic> parseRecommend(byte[] data) throws UnsupportedEncodingException {
+        protected List<Comic> parseCategory(byte[] data) throws UnsupportedEncodingException {
             String content = new String(data, "utf-8");
             Document doc = Jsoup.parse(content);
             Element comicsSrc = doc.select("div[class=cComicList]").first();
