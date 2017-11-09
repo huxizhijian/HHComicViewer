@@ -49,6 +49,7 @@ android {
         maven { url 'http://guardian.github.com/maven/repo-releases' }
         jcenter()
         maven { url "https://jitpack.io" }
+        maven { url 'https://maven.google.com' }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
