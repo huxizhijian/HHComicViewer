@@ -62,6 +62,7 @@ ext {
 }
 
 dependencies {
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':hh-comic')
     // test

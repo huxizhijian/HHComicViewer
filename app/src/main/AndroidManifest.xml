@@ -38,11 +38,11 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.READ_LOGS"/>
-    <!--保存资源到SD卡-->
+    <!-- 保存资源到SD卡 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
-        android:name="org.huxizhijian.hhcomicviewer.app.HHApplication"
+        android:name=".app.HHApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -50,16 +50,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:theme">
-
         <activity
-            android:name="org.huxizhijian.hhcomicviewer.ui.main.MainActivity"
+            android:name=".ui.main.MainActivity"
             android:label="@string/app_name_short"
             android:launchMode="singleTask"
             android:screenOrientation="portrait">
         </activity>
-
         <activity
-            android:name="org.huxizhijian.hhcomicviewer.ui.main.SplashActivity"
+            android:name=".ui.main.SplashActivity"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -68,10 +66,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="org.huxizhijian.hhcomicviewer.ui.entry.GalleryActivity"
+            android:name=".ui.entry.GalleryActivity"
             android:theme="@android:style/Theme.DeviceDefault.NoActionBar.Fullscreen"/>
         <activity
-            android:name="org.huxizhijian.hhcomicviewer.ui.search.SearchActivity"
+            android:name=".ui.search.SearchActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -84,16 +82,16 @@
         </activity>
 
         <service
-            android:name="org.huxizhijian.hhcomicviewer.service.DownloadManagerService"
+            android:name=".service.DownloadManagerService"
             android:enabled="true"
             android:exported="false"/>
 
         <activity
-            android:name="org.huxizhijian.hhcomicviewer.ui.user.PreferenceActivity"
+            android:name=".ui.user.PreferenceActivity"
             android:label=""
             android:screenOrientation="portrait"/>
         <activity
-            android:name="org.huxizhijian.hhcomicviewer.ui.entry.ComicDetailsActivity"
+            android:name=".ui.entry.ComicDetailsActivity"
             android:screenOrientation="portrait">
         </activity>
 
@@ -123,7 +121,7 @@
 
         <!-- 微信分享回调 -->
         <activity
-            android:name="org.huxizhijian.hhcomicviewer.wxapi.WXEntryActivity"
+            android:name=".wxapi.WXEntryActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
             android:screenOrientation="portrait"
@@ -134,28 +132,24 @@
             android:name="com.tencent.bugly.beta.ui.BetaActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|locale"
             android:theme="@android:style/Theme.Translucent"/>
-
-        <activity android:name="org.huxizhijian.hhcomicviewer.ui.recommend.ComicShowActivity">
+        <activity android:name=".ui.recommend.ComicShowActivity">
         </activity>
-        <activity android:name="org.huxizhijian.hhcomicviewer.ui.recommend.RankShowActivity">
+        <activity android:name=".ui.recommend.RankShowActivity">
         </activity>
-        <activity android:name="org.huxizhijian.hhcomicviewer.ui.recommend.ClassifiesShowActivity">
+        <activity android:name=".ui.recommend.ClassifiesShowActivity">
         </activity>
-
         <activity
-            android:name="org.huxizhijian.hhcomicviewer.ui.download.OfflineComicDownloadActivity"
+            android:name=".ui.download.OfflineComicDownloadActivity"
             android:excludeFromRecents="true"
             android:launchMode="singleTask">
         </activity>
-
         <activity
-            android:name="org.huxizhijian.hhcomicviewer.ui.download.ComicChapterDownloadActivity"
+            android:name=".ui.download.ComicChapterDownloadActivity"
             android:excludeFromRecents="true"
             android:launchMode="singleTask">
         </activity>
-
         <activity
-            android:name="org.huxizhijian.hhcomicviewer.ui.download.DownloadingChapterActivity"
+            android:name=".ui.download.DownloadingChapterActivity"
             android:excludeFromRecents="true"
             android:launchMode="singleTask">
         </activity>
@@ -170,6 +164,8 @@
                 android:resource="@xml/provider_paths"/>
         </provider>
 
+        <activity android:name=".ui.debug.DebugActivity">
+        </activity>
     </application>
 
 </manifest>
