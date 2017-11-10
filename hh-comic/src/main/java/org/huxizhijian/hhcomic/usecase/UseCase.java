@@ -16,6 +16,8 @@
 
 package org.huxizhijian.hhcomic.usecase;
 
+import android.support.annotation.Nullable;
+
 import org.huxizhijian.hhcomic.comic.value.IComicRequest;
 import org.huxizhijian.hhcomic.comic.value.IComicResponse;
 
@@ -51,12 +53,22 @@ public abstract class UseCase<Q extends UseCase.RequestValues, P extends UseCase
         executeUseCase(mRequestValues);
     }
 
+    /**
+     * 执行use case的方法
+     *
+     * @param requestValues 请求参数类
+     */
     protected abstract void executeUseCase(Q requestValues);
 
     /**
      * 传入参数，IComicRequest
      */
     public interface RequestValues {
+        /**
+         * 获取请求参数
+         *
+         * @return 请求参数的集合类
+         */
         IComicRequest getValues();
     }
 
@@ -64,6 +76,11 @@ public abstract class UseCase<Q extends UseCase.RequestValues, P extends UseCase
      * 返回参数，IComicResponse
      */
     public interface ResponseValue {
+        /**
+         * 获取结果
+         *
+         * @return 结果的集合类，可以取出结果
+         */
         IComicResponse getValues();
     }
 
@@ -71,14 +88,23 @@ public abstract class UseCase<Q extends UseCase.RequestValues, P extends UseCase
 
         /**
          * use case调用成功并返回数据
+         *
+         * @param responseValue 结果类
          */
-        void onSuccess(R reposeValues);
+        void onSuccess(R responseValue);
 
         /**
          * 出现了异常
          */
         void onError();
+    }
 
+    public static <T> T checkNotNull(T reference, @Nullable Object errorMessage) {
+        if(reference == null) {
+            throw new NullPointerException(String.valueOf(errorMessage));
+        } else {
+            return reference;
+        }
     }
 
 }
