@@ -26,6 +26,17 @@ import okhttp3.Response;
  */
 public class RemoteComicRepository implements ComicDataSource {
 
+    private RemoteComicRepository() {
+    }
+
+    private static final class Holder {
+        private static final RemoteComicRepository INSTANCE = new RemoteComicRepository();
+    }
+
+    public static RemoteComicRepository getInstance() {
+        return Holder.INSTANCE;
+    }
+
     @Override
     public void get(ComicSource source, IComicRequest requestValues, ComicDataCallback callback) {
         int type = requestValues.getRequestType();

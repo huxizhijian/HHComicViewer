@@ -21,6 +21,7 @@ package org.huxizhijian.hhcomic.comic.type;
  *
  * @author huxizhijian 2017/10/1
  */
+@SuppressWarnings("unused")
 public class RequestFieldType {
     public static final int KEY_WORD = 0x0;
     public static final int PAGE = 0x1;

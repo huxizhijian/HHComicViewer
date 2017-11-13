@@ -60,9 +60,10 @@ public class ComicResponseValues implements IComicResponse {
         return this;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public Object getResponse() {
-        return FIELDS_REFERENCE.get().containsValue(ResponseFieldType.COMIC_RESPONSE);
+    public <T> T getResponse() {
+        return (T) FIELDS_REFERENCE.get().get(ResponseFieldType.COMIC_RESPONSE);
     }
 
     @Override

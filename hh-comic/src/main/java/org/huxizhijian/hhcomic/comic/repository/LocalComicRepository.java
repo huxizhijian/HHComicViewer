@@ -22,6 +22,17 @@ public class LocalComicRepository implements ComicDataSource {
 
     private ComicDBHelper mComicDBHelper = ComicDBHelper.getInstance();
 
+    private LocalComicRepository() {
+    }
+
+    private static final class Holder {
+        private static final LocalComicRepository INSTANCE = new LocalComicRepository();
+    }
+
+    public static LocalComicRepository getInstance() {
+        return Holder.INSTANCE;
+    }
+
     @Override
     public void get(ComicSource source, IComicRequest requestValues, ComicDataCallback callback) {
         int order = requestValues.getField(RequestFieldType.ORDER);

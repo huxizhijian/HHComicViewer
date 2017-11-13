@@ -15,7 +15,7 @@ public interface IComicResponse {
      *
      * @return Comic或其集合或Null
      */
-    Object getResponse();
+    <T> T  getResponse();
 
     /**
      * 设置返回结果

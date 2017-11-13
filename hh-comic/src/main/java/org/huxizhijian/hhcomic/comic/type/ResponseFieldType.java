@@ -19,6 +19,7 @@ package org.huxizhijian.hhcomic.comic.type;
 /**
  * @author huxizhijian 2017/10/2
  */
+@SuppressWarnings("unused")
 public class ResponseFieldType {
     public static final int COMIC_RESPONSE = 0x0;
     public static final int PAGE = 0x1;

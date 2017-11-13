@@ -74,7 +74,7 @@ public class UseCaseHandler {
     }
 
 
-    public UseCaseHandler getInstance() {
+    public static UseCaseHandler getInstance() {
         return Holder.INSTANCE;
     }
 

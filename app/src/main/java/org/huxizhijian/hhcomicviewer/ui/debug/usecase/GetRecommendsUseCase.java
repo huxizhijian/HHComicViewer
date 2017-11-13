@@ -7,6 +7,8 @@ import org.huxizhijian.hhcomic.comic.value.IComicRequest;
 import org.huxizhijian.hhcomic.comic.value.IComicResponse;
 import org.huxizhijian.hhcomic.usecase.UseCase;
 
+import static org.huxizhijian.hhcomic.util.Preconditions.checkNotNull;
+
 /**
  * @author huxizhijian
  * @date 2017/11/9

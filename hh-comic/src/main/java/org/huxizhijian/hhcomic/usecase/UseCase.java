@@ -16,8 +16,6 @@
 
 package org.huxizhijian.hhcomic.usecase;
 
-import android.support.annotation.Nullable;
-
 import org.huxizhijian.hhcomic.comic.value.IComicRequest;
 import org.huxizhijian.hhcomic.comic.value.IComicResponse;
 
@@ -97,14 +95,6 @@ public abstract class UseCase<Q extends UseCase.RequestValues, P extends UseCase
          * 出现了异常
          */
         void onError();
-    }
-
-    public static <T> T checkNotNull(T reference, @Nullable Object errorMessage) {
-        if(reference == null) {
-            throw new NullPointerException(String.valueOf(errorMessage));
-        } else {
-            return reference;
-        }
     }
 
 }
