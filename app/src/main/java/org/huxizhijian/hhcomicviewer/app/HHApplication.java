@@ -77,19 +77,11 @@ public class HHApplication extends MultiDexApplication {
         DbManager.DaoConfig daoConfig = new DbManager.DaoConfig()
                 .setDbName("comic_db")
                 .setDbVersion(1)
-                .setDbOpenListener(new DbManager.DbOpenListener() {
-                    @Override
-                    public void onDbOpened(DbManager db) {
-                        // 开启WAL, 对写入加速提升巨大
-                        db.getDatabase().enableWriteAheadLogging();
-                    }
+                .setDbOpenListener(db -> {
+                    // 开启WAL, 对写入加速提升巨大
+                    db.getDatabase().enableWriteAheadLogging();
                 })
-                .setDbUpgradeListener(new DbManager.DbUpgradeListener() {
-                    @Override
-                    public void onUpgrade(DbManager db, int oldVersion, int newVersion) {
-                        db.getDatabase().enableWriteAheadLogging();
-                    }
-                });
+                .setDbUpgradeListener((db, oldVersion, newVersion) -> db.getDatabase().enableWriteAheadLogging());
         return daoConfig;
     }
 
@@ -130,7 +122,9 @@ public class HHApplication extends MultiDexApplication {
                 .addSource(Source.HHManHua.hashCode(), new HHManHua().defaultConfig());
     }
 
-    //初始化腾讯bugly
+    /**
+     * 初始化腾讯bugly
+     */
     private void initBugly() {
         Beta.largeIconId = R.mipmap.ic_launcher;
         Beta.smallIconId = R.mipmap.ic_launcher;

@@ -81,5 +81,4 @@ public class HHLogger {
             Logger.t(tag).e(message);
         }
     }
-
 }

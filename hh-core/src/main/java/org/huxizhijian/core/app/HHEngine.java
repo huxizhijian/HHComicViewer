@@ -25,7 +25,8 @@ import java.util.HashMap;
  * 封装配置内容的入口类，通常用户不会直接调用{@link Configurator}的获取配置方法
  * 调用init后直接返回{@link Configurator}的实例
  *
- * @author huxizhijian 2017/9/17
+ * @author huxizhijian
+ * @date 2017/9/17
  */
 public final class HHEngine {
 

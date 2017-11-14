@@ -2,6 +2,7 @@ package org.huxizhijian.hhcomicviewer.ui.debug;
 
 import org.huxizhijian.hhcomic.comic.bean.Comic;
 import org.huxizhijian.hhcomic.comic.repository.ComicRepository;
+import org.huxizhijian.hhcomic.comic.type.ComicDataSourceType;
 import org.huxizhijian.hhcomic.comic.type.RequestFieldType;
 import org.huxizhijian.hhcomic.comic.type.ResponseFieldType;
 import org.huxizhijian.hhcomic.comic.value.ComicRequestValues;
@@ -69,7 +70,8 @@ public class GetRecommendsPresenter implements GetRecommendsContract.Presenter {
     private void getComicList(boolean isLoadMore) {
         IComicRequest request = new ComicRequestValues();
         request.addField(RequestFieldType.PAGE, mPage);
-        request.setRequestType(mSourceType);
+        request.setRequestType(ComicDataSourceType.WEB_RECOMMENDED);
+//        request.addField(RequestFieldType.RECOMMEND_TYPE, ComicRouter.getInstance().getSource());
         mUseCaseHandler.execute(mUseCase, () -> request, new UseCase.UseCaseCallback<UseCase.ResponseValue>() {
             @Override
             public void onSuccess(UseCase.ResponseValue responseValue) {

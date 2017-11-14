@@ -70,5 +70,7 @@ dependencies {
     compile 'com.alibaba:fastjson:1.2.39'
     // greenDAO库
     compile 'org.greenrobot:greendao:3.2.2'
+    // BRVAH RecyclerAdapter框架
+    compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.30'
     androidTestCompile 'junit:junit:4.12'
 }
