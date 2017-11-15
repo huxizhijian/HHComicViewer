@@ -32,11 +32,11 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile project(':hh-core')
+    api fileTree(include: ['*.jar'], dir: 'libs')
+    api project(':hh-core')
     // test
-    compile "com.android.support.test.espresso:espresso-idling-resource:${espressoVersion}"
-    testCompile "junit:junit:${junitVersion}"
+    api "com.android.support.test.espresso:espresso-idling-resource:${espressoVersion}"
+    testApi "junit:junit:${junitVersion}"
     // Jsoup DOM操作库
-    compile 'org.jsoup:jsoup:1.10.3'
+    api 'org.jsoup:jsoup:1.10.3'
 }

@@ -59,46 +59,46 @@ android {
 
 dependencies {
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile project(':hh-comic')
+    api fileTree(include: ['*.jar'], dir: 'libs')
+    api project(':hh-comic')
     // test
-    compile "com.android.support.test.espresso:espresso-idling-resource:${espressoVersion}"
-    testCompile "junit:junit:${junitVersion}"
+    api "com.android.support.test.espresso:espresso-idling-resource:${espressoVersion}"
+    testApi "junit:junit:${junitVersion}"
     // Mob的ShareSDK依赖
-    compile files('libs/MobCommons-2016.1107.1809.jar')
-    compile files('libs/MobTools-2016.1107.1809.jar')
-    compile files('libs/ShareSDK-Core-2.7.10.jar')
-    compile files('libs/ShareSDK-Email-2.7.10.jar')
-    compile files('libs/ShareSDK-QQ-2.7.10.jar')
-    compile files('libs/ShareSDK-QZone-2.7.10.jar')
-    compile files('libs/ShareSDK-ShortMessage-2.7.10.jar')
-    compile files('libs/ShareSDK-SinaWeibo-2.7.10.jar')
-    compile files('libs/ShareSDK-Wechat-2.7.10.jar')
-    compile files('libs/ShareSDK-Wechat-Core-2.7.10.jar')
-    compile files('libs/ShareSDK-Wechat-Favorite-2.7.10.jar')
-    compile files('libs/ShareSDK-Wechat-Moments-2.7.10.jar')
+    api files('libs/MobCommons-2016.1107.1809.jar')
+    api files('libs/MobTools-2016.1107.1809.jar')
+    api files('libs/ShareSDK-Core-2.7.10.jar')
+    api files('libs/ShareSDK-Email-2.7.10.jar')
+    api files('libs/ShareSDK-QQ-2.7.10.jar')
+    api files('libs/ShareSDK-QZone-2.7.10.jar')
+    api files('libs/ShareSDK-ShortMessage-2.7.10.jar')
+    api files('libs/ShareSDK-SinaWeibo-2.7.10.jar')
+    api files('libs/ShareSDK-Wechat-2.7.10.jar')
+    api files('libs/ShareSDK-Wechat-Core-2.7.10.jar')
+    api files('libs/ShareSDK-Wechat-Favorite-2.7.10.jar')
+    api files('libs/ShareSDK-Wechat-Moments-2.7.10.jar')
     // xUtils依赖（用于DB）
-    compile 'org.xutils:xutils:3.3.38'
+    api 'org.xutils:xutils:3.3.38'
     // statusBar依赖
-    compile 'com.readystatesoftware.systembartint:systembartint:1.0.4'
+    api 'com.readystatesoftware.systembartint:systembartint:1.0.4'
     // material控件库的依赖
-    compile 'com.github.rey5137:material:1.2.4'
+    api 'com.github.rey5137:material:1.2.4'
     // 文件夹选择器依赖
-    compile 'net.rdrei.android.dirchooser:library:3.2'
+    api 'net.rdrei.android.dirchooser:library:3.2'
     // 多dex文件依赖
-    compile 'com.android.support:multidex:1.0.2'
+    api 'com.android.support:multidex:1.0.2'
     // Recycler封装库依赖
-    compile 'com.github.jdsjlzx:LRecyclerView:1.4.0'
+    api 'com.github.jdsjlzx:LRecyclerView:1.4.0'
     // searchbar依赖
-    compile 'br.com.mauker.materialsearchview:materialsearchview:1.2.2'
+    api 'br.com.mauker.materialsearchview:materialsearchview:1.2.2'
     // recycler加载动画依赖
-    compile 'jp.wasabeef:recyclerview-animators:2.2.6'
+    api 'jp.wasabeef:recyclerview-animators:2.2.6'
     // leak canary依赖
-    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
-    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
+    debugApi 'com.squareup.leakcanary:leakcanary-android:1.5'
+    releaseApi 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
     // 腾讯bugly依赖
-    compile 'com.tencent.bugly:crashreport_upgrade:latest.release'
-    compile 'com.tencent.bugly:nativecrashreport:latest.release'
+    api 'com.tencent.bugly:crashreport_upgrade:latest.release'
+    api 'com.tencent.bugly:nativecrashreport:latest.release'
     // APT
     annotationProcessor 'com.google.auto.value:auto-value:1.1'
 }
