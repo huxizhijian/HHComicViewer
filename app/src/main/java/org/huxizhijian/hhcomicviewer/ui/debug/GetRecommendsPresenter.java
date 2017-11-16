@@ -1,5 +1,6 @@
 package org.huxizhijian.hhcomicviewer.ui.debug;
 
+import org.huxizhijian.hhcomic.comic.ComicRouter;
 import org.huxizhijian.hhcomic.comic.bean.Comic;
 import org.huxizhijian.hhcomic.comic.repository.ComicRepository;
 import org.huxizhijian.hhcomic.comic.type.ComicDataSourceType;
@@ -13,6 +14,7 @@ import org.huxizhijian.hhcomic.usecase.UseCaseHandler;
 import org.huxizhijian.hhcomicviewer.ui.debug.usecase.GetRecommendsUseCase;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author huxizhijian
@@ -71,7 +73,14 @@ public class GetRecommendsPresenter implements GetRecommendsContract.Presenter {
         IComicRequest request = new ComicRequestValues();
         request.addField(RequestFieldType.PAGE, mPage);
         request.setRequestType(ComicDataSourceType.WEB_RECOMMENDED);
-//        request.addField(RequestFieldType.RECOMMEND_TYPE, ComicRouter.getInstance().getSource());
+        //todo 优化
+        Map<String, String> type = ComicRouter.getInstance().getSource(mSourceType).getRecommendTypeMap();
+        String recommendType = "";
+        if (type.entrySet().iterator().hasNext()) {
+            recommendType = type.entrySet().iterator().next().getKey();
+        }
+        request.addField(RequestFieldType.RECOMMEND_TYPE, recommendType);
+        request.addField(RequestFieldType.SOURCE_TYPE, mSourceType);
         mUseCaseHandler.execute(mUseCase, () -> request, new UseCase.UseCaseCallback<UseCase.ResponseValue>() {
             @Override
             public void onSuccess(UseCase.ResponseValue responseValue) {
