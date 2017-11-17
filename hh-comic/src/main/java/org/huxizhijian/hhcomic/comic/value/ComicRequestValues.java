@@ -47,14 +47,25 @@ public class ComicRequestValues implements IComicRequest {
     }
 
     @Override
-    public int getRequestType() {
-        return (int) FIELDS_REFERENCE.get().get(RequestFieldType.SOURCE_TYPE);
+    public int getComicSourceHashCode() {
+        return (int) FIELDS_REFERENCE.get().get(RequestFieldType.COMIC_SOURCE_TYPE);
     }
 
     @Override
-    public IComicRequest setRequestType(int type) {
-        FIELDS_REFERENCE.get().put(RequestFieldType.SOURCE_TYPE, type);
+    public IComicRequest setComicSourceHashCode(int type) {
+        FIELDS_REFERENCE.get().put(RequestFieldType.COMIC_SOURCE_TYPE, type);
         return this;
+    }
+
+    @Override
+    public IComicRequest setDataSourceType(int type) {
+        FIELDS_REFERENCE.get().put(RequestFieldType.DATA_SOURCE_TYPE, type);
+        return this;
+    }
+
+    @Override
+    public int getDataSourceType() {
+        return (int) FIELDS_REFERENCE.get().get(RequestFieldType.DATA_SOURCE_TYPE);
     }
 
     @Override

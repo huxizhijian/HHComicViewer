@@ -1,5 +1,7 @@
 package org.huxizhijian.hhcomic.comic.value;
 
+import org.huxizhijian.hhcomic.comic.type.DataSourceType;
+
 import java.util.Map;
 
 /**
@@ -11,16 +13,32 @@ import java.util.Map;
 public interface IComicRequest {
 
     /**
-     * 获取请求的{@link org.huxizhijian.hhcomic.comic.type.ComicDataSourceType}
+     * 获取请求的{@link DataSourceType}
      *
      * @return type
      */
-    int getRequestType();
+    int getComicSourceHashCode();
 
     /**
-     * 设置请求的{@link org.huxizhijian.hhcomic.comic.type.ComicDataSourceType}
+     * 设置请求的{@link DataSourceType}的hashcode
+     *
+     * @param hashcode hashcode
+     * @return 链式调用
      */
-    IComicRequest setRequestType(int type);
+    IComicRequest setComicSourceHashCode(int hashcode);
+
+    /**
+     * 设置{@link DataSourceType}
+     *
+     * @param type 数据来源类别
+     * @return 链式调用
+     */
+    IComicRequest setDataSourceType(int type);
+
+    /**
+     * @return 数据来源类别
+     */
+    int getDataSourceType();
 
     /**
      * @param key   {@link org.huxizhijian.hhcomic.comic.type.RequestFieldType}标记的key值

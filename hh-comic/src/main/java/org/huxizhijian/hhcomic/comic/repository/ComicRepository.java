@@ -18,7 +18,7 @@ package org.huxizhijian.hhcomic.comic.repository;
 
 import org.huxizhijian.hhcomic.comic.bean.Comic;
 import org.huxizhijian.hhcomic.comic.source.base.ComicSource;
-import org.huxizhijian.hhcomic.comic.type.ComicDataSourceType;
+import org.huxizhijian.hhcomic.comic.type.DataSourceType;
 import org.huxizhijian.hhcomic.comic.type.ComicDataState;
 import org.huxizhijian.hhcomic.comic.value.IComicRequest;
 
@@ -65,20 +65,20 @@ public class ComicRepository implements ComicDataSource {
 
     @Override
     public void get(ComicSource source, IComicRequest requestValues, ComicDataCallback callback) {
-        int requestType = requestValues.getRequestType();
+        int requestType = requestValues.getDataSourceType();
         switch (requestType) {
-            case ComicDataSourceType.DB_DOWNLOADED:
-            case ComicDataSourceType.DB_FAVORITE:
-            case ComicDataSourceType.DB_HISTORY:
+            case DataSourceType.DB_DOWNLOADED:
+            case DataSourceType.DB_FAVORITE:
+            case DataSourceType.DB_HISTORY:
                 // 调用本地仓库
                 mLocalRepository.get(source, requestValues, callback);
                 break;
-            case ComicDataSourceType.WEB_CATEGORY:
-            case ComicDataSourceType.WEB_DETAIL:
-            case ComicDataSourceType.WEB_GET_CHAPTER:
-            case ComicDataSourceType.WEB_RANK:
-            case ComicDataSourceType.WEB_RECOMMENDED:
-            case ComicDataSourceType.WEB_SEARCH:
+            case DataSourceType.WEB_CATEGORY:
+            case DataSourceType.WEB_DETAIL:
+            case DataSourceType.WEB_GET_CHAPTER:
+            case DataSourceType.WEB_RANK:
+            case DataSourceType.WEB_RECOMMENDED:
+            case DataSourceType.WEB_SEARCH:
                 // 调用网络仓库
                 mRemoteRepository.get(source, requestValues, callback);
                 break;

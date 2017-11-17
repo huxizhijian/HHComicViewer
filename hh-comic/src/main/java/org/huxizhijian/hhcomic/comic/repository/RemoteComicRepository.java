@@ -2,6 +2,7 @@ package org.huxizhijian.hhcomic.comic.repository;
 
 import org.huxizhijian.core.app.ConfigKeys;
 import org.huxizhijian.core.app.HHEngine;
+import org.huxizhijian.core.util.log.HHLogger;
 import org.huxizhijian.hhcomic.comic.bean.Comic;
 import org.huxizhijian.hhcomic.comic.parser.comic.ComicParseStrategy;
 import org.huxizhijian.hhcomic.comic.source.base.ComicSource;
@@ -26,6 +27,8 @@ import okhttp3.Response;
  */
 public class RemoteComicRepository implements ComicDataSource {
 
+    private static final String TAG = RemoteComicRepository.class.getSimpleName();
+
     private RemoteComicRepository() {
     }
 
@@ -39,7 +42,7 @@ public class RemoteComicRepository implements ComicDataSource {
 
     @Override
     public void get(ComicSource source, IComicRequest requestValues, ComicDataCallback callback) {
-        int type = requestValues.getRequestType();
+        int type = requestValues.getDataSourceType();
         ComicParseStrategy comicParseStrategy = source.getStrategy(type);
         if (comicParseStrategy == null) {
             callback.onError(new NullPointerException("This strategy is null!"));
@@ -47,6 +50,7 @@ public class RemoteComicRepository implements ComicDataSource {
         }
         try {
             Request request = comicParseStrategy.buildRequest(requestValues);
+            HHLogger.i(TAG, request.url().toString());
             OkHttpClient client = HHEngine.getConfiguration(ConfigKeys.OKHTTP_CLIENT);
             Response response = client.newCall(request).execute();
             IComicResponse comicResponse = new ComicResponseValues();
@@ -54,7 +58,7 @@ public class RemoteComicRepository implements ComicDataSource {
                 throw new IOException("OKHttp connect no successful!");
             }
             byte[] data = response.body().bytes();
-            comicParseStrategy.parseData(comicResponse, data);
+            callback.onSuccess(comicParseStrategy.parseData(comicResponse, data));
         } catch (IOException | NullPointerException e) {
             callback.onError(e);
         }

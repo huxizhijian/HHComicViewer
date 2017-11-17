@@ -15,7 +15,7 @@ public interface IComicResponse {
      *
      * @return Comic或其集合或Null
      */
-    <T> T  getResponse();
+    <T> T getComicResponse();
 
     /**
      * 设置返回结果
@@ -23,7 +23,7 @@ public interface IComicResponse {
      * @param field Comic或其集合
      * @return 链式调用
      */
-    IComicResponse setResponse(Object field);
+    IComicResponse setComicResponse(Object field);
 
     /**
      * 添加返回结果

@@ -66,7 +66,7 @@ public abstract class RankStrategy extends BaseComicParseStrategy {
     public IComicResponse parseData(IComicResponse comicResponse, byte[] data) throws IOException {
         comicResponse.addField(ResponseFieldType.PAGE_COUNT, getPageCount(data));
         comicResponse.addField(ResponseFieldType.PAGE, mPage);
-        comicResponse.setResponse(parseRankComics(data));
+        comicResponse.setComicResponse(parseRankComics(data));
         return comicResponse;
     }
 

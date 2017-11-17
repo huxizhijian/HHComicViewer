@@ -3,7 +3,7 @@ package org.huxizhijian.hhcomic.comic.repository;
 import org.huxizhijian.hhcomic.comic.bean.Comic;
 import org.huxizhijian.hhcomic.comic.db.ComicDBHelper;
 import org.huxizhijian.hhcomic.comic.source.base.ComicSource;
-import org.huxizhijian.hhcomic.comic.type.ComicDataSourceType;
+import org.huxizhijian.hhcomic.comic.type.DataSourceType;
 import org.huxizhijian.hhcomic.comic.type.ComicDataState;
 import org.huxizhijian.hhcomic.comic.type.RequestFieldType;
 import org.huxizhijian.hhcomic.comic.value.ComicResponseValues;
@@ -38,14 +38,14 @@ public class LocalComicRepository implements ComicDataSource {
         int order = requestValues.getField(RequestFieldType.ORDER);
         boolean highLight = requestValues.getField(RequestFieldType.HIGH_LIGHT);
         List<Comic> comics;
-        switch (requestValues.getRequestType()) {
-            case ComicDataSourceType.DB_DOWNLOADED:
+        switch (requestValues.getDataSourceType()) {
+            case DataSourceType.DB_DOWNLOADED:
                 comics = mComicDBHelper.getDownloadList(order);
                 break;
-            case ComicDataSourceType.DB_FAVORITE:
+            case DataSourceType.DB_FAVORITE:
                 comics = mComicDBHelper.getFavoriteList(order, highLight);
                 break;
-            case ComicDataSourceType.DB_HISTORY:
+            case DataSourceType.DB_HISTORY:
                 comics = mComicDBHelper.getHistoryList(order);
                 break;
             default:
@@ -56,7 +56,7 @@ public class LocalComicRepository implements ComicDataSource {
             callback.onDataNotAvailable();
         }
         IComicResponse values = new ComicResponseValues();
-        values.setResponse(comics);
+        values.setComicResponse(comics);
         callback.onSuccess(values);
     }
 

@@ -27,22 +27,23 @@ public class GetRecommendsUseCase extends UseCase<UseCase.RequestValues, UseCase
     @Override
     protected void executeUseCase(RequestValues requestValues) {
         IComicRequest request = requestValues.getValues();
-        mComicRepository.get(ComicRouter.getInstance().getSource(request.getRequestType()), request, new ComicDataSource.ComicDataCallback() {
-            @Override
-            public void onSuccess(IComicResponse responseValues) {
-                getUseCaseCallback().onSuccess(() -> responseValues);
-            }
+        mComicRepository.get(ComicRouter.getInstance().getSource(request.getComicSourceHashCode()),
+                request, new ComicDataSource.ComicDataCallback() {
+                    @Override
+                    public void onSuccess(IComicResponse responseValues) {
+                        getUseCaseCallback().onSuccess(() -> responseValues);
+                    }
 
-            @Override
-            public void onError(Throwable throwable) {
-                throwable.printStackTrace();
-                getUseCaseCallback().onError();
-            }
+                    @Override
+                    public void onError(Throwable throwable) {
+                        throwable.printStackTrace();
+                        getUseCaseCallback().onError();
+                    }
 
-            @Override
-            public void onDataNotAvailable() {
-                getUseCaseCallback().onError();
-            }
-        });
+                    @Override
+                    public void onDataNotAvailable() {
+                        getUseCaseCallback().onError();
+                    }
+                });
     }
 }

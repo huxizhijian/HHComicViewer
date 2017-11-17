@@ -86,7 +86,7 @@ public abstract class DetailStrategy extends BaseComicParseStrategy {
     public IComicResponse parseData(IComicResponse comicResponse, byte[] data) throws IOException, NullPointerException {
         Comic comic = parseComic(data, mComicId);
         // 添加返回结果
-        comicResponse.setResponse(comic);
+        comicResponse.setComicResponse(comic);
         List<Chapter> chapters = null;
         if (needMoreRequestGetChapterList()) {
             chapters = parseChapter(data);

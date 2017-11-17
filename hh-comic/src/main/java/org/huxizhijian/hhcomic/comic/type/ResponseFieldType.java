@@ -21,9 +21,24 @@ package org.huxizhijian.hhcomic.comic.type;
  */
 @SuppressWarnings("unused")
 public class ResponseFieldType {
+    /**
+     * 结果（可以是Comic单个实例或者list）
+     */
     public static final int COMIC_RESPONSE = 0x0;
+    /**
+     * 页码
+     */
     public static final int PAGE = 0x1;
+    /**
+     * 页数
+     */
     public static final int PAGE_COUNT = 0x2;
+    /**
+     * 章节列表
+     */
     public static final int CHAPTER_LIST = 0x3;
+    /**
+     * 返回结果的名称
+     */
     public static final int RESULT_NAME = 0x4;
 }

@@ -3,7 +3,7 @@ package org.huxizhijian.hhcomicviewer.ui.debug;
 import org.huxizhijian.hhcomic.comic.ComicRouter;
 import org.huxizhijian.hhcomic.comic.bean.Comic;
 import org.huxizhijian.hhcomic.comic.repository.ComicRepository;
-import org.huxizhijian.hhcomic.comic.type.ComicDataSourceType;
+import org.huxizhijian.hhcomic.comic.type.DataSourceType;
 import org.huxizhijian.hhcomic.comic.type.RequestFieldType;
 import org.huxizhijian.hhcomic.comic.type.ResponseFieldType;
 import org.huxizhijian.hhcomic.comic.value.ComicRequestValues;
@@ -72,7 +72,8 @@ public class GetRecommendsPresenter implements GetRecommendsContract.Presenter {
     private void getComicList(boolean isLoadMore) {
         IComicRequest request = new ComicRequestValues();
         request.addField(RequestFieldType.PAGE, mPage);
-        request.setRequestType(ComicDataSourceType.WEB_RECOMMENDED);
+        request.setComicSourceHashCode(mSourceType);
+        request.setDataSourceType(DataSourceType.WEB_RECOMMENDED);
         //todo 优化
         Map<String, String> type = ComicRouter.getInstance().getSource(mSourceType).getRecommendTypeMap();
         String recommendType = "";
@@ -80,12 +81,11 @@ public class GetRecommendsPresenter implements GetRecommendsContract.Presenter {
             recommendType = type.entrySet().iterator().next().getKey();
         }
         request.addField(RequestFieldType.RECOMMEND_TYPE, recommendType);
-        request.addField(RequestFieldType.SOURCE_TYPE, mSourceType);
         mUseCaseHandler.execute(mUseCase, () -> request, new UseCase.UseCaseCallback<UseCase.ResponseValue>() {
             @Override
             public void onSuccess(UseCase.ResponseValue responseValue) {
                 IComicResponse response = responseValue.getValues();
-                List<Comic> comicList = response.getResponse();
+                List<Comic> comicList = response.getComicResponse();
                 mPageCount = response.getField(ResponseFieldType.PAGE_COUNT);
                 boolean hasMore = true;
                 if (mPageCount != -1) {

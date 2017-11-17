@@ -60,7 +60,7 @@ public abstract class SearchGetStrategy extends BaseComicParseStrategy {
     @Override
     public IComicResponse parseData(IComicResponse comicResponse, byte[] data) throws IOException {
         List<Comic> comics = parseSearchResult(data);
-        comicResponse.setResponse(comics);
+        comicResponse.setComicResponse(comics);
         int pageCount = getPageCount(data);
         comicResponse.addField(ResponseFieldType.PAGE_COUNT, pageCount);
         return comicResponse;

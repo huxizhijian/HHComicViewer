@@ -68,7 +68,7 @@ public abstract class CategoryStrategy extends BaseComicParseStrategy {
         comicResponse.addField(ResponseFieldType.PAGE, mPage);
         mPageCount = getPageCount(data);
         comicResponse.addField(ResponseFieldType.PAGE_COUNT, mPageCount);
-        comicResponse.setResponse(parseCategory(data));
+        comicResponse.setComicResponse(parseCategory(data));
         return comicResponse;
     }
 

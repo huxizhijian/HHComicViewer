@@ -14,7 +14,7 @@ import org.huxizhijian.hhcomic.comic.parser.comic.detail.DetailStrategy;
 import org.huxizhijian.hhcomic.comic.parser.comic.search.SearchGetStrategy;
 import org.huxizhijian.hhcomic.comic.source.base.ComicSource;
 import org.huxizhijian.hhcomic.comic.source.base.Source;
-import org.huxizhijian.hhcomic.comic.type.ComicDataSourceType;
+import org.huxizhijian.hhcomic.comic.type.DataSourceType;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
@@ -98,8 +98,8 @@ public class Dmzj extends ComicSource {
      */
     public ComicSource defaultConfig() {
         return new Dmzj()
-                .addStrategy(ComicDataSourceType.WEB_DETAIL, new DmzjDetailStrategy())
-                .addStrategy(ComicDataSourceType.WEB_SEARCH, new DmzjSearchStrategy());
+                .addStrategy(DataSourceType.WEB_DETAIL, new DmzjDetailStrategy())
+                .addStrategy(DataSourceType.WEB_SEARCH, new DmzjSearchStrategy());
     }
 
     /**

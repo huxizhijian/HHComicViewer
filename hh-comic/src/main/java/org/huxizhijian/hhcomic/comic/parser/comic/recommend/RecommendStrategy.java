@@ -44,7 +44,7 @@ public abstract class RecommendStrategy extends BaseComicParseStrategy {
 
     private String mRecommendType;
     private int mPage;
-    private int mSize;
+    private Integer mSize;
 
     @Override
     public Request buildRequest(IComicRequest comicRequest) throws UnsupportedEncodingException, NullPointerException {
@@ -54,6 +54,9 @@ public abstract class RecommendStrategy extends BaseComicParseStrategy {
         mRecommendType = comicRequest.getField(RequestFieldType.RECOMMEND_TYPE);
         mPage = comicRequest.getField(RequestFieldType.PAGE);
         mSize = comicRequest.getField(RequestFieldType.SIZE);
+        if (mSize == null) {
+            mSize = 0;
+        }
         return getRequestGetAndWithUrl(getRecommendUrl(mRecommendType, mPage, mSize));
     }
 
@@ -61,7 +64,7 @@ public abstract class RecommendStrategy extends BaseComicParseStrategy {
     public IComicResponse parseData(IComicResponse comicResponse, byte[] data) throws IOException {
         comicResponse.addField(ResponseFieldType.PAGE_COUNT, getPageCount(data));
         comicResponse.addField(ResponseFieldType.PAGE, mPage);
-        comicResponse.setResponse(parseRecommendComics(data, mRecommendType));
+        comicResponse.setComicResponse(parseRecommendComics(data, mRecommendType));
         return comicResponse;
     }
 

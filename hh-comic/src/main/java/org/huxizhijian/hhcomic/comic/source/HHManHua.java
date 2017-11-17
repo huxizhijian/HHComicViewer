@@ -10,7 +10,7 @@ import org.huxizhijian.hhcomic.comic.parser.comic.recommend.RecommendStrategy;
 import org.huxizhijian.hhcomic.comic.parser.comic.search.SearchGetStrategy;
 import org.huxizhijian.hhcomic.comic.source.base.ComicSource;
 import org.huxizhijian.hhcomic.comic.source.base.Source;
-import org.huxizhijian.hhcomic.comic.type.ComicDataSourceType;
+import org.huxizhijian.hhcomic.comic.type.DataSourceType;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -95,11 +95,11 @@ public class HHManHua extends ComicSource {
      */
     public ComicSource defaultConfig() {
         return this
-                .addStrategy(ComicDataSourceType.WEB_DETAIL, new HHDetailStrategy())
-                .addStrategy(ComicDataSourceType.WEB_SEARCH, new HHSearchStrategy())
-                .addStrategy(ComicDataSourceType.WEB_RANK, new HHRankStrategy())
-                .addStrategy(ComicDataSourceType.WEB_RECOMMENDED, new HHRecommendStrategy())
-                .addStrategy(ComicDataSourceType.WEB_CATEGORY, new HHCategoryStrategy());
+                .addStrategy(DataSourceType.WEB_DETAIL, new HHDetailStrategy())
+                .addStrategy(DataSourceType.WEB_SEARCH, new HHSearchStrategy())
+                .addStrategy(DataSourceType.WEB_RANK, new HHRankStrategy())
+                .addStrategy(DataSourceType.WEB_RECOMMENDED, new HHRecommendStrategy())
+                .addStrategy(DataSourceType.WEB_CATEGORY, new HHCategoryStrategy());
     }
 
     /**
@@ -325,7 +325,8 @@ public class HHManHua extends ComicSource {
             Elements tumbs = hotDoc.select("img");
             Elements infos = hotDoc.select("li");
             List<Comic> hotComics = new ArrayList<>();
-            for (int i = 0; i < links.size(); i++) {
+            int size = links.size();
+            for (int i = 0; i < size; i++) {
                 Comic comic = new Comic();
                 comic.setTitle(links.get(i).attr("title"));
                 String url = links.get(i).attr("href");

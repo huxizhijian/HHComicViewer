@@ -21,7 +21,7 @@ package org.huxizhijian.hhcomic.comic.type;
  *
  * @author huxizhijian 2017/9/21
  */
-public class ComicDataSourceType {
+public class DataSourceType {
     public static final int DB_HISTORY = 0x0;
     public static final int DB_FAVORITE = 0x1;
     public static final int DB_DOWNLOADED = 0x2;
