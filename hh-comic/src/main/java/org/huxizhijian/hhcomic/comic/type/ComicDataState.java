@@ -22,7 +22,16 @@ package org.huxizhijian.hhcomic.comic.type;
  * @author huxizhijian 2017/9/21
  */
 public enum ComicDataState {
+    /**
+     * 历史状态
+     */
     HISTORY,
+    /**
+     * 收藏状态
+     */
     FAVORITE,
+    /**
+     * 下载状态
+     */
     DOWNLOADED
 }

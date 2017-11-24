@@ -27,9 +27,10 @@ import android.view.ViewGroup;
 
 /**
  * lazy load base fragment abstract class
- * Created by wei on 2017/1/3.
+ *
+ * @author huxizhijian
+ * @date 2017/1/3
  */
-
 public abstract class RefreshBaseFragment extends Fragment {
 
     protected Context mContext;

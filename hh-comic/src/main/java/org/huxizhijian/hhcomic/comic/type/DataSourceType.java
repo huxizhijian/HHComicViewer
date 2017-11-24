@@ -22,13 +22,40 @@ package org.huxizhijian.hhcomic.comic.type;
  * @author huxizhijian 2017/9/21
  */
 public class DataSourceType {
+    /**
+     * 数据库中标记{@link ComicDataState}为历史的comic列表
+     */
     public static final int DB_HISTORY = 0x0;
+    /**
+     * 数据库中标记为收藏的comic列表
+     */
     public static final int DB_FAVORITE = 0x1;
+    /**
+     * 数据库中标记为下载的comic列表
+     */
     public static final int DB_DOWNLOADED = 0x2;
+    /**
+     * 网络搜索,返回结果列表
+     */
     public static final int WEB_SEARCH = 0x3;
+    /**
+     * 网络获取comic详情
+     */
     public static final int WEB_DETAIL = 0x4;
+    /**
+     * 网络获取推荐列表
+     */
     public static final int WEB_RECOMMENDED = 0x5;
+    /**
+     * 网络获取comic排名列表
+     */
     public static final int WEB_RANK = 0x6;
+    /**
+     * 网络获取comic分类列表
+     */
     public static final int WEB_CATEGORY = 0x7;
+    /**
+     * 网络获取comic对应的chapter
+     */
     public static final int WEB_GET_CHAPTER = 0x8;
 }

@@ -18,8 +18,8 @@ package org.huxizhijian.hhcomic.comic.repository;
 
 import org.huxizhijian.hhcomic.comic.bean.Comic;
 import org.huxizhijian.hhcomic.comic.source.base.ComicSource;
-import org.huxizhijian.hhcomic.comic.type.DataSourceType;
 import org.huxizhijian.hhcomic.comic.type.ComicDataState;
+import org.huxizhijian.hhcomic.comic.type.DataSourceType;
 import org.huxizhijian.hhcomic.comic.value.IComicRequest;
 
 import java.util.List;
@@ -117,5 +117,4 @@ public class ComicRepository implements ComicDataSource {
     public void checkMarkComicUpdate(ComicDataCallback callback) {
         mRemoteRepository.checkMarkComicUpdate(callback);
     }
-
 }
