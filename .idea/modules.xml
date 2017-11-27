@@ -3,13 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/HHComicViewer.iml" filepath="$PROJECT_DIR$/HHComicViewer.iml" />
-      <module fileurl="file://D:\Android\AndroidStudioProject\HHComicViewer\HHComicViewer.iml" filepath="D:\Android\AndroidStudioProject\HHComicViewer\HHComicViewer.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://D:\Android\AndroidStudioProject\HHComicViewer\app\app.iml" filepath="D:\Android\AndroidStudioProject\HHComicViewer\app\app.iml" />
       <module fileurl="file://$PROJECT_DIR$/hh-comic/hh-comic.iml" filepath="$PROJECT_DIR$/hh-comic/hh-comic.iml" />
-      <module fileurl="file://D:\Android\AndroidStudioProject\HHComicViewer\hh-comic\hh-comic.iml" filepath="D:\Android\AndroidStudioProject\HHComicViewer\hh-comic\hh-comic.iml" />
       <module fileurl="file://$PROJECT_DIR$/hh-core/hh-core.iml" filepath="$PROJECT_DIR$/hh-core/hh-core.iml" />
-      <module fileurl="file://D:\Android\AndroidStudioProject\HHComicViewer\hh-core\hh-core.iml" filepath="D:\Android\AndroidStudioProject\HHComicViewer\hh-core\hh-core.iml" />
     </modules>
   </component>
 </project>
