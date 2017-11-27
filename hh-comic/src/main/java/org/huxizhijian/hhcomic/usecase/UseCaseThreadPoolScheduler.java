@@ -44,7 +44,7 @@ public class UseCaseThreadPoolScheduler implements UseCaseScheduler {
 
     public UseCaseThreadPoolScheduler() {
         mThreadPoolExecutor = new ThreadPoolExecutor(POOL_SIZE, MAX_POOL_SIZE, TIMEOUT,
-                TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(POOL_SIZE), new ThreadPoolExecutor.AbortPolicy());
+                TimeUnit.SECONDS, new ArrayBlockingQueue<>(POOL_SIZE), new ThreadPoolExecutor.AbortPolicy());
     }
 
     @Override
@@ -55,25 +55,17 @@ public class UseCaseThreadPoolScheduler implements UseCaseScheduler {
     @Override
     public <V extends UseCase.ResponseValue> void notifyResponse(final V response,
                                                                  final UseCase.UseCaseCallback<V> useCaseCallback) {
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                //在主线程中回调onSuccess()方法
-                useCaseCallback.onSuccess(response);
-            }
+        mHandler.post(() -> {
+            //在主线程中回调onSuccess()方法
+            useCaseCallback.onSuccess(response);
         });
     }
 
     @Override
     public <V extends UseCase.ResponseValue> void onError(
             final UseCase.UseCaseCallback<V> useCaseCallback) {
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                //在主线程中回调onError()方法
-                useCaseCallback.onError();
-            }
-        });
+        //在主线程中回调onError()方法
+        mHandler.post(useCaseCallback::onError);
     }
 
 }
