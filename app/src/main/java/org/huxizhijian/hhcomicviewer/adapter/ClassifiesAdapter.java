@@ -63,14 +63,11 @@ public class ClassifiesAdapter extends RecyclerView.Adapter<ClassifiesAdapter.Cl
         mImageLoader.displayThumbnail(mContext, mClassifiesEntities.get(position).getClassifiesPicUrl(), holder.iv,
                 R.mipmap.blank, R.mipmap.blank, 165, 220);
         holder.tv.setText(mClassifiesEntities.get(position).getClassifiesName());
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(mContext, ClassifiesShowActivity.class);
-                intent.putExtra("url", mClassifiesEntities.get(position).getClassifiesUrl());
-                intent.putExtra("classifies_name", mClassifiesEntities.get(position).getClassifiesName());
-                mContext.startActivity(intent);
-            }
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(mContext, ClassifiesShowActivity.class);
+            intent.putExtra("url", mClassifiesEntities.get(position).getClassifiesUrl());
+            intent.putExtra("classifies_name", mClassifiesEntities.get(position).getClassifiesName());
+            mContext.startActivity(intent);
         });
     }
 

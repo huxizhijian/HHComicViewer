@@ -38,7 +38,7 @@ android {
         }
     }
     dataBinding {
-        enabled = true;
+        enabled = true
     }
     lintOptions {
         checkReleaseBuilds false

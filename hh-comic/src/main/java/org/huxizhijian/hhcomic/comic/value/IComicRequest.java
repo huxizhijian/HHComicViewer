@@ -36,6 +36,8 @@ public interface IComicRequest {
     IComicRequest setDataSourceType(int type);
 
     /**
+     * 获取数据来源类别
+     *
      * @return 数据来源类别
      */
     int getDataSourceType();
