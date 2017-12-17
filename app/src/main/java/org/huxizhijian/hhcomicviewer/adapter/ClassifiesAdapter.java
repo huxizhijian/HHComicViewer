@@ -37,7 +37,6 @@ import java.util.List;
  * 分类，排行榜显示适配器
  * Created by wei on 2017/1/8.
  */
-
 public class ClassifiesAdapter extends RecyclerView.Adapter<ClassifiesAdapter.ClassifiesViewHolder> {
 
     private Context mContext;
