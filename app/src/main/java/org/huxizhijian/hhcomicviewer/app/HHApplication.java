@@ -36,9 +36,13 @@ import org.huxizhijian.sdk.sharedpreferences.SharedPreferencesManager;
 import org.xutils.DbManager;
 import org.xutils.x;
 
+import java.io.File;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.Cache;
+import okhttp3.Call;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
 
 /**
  * 本工程的application
@@ -98,6 +102,7 @@ public class HHApplication extends MultiDexApplication {
                 mClient = new OkHttpClient.Builder()
                         .connectTimeout(10000, TimeUnit.MILLISECONDS)
                         .readTimeout(60000, TimeUnit.MILLISECONDS)
+                        .cache(new Cache(new File("cache"), 24 * 1024 * 1024))
                         .build();
             }
         }
