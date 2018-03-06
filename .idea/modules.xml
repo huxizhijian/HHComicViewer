@@ -6,7 +6,7 @@
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/hh-comic/hh-comic.iml" filepath="$PROJECT_DIR$/hh-comic/hh-comic.iml" />
       <module fileurl="file://$PROJECT_DIR$/hh-core/hh-core.iml" filepath="$PROJECT_DIR$/hh-core/hh-core.iml" />
-      <module fileurl="file://$PROJECT_DIR$/hh_annotations/hh_annotation.iml" filepath="$PROJECT_DIR$/hh_annotations/hh_annotation.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hh_annotations/hh_annotations.iml" filepath="$PROJECT_DIR$/hh_annotations/hh_annotations.iml" />
       <module fileurl="file://$PROJECT_DIR$/hh_compiler/hh_compiler.iml" filepath="$PROJECT_DIR$/hh_compiler/hh_compiler.iml" />
     </modules>
   </component>

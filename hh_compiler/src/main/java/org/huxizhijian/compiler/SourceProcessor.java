@@ -1,9 +1,14 @@
 package org.huxizhijian.compiler;
 
 import com.google.auto.service.AutoService;
+import com.squareup.javapoet.JavaFile;
+import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.TypeSpec;
 
 import org.huxizhijian.annotations.SourceGenerator;
 
+import java.io.IOException;
+import java.io.Writer;
 import java.lang.annotation.Annotation;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -16,11 +21,13 @@ import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
+import javax.tools.JavaFileObject;
 
 /**
- * An processor for generate source auto add code.
+ * A processor for generate java class to auto add source
  *
  * @author huxizhijian
  * @date 2018/3/6
@@ -64,11 +71,42 @@ public class SourceProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        Set<? extends Element> sourceElement = roundEnv.getElementsAnnotatedWith(SourceGenerator.class);
+        /*Set<? extends Element> sourceElement = roundEnv.getElementsAnnotatedWith(SourceGenerator.class);
         for (Element element : sourceElement) {
             SourceGenerator source = element.getAnnotation(SourceGenerator.class);
             System.out.println("value = " + source.value());
-        }
+        }*/
+        // TODO: 2018/3/6 generate class to auto regist source
+
+        /*final String packageName = "org.huxizhijian.generate";
+        final String clsName = "HelloWorld";
+
+        MethodSpec main = MethodSpec.methodBuilder("main")
+                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+                .returns(void.class)
+                .addParameter(String[].class, "args")
+                .addStatement("$T.out.println($S)", System.class, "Hello, JavaPoet!")
+                .build();
+
+        TypeSpec helloWorld = TypeSpec.classBuilder(clsName)
+                .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
+                .addMethod(main)
+                .build();
+
+        JavaFile javaFile = JavaFile.builder(packageName, helloWorld)
+                .build();
+
+        String content = javaFile.toString();
+
+        try {
+            JavaFileObject javaFileObject = mFiler.createSourceFile(packageName + "." + clsName);
+            Writer writer = javaFileObject.openWriter();
+            writer.write(content);
+            writer.flush();
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
         return false;
     }
 }
