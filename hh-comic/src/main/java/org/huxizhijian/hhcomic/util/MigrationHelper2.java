@@ -29,7 +29,7 @@ import java.util.List;
  * @author huxizhijian
  * @date 2017/10/23
  */
-public class MigrationHelper2 {
+public class  MigrationHelper2 {
 
     public static boolean DEBUG = false;
     private static String TAG = "MigrationHelper2";

@@ -86,7 +86,7 @@ dependencies {
     // 文件夹选择器依赖
     api 'net.rdrei.android.dirchooser:library:3.2'
     // 多dex文件依赖
-    compile 'com.android.support:multidex:1.0.2'
+    compile 'com.android.support:multidex:1.0.3'
     // Recycler封装库依赖
     api 'com.github.jdsjlzx:LRecyclerView:1.4.0'
     // searchbar依赖
