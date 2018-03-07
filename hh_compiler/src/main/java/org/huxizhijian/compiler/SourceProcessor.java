@@ -1,14 +1,15 @@
 package org.huxizhijian.compiler;
 
 import com.google.auto.service.AutoService;
+import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
 import org.huxizhijian.annotations.SourceGenerator;
 
 import java.io.IOException;
-import java.io.Writer;
 import java.lang.annotation.Annotation;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -24,7 +25,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
-import javax.tools.JavaFileObject;
+import javax.lang.model.util.Types;
 
 /**
  * A processor for generate java class to auto add source
@@ -37,13 +38,16 @@ import javax.tools.JavaFileObject;
 public class SourceProcessor extends AbstractProcessor {
 
     private Filer mFiler;
+    private Types mTypeUtils;
     private Messager mMessager;
     private Elements mElementUtils;
+
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnvironment) {
         super.init(processingEnvironment);
         mFiler = processingEnvironment.getFiler();
+        mTypeUtils = processingEnvironment.getTypeUtils();
         mMessager = processingEnvironment.getMessager();
         mElementUtils = processingEnvironment.getElementUtils();
     }
@@ -71,21 +75,21 @@ public class SourceProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        /*Set<? extends Element> sourceElement = roundEnv.getElementsAnnotatedWith(SourceGenerator.class);
-        for (Element element : sourceElement) {
-            SourceGenerator source = element.getAnnotation(SourceGenerator.class);
-            System.out.println("value = " + source.value());
-        }*/
-        // TODO: 2018/3/6 generate class to auto regist source
-
-        /*final String packageName = "org.huxizhijian.generate";
+        final String packageName = "org.huxizhijian.generate";
         final String clsName = "HelloWorld";
 
-        MethodSpec main = MethodSpec.methodBuilder("main")
+        MethodSpec.Builder mainBuilder = MethodSpec.methodBuilder("main")
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
                 .returns(void.class)
-                .addParameter(String[].class, "args")
-                .addStatement("$T.out.println($S)", System.class, "Hello, JavaPoet!")
+                .addParameter(String[].class, "args");
+
+        Set<? extends Element> sourceElement = roundEnv.getElementsAnnotatedWith(SourceGenerator.class);
+        for (Element element : sourceElement) {
+            TypeName clazz = ClassName.get(element.asType());
+            mainBuilder.addStatement("$T object = null", clazz);
+        }
+
+        MethodSpec main = mainBuilder
                 .build();
 
         TypeSpec helloWorld = TypeSpec.classBuilder(clsName)
@@ -96,17 +100,11 @@ public class SourceProcessor extends AbstractProcessor {
         JavaFile javaFile = JavaFile.builder(packageName, helloWorld)
                 .build();
 
-        String content = javaFile.toString();
-
         try {
-            JavaFileObject javaFileObject = mFiler.createSourceFile(packageName + "." + clsName);
-            Writer writer = javaFileObject.openWriter();
-            writer.write(content);
-            writer.flush();
-            writer.close();
+            javaFile.writeTo(mFiler);
         } catch (IOException e) {
             e.printStackTrace();
-        }*/
+        }
         return false;
     }
 }

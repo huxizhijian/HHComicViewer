@@ -7,7 +7,6 @@ import com.alibaba.fastjson.JSONObject;
 import org.huxizhijian.annotations.SourceGenerator;
 import org.huxizhijian.core.app.HHEngine;
 import org.huxizhijian.core.util.misc.Pair;
-import org.huxizhijian.generate.HelloWorld;
 import org.huxizhijian.hhcomic.R;
 import org.huxizhijian.hhcomic.comic.bean.Chapter;
 import org.huxizhijian.hhcomic.comic.bean.Comic;
@@ -26,6 +25,8 @@ import java.util.Locale;
 
 import okhttp3.Request;
 
+import static org.huxizhijian.hhcomic.comic.source.Dmzj.SOURCE_NAME;
+
 /**
  * TODO 动漫之家解析类
  * 图片的请求需要加入Header("Referer", "http://images.dmzj.com/")，否则会403
@@ -33,9 +34,10 @@ import okhttp3.Request;
  * @author huxizhijian
  * @date 2017/10/12
  */
+@SourceGenerator(SOURCE_NAME)
 public class Dmzj extends ComicSource {
 
-    private static final String SOURCE_NAME = "动漫之家";
+    public static final String SOURCE_NAME = "动漫之家";
     /**
      * 主站API网址
      */
@@ -98,7 +100,7 @@ public class Dmzj extends ComicSource {
      * 默认添加所有策略，也可以自行添加
      */
     public ComicSource defaultConfig() {
-        return new Dmzj()
+        return this
                 .addStrategy(DataSourceType.WEB_DETAIL, new DmzjDetailStrategy())
                 .addStrategy(DataSourceType.WEB_SEARCH, new DmzjSearchStrategy());
     }
