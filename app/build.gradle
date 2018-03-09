@@ -9,8 +9,8 @@ android {
         applicationId "org.huxizhijian.hhcomicviewer"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 108
-        versionName "1.08"
+        versionCode 1081
+        versionName "1.08.1"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
         ndk {

@@ -27,6 +27,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.jsoup.select.Selector;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -69,19 +70,22 @@ public class RankDetailsPresenterImpl implements IRankDetailsPresenter {
                                 comic.setComicStatus(comicSrc.select("span[class=cComicRating").first().text());
                                 comics.add(comic);
                             }
-                            if (mFragment != null)
+                            if (mFragment != null) {
                                 mFragment.onSuccess(comics);
-                        } catch (UnsupportedEncodingException e) {
+                            }
+                        } catch (UnsupportedEncodingException | Selector.SelectorParseException e) {
                             e.printStackTrace();
-                            if (mFragment != null)
+                            if (mFragment != null) {
                                 mFragment.onException(e);
+                            }
                         }
                     }
 
                     @Override
                     public void fail(int errorCode, String errorMsg) {
-                        if (mFragment != null)
+                        if (mFragment != null) {
                             mFragment.onFailure(errorCode, errorMsg);
+                        }
                     }
                 });
     }

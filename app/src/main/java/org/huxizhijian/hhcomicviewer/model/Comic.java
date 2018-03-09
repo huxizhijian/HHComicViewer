@@ -33,7 +33,6 @@ import java.util.List;
  *
  * @author huxizhijian
  * @date 2016/8/23
- * @deprecated 在下个版本将被替代
  */
 @Table(name = "comic")
 public class Comic implements Serializable, Comparable {

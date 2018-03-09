@@ -21,9 +21,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
-import org.huxizhijian.hhcomicviewer.BuildConfig;
-import org.huxizhijian.hhcomicviewer.ui.debug.DebugActivity;
-
 /**
  * 闪屏页
  *
@@ -36,11 +33,7 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent;
-        if (BuildConfig.DEBUG) {
-            intent = new Intent(this, DebugActivity.class);
-        } else {
-            intent = new Intent(this, MainActivity.class);
-        }
+        intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();
     }
