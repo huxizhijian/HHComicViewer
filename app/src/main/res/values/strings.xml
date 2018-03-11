@@ -96,7 +96,7 @@
     <string name="edit" translatable="false">编辑</string>
     <string name="right" translatable="false">确定</string>
 
-    <string name="app_version" translatable="false">汗汗漫画阅读器  v1.08</string>
+    <string name="app_version" translatable="false">汗汗漫画阅读器  v1.08.1</string>
     <string name="loading" translatable="false">加载中…</string>
     <string name="retry" translatable="false">重试</string>
     <string name="search_query_will_no_be_empty" translatable="false">搜索内容不能为空！</string>
