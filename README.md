@@ -40,9 +40,7 @@ Here is the libraries
 # Download
 
 [github release](https://github.com/huxizhijian/HHComicViewer/releases)<br>
-[fir.im download](https://fir.im/hvdk)<br>
-
-![二维码](https://github.com/huxizhijian/HHComicViewer/blob/master/art/download.png)  
+[fir.im download](https://fir.im/dxbw)<br>
 
 # TODO
 
