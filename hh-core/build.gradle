@@ -54,14 +54,14 @@ dependencies {
     // glide 图片加载库
     api 'com.github.bumptech.glide:glide:4.3.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.3.1'
-//     glide 变换
+    // glide 变换
     api 'jp.wasabeef:glide-transformations:3.0.1'
     // 一个封装了glide加载进度监听的库
-//    compile 'com.sunfusheng:glideimageview:1.1.0'
+    // compile 'com.sunfusheng:glideimageview:1.1.0'
     // gson JSON解析库
     api 'com.google.code.gson:gson:2.8.2'
     // okhttp3 网络请求库
-    api 'com.squareup.okhttp3:okhttp:3.9.0'
+    api 'com.squareup.okhttp3:okhttp:3.9.1'
     // Android工具类库
     api 'com.blankj:utilcode:1.9.0'
     // 打logger专用工具
