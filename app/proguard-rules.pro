@@ -38,15 +38,13 @@
     @org.xutils.view.annotation.Event <methods>;
 }
 
-#okhttp混淆设置
--dontwarn com.squareup.okhttp.**
--keep class com.squareup.okhttp.** { *;}
--keep interface com.squareup.okhttp.** { *; }
-
-#okio
+#okhttp3混淆设置
+-dontwarn okhttp3.**
 -dontwarn okio.**
--keep class okio.**{*;}
--keep interface okio.**{*;}
+-dontwarn javax.annotation.**
+-dontwarn org.conscrypt.**
+# A resource is loaded with a relative path so the package of this class must be preserved.
+-keepnames class okhttp3.internal.publicsuffix.PublicSuffixDatabase
 
 #glide配置文件混淆设置
 -keep public class * implements com.bumptech.glide.module.GlideModule
@@ -96,6 +94,26 @@
 #LRecyclerview_library
 -dontwarn com.github.jdsjlzx.**
 -keep class com.github.jdsjlzx.**{*;}
+
+#fastjson混淆
+-keepattributes Signature
+-dontwarn com.alibaba.fastjson.**
+-keep class com.alibaba.fastjson.**{*; }
+
+#greendao混淆
+-keepclassmembers class * extends org.greenrobot.greendao.AbstractDao {
+public static java.lang.String TABLENAME;
+}
+-keep class **$Properties
+
+# If you do not use SQLCipher:
+-dontwarn org.greenrobot.greendao.database.**
+# If you do not use Rx:
+-dontwarn rx.**
+
+#material混淆
+-dontwarn com.rey.material.widget.**
+-dontwarn com.rey.material.app.**
 
 #自己定义的model不混淆
 -dontwarn org.huxizhijian.sdk.**
