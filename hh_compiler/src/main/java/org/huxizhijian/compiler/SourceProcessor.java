@@ -103,13 +103,14 @@ public class SourceProcessor extends AbstractProcessor {
         for (Element element : sourceElement) {
             TypeName clazz = ClassName.get(element.asType());
             mainBuilder.addStatement("$T object = null", clazz);
+            mainBuilder.addStatement("// 这是一行中文注释");
         }
 
         MethodSpec main = mainBuilder
                 .build();
 
         TypeSpec helloWorld = TypeSpec.classBuilder(clsName)
-                .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
+                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
                 .addMethod(main)
                 .build();
 
