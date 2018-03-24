@@ -1,3 +1,19 @@
+/*
+ * Copyright 2018 huxizhijian
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 apply plugin: 'com.android.library'
 apply plugin: 'org.greenrobot.greendao'
 
@@ -52,8 +68,8 @@ dependencies {
     api "com.android.support:support-v13:${supportLibVersion}"
     api "com.android.support:design:${supportLibVersion}"
     // glide 图片加载库
-    api 'com.github.bumptech.glide:glide:4.3.1'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.3.1'
+    api 'com.github.bumptech.glide:glide:4.6.1'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.6.1'
     // glide 变换
     api 'jp.wasabeef:glide-transformations:3.0.1'
     // 一个封装了glide加载进度监听的库
