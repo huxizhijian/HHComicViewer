@@ -55,11 +55,10 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+    api fileTree(include: ['*.jar'], dir: 'libs')
     // test
-    api "com.android.support.test.espresso:espresso-idling-resource:${espressoVersion}"
-    testApi "junit:junit:${junitVersion}"
-    testApi 'junit:junit:4.12'
+    implementation "com.android.support.test.espresso:espresso-idling-resource:${espressoVersion}"
+    testImplementation "junit:junit:${junitVersion}"
     // android support 包
     api "com.android.support:appcompat-v7:${supportLibVersion}"
     api "com.android.support:support-v4:${supportLibVersion}"

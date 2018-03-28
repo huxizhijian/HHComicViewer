@@ -50,11 +50,11 @@ android {
 dependencies {
     api fileTree(include: ['*.jar'], dir: 'libs')
     // test
-    api "com.android.support.test.espresso:espresso-idling-resource:${espressoVersion}"
-    testApi "junit:junit:${junitVersion}"
+    implementation "com.android.support.test.espresso:espresso-idling-resource:${espressoVersion}"
+    testImplementation "junit:junit:${junitVersion}"
     // Jsoup DOM操作库
     api 'org.jsoup:jsoup:1.11.2'
     api project(':hh-core')
     annotationProcessor project(':hh_compiler')
-    provided project(':hh_annotations')
+    compileOnly project(':hh_annotations')
 }
