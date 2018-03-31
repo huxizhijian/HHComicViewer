@@ -27,7 +27,7 @@ import com.tencent.bugly.beta.Beta;
 import org.huxizhijian.core.app.HHEngine;
 import org.huxizhijian.hhcomic.comic.ComicRouter;
 import org.huxizhijian.hhcomic.comic.source.HHManHua;
-import org.huxizhijian.hhcomic.comic.source.base.Source;
+import org.huxizhijian.hhcomic.comic.source.base.SourceEnum;
 import org.huxizhijian.hhcomicviewer.R;
 import org.huxizhijian.hhcomicviewer.option.HHComicWebVariable;
 import org.huxizhijian.sdk.SDKConstant;
@@ -40,9 +40,7 @@ import java.io.File;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Cache;
-import okhttp3.Call;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
 
 /**
  * 本工程的application
@@ -124,7 +122,7 @@ public class HHApplication extends MultiDexApplication {
                 .withConnectTimeOut(30000, TimeUnit.MILLISECONDS)
                 .configure();
         ComicRouter.getInstance()
-                .addSource(Source.HHManHua.hashCode(), new HHManHua().defaultConfig());
+                .addSource(SourceEnum.HHManHua.hashCode(), new HHManHua().defaultConfig());
     }
 
     /**

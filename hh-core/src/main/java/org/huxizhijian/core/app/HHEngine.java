@@ -28,7 +28,7 @@ import java.util.HashMap;
  * @author huxizhijian
  * @date 2017/9/17
  */
-public final class HHEngine {
+public final class  HHEngine {
 
     public static Configurator init(Context context) {
         getConfigurators().put(ConfigKeys.APPLICATION_CONTEXT, context);

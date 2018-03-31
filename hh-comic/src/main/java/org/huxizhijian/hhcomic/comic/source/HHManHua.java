@@ -25,7 +25,7 @@ import org.huxizhijian.hhcomic.comic.parser.comic.rank.RankStrategy;
 import org.huxizhijian.hhcomic.comic.parser.comic.recommend.RecommendStrategy;
 import org.huxizhijian.hhcomic.comic.parser.comic.search.SearchGetStrategy;
 import org.huxizhijian.hhcomic.comic.source.base.ComicSource;
-import org.huxizhijian.hhcomic.comic.source.base.Source;
+import org.huxizhijian.hhcomic.comic.source.base.SourceEnum;
 import org.huxizhijian.hhcomic.comic.type.DataSourceType;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -53,7 +53,7 @@ public class HHManHua extends ComicSource {
     private static final String HH_COMIC_PRE = "/manhua";
     private static final String HH_SEARCH_URL = "http://ssooff.com/";
 
-    private static final int SOURCE_TYPE = Source.HHManHua.hashCode();
+    private static final int SOURCE_TYPE = SourceEnum.HHManHua.hashCode();
 
     @Override
     public String setSourceName() {

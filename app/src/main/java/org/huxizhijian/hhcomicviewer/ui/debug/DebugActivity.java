@@ -29,7 +29,7 @@ import com.chad.library.adapter.base.BaseViewHolder;
 
 import org.huxizhijian.core.util.log.HHLogger;
 import org.huxizhijian.hhcomic.comic.bean.Comic;
-import org.huxizhijian.hhcomic.comic.source.base.Source;
+import org.huxizhijian.hhcomic.comic.source.base.SourceEnum;
 import org.huxizhijian.hhcomicviewer.R;
 import org.huxizhijian.hhcomicviewer.base.Injection;
 import org.huxizhijian.sdk.imageloader.ImageLoaderOptions;
@@ -58,7 +58,7 @@ public class DebugActivity extends AppCompatActivity implements GetRecommendsCon
         setContentView(R.layout.activity_debug);
         initView();
         mPresenter = new GetRecommendsPresenter(Injection.provideComicRepository(), this, Injection.provideUseCaseHandler(),
-                Injection.provideGetRecommendsUseCase(), Source.HHManHua.hashCode());
+                Injection.provideGetRecommendsUseCase(), SourceEnum.HHManHua.hashCode());
     }
 
     private void initView() {

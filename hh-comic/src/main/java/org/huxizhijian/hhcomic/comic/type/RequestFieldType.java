@@ -16,6 +16,8 @@
 
 package org.huxizhijian.hhcomic.comic.type;
 
+import org.huxizhijian.hhcomic.comic.source.base.SourceEnum;
+
 /**
  * 加载请求时传入的参数key
  *
@@ -48,7 +50,7 @@ public class RequestFieldType {
      */
     public static final int COMIC = 0x5;
     /**
-     * 站点源{@link org.huxizhijian.hhcomic.comic.source.base.Source}枚举的hashcode
+     * 站点源{@link SourceEnum}枚举的hashcode
      */
     public static final int COMIC_SOURCE_TYPE = 0x6;
     /**

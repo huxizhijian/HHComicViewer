@@ -30,7 +30,7 @@ import org.huxizhijian.hhcomic.comic.parser.comic.category.CategoryStrategy;
 import org.huxizhijian.hhcomic.comic.parser.comic.detail.DetailStrategy;
 import org.huxizhijian.hhcomic.comic.parser.comic.search.SearchGetStrategy;
 import org.huxizhijian.hhcomic.comic.source.base.ComicSource;
-import org.huxizhijian.hhcomic.comic.source.base.Source;
+import org.huxizhijian.hhcomic.comic.source.base.SourceEnum;
 import org.huxizhijian.hhcomic.comic.type.DataSourceType;
 
 import java.io.UnsupportedEncodingException;
@@ -83,7 +83,7 @@ public class Dmzj extends ComicSource {
      */
     private static final String DMZJ_RANK_URL = "/rank/%d/%d/%d/%d.json";
 
-    private static final int SOURCE_TYPE = Source.Dmzj.hashCode();
+    private static final int SOURCE_TYPE = SourceEnum.Dmzj.hashCode();
 
     @Override
     public String setSourceName() {

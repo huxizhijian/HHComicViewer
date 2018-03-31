@@ -66,9 +66,9 @@ public abstract class ComicSource {
     public abstract String setBaseUrl();
 
     /**
-     * 来源网站的{@link Source}枚举类的hashcode
+     * 来源网站的{@link SourceEnum}枚举类的hashcode
      *
-     * @return {@link Source}hashcode
+     * @return {@link SourceEnum}hashcode
      */
     public abstract int getSourceType();
 
