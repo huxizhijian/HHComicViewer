@@ -29,9 +29,10 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.SOURCE)
-public @interface SourceGenerator {
+public @interface SourceImpl {
+
     /**
-     * @return name of source
+     * @return name of source implement
      */
     String value();
 }

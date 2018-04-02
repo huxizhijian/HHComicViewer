@@ -252,7 +252,9 @@ public class ImageDownloader implements RequestProgressListener, Closeable {
             return true;
         }
         if (mDispatcher != null && mDispatcher.request != null) {
-            if (request.getChid() != mDispatcher.request.getChid()) return false;
+            if (request.getChid() != mDispatcher.request.getChid()) {
+                return false;
+            }
             if (!isFinished) {
                 return true;
             }

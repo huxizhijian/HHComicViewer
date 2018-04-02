@@ -33,8 +33,13 @@ buildscript {
 
 allprojects {
     repositories {
-        jcenter()
         google()
+        jcenter()
+        maven { url 'https://maven.fabric.io/public' }
+        maven { url 'https://jitpack.io' }
+        mavenCentral()
+        maven { url "https://maven.google.com" }
+        maven { url 'http://guardian.github.com/maven/repo-releases' }
     }
 }
 

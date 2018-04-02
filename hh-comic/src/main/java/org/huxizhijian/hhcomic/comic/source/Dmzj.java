@@ -20,7 +20,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
-import org.huxizhijian.annotations.SourceGenerator;
+import org.huxizhijian.annotations.SourceImpl;
 import org.huxizhijian.core.app.HHEngine;
 import org.huxizhijian.core.util.misc.Pair;
 import org.huxizhijian.hhcomic.R;
@@ -50,7 +50,7 @@ import static org.huxizhijian.hhcomic.comic.source.Dmzj.SOURCE_NAME;
  * @author huxizhijian
  * @date 2017/10/12
  */
-@SourceGenerator(SOURCE_NAME)
+@SourceImpl(SOURCE_NAME)
 public class Dmzj extends ComicSource {
 
     public static final String SOURCE_NAME = "动漫之家";

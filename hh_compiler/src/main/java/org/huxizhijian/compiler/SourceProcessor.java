@@ -23,7 +23,8 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
-import org.huxizhijian.annotations.SourceGenerator;
+import org.huxizhijian.annotations.SourceImpl;
+import org.huxizhijian.annotations.SourceInterface;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
@@ -58,6 +59,11 @@ public class SourceProcessor extends AbstractProcessor {
     private Messager mMessager;
     private Elements mElementUtils;
 
+    /**
+     * 生成类的包名和类名
+     */
+    private static final String PACKAGE_NAME = "org.huxizhijian.generate";
+    private static final String CLS_NAME = "SourceRouterApp";
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnvironment) {
@@ -85,21 +91,22 @@ public class SourceProcessor extends AbstractProcessor {
 
     private Set<Class<? extends Annotation>> getSupportedAnnotations() {
         final Set<Class<? extends Annotation>> annotations = new LinkedHashSet<>();
-        annotations.add(SourceGenerator.class);
+        annotations.add(SourceInterface.class);
+        annotations.add(SourceImpl.class);
         return annotations;
     }
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        final String packageName = "org.huxizhijian.generate";
-        final String clsName = "HelloWorld";
+
+
+        Set<? extends Element> sourceElement = roundEnv.getElementsAnnotatedWith(SourceImpl.class);
 
         MethodSpec.Builder mainBuilder = MethodSpec.methodBuilder("main")
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
                 .returns(void.class)
                 .addParameter(String[].class, "args");
 
-        Set<? extends Element> sourceElement = roundEnv.getElementsAnnotatedWith(SourceGenerator.class);
         for (Element element : sourceElement) {
             TypeName clazz = ClassName.get(element.asType());
             mainBuilder.addStatement("$T object = null", clazz);
@@ -108,12 +115,14 @@ public class SourceProcessor extends AbstractProcessor {
         MethodSpec main = mainBuilder
                 .build();
 
-        TypeSpec helloWorld = TypeSpec.classBuilder(clsName)
+        // 生成的java类名,修饰
+        TypeSpec clsType = TypeSpec.classBuilder(CLS_NAME)
                 .addModifiers(Modifier.PUBLIC)
                 .addMethod(main)
                 .build();
 
-        JavaFile javaFile = JavaFile.builder(packageName, helloWorld)
+        // 生成的java文件
+        JavaFile javaFile = JavaFile.builder(PACKAGE_NAME, clsType)
                 .build();
 
         try {

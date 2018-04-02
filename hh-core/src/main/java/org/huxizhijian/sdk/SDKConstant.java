@@ -60,5 +60,4 @@ public class SDKConstant {
     public static final String DISK_CACHE_160MB = "160MB";
     public static final String DISK_CACHE_320MB = "320MB";
     public static final String DISK_CACHE_640MB = "640MB";
-
 }
