@@ -8,5 +8,5 @@ import org.huxizhijian.annotations.SourceInterface;
  */
 @SourceInterface
 public interface Source {
-
+    
 }

@@ -16,6 +16,7 @@
 
 package org.huxizhijian.hhcomic.comic.source;
 
+import org.huxizhijian.annotations.SourceImpl;
 import org.huxizhijian.core.util.misc.Pair;
 import org.huxizhijian.hhcomic.comic.bean.Chapter;
 import org.huxizhijian.hhcomic.comic.bean.Comic;
@@ -40,15 +41,18 @@ import java.util.Locale;
 
 import okhttp3.Request;
 
+import static org.huxizhijian.hhcomic.comic.source.HHManHua.HH_NAME;
+
 /**
  * 汗汗漫画网站解析类
  *
  * @author huxizhijian
  * @date 2017/10/9.
  */
+@SourceImpl(name = HH_NAME, type = 0)
 public class HHManHua extends ComicSource {
 
-    private static final String HH_NAME = "汗汗漫画";
+    public static final String HH_NAME = "汗汗漫画";
     private static final String HH_BASE_URL = "http://www.hhmmoo.com";
     private static final String HH_COMIC_PRE = "/manhua";
     private static final String HH_SEARCH_URL = "http://ssooff.com/";

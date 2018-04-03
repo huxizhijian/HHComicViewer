@@ -18,8 +18,10 @@ package org.huxizhijian.compiler;
 
 import com.google.auto.service.AutoService;
 import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
@@ -28,6 +30,7 @@ import org.huxizhijian.annotations.SourceInterface;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -45,6 +48,7 @@ import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
 /**
+ * 注解处理器
  * A processor for generate java class to auto add source
  *
  * @author huxizhijian
@@ -59,11 +63,17 @@ public class SourceProcessor extends AbstractProcessor {
     private Messager mMessager;
     private Elements mElementUtils;
 
+    private Set<Integer> mTypes;
+
     /**
      * 生成类的包名和类名
      */
     private static final String PACKAGE_NAME = "org.huxizhijian.generate";
     private static final String CLS_NAME = "SourceRouterApp";
+    private static final ClassName THIS_TYPE = ClassName.get(PACKAGE_NAME, CLS_NAME);
+
+    private static final String PACKAGE_UTIL = "android.util";
+    private static final ClassName SPARSE_ARRAY_NAME = ClassName.get(PACKAGE_UTIL, "SparseArray");
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnvironment) {
@@ -72,6 +82,7 @@ public class SourceProcessor extends AbstractProcessor {
         mTypeUtils = processingEnvironment.getTypeUtils();
         mMessager = processingEnvironment.getMessager();
         mElementUtils = processingEnvironment.getElementUtils();
+        mTypes = new HashSet<>();
     }
 
     @Override
@@ -91,38 +102,56 @@ public class SourceProcessor extends AbstractProcessor {
 
     private Set<Class<? extends Annotation>> getSupportedAnnotations() {
         final Set<Class<? extends Annotation>> annotations = new LinkedHashSet<>();
-        annotations.add(SourceInterface.class);
         annotations.add(SourceImpl.class);
+        annotations.add(SourceInterface.class);
         return annotations;
     }
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-
-
-        Set<? extends Element> sourceElement = roundEnv.getElementsAnnotatedWith(SourceImpl.class);
-
-        MethodSpec.Builder mainBuilder = MethodSpec.methodBuilder("main")
-                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-                .returns(void.class)
-                .addParameter(String[].class, "args");
-
-        for (Element element : sourceElement) {
-            TypeName clazz = ClassName.get(element.asType());
-            mainBuilder.addStatement("$T object = null", clazz);
-        }
-
-        MethodSpec main = mainBuilder
-                .build();
+        // 取出两者注解的类的Element
+        Set<? extends Element> sourceImplElement = roundEnv.getElementsAnnotatedWith(SourceImpl.class);
+        Set<? extends Element> sourceInterfaceElement = roundEnv.getElementsAnnotatedWith(SourceInterface.class);
 
         // 生成的java类名,修饰
-        TypeSpec clsType = TypeSpec.classBuilder(CLS_NAME)
-                .addModifiers(Modifier.PUBLIC)
-                .addMethod(main)
+        TypeSpec.Builder typeBuilder = TypeSpec.classBuilder(CLS_NAME)
+                .addModifiers(Modifier.PUBLIC);
+
+        for (Element element : sourceImplElement) {
+            String fieldName = element.getSimpleName().toString().toUpperCase();
+            int type = element.getAnnotation(SourceImpl.class).type();
+            if (mTypes.contains(type)) {
+                // 当存在重复的ID时
+                System.out.println("不应当存在相同的id");
+                return false;
+            } else {
+                mTypes.add(type);
+            }
+            typeBuilder.addField(generateContactSourceInt(fieldName, type));
+        }
+
+        if (sourceInterfaceElement != null) {
+            if (sourceInterfaceElement.size() != 1) {
+                System.out.println("不存在或者不只有一个带有@SourceInterface的类");
+                return false;
+            } else {
+                for (Element element : sourceInterfaceElement) {
+                    TypeName clazz = ClassName.get(element.asType());
+                    typeBuilder.addField(sourceArraySpec(clazz));
+                }
+            }
+        }
+
+        typeBuilder
+                .addField(sourceNameArraySpec())
+                .addField(staticInstantSpec())
+                .addMethod(getInstantSpec())
+                .addMethod(constructorPrivate(sourceImplElement))
+                .addMethod(getSourceNameSpec())
                 .build();
 
         // 生成的java文件
-        JavaFile javaFile = JavaFile.builder(PACKAGE_NAME, clsType)
+        JavaFile javaFile = JavaFile.builder(PACKAGE_NAME, typeBuilder.build())
                 .build();
 
         try {
@@ -130,6 +159,111 @@ public class SourceProcessor extends AbstractProcessor {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return false;
+        return true;
+    }
+
+    /**
+     * 生成常量, 对应一个SourceImpl, 值由注解提供
+     *
+     * @param fieldName 常量名称
+     * @param index     常量值,不重复,即SourceImpl注解的type
+     * @return field spec
+     */
+    private FieldSpec generateContactSourceInt(String fieldName, int index) {
+        return FieldSpec.builder(int.class, fieldName)
+                .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
+                .initializer("$L", index)
+                .build();
+    }
+
+    /**
+     * 包含source名称的SparseArray成员变量
+     *
+     * @return field spec
+     */
+    private FieldSpec sourceNameArraySpec() {
+        TypeName stringType = TypeName.get(String.class);
+        TypeName arrayOfString = ParameterizedTypeName.get(SPARSE_ARRAY_NAME, stringType);
+        return FieldSpec.builder(arrayOfString, "mSourceNameArray")
+                .addModifiers(Modifier.PRIVATE, Modifier.FINAL)
+                .initializer("new $T()", arrayOfString)
+                .build();
+    }
+
+    /**
+     * 包含source实例的SparseArray成员变量
+     *
+     * @param sourceName SourceInterface注解的类,仅能有一个
+     * @return fieldSpec
+     */
+    private FieldSpec sourceArraySpec(TypeName sourceName) {
+        TypeName arrayOfSource = ParameterizedTypeName.get(SPARSE_ARRAY_NAME, sourceName);
+        return FieldSpec.builder(arrayOfSource, "mSourceArray")
+                .addModifiers(Modifier.PRIVATE, Modifier.FINAL)
+                .initializer("new $T()", arrayOfSource)
+                .build();
+    }
+
+    /**
+     * 生成本类的静态成员变量, 用于单例模式
+     *
+     * @return field spec
+     */
+    private FieldSpec staticInstantSpec() {
+        return FieldSpec.builder(THIS_TYPE, "sSourceRouterAuto")
+                .addModifiers(Modifier.PRIVATE, Modifier.STATIC, Modifier.VOLATILE)
+                .build();
+    }
+
+    /**
+     * 单例模式获取实例方法
+     *
+     * @return method spec
+     */
+    private MethodSpec getInstantSpec() {
+        return MethodSpec.methodBuilder("getInstance")
+                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+                .returns(THIS_TYPE)
+                .beginControlFlow("if (sSourceRouterAuto == null)")
+                .beginControlFlow("synchronized ($T.class)", THIS_TYPE)
+                .beginControlFlow("if (sSourceRouterAuto == null)")
+                .addStatement("sSourceRouterAuto = new $T()", THIS_TYPE)
+                .endControlFlow()
+                .endControlFlow()
+                .endControlFlow()
+                .addStatement("return sSourceRouterAuto")
+                .build();
+    }
+
+
+    /**
+     * 构建私有构造方法, 具有一些初始化方法
+     *
+     * @return method spec
+     */
+    private MethodSpec constructorPrivate(Set<? extends Element> sourceImplElement) {
+        MethodSpec.Builder builder = MethodSpec.constructorBuilder()
+                .addModifiers(Modifier.PRIVATE);
+        // 初始化mSourceNameArray
+        for (Element element : sourceImplElement) {
+            SourceImpl source = element.getAnnotation(SourceImpl.class);
+            builder.addStatement("mSourceNameArray.put($L,$S)",
+                    element.getSimpleName().toString().toUpperCase(), source.name());
+        }
+        return builder.build();
+    }
+
+    /**
+     * 获取source名称
+     *
+     * @return method spec
+     */
+    private MethodSpec getSourceNameSpec() {
+        return MethodSpec.methodBuilder("getSourceName")
+                .addModifiers(Modifier.PUBLIC)
+                .addParameter(int.class, "type")
+                .returns(String.class)
+                .addStatement("return mSourceNameArray.get(type)")
+                .build();
     }
 }

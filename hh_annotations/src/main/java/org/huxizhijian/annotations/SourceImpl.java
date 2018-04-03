@@ -30,9 +30,13 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.SOURCE)
 public @interface SourceImpl {
+    /**
+     * @return name of source impl, it will show to users.
+     */
+    String name();
 
     /**
-     * @return name of source implement
+     * @return Type id of source impl, it must be only one in all sources, and could not change.
      */
-    String value();
+    int type();
 }

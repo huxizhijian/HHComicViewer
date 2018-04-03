@@ -2,19 +2,19 @@ package org.huxizhijian.hhcomic.comic;
 
 import android.util.SparseArray;
 
+import org.huxizhijian.hhcomic.comic.source.base.Source;
+
 /**
  * @author huxizhijian
  * @date 2018/3/31
  */
 public class ComicRouterAuto {
 
-    /**
-     * 这里使用类名的大写作为名称,此后可能作为唯一ID使用
-     */
     public static final int DMZJ = 1;
     public static final int HHMANHUA = 2;
 
-    private final SparseArray<String> mSourceName = new SparseArray<>();
+    private final SparseArray<Source> mSourceArray = new SparseArray<>();
+    private final SparseArray<String> mSourceNameArray = new SparseArray<>();
 
     private static ComicRouterAuto sComicRouterAuto;
 
@@ -31,7 +31,9 @@ public class ComicRouterAuto {
     }
 
     private ComicRouterAuto() {
-        // 这里加入Source注册的名字,作为向外公式的名字
-        mSourceName.put(DMZJ, "动漫之家");
+    }
+
+    public String getSourceName(int type) {
+        return mSourceNameArray.get(type);
     }
 }

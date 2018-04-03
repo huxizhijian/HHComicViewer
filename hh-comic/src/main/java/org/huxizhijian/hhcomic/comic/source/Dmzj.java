@@ -50,7 +50,7 @@ import static org.huxizhijian.hhcomic.comic.source.Dmzj.SOURCE_NAME;
  * @author huxizhijian
  * @date 2017/10/12
  */
-@SourceImpl(SOURCE_NAME)
+@SourceImpl(name = SOURCE_NAME, type = 1)
 public class Dmzj extends ComicSource {
 
     public static final String SOURCE_NAME = "动漫之家";
