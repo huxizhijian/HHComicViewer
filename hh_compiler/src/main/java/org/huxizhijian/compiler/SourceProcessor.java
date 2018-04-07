@@ -121,9 +121,8 @@ public class SourceProcessor extends AbstractProcessor {
             String fieldName = element.getSimpleName().toString().toUpperCase();
             int type = element.getAnnotation(SourceImpl.class).type();
             if (mTypes.contains(type)) {
-                // 当存在重复的ID时
-                System.out.println("不应当存在相同的id");
-                return false;
+                // 不应当存在相同的id
+                throw new IllegalStateException("Id in all sources should not be the same!");
             } else {
                 mTypes.add(type);
             }
@@ -131,9 +130,8 @@ public class SourceProcessor extends AbstractProcessor {
         }
 
         if (sourceInterfaceElement != null) {
-            if (sourceInterfaceElement.size() != 1) {
-                System.out.println("不存在或者不只有一个带有@SourceInterface的类");
-                return false;
+            if (sourceInterfaceElement.size() > 1) {
+                throw new IllegalStateException("Only one interface could has @SourceInterface annotation!");
             } else {
                 for (Element element : sourceInterfaceElement) {
                     TypeName clazz = ClassName.get(element.asType());

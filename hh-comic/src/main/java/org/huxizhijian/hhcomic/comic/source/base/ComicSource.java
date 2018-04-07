@@ -17,8 +17,8 @@
 package org.huxizhijian.hhcomic.comic.source.base;
 
 import org.huxizhijian.core.util.misc.Pair;
-import org.huxizhijian.hhcomic.comic.repository.ComicDataSource;
 import org.huxizhijian.hhcomic.comic.parser.comic.ComicParseStrategy;
+import org.huxizhijian.hhcomic.comic.repository.ComicDataSource;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
