@@ -29,7 +29,6 @@ import java.util.ArrayList;
  * 章节实体类，主要保存下载状态
  * Created by wei on 2016/8/23.
  */
-@Deprecated
 @Table(name = "comic_chapter")
 public class ComicChapter implements Serializable, Comparable {
     @Column(name = "id", isId = true)

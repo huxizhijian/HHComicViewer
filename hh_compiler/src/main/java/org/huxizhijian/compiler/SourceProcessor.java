@@ -117,16 +117,18 @@ public class SourceProcessor extends AbstractProcessor {
         TypeSpec.Builder typeBuilder = TypeSpec.classBuilder(CLS_NAME)
                 .addModifiers(Modifier.PUBLIC);
 
-        for (Element element : sourceImplElement) {
-            String fieldName = element.getSimpleName().toString().toUpperCase();
-            int type = element.getAnnotation(SourceImpl.class).type();
-            if (mTypes.contains(type)) {
-                // 不应当存在相同的id
-                throw new IllegalStateException("Id in all sources should not be the same!");
-            } else {
-                mTypes.add(type);
+        if (sourceImplElement != null) {
+            for (Element element : sourceImplElement) {
+                String fieldName = element.getSimpleName().toString().toUpperCase();
+                int type = element.getAnnotation(SourceImpl.class).type();
+                if (mTypes.contains(type)) {
+                    // 不应当存在相同的id
+                    throw new IllegalStateException("Id in all sources should not be the same!");
+                } else {
+                    mTypes.add(type);
+                }
+                typeBuilder.addField(generateContactSourceInt(fieldName, type));
             }
-            typeBuilder.addField(generateContactSourceInt(fieldName, type));
         }
 
         if (sourceInterfaceElement != null) {
@@ -219,6 +221,7 @@ public class SourceProcessor extends AbstractProcessor {
      * @return method spec
      */
     private MethodSpec getInstantSpec() {
+
         return MethodSpec.methodBuilder("getInstance")
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
                 .returns(THIS_TYPE)
@@ -243,10 +246,12 @@ public class SourceProcessor extends AbstractProcessor {
         MethodSpec.Builder builder = MethodSpec.constructorBuilder()
                 .addModifiers(Modifier.PRIVATE);
         // 初始化mSourceNameArray
-        for (Element element : sourceImplElement) {
-            SourceImpl source = element.getAnnotation(SourceImpl.class);
-            builder.addStatement("mSourceNameArray.put($L,$S)",
-                    element.getSimpleName().toString().toUpperCase(), source.name());
+        if (sourceImplElement != null) {
+            for (Element element : sourceImplElement) {
+                SourceImpl source = element.getAnnotation(SourceImpl.class);
+                builder.addStatement("mSourceNameArray.put($L,$S)",
+                        element.getSimpleName().toString().toUpperCase(), source.name());
+            }
         }
         return builder.build();
     }
