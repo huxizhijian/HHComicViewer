@@ -14,20 +14,24 @@
  * limitations under the License.
  */
 
-package org.huxizhijian.hhcomic;
-
-import org.huxizhijian.hhcomic.oldcomic.source.base.SourceEnum;
-import org.junit.Test;
+package org.huxizhijian.hhcomic.oldcomic.type;
 
 /**
- * Example local unit test, which will execute on the development machine (host).
+ * Comic的是否保存为历史、收藏、下载的状态表示类
  *
- * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
+ * @author huxizhijian 2017/9/21
  */
-public class ExampleUnitTest {
-    @Test
-    public void main() {
-        System.out.println("Dmzj hashcode = " + SourceEnum.Dmzj.hashCode());
-        System.out.println("HHManhua hashcode = " + SourceEnum.HHManHua.hashCode());
-    }
+public enum ComicDataState {
+    /**
+     * 历史状态
+     */
+    HISTORY,
+    /**
+     * 收藏状态
+     */
+    FAVORITE,
+    /**
+     * 下载状态
+     */
+    DOWNLOADED
 }

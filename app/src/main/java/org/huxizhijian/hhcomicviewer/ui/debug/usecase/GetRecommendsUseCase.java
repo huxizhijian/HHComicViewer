@@ -16,11 +16,11 @@
 
 package org.huxizhijian.hhcomicviewer.ui.debug.usecase;
 
-import org.huxizhijian.hhcomic.comic.ComicRouter;
-import org.huxizhijian.hhcomic.comic.repository.ComicDataSource;
-import org.huxizhijian.hhcomic.comic.repository.ComicRepository;
-import org.huxizhijian.hhcomic.comic.value.IComicRequest;
-import org.huxizhijian.hhcomic.comic.value.IComicResponse;
+import org.huxizhijian.hhcomic.oldcomic.ComicRouter;
+import org.huxizhijian.hhcomic.oldcomic.repository.ComicDataSource;
+import org.huxizhijian.hhcomic.oldcomic.repository.ComicRepository;
+import org.huxizhijian.hhcomic.oldcomic.value.IComicRequest;
+import org.huxizhijian.hhcomic.oldcomic.value.IComicResponse;
 import org.huxizhijian.hhcomic.usecase.UseCase;
 
 import static org.huxizhijian.hhcomic.util.Preconditions.checkNotNull;

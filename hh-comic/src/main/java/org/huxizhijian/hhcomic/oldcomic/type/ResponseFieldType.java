@@ -14,20 +14,31 @@
  * limitations under the License.
  */
 
-package org.huxizhijian.hhcomic;
-
-import org.huxizhijian.hhcomic.oldcomic.source.base.SourceEnum;
-import org.junit.Test;
+package org.huxizhijian.hhcomic.oldcomic.type;
 
 /**
- * Example local unit test, which will execute on the development machine (host).
- *
- * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
+ * @author huxizhijian 2017/10/2
  */
-public class ExampleUnitTest {
-    @Test
-    public void main() {
-        System.out.println("Dmzj hashcode = " + SourceEnum.Dmzj.hashCode());
-        System.out.println("HHManhua hashcode = " + SourceEnum.HHManHua.hashCode());
-    }
+@SuppressWarnings("unused")
+public class ResponseFieldType {
+    /**
+     * 结果（可以是Comic单个实例或者list）
+     */
+    public static final int COMIC_RESPONSE = 0x0;
+    /**
+     * 页码
+     */
+    public static final int PAGE = 0x1;
+    /**
+     * 页数
+     */
+    public static final int PAGE_COUNT = 0x2;
+    /**
+     * 章节列表
+     */
+    public static final int CHAPTER_LIST = 0x3;
+    /**
+     * 返回结果的名称
+     */
+    public static final int RESULT_NAME = 0x4;
 }

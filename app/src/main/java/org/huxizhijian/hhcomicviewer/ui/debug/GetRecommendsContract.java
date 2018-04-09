@@ -16,7 +16,7 @@
 
 package org.huxizhijian.hhcomicviewer.ui.debug;
 
-import org.huxizhijian.hhcomic.comic.bean.Comic;
+import org.huxizhijian.hhcomic.oldcomic.bean.Comic;
 import org.huxizhijian.hhcomicviewer.base.BasePresenter;
 import org.huxizhijian.hhcomicviewer.base.BaseView;
 

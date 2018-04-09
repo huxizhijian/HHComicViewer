@@ -25,9 +25,9 @@ import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
 
 import org.huxizhijian.core.app.HHEngine;
-import org.huxizhijian.hhcomic.comic.ComicRouter;
-import org.huxizhijian.hhcomic.comic.source.HHManHua;
-import org.huxizhijian.hhcomic.comic.source.base.SourceEnum;
+import org.huxizhijian.hhcomic.oldcomic.ComicRouter;
+import org.huxizhijian.hhcomic.oldcomic.source.HHManHua;
+import org.huxizhijian.hhcomic.oldcomic.source.base.SourceEnum;
 import org.huxizhijian.hhcomicviewer.R;
 import org.huxizhijian.hhcomicviewer.option.HHComicWebVariable;
 import org.huxizhijian.sdk.SDKConstant;

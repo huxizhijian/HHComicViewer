@@ -16,9 +16,9 @@
 
 package org.huxizhijian.hhcomicviewer.base;
 
-import org.huxizhijian.hhcomic.comic.repository.ComicRepository;
-import org.huxizhijian.hhcomic.comic.repository.LocalComicRepository;
-import org.huxizhijian.hhcomic.comic.repository.RemoteComicRepository;
+import org.huxizhijian.hhcomic.oldcomic.repository.ComicRepository;
+import org.huxizhijian.hhcomic.oldcomic.repository.LocalComicRepository;
+import org.huxizhijian.hhcomic.oldcomic.repository.RemoteComicRepository;
 import org.huxizhijian.hhcomic.usecase.UseCaseHandler;
 import org.huxizhijian.hhcomicviewer.ui.debug.usecase.GetRecommendsUseCase;
 

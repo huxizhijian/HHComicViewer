@@ -28,8 +28,8 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 
 import org.huxizhijian.core.util.log.HHLogger;
-import org.huxizhijian.hhcomic.comic.bean.Comic;
-import org.huxizhijian.hhcomic.comic.source.base.SourceEnum;
+import org.huxizhijian.hhcomic.oldcomic.bean.Comic;
+import org.huxizhijian.hhcomic.oldcomic.source.base.SourceEnum;
 import org.huxizhijian.hhcomicviewer.R;
 import org.huxizhijian.hhcomicviewer.base.Injection;
 import org.huxizhijian.sdk.imageloader.ImageLoaderOptions;

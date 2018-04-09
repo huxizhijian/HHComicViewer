@@ -16,15 +16,15 @@
 
 package org.huxizhijian.hhcomicviewer.ui.debug;
 
-import org.huxizhijian.hhcomic.comic.ComicRouter;
-import org.huxizhijian.hhcomic.comic.bean.Comic;
-import org.huxizhijian.hhcomic.comic.repository.ComicRepository;
-import org.huxizhijian.hhcomic.comic.type.DataSourceType;
-import org.huxizhijian.hhcomic.comic.type.RequestFieldType;
-import org.huxizhijian.hhcomic.comic.type.ResponseFieldType;
-import org.huxizhijian.hhcomic.comic.value.ComicRequestValues;
-import org.huxizhijian.hhcomic.comic.value.IComicRequest;
-import org.huxizhijian.hhcomic.comic.value.IComicResponse;
+import org.huxizhijian.hhcomic.oldcomic.ComicRouter;
+import org.huxizhijian.hhcomic.oldcomic.bean.Comic;
+import org.huxizhijian.hhcomic.oldcomic.repository.ComicRepository;
+import org.huxizhijian.hhcomic.oldcomic.type.DataSourceType;
+import org.huxizhijian.hhcomic.oldcomic.type.RequestFieldType;
+import org.huxizhijian.hhcomic.oldcomic.type.ResponseFieldType;
+import org.huxizhijian.hhcomic.oldcomic.value.ComicRequestValues;
+import org.huxizhijian.hhcomic.oldcomic.value.IComicRequest;
+import org.huxizhijian.hhcomic.oldcomic.value.IComicResponse;
 import org.huxizhijian.hhcomic.usecase.UseCase;
 import org.huxizhijian.hhcomic.usecase.UseCaseHandler;
 import org.huxizhijian.hhcomicviewer.ui.debug.usecase.GetRecommendsUseCase;
