@@ -2,6 +2,8 @@ package org.huxizhijian.hhcomic.oldcomic;
 
 import android.util.SparseArray;
 
+import org.huxizhijian.hhcomic.comic.source.base.Source;
+
 /**
  * @author huxizhijian
  * @date 2018/3/31
