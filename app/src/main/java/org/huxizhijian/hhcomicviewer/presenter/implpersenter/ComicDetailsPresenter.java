@@ -55,7 +55,7 @@ public class ComicDetailsPresenter implements IComicDetailsPresenter {
 
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
-                        Comic comic = null;
+                        ComicEngine comic = null;
                         try {
                             String content = new String(response.body().bytes(), "utf-8");
                             //初始化

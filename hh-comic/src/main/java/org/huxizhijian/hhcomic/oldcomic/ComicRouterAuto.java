@@ -2,7 +2,7 @@ package org.huxizhijian.hhcomic.oldcomic;
 
 import android.util.SparseArray;
 
-import org.huxizhijian.hhcomic.comic.source.base.Source;
+import org.huxizhijian.hhcomic.comic.sources.base.Source;
 
 /**
  * @author huxizhijian

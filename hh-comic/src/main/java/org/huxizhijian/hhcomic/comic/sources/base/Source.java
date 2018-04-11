@@ -1,4 +1,4 @@
-package org.huxizhijian.hhcomic.comic.source.base;
+package org.huxizhijian.hhcomic.comic.sources.base;
 
 import org.huxizhijian.annotations.SourceInterface;
 
@@ -10,5 +10,4 @@ import org.huxizhijian.annotations.SourceInterface;
  */
 @SourceInterface
 public interface Source {
-
 }

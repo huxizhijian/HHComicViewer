@@ -42,7 +42,7 @@ import okhttp3.Response;
 public abstract class DetailStrategy extends BaseComicParseStrategy {
 
     /**
-     * Comic id
+     * ComicEngine id
      */
     protected String mComicId;
 
@@ -59,7 +59,7 @@ public abstract class DetailStrategy extends BaseComicParseStrategy {
      *
      * @param data    网页请求返回的内容
      * @param comicId comic网站标识
-     * @return Comic
+     * @return ComicEngine
      * @throws UnsupportedEncodingException 解析时可能会抛出的异常
      */
     protected abstract Comic parseComic(byte[] data, String comicId) throws UnsupportedEncodingException;
