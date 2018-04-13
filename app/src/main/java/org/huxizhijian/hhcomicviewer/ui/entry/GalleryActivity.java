@@ -339,6 +339,7 @@ public class GalleryActivity extends Activity implements View.OnClickListener,
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
                     mSeekBar.setProgress(mListView.getFirstVisiblePosition());
+                    // todo mComicChapter可能为空, 该调用可能在获取该类之前
                     mTv_progress.setText(mListView.getFirstVisiblePosition() + 1 + "/" + mComicChapter.getPageCount());
                     mPosition = mListView.getLastVisiblePosition();
                 }

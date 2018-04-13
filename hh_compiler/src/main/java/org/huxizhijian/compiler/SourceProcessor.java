@@ -30,7 +30,7 @@ import org.huxizhijian.annotations.SourceInterface;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
-import java.util.HashSet;
+import java.util.EnumMap;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -63,17 +63,21 @@ public class SourceProcessor extends AbstractProcessor {
     private Messager mMessager;
     private Elements mElementUtils;
 
-    private Set<Integer> mTypes;
-
     /**
      * 生成类的包名和类名
      */
     private static final String PACKAGE_NAME = "org.huxizhijian.generate";
     private static final String CLS_NAME = "SourceRouterApp";
+    private static final String ENUM_CLS_NAME = "SourceType";
     private static final ClassName THIS_TYPE = ClassName.get(PACKAGE_NAME, CLS_NAME);
+    private static final ClassName ENUM_TYPE = ClassName.get(PACKAGE_NAME, CLS_NAME + "." + ENUM_CLS_NAME);
 
-    private static final String PACKAGE_UTIL = "android.util";
-    private static final ClassName SPARSE_ARRAY_NAME = ClassName.get(PACKAGE_UTIL, "SparseArray");
+    /**
+     * 成员变量名
+     */
+    private static final String SOURCE_MAP_FIELD_NAME = "mSourceMap";
+    private static final String SOURCE_NAME_MAP_FIELD_NAME = "mSourceNameMap";
+    private static final String APP_INSTANCE = "sSourceRouterApp";
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnvironment) {
@@ -82,7 +86,6 @@ public class SourceProcessor extends AbstractProcessor {
         mTypeUtils = processingEnvironment.getTypeUtils();
         mMessager = processingEnvironment.getMessager();
         mElementUtils = processingEnvironment.getElementUtils();
-        mTypes = new HashSet<>();
     }
 
     @Override
@@ -117,17 +120,19 @@ public class SourceProcessor extends AbstractProcessor {
         TypeSpec.Builder typeBuilder = TypeSpec.classBuilder(CLS_NAME)
                 .addModifiers(Modifier.PUBLIC);
 
+        // 生成的枚举类
+        TypeSpec.Builder typeEnumBuilder = TypeSpec.enumBuilder(ENUM_CLS_NAME)
+                .addModifiers(Modifier.PUBLIC);
+
+        // 加入枚举常量
         if (sourceImplElement != null) {
             for (Element element : sourceImplElement) {
-                String fieldName = element.getSimpleName().toString().toUpperCase();
-                int type = element.getAnnotation(SourceImpl.class).type();
-                if (mTypes.contains(type)) {
-                    // 不应当存在相同的id
-                    throw new IllegalStateException("Id in all sources should not be the same!");
-                } else {
-                    mTypes.add(type);
-                }
-                typeBuilder.addField(generateContactSourceInt(fieldName, type));
+                String typeName = element.getSimpleName().toString().toUpperCase();
+                typeEnumBuilder.addEnumConstant(typeName);
+            }
+            // JavaPoet里枚举内部类不能是空的
+            if (sourceImplElement.size() != 0) {
+                typeBuilder.addType(typeEnumBuilder.build());
             }
         }
 
@@ -163,30 +168,17 @@ public class SourceProcessor extends AbstractProcessor {
     }
 
     /**
-     * 生成常量, 对应一个SourceImpl, 值由注解提供
-     *
-     * @param fieldName 常量名称
-     * @param index     常量值,不重复,即SourceImpl注解的type
-     * @return field spec
-     */
-    private FieldSpec generateContactSourceInt(String fieldName, int index) {
-        return FieldSpec.builder(int.class, fieldName)
-                .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
-                .initializer("$L", index)
-                .build();
-    }
-
-    /**
      * 包含source名称的SparseArray成员变量
      *
      * @return field spec
      */
     private FieldSpec sourceNameArraySpec() {
-        TypeName stringType = TypeName.get(String.class);
-        TypeName arrayOfString = ParameterizedTypeName.get(SPARSE_ARRAY_NAME, stringType);
-        return FieldSpec.builder(arrayOfString, "mSourceNameArray")
+        // 使用EnumMap获得更快的枚举索引速度, EnumMap与序数索引数组的速度相当
+        TypeName arrayOfString = ParameterizedTypeName.get(ClassName.get(EnumMap.class),
+                ENUM_TYPE, ClassName.get(String.class));
+        return FieldSpec.builder(arrayOfString, SOURCE_NAME_MAP_FIELD_NAME)
                 .addModifiers(Modifier.PRIVATE, Modifier.FINAL)
-                .initializer("new $T()", arrayOfString)
+                .initializer("new $T($L)", arrayOfString, ENUM_TYPE.simpleName() + ".class")
                 .build();
     }
 
@@ -197,10 +189,11 @@ public class SourceProcessor extends AbstractProcessor {
      * @return fieldSpec
      */
     private FieldSpec sourceArraySpec(TypeName sourceName) {
-        TypeName arrayOfSource = ParameterizedTypeName.get(SPARSE_ARRAY_NAME, sourceName);
-        return FieldSpec.builder(arrayOfSource, "mSourceArray")
+        TypeName arrayOfSource = ParameterizedTypeName.get(ClassName.get(EnumMap.class),
+                ENUM_TYPE, ClassName.get(String.class));
+        return FieldSpec.builder(arrayOfSource, SOURCE_MAP_FIELD_NAME)
                 .addModifiers(Modifier.PRIVATE, Modifier.FINAL)
-                .initializer("new $T()", arrayOfSource)
+                .initializer("new $T($L)", arrayOfSource, ENUM_TYPE.simpleName() + ".class")
                 .build();
     }
 
@@ -210,7 +203,7 @@ public class SourceProcessor extends AbstractProcessor {
      * @return field spec
      */
     private FieldSpec staticInstantSpec() {
-        return FieldSpec.builder(THIS_TYPE, "sSourceRouterAuto")
+        return FieldSpec.builder(THIS_TYPE, APP_INSTANCE)
                 .addModifiers(Modifier.PRIVATE, Modifier.STATIC, Modifier.VOLATILE)
                 .build();
     }
@@ -221,18 +214,17 @@ public class SourceProcessor extends AbstractProcessor {
      * @return method spec
      */
     private MethodSpec getInstantSpec() {
-
         return MethodSpec.methodBuilder("getInstance")
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
                 .returns(THIS_TYPE)
-                .beginControlFlow("if (sSourceRouterAuto == null)")
+                .beginControlFlow("if ($L == null)", APP_INSTANCE)
                 .beginControlFlow("synchronized ($T.class)", THIS_TYPE)
-                .beginControlFlow("if (sSourceRouterAuto == null)")
-                .addStatement("sSourceRouterAuto = new $T()", THIS_TYPE)
+                .beginControlFlow("if ($L == null)", APP_INSTANCE)
+                .addStatement("$L = new $T()", APP_INSTANCE, THIS_TYPE)
                 .endControlFlow()
                 .endControlFlow()
                 .endControlFlow()
-                .addStatement("return sSourceRouterAuto")
+                .addStatement("return $L", APP_INSTANCE)
                 .build();
     }
 
@@ -249,8 +241,8 @@ public class SourceProcessor extends AbstractProcessor {
         if (sourceImplElement != null) {
             for (Element element : sourceImplElement) {
                 SourceImpl source = element.getAnnotation(SourceImpl.class);
-                builder.addStatement("mSourceNameArray.put($L,$S)",
-                        element.getSimpleName().toString().toUpperCase(), source.name());
+                builder.addStatement("$L.put($L,$S)", SOURCE_NAME_MAP_FIELD_NAME,
+                        ENUM_CLS_NAME + "." + element.getSimpleName().toString().toUpperCase(), source.name());
             }
         }
         return builder.build();
@@ -264,9 +256,9 @@ public class SourceProcessor extends AbstractProcessor {
     private MethodSpec getSourceNameSpec() {
         return MethodSpec.methodBuilder("getSourceName")
                 .addModifiers(Modifier.PUBLIC)
-                .addParameter(int.class, "type")
+                .addParameter(ENUM_TYPE, "sourceType")
                 .returns(String.class)
-                .addStatement("return mSourceNameArray.get(type)")
+                .addStatement("return $L.get(sourceType)", SOURCE_NAME_MAP_FIELD_NAME)
                 .build();
     }
 }

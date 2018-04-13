@@ -34,9 +34,4 @@ public @interface SourceImpl {
      * @return name of source impl, it will show to users.
      */
     String name();
-
-    /**
-     * @return Type id of source impl, it must be only one in all sources, and could not change.
-     */
-    int type();
 }

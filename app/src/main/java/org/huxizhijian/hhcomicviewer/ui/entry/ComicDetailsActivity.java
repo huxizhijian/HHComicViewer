@@ -673,6 +673,7 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // TODO data应该判断是否为空, 取到的Comic也一样
         mComic = (Comic) data.getSerializableExtra("comic");
         mComic.setLastReadTime(System.currentTimeMillis());
         if (mVolAdapter != null) {

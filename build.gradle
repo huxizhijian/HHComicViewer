@@ -51,7 +51,7 @@ ext {
     buildToolsVersion = '27.0.3'
 
     // App dependencies
-    supportLibVersion = "27.1.0"
+    supportLibVersion = "27.1.1"
     junitVersion = '4.12'
     espressoVersion = '3.0.1'
 }
@@ -59,4 +59,3 @@ ext {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
-

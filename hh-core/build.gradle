@@ -76,9 +76,9 @@ dependencies {
     // gson JSON解析库
     api 'com.google.code.gson:gson:2.8.2'
     // okhttp3 网络请求库
-    api 'com.squareup.okhttp3:okhttp:3.9.1'
+    api 'com.squareup.okhttp3:okhttp:3.10.0'
     // Android工具类库
-    api 'com.blankj:utilcode:1.9.0'
+    api 'com.blankj:utilcode:1.13.3'
     // 打logger专用工具
     api 'com.orhanobut:logger:2.1.1'
     // 字体图标库，使用fontawesome开源图标库
