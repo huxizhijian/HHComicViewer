@@ -114,6 +114,4 @@ dependencies {
     // 腾讯bugly依赖
     implementation 'com.tencent.bugly:crashreport_upgrade:latest.release'
     implementation 'com.tencent.bugly:nativecrashreport:latest.release'
-    // APT
-    annotationProcessor 'com.google.auto.value:auto-value:1.1.0'
 }

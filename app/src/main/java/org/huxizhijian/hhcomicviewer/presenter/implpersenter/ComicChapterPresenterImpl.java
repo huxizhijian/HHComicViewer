@@ -40,7 +40,7 @@ public class ComicChapterPresenterImpl implements IComicChapterPresenter {
 
     @Override
     public void getComicChapter(final ComicChapter comicChapter) {
-        /*Request request = new Request.Builder().get()
+        /*ComicRequest request = new ComicRequest.Builder().get()
                 .url(CommonUtils.getChapterUrl(comicChapter.getCid(), comicChapter.getChid(),
                         comicChapter.getServerId()))
                 .build();

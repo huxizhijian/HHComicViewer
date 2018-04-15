@@ -43,7 +43,7 @@ public class ComicDetailsPresenter implements IComicDetailsPresenter {
 
     @Override
     public void getComic(final int cid, final Comic oldComic) {
-        /*final Request request = new Request.Builder().get()
+        /*final ComicRequest request = new ComicRequest.Builder().get()
                 .url(CommonUtils.getComicUrl(cid))
                 .build();
         HHApplication.getInstance().getClient().newCall(request)

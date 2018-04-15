@@ -60,8 +60,9 @@ public class ComicRecommendPresenter implements IComicRecommendPresenter {
         this.mFragment = fragment;
     }
 
+    @Override
     public void getRecommendList() {
-        /*Request request = new Request.Builder().get()
+        /*ComicRequest request = new ComicRequest.Builder().get()
                 .url(HHApplication.getInstance().getHHWebVariable().getCsite())
                 .build();
         HHApplication.getInstance().getClient().newCall(request)

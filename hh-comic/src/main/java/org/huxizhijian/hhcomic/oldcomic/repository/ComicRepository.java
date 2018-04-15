@@ -83,7 +83,7 @@ public class ComicRepository implements ComicDataSource {
                 mRemoteRepository.get(source, requestValues, callback);
                 break;
             default:
-                callback.onError(new NullPointerException("Request type is not exist!"));
+                callback.onError(new NullPointerException("ComicRequest type is not exist!"));
                 break;
         }
     }
