@@ -17,6 +17,12 @@
 package org.huxizhijian.hhcomic.comic.sources.base;
 
 import org.huxizhijian.annotations.SourceInterface;
+import org.huxizhijian.hhcomic.comic.entities.Chapter;
+import org.huxizhijian.hhcomic.comic.entities.Comic;
+import org.huxizhijian.hhcomic.comic.entities.ImageUrl;
+import org.huxizhijian.hhcomic.comic.net.ComicRequest;
+
+import java.util.List;
 
 /**
  * Comic策略接口
@@ -26,5 +32,25 @@ import org.huxizhijian.annotations.SourceInterface;
  */
 @SourceInterface
 public interface Source {
+    ComicRequest getComicInfoRequest(String cid);
 
+    void parseInfo(String html, Comic comic);
+
+    ComicRequest getChapterRequest(String html, String cid);
+
+    List<Chapter> parseChapter(String html);
+
+    ComicRequest getImageRequest(String cid, String path);
+
+    List<ImageUrl> parseImages(String html);
+
+    ComicRequest getLazyRequest(String url);
+
+    String parseLazy(String html, String url);
+
+    ComicRequest getCheckRequest();
+
+    String parseCheck(String html);
+
+    String getTitle();
 }
