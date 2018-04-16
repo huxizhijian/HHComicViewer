@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 huxizhijian
+ * Copyright 2016-2018 huxizhijian
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,10 +32,12 @@ public abstract class BufferHttpRequest extends AbstractHttpRequest {
 
     private ByteArrayOutputStream mByteArray = new ByteArrayOutputStream();
 
+    @Override
     protected OutputStream getBodyOutputStream() {
         return mByteArray;
     }
 
+    @Override
     protected HttpResponse executeInternal(HttpHeader header) throws IOException {
         byte[] data = mByteArray.toByteArray();
         return executeInternal(header, data);

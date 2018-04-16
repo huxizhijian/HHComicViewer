@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 huxizhijian
+ * Copyright 2016-2018 huxizhijian
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,31 +16,35 @@
 
 package org.huxizhijian.hhcomic.comic.net;
 
-import android.support.annotation.IntDef;
+import android.support.annotation.StringDef;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 封装一个Request, 然后转换成一个真正的网络请求
- * 该类为不可变类, 使用了构造器模式生成实例
+ * 封装一个Request, 然后按照{@link HttpEngine}的需要转换成一个真正的网络请求
+ * 该类为不可变类, 类的不可变成员都为私有, 使用了构造器模式生成实例
  *
  * @author huxizhijian
  * @date 2018/4/16
  */
-public class ComicRequest {
+public final class ComicRequest {
 
     final String url;
-    final Map<String, String> header;
+    private final Map<String, String> header;
     @Method
-    final int method;
+    final String method;
+    final String postContentType;
+    private final byte[] postBody;
 
     public static class Builder {
 
         String url;
         Map<String, String> header;
         @Method
-        int method;
+        String method;
+        String postContentType;
+        byte[] postBody;
 
         public Builder url(String url) {
             this.url = url;
@@ -49,7 +53,7 @@ public class ComicRequest {
 
         public Builder addHeader(String key, String value) {
             if (header == null) {
-                header = new HashMap<>();
+                header = new HashMap<>(16);
             }
             header.put(key, value);
             return this;
@@ -60,12 +64,14 @@ public class ComicRequest {
             return this;
         }
 
-        public Builder post() {
+        public Builder post(String contentType, byte[] body) {
             this.method = POST;
+            postContentType = contentType;
+            postBody = body;
             return this;
         }
 
-        public ComicRequest build(){
+        public ComicRequest build() {
             return new ComicRequest(this);
         }
     }
@@ -74,6 +80,8 @@ public class ComicRequest {
         url = builder.url;
         method = builder.method;
         header = builder.header;
+        postContentType = builder.postContentType;
+        postBody = builder.postBody;
     }
 
     public String getUrl() {
@@ -81,17 +89,31 @@ public class ComicRequest {
     }
 
     public Map<String, String> getHeader() {
-        return header;
+        if (header == null || header.size() == 0) {
+            return null;
+        }
+        // 传递一个header的复制, 因为该类是不可变类, 不能让外部有机会改变该类的任何属性
+        Map<String, String> newCopy = new HashMap<>(header.size());
+        newCopy.putAll(header);
+        return newCopy;
     }
 
-    public int getMethod() {
+    public String getMethod() {
         return method;
     }
 
-    public static final int GET = 1;
-    public static final int POST = 2;
+    public String getPostContentType() {
+        return postContentType;
+    }
 
-    @IntDef({GET, POST})
+    public byte[] getPostBody() {
+        return postBody.clone();
+    }
+
+    public static final String GET = "GET";
+    public static final String POST = "POST";
+
+    @StringDef({GET, POST})
     public @interface Method {
     }
 }

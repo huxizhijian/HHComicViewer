@@ -49,7 +49,7 @@ Here is the libraries
 ~~应用检测更新~~<br>
 
 # License
-<div class="codehilite"><pre>Copyright (C) 2018 huxizhijian<br>
+<div class="codehilite"><pre>Copyright (C) 2016-2018 huxizhijian<br>
 Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at<br>
