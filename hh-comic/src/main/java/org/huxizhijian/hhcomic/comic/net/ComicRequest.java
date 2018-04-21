@@ -37,6 +37,55 @@ public final class ComicRequest {
     final String postContentType;
     private final byte[] postBody;
 
+    private ComicRequest(Builder builder) {
+        url = builder.url;
+        method = builder.method;
+        postContentType = builder.postContentType;
+
+        // Map是可变类, 对它进行拷贝, 而不是直接复制它的引用
+        header = new HashMap<>();
+        header.putAll(builder.header);
+
+        // 使用数组的拷贝, 而不是复制它的引用
+        postBody = builder.postBody.clone();
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public Map<String, String> getHeader() {
+        if (header == null || header.size() == 0) {
+            return null;
+        }
+        // 传递一个header的复制, 因为该类是不可变类, 不能让外部有机会改变该类的任何属性
+        Map<String, String> newCopy = new HashMap<>(header.size());
+        newCopy.putAll(header);
+        return newCopy;
+    }
+
+    public String getMethod() {
+        return method;
+    }
+
+    public String getPostContentType() {
+        return postContentType;
+    }
+
+    public byte[] getPostBody() {
+        return postBody.clone();
+    }
+
+    public static final String GET = "GET";
+    public static final String POST = "POST";
+
+    @StringDef({GET, POST})
+    public @interface Method {
+    }
+
+    /**
+     * 构造器模式, 该类为不可变类提供一个复用代码的方式
+     */
     public static class Builder {
 
         String url;
@@ -74,46 +123,5 @@ public final class ComicRequest {
         public ComicRequest build() {
             return new ComicRequest(this);
         }
-    }
-
-    private ComicRequest(Builder builder) {
-        url = builder.url;
-        method = builder.method;
-        header = builder.header;
-        postContentType = builder.postContentType;
-        postBody = builder.postBody;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public Map<String, String> getHeader() {
-        if (header == null || header.size() == 0) {
-            return null;
-        }
-        // 传递一个header的复制, 因为该类是不可变类, 不能让外部有机会改变该类的任何属性
-        Map<String, String> newCopy = new HashMap<>(header.size());
-        newCopy.putAll(header);
-        return newCopy;
-    }
-
-    public String getMethod() {
-        return method;
-    }
-
-    public String getPostContentType() {
-        return postContentType;
-    }
-
-    public byte[] getPostBody() {
-        return postBody.clone();
-    }
-
-    public static final String GET = "GET";
-    public static final String POST = "POST";
-
-    @StringDef({GET, POST})
-    public @interface Method {
     }
 }

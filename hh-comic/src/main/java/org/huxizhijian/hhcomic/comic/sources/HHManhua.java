@@ -16,9 +16,17 @@
 
 package org.huxizhijian.hhcomic.comic.sources;
 
+import android.support.annotation.Nullable;
+
 import org.huxizhijian.annotations.SourceImpl;
+import org.huxizhijian.hhcomic.comic.entities.Chapter;
+import org.huxizhijian.hhcomic.comic.entities.Comic;
+import org.huxizhijian.hhcomic.comic.entities.ImageUrl;
 import org.huxizhijian.hhcomic.comic.net.ComicRequest;
+import org.huxizhijian.hhcomic.comic.net.ComicResponse;
 import org.huxizhijian.hhcomic.comic.sources.base.Source;
+
+import java.util.List;
 
 import static org.huxizhijian.hhcomic.comic.sources.HHManhua.HH_MANHUA;
 
@@ -31,8 +39,59 @@ import static org.huxizhijian.hhcomic.comic.sources.HHManhua.HH_MANHUA;
 @SuppressWarnings("AlibabaClassNamingShouldBeCamel")
 @SourceImpl(name = HH_MANHUA)
 public class HHManhua implements Source {
+
     public static final String HH_MANHUA = "汗汗漫画";
 
     public void createRequest(){
+    }
+
+    @Override
+    public ComicRequest getComicInfoRequest(String cid) {
+        return null;
+    }
+
+    @Override
+    public void parseInfo(ComicResponse response, Comic comic) {
+
+    }
+
+    @Override
+    public ComicRequest getChapterRequest(ComicResponse response, String cid) {
+        return null;
+    }
+
+    @Override
+    public List<Chapter> parseChapter(ComicResponse response) {
+        return null;
+    }
+
+    @Override
+    public ComicRequest getImageRequest(String cid, String path) {
+        return null;
+    }
+
+    @Override
+    public List<ImageUrl> parseImages(ComicResponse response) {
+        return null;
+    }
+
+    @Override
+    public ComicRequest getLazyRequest(@Nullable String url, int page) {
+        return null;
+    }
+
+    @Override
+    public String parseLazy(ComicResponse response, String url) {
+        return null;
+    }
+
+    @Override
+    public ComicRequest getCheckRequest(String cid) {
+        return null;
+    }
+
+    @Override
+    public String parseCheck(ComicResponse response) {
+        return null;
     }
 }
