@@ -24,12 +24,14 @@ import java.util.List;
  * @author huxizhijian
  * @date 2018/4/23
  */
-public interface Category {
+public interface Categorys {
 
     Filter getFilter();
 
     List<String> getCategoryNames();
 
     String getCategoryPath(String name);
+
+    String formatUrl(String name, int page, Filter.FilterSelector selector);
 
 }

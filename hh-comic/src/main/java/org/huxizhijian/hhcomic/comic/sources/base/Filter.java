@@ -21,4 +21,7 @@ package org.huxizhijian.hhcomic.comic.sources.base;
  * @date 2018/4/23
  */
 public interface Filter {
+    public interface FilterSelector {
+
+    }
 }
