@@ -119,5 +119,4 @@ public interface Source {
      * @return update time
      */
     String parseCheck(ComicResponse response);
-
 }

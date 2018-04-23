@@ -81,4 +81,12 @@ public final class ComicResponse {
         mResponse = response;
         mComicRequest = comicRequest;
     }
+
+    public String getErrorMsg() {
+        if (mResponse.isSuccessful()) {
+            return null;
+        } else {
+            return "null";
+        }
+    }
 }
