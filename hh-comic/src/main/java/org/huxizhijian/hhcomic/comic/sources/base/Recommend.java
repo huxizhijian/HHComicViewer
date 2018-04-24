@@ -16,21 +16,9 @@
 
 package org.huxizhijian.hhcomic.comic.sources.base;
 
-import org.huxizhijian.hhcomic.oldcomic.bean.Comic;
-
-import java.util.List;
-
 /**
  * @author huxizhijian
- * @date 2018/4/23
+ * @date 2018/4/24
  */
-public interface ListResult {
-
-    boolean isSuccessful();
-
-    String getErrorMsg();
-
-    int getPageSize();
-
-    List<Comic> getComicList();
+public interface Recommend {
 }

@@ -16,22 +16,21 @@
 
 package org.huxizhijian.hhcomic.comic.sources.base;
 
+import org.huxizhijian.hhcomic.oldcomic.bean.Comic;
+
 import java.util.List;
 
 /**
- * 分类
- *
  * @author huxizhijian
  * @date 2018/4/23
  */
-public interface Categorys {
+public interface ComicListResult {
 
-    Filter getFilter();
+    boolean isSuccessful();
 
-    List<String> getCategoryNames();
+    String getErrorMsg();
 
-    String getCategoryPath(String name);
+    int getPageSize();
 
-    String formatUrl(String name, int page, Filter.FilterSelector selector);
-
+    List<Comic> getComicList();
 }

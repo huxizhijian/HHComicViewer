@@ -16,12 +16,22 @@
 
 package org.huxizhijian.hhcomic.comic.sources.base;
 
+import java.util.List;
+
 /**
+ * 分类
+ *
  * @author huxizhijian
  * @date 2018/4/23
  */
-public interface Filter {
-    public interface FilterSelector {
+public interface Category {
 
-    }
+    FilterManager getFilter();
+
+    List<String> getCategoryNames();
+
+    String getCategoryPath(String name);
+
+    String getUrl(String name, int page, FilterManager.FilterSelector selector);
+
 }

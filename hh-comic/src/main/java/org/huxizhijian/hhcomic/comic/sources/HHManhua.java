@@ -24,7 +24,7 @@ import org.huxizhijian.hhcomic.comic.entities.Comic;
 import org.huxizhijian.hhcomic.comic.entities.ImageUrl;
 import org.huxizhijian.hhcomic.comic.net.ComicRequest;
 import org.huxizhijian.hhcomic.comic.net.ComicResponse;
-import org.huxizhijian.hhcomic.comic.sources.base.Source;
+import org.huxizhijian.hhcomic.comic.sources.baseimpl.ComicSource;
 
 import java.util.List;
 
@@ -38,11 +38,11 @@ import static org.huxizhijian.hhcomic.comic.sources.HHManhua.HH_MANHUA;
  */
 @SuppressWarnings("AlibabaClassNamingShouldBeCamel")
 @SourceImpl(name = HH_MANHUA)
-public class HHManhua implements Source {
+public class HHManhua extends ComicSource {
 
     public static final String HH_MANHUA = "汗汗漫画";
 
-    public void createRequest(){
+    public void createRequest() {
     }
 
     @Override
