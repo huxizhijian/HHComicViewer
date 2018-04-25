@@ -16,7 +16,7 @@
 
 package org.huxizhijian.hhcomic.oldcomic.source;
 
-import org.huxizhijian.core.util.misc.Pair;
+import org.huxizhijian.hhcomic.comic.sources.base.Filter;
 import org.huxizhijian.hhcomic.oldcomic.bean.Chapter;
 import org.huxizhijian.hhcomic.oldcomic.bean.Comic;
 import org.huxizhijian.hhcomic.oldcomic.parser.comic.category.CategoryStrategy;
@@ -77,27 +77,27 @@ public class HHManHua extends ComicSource {
         RANK_TYPE_MAP.put("评分最高", "/top/toprating.aspx");
         RANK_TYPE_MAP.put("最多人评论", "/top/hoorating.aspx");
         // 支持的分类类别
-        CATEGORY_TYPE_MAP.put("1", Pair.create("萌系", "http://pic.huo80.com/comicui/21301.JPG"));
-        CATEGORY_TYPE_MAP.put("2", Pair.create("搞笑", "http://pic.huo80.com/comicui/28545.JPG"));
-        CATEGORY_TYPE_MAP.put("3", Pair.create("格斗", "http://pic.huo80.com/comicui/28906.JPG"));
-        CATEGORY_TYPE_MAP.put("4", Pair.create("科幻", "http://pic.huo80.com/comicui/30298.JPG"));
-        CATEGORY_TYPE_MAP.put("5", Pair.create("剧情", "http://pic.huo80.com/comicui/30589.JPG"));
-        CATEGORY_TYPE_MAP.put("6", Pair.create("侦探", "http://pic.huo80.com/upload/up200802/a104.jpg"));
-        CATEGORY_TYPE_MAP.put("7", Pair.create("竞技", "http://pic.huo80.com/upload/up200806/a198.jpg"));
-        CATEGORY_TYPE_MAP.put("8", Pair.create("魔法", "http://pic.huo80.com/upload/up200912/a130.jpg"));
-        CATEGORY_TYPE_MAP.put("9", Pair.create("神鬼", "http://pic.huo80.com/upload/up201003/a164.jpg"));
-        CATEGORY_TYPE_MAP.put("10", Pair.create("校园", "http://pic.huo80.com/comicui2/7688a.JPG"));
-        CATEGORY_TYPE_MAP.put("11", Pair.create("惊栗", "http://pic.huo80.com/comicui/7556.JPG"));
-        CATEGORY_TYPE_MAP.put("12", Pair.create("厨艺", "http://pic.huo80.com/comicui/27782.JPG"));
-        CATEGORY_TYPE_MAP.put("13", Pair.create("伪娘", "http://pic.huo80.com/comicui/31342.JPG"));
-        CATEGORY_TYPE_MAP.put("15", Pair.create("冒险", "http://pic.huo80.com/comicui/20512.JPG"));
-        CATEGORY_TYPE_MAP.put("19", Pair.create("小说", "http://pic.huo80.com/comicui/31149.JPG"));
-        CATEGORY_TYPE_MAP.put("20", Pair.create("港漫", "http://pic.huo80.com/upload/up200804/a195.jpg"));
-        CATEGORY_TYPE_MAP.put("21", Pair.create("耽美", "http://pic.huo80.com/comicui/11616.JPG"));
-        CATEGORY_TYPE_MAP.put("22", Pair.create("经典", "http://pic.huo80.com/comicui/15553.JPG"));
-        CATEGORY_TYPE_MAP.put("23", Pair.create("欧美", "http://pic.huo80.com/comicui/30267.JPG"));
-        CATEGORY_TYPE_MAP.put("24", Pair.create("日文", "http://pic.huo80.com/comicui/24318.JPG"));
-        CATEGORY_TYPE_MAP.put("25", Pair.create("亲情", "http://pic.huo80.com/comicui/29176.JPG"));
+        CATEGORY_TYPE_MAP.put("1", Filter.create("萌系", "http://pic.huo80.com/comicui/21301.JPG"));
+        CATEGORY_TYPE_MAP.put("2", Filter.create("搞笑", "http://pic.huo80.com/comicui/28545.JPG"));
+        CATEGORY_TYPE_MAP.put("3", Filter.create("格斗", "http://pic.huo80.com/comicui/28906.JPG"));
+        CATEGORY_TYPE_MAP.put("4", Filter.create("科幻", "http://pic.huo80.com/comicui/30298.JPG"));
+        CATEGORY_TYPE_MAP.put("5", Filter.create("剧情", "http://pic.huo80.com/comicui/30589.JPG"));
+        CATEGORY_TYPE_MAP.put("6", Filter.create("侦探", "http://pic.huo80.com/upload/up200802/a104.jpg"));
+        CATEGORY_TYPE_MAP.put("7", Filter.create("竞技", "http://pic.huo80.com/upload/up200806/a198.jpg"));
+        CATEGORY_TYPE_MAP.put("8", Filter.create("魔法", "http://pic.huo80.com/upload/up200912/a130.jpg"));
+        CATEGORY_TYPE_MAP.put("9", Filter.create("神鬼", "http://pic.huo80.com/upload/up201003/a164.jpg"));
+        CATEGORY_TYPE_MAP.put("10", Filter.create("校园", "http://pic.huo80.com/comicui2/7688a.JPG"));
+        CATEGORY_TYPE_MAP.put("11", Filter.create("惊栗", "http://pic.huo80.com/comicui/7556.JPG"));
+        CATEGORY_TYPE_MAP.put("12", Filter.create("厨艺", "http://pic.huo80.com/comicui/27782.JPG"));
+        CATEGORY_TYPE_MAP.put("13", Filter.create("伪娘", "http://pic.huo80.com/comicui/31342.JPG"));
+        CATEGORY_TYPE_MAP.put("15", Filter.create("冒险", "http://pic.huo80.com/comicui/20512.JPG"));
+        CATEGORY_TYPE_MAP.put("19", Filter.create("小说", "http://pic.huo80.com/comicui/31149.JPG"));
+        CATEGORY_TYPE_MAP.put("20", Filter.create("港漫", "http://pic.huo80.com/upload/up200804/a195.jpg"));
+        CATEGORY_TYPE_MAP.put("21", Filter.create("耽美", "http://pic.huo80.com/comicui/11616.JPG"));
+        CATEGORY_TYPE_MAP.put("22", Filter.create("经典", "http://pic.huo80.com/comicui/15553.JPG"));
+        CATEGORY_TYPE_MAP.put("23", Filter.create("欧美", "http://pic.huo80.com/comicui/30267.JPG"));
+        CATEGORY_TYPE_MAP.put("24", Filter.create("日文", "http://pic.huo80.com/comicui/24318.JPG"));
+        CATEGORY_TYPE_MAP.put("25", Filter.create("亲情", "http://pic.huo80.com/comicui/29176.JPG"));
         // 支持的推荐类别
         RECOMMEND_TYPE_MAP.put("新加漫画", "iTabHotHtm0");
         RECOMMEND_TYPE_MAP.put("热点漫画", "iTabHotHtm2");

@@ -14,31 +14,38 @@
  * limitations under the License.
  */
 
-package org.huxizhijian.core.util.misc;
+package org.huxizhijian.hhcomic.comic.sources.base;
 
 /**
- * 展示一个关系
+ * 一个过滤或者排序
  *
- * @Author huxizhijian on 2017/10/12.
+ * @author huxizhijian
+ * @date 2017/10/12
  */
 
-public class Pair<F, S> {
+public final class Filter {
 
-    public F first;
-    public S second;
+    public final String name;
+    public final String path;
 
-    private Pair(F first, S second) {
-        this.first = first;
-        this.second = second;
+    public Filter(String name, String path) {
+        this.name = name;
+        this.path = path;
     }
 
-    public static <F, S> Pair<F, S> create(F first, S second) {
-        return new Pair<>(first, second);
+    /**
+     * 创建一个Filter
+     *
+     * @param name filter名称
+     * @param path 帮助完成url的字段
+     * @return instance
+     */
+    public static Filter create(String name, String path) {
+        return new Filter(name, path);
     }
 
     @Override
     public String toString() {
-        return first.toString();
+        return name;
     }
-
 }

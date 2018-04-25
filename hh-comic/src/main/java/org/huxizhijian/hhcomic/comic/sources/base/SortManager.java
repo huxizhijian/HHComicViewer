@@ -18,7 +18,8 @@ package org.huxizhijian.hhcomic.comic.sources.base;
 
 /**
  * @author huxizhijian
- * @date 2018/4/24
+ * @date 2018/4/25
  */
-public interface Recommend {
+public interface SortManager {
+
 }

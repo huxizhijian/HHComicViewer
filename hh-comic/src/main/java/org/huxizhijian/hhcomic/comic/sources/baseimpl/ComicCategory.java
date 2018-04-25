@@ -66,7 +66,7 @@ public class ComicCategory implements Category {
 
     @Override
     public String getUrl(String name, int page, FilterManager.FilterSelector selector) {
-        return mGetUrl.getUrl(getCategoryPath(name), page);
+        return mGetUrl.getUrl(getCategoryPath(name), page, selector);
     }
 
     public static ComicCategory init(FilterManager filterManager, GetUrl getUrl) {
@@ -84,8 +84,9 @@ public class ComicCategory implements Category {
          *
          * @param categoryPath 设置的path, 用于辅助构造url
          * @param page         页码
+         * @param selector     selector
          * @return url
          */
-        String getUrl(String categoryPath, int page);
+        String getUrl(String categoryPath, int page, FilterManager.FilterSelector selector);
     }
 }
