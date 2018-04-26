@@ -20,7 +20,6 @@ import org.huxizhijian.hhcomic.comic.sources.base.Category;
 import org.huxizhijian.hhcomic.comic.sources.base.FilterManager;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
@@ -51,12 +50,7 @@ public class ComicCategory implements Category {
     @Override
     public List<String> getCategoryNames() {
         Set<String> keys = mCategory.keySet();
-        Iterator<String> keyName = keys.iterator();
-        List<String> categoryNames = new ArrayList<>();
-        while (keyName.hasNext()) {
-            categoryNames.add(keyName.next());
-        }
-        return categoryNames;
+        return new ArrayList<>(keys);
     }
 
     @Override

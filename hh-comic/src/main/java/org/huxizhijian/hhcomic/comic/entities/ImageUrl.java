@@ -21,5 +21,12 @@ package org.huxizhijian.hhcomic.comic.entities;
  * @date 2018/4/16
  */
 public class ImageUrl {
-
+    String chapterUrl;
+    String[] urls;
+    int id;
+    int index;
+    boolean lazy;
+    boolean loading;
+    boolean success;
+    boolean download;
 }

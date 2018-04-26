@@ -16,7 +16,7 @@
 
 package org.huxizhijian.hhcomic.comic.sources.base;
 
-import java.util.Hashtable;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -43,9 +43,9 @@ public interface FilterManager {
     /**
      * 获取所有组及组内的filter
      *
-     * @return 有顺序的的map, 我们不希望组是无序的
+     * @return 有序的的map, 我们不希望组是无序的
      */
-    Hashtable<String, List<Filter>> getAllSubjectFilters();
+    LinkedHashMap<String, List<Filter>> getAllSubjectFilters();
 
     /**
      * 获取可选的排序

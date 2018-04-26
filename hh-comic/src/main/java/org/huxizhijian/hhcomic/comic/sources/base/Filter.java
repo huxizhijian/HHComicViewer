@@ -28,7 +28,7 @@ public final class Filter {
     public final String name;
     public final String path;
 
-    public Filter(String name, String path) {
+    private Filter(String name, String path) {
         this.name = name;
         this.path = path;
     }

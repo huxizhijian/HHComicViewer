@@ -78,8 +78,19 @@ public class OkHttpEngine implements HttpEngine {
         if (ComicRequest.GET.equals(request.method)) {
             builder.get();
         } else if (ComicRequest.POST.equals(request.method)) {
-            RequestBody requestBody = RequestBody.create(MediaType.parse(request.postContentType), request.getPostBody());
-            builder.post(requestBody);
+            if (request.postContentType != null) {
+                RequestBody requestBody = RequestBody.create(MediaType.parse(request.postContentType), request.getPostBody());
+                builder.post(requestBody);
+            } else {
+                builder.post(RequestBody.create(null, ""));
+            }
+        } else if (ComicRequest.PUT.equals(request.method)) {
+            if (request.postContentType != null) {
+                RequestBody requestBody = RequestBody.create(MediaType.parse(request.postContentType), request.getPostBody());
+                builder.put(requestBody);
+            } else {
+                builder.put(RequestBody.create(null, ""));
+            }
         }
         Map<String, String> header = request.getHeader();
         if (header != null && header.size() != 0) {

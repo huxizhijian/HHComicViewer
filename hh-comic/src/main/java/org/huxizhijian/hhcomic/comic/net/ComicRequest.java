@@ -16,6 +16,8 @@
 
 package org.huxizhijian.hhcomic.comic.net;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.StringDef;
 
 import java.util.HashMap;
@@ -78,8 +80,9 @@ public final class ComicRequest {
 
     public static final String GET = "GET";
     public static final String POST = "POST";
+    public static final String PUT = "PUT";
 
-    @StringDef({GET, POST})
+    @StringDef({GET, POST, PUT})
     public @interface Method {
     }
 
@@ -95,12 +98,12 @@ public final class ComicRequest {
         String postContentType;
         byte[] postBody;
 
-        public Builder url(String url) {
+        public Builder url(@NonNull String url) {
             this.url = url;
             return this;
         }
 
-        public Builder addHeader(String key, String value) {
+        public Builder addHeader(@NonNull String key, @NonNull String value) {
             if (header == null) {
                 header = new HashMap<>(16);
             }
@@ -113,14 +116,24 @@ public final class ComicRequest {
             return this;
         }
 
-        public Builder post(String contentType, byte[] body) {
+        public Builder post(@Nullable String contentType, @Nullable byte[] body) {
             this.method = POST;
             postContentType = contentType;
             postBody = body;
             return this;
         }
 
+        public Builder put(@Nullable String contentType, @Nullable byte[] body) {
+            this.method = PUT;
+            postContentType = contentType;
+            postBody = body;
+            return this;
+        }
+
         public ComicRequest build() {
+            if (url == null || method == null) {
+                throw new IllegalArgumentException("url or method should not be null!");
+            }
             return new ComicRequest(this);
         }
     }
