@@ -24,6 +24,3 @@ package org.huxizhijian.hhcomic.comic;
 public class ComicEngine {
 
 }
-
-
-

@@ -17,6 +17,9 @@
 package org.huxizhijian.hhcomic.comic.net;
 
 import java.io.IOException;
+import java.util.List;
+
+import okhttp3.Interceptor;
 
 /**
  * @author huxizhijian
@@ -32,4 +35,14 @@ public interface HttpEngine {
      * @throws IOException 可能导致的异常
      */
     ComicResponse execute(ComicRequest request) throws IOException;
+
+    /**
+     * 一个默认实现, 用于提供一个子类
+     *
+     * @param interceptorList 要添加的拦截器列表
+     * @return subclass instance
+     */
+    default HttpEngine getOkHttpEngine(List<Interceptor> interceptorList) {
+        return OkHttpEngine.getInstance(interceptorList);
+    }
 }

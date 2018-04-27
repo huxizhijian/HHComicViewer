@@ -61,7 +61,7 @@ public class OkHttpEngine implements HttpEngine {
      * @param interceptorList 用户欲添加的interceptor
      * @return instance
      */
-    public OkHttpEngine getInstance(List<Interceptor> interceptorList) {
+    public static OkHttpEngine getInstance(List<Interceptor> interceptorList) {
         if (sOkHttpEngine != null) {
             synchronized (OkHttpEngine.class) {
                 if (sOkHttpEngine != null) {
