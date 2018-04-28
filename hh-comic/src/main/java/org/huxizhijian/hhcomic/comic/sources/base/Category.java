@@ -26,12 +26,17 @@ import java.util.List;
  */
 public interface Category {
 
-    FilterManager getFilter();
+    /**
+     * category通常来说只有一种manager
+     *
+     * @return selectorManager
+     */
+    UserSelectorManager getUserSelectorManager();
 
     List<String> getCategoryNames();
 
     String getCategoryPath(String name);
 
-    String getUrl(String name, int page, FilterManager.FilterSelector selector);
+    String getUrl(String name, int page, UserSelectorManager.UserSelector selector);
 
 }

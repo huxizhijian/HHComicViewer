@@ -16,55 +16,76 @@
 
 package org.huxizhijian.hhcomic.comic.sources.base;
 
+import android.support.annotation.NonNull;
+
 import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
+ * 用户选择器manager, 不可变类, 该类提供排行, 分类, 推荐的结果的可选排序, 筛选等
+ *
  * @author huxizhijian
  * @date 2018/4/23
  */
-public interface FilterManager {
+public interface UserSelectorManager<T extends UserSelectorManager.UserSelector.Builder> {
 
     /**
-     * 获取filter的组别(同一组别的filter只能单选)
+     * 获取filter的组别(同一组别的filter只能单选, 每个组别可选一个filter)
      *
      * @return subjectList
      */
     List<String> getFilterSubjects();
 
     /**
-     * 获取组下包含的filter
+     * 获取组包含的filter
      *
      * @param subject 组名
      * @return filter
      */
-    List<Filter> getOneSubjectFilters(String subject);
+    List<SelectItem> getOneSubjectFilters(@NonNull String subject);
 
     /**
      * 获取所有组及组内的filter
      *
      * @return 有序的的map, 我们不希望组是无序的
      */
-    LinkedHashMap<String, List<Filter>> getAllSubjectFilters();
+    LinkedHashMap<String, List<SelectItem>> getAllSubjectFilters();
 
     /**
      * 获取可选的排序
      *
      * @return sortList
      */
-    List<Filter> getSort();
+    List<SelectItem> getSort();
 
     /**
-     * 用户filter选择器
+     * 用户开始选择一个filter, 返回一个Builder, Builder类可以复用
+     *
+     * @param subject filter组别
+     * @param item    filter
+     * @return selector
      */
-    public interface FilterSelector {
+    T startSelectFilter(@NonNull String subject, @NonNull SelectItem item);
+
+    /**
+     * 用户开始选择一个sort, 返回一个Builder, 该类可以复用
+     *
+     * @param item sort
+     * @return selector
+     */
+    T startSelectSort(@NonNull SelectItem item);
+
+    /**
+     * 用户选择器, 不可变类, 目的是不产生不可预知的结果
+     */
+    interface UserSelector {
 
         /**
          * 获取被用户选中的filter的组
          *
          * @return subjectList
          */
-        List<String> getSelectFilterSubject();
+        List getSelectFilterSubject();
 
         /**
          * 获取组内被选择的filter(组内仅能单选)
@@ -72,43 +93,34 @@ public interface FilterManager {
          * @param subject 组名
          * @return filter
          */
-        Filter getSelectFilter(String subject);
+        SelectItem getSelectFilter(@NonNull String subject);
 
         /**
          * 获取所有被选中的filter
          *
          * @return filterList
          */
-        List<Filter> getAllSelectFitlter();
+        List<SelectItem> getAllSelectFilter();
 
         /**
          * 获取选择的排序
          *
          * @return sort
          */
-        Filter getSort();
+        SelectItem getSelectSort();
 
         /**
          * Selector的构造器类
          * 我们希望Selector是不可变类, 所以它会有一个可变的辅助构造类, 以帮助完成代码复用
          */
-        public interface Builder {
+        interface Builder<T extends UserSelector, U extends Builder> {
 
             /**
              * 构造方法
              *
              * @return selector instance
              */
-            FilterSelector build();
-
-            /**
-             * 当没有调用init方法时, 不能调用build方法
-             * 这是为了安全检查, 不会导致不存在的filter或者sort被选中
-             *
-             * @param manager filterManager
-             * @return this
-             */
-            Builder init(FilterManager manager);
+            T build();
 
             /**
              * 用户选中(当选中相同组的filter时, 我们会取消之前的选中)
@@ -117,15 +129,15 @@ public interface FilterManager {
              * @param filter  filter
              * @return this
              */
-            Builder select(String subject, Filter filter);
+            U filter(@NonNull String subject, @NonNull SelectItem filter);
 
             /**
-             * 选择排序
+             * 用户选择排序(所有的排序都是互斥的, 选择新的会取消选择旧的, 这也是当然的)
              *
              * @param sort 排序
              * @return this
              */
-            Builder sort(Filter sort);
+            U sort(@NonNull SelectItem sort);
         }
     }
 }

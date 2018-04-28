@@ -23,25 +23,25 @@ package org.huxizhijian.hhcomic.comic.sources.base;
  * @date 2017/10/12
  */
 
-public final class Filter {
+public final class SelectItem {
 
     public final String name;
     public final String path;
 
-    private Filter(String name, String path) {
+    private SelectItem(String name, String path) {
         this.name = name;
         this.path = path;
     }
 
     /**
-     * 创建一个Filter
+     * 创建一个Item
      *
-     * @param name filter名称
+     * @param name 名称
      * @param path 帮助完成url的字段
      * @return instance
      */
-    public static Filter create(String name, String path) {
-        return new Filter(name, path);
+    public static SelectItem create(String name, String path) {
+        return new SelectItem(name, path);
     }
 
     @Override

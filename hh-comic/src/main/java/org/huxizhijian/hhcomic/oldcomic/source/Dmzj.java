@@ -21,7 +21,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 import org.huxizhijian.core.app.HHEngine;
-import org.huxizhijian.hhcomic.comic.sources.base.Filter;
+import org.huxizhijian.hhcomic.comic.sources.base.SelectItem;
 import org.huxizhijian.hhcomic.R;
 import org.huxizhijian.hhcomic.oldcomic.bean.Chapter;
 import org.huxizhijian.hhcomic.oldcomic.bean.Comic;
@@ -104,7 +104,7 @@ public class Dmzj extends ComicSource {
         for (int i = 0; i < size; i++) {
             object = array.getJSONObject(i);
             CATEGORY_TYPE_MAP.put(String.valueOf(object.getInteger("tag_id")),
-                    Filter.create(object.getString("title"), object.getString("cover")));
+                    SelectItem.create(object.getString("title"), object.getString("cover")));
         }
     }
 

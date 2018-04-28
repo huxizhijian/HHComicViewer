@@ -22,5 +22,7 @@ package org.huxizhijian.hhcomic.comic;
  * @date 2018/4/9
  */
 public class ComicEngine {
+    public static void main(String[] args) {
 
+    }
 }

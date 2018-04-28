@@ -16,7 +16,7 @@
 
 package org.huxizhijian.hhcomic.oldcomic.source.base;
 
-import org.huxizhijian.hhcomic.comic.sources.base.Filter;
+import org.huxizhijian.hhcomic.comic.sources.base.SelectItem;
 import org.huxizhijian.hhcomic.oldcomic.parser.comic.ComicParseStrategy;
 import org.huxizhijian.hhcomic.oldcomic.repository.ComicDataSource;
 
@@ -39,7 +39,7 @@ public abstract class ComicSource {
 
     private final Map<Integer, ComicParseStrategy> STRATEGY_MAP;
     protected final Map<String, String> RANK_TYPE_MAP;
-    protected final Map<String, Filter> CATEGORY_TYPE_MAP;
+    protected final Map<String, SelectItem> CATEGORY_TYPE_MAP;
     protected final Map<String, String> RECOMMEND_TYPE_MAP;
 
     public ComicSource() {
@@ -111,7 +111,7 @@ public abstract class ComicSource {
         return RANK_TYPE_MAP;
     }
 
-    public Map<String, Filter> getCategoryTypeMap() {
+    public Map<String, SelectItem> getCategoryTypeMap() {
         return CATEGORY_TYPE_MAP;
     }
 
