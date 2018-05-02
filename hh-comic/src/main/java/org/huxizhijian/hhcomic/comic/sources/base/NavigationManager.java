@@ -19,24 +19,21 @@ package org.huxizhijian.hhcomic.comic.sources.base;
 import java.util.List;
 
 /**
- * 分类
- *
  * @author huxizhijian
- * @date 2018/4/23
+ * @date 2018/5/2
  */
-public interface Category {
+public interface NavigationManager {
 
-    /**
-     * category通常来说只有一种manager
-     *
-     * @return selectorManager
-     */
-    SelectorManager getUserSelectorManager();
+    SelectorManager getSelectorManager(String requestName);
 
-    List<String> getCategoryNames();
+    List<String> getNavigationNameList();
 
-    String getCategoryPath(String name);
+    List<String> getNavigationPathList();
 
-    String getUrl(String name, int page, SelectorManager.UserSelector selector);
+    int getPageSize(String html, String url);
+
+    List<String> parsePageComicList(String html, String url);
+
+    String getUrl(String navigationName, int page, SelectorManager.UserSelector userSelector) throws IllegalArgumentException;
 
 }

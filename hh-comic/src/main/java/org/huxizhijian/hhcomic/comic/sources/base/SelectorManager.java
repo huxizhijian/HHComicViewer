@@ -27,7 +27,7 @@ import java.util.List;
  * @author huxizhijian
  * @date 2018/4/23
  */
-public interface UserSelectorManager<T extends UserSelectorManager.UserSelector.Builder> {
+public interface SelectorManager<T extends SelectorManager.UserSelector.Builder> {
 
     /**
      * 获取filter的组别(同一组别的filter只能单选, 每个组别可选一个filter)

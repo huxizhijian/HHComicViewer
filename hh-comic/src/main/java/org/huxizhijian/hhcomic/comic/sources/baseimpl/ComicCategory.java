@@ -17,7 +17,7 @@
 package org.huxizhijian.hhcomic.comic.sources.baseimpl;
 
 import org.huxizhijian.hhcomic.comic.sources.base.Category;
-import org.huxizhijian.hhcomic.comic.sources.base.UserSelectorManager;
+import org.huxizhijian.hhcomic.comic.sources.base.SelectorManager;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -30,7 +30,7 @@ import java.util.Set;
  */
 public class ComicCategory implements Category {
 
-    private UserSelectorManager mUserSelectorManager;
+    private SelectorManager mUserSelectorManager;
 
     /**
      * 有序的map
@@ -38,14 +38,14 @@ public class ComicCategory implements Category {
     private LinkedHashMap<String, String> mCategory = new LinkedHashMap<>();
     private GetUrl mGetUrl;
 
-    private ComicCategory(UserSelectorManager filterManager, GetUrl getUrl) {
+    private ComicCategory(SelectorManager filterManager, GetUrl getUrl) {
         mUserSelectorManager = filterManager;
         mGetUrl = getUrl;
     }
 
 
     @Override
-    public UserSelectorManager getUserSelectorManager() {
+    public SelectorManager getUserSelectorManager() {
         return mUserSelectorManager;
     }
 
@@ -61,11 +61,11 @@ public class ComicCategory implements Category {
     }
 
     @Override
-    public String getUrl(String name, int page, UserSelectorManager.UserSelector selector) {
+    public String getUrl(String name, int page, SelectorManager.UserSelector selector) {
         return mGetUrl.getUrl(getCategoryPath(name), page, selector);
     }
 
-    public static ComicCategory init(UserSelectorManager filterManager, GetUrl getUrl) {
+    public static ComicCategory init(SelectorManager filterManager, GetUrl getUrl) {
         return new ComicCategory(filterManager, getUrl);
     }
 
@@ -83,6 +83,6 @@ public class ComicCategory implements Category {
          * @param selector     selector
          * @return url
          */
-        String getUrl(String categoryPath, int page, UserSelectorManager.UserSelector selector);
+        String getUrl(String categoryPath, int page, SelectorManager.UserSelector selector);
     }
 }

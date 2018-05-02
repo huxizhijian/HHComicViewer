@@ -19,7 +19,7 @@ package org.huxizhijian.hhcomic.comic.sources.baseimpl;
 import android.support.annotation.NonNull;
 
 import org.huxizhijian.hhcomic.comic.sources.base.SelectItem;
-import org.huxizhijian.hhcomic.comic.sources.base.UserSelectorManager;
+import org.huxizhijian.hhcomic.comic.sources.base.SelectorManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,7 +32,7 @@ import java.util.Map;
  * @author huxizhijian
  * @date 2018/4/28
  */
-public class ComicUserSelectorManager implements UserSelectorManager<ComicUserSelectorManager.ComicUserSelector.Builder> {
+public class ComicUserSelectorManager implements SelectorManager<ComicUserSelectorManager.ComicUserSelector.Builder> {
 
     private LinkedHashMap<String, List<SelectItem>> mFilters;
     private List<SelectItem> mSorts;
@@ -174,7 +174,7 @@ public class ComicUserSelectorManager implements UserSelectorManager<ComicUserSe
     /**
      * 用户选择, 用于返回到source去构造url
      */
-    public static class ComicUserSelector implements UserSelectorManager.UserSelector {
+    public static class ComicUserSelector implements SelectorManager.UserSelector {
 
         private final Map<String, SelectItem> mFilterSelect;
 
@@ -209,7 +209,7 @@ public class ComicUserSelectorManager implements UserSelectorManager<ComicUserSe
         /**
          * selector的构造器
          */
-        public static class Builder implements UserSelectorManager.UserSelector.Builder
+        public static class Builder implements SelectorManager.UserSelector.Builder
                 <ComicUserSelector, ComicUserSelector.Builder> {
 
             private ComicUserSelectorManager mManager;
