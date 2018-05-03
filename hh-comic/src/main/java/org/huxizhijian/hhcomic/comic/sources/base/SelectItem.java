@@ -17,12 +17,11 @@
 package org.huxizhijian.hhcomic.comic.sources.base;
 
 /**
- * 一个过滤或者排序
+ * 一个过滤或者排序, 该类为不可变(Immutable)的
  *
  * @author huxizhijian
  * @date 2017/10/12
  */
-
 public final class SelectItem {
 
     public final String name;

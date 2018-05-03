@@ -24,10 +24,26 @@ import java.util.List;
  */
 public interface NavigationManager {
 
+    /**
+     * 获取filter和sort的信息
+     *
+     * @param requestName 导航的名称
+     * @return SelectorManager
+     */
     SelectorManager getSelectorManager(String requestName);
 
+    /**
+     * 获取导航名称列表
+     *
+     * @return list of name
+     */
     List<String> getNavigationNameList();
 
+    /**
+     * 获取导航的辅助路径
+     *
+     * @return pathList
+     */
     List<String> getNavigationPathList();
 
     int getPageSize(String html, String url);
