@@ -16,12 +16,23 @@
 
 package org.huxizhijian.hhcomic.comic.sources.baseimpl;
 
+import org.huxizhijian.hhcomic.comic.sources.base.ComicInfoParser;
+import org.huxizhijian.hhcomic.comic.sources.base.ImageParser;
 import org.huxizhijian.hhcomic.comic.sources.base.Source;
 
 /**
  * @author huxizhijian
  * @date 2018/4/24
  */
-public abstract class ComicSource implements Source {
+public abstract class ComicSource implements Source, ComicInfoParser, ImageParser {
 
+    @Override
+    public ImageParser getImageParser() {
+        return this;
+    }
+
+    @Override
+    public ComicInfoParser getComicInfoParser() {
+        return this;
+    }
 }
