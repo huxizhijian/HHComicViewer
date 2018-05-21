@@ -127,8 +127,9 @@ public class SourceProcessor extends AbstractProcessor {
         // 加入枚举常量
         if (sourceImplElement != null) {
             for (Element element : sourceImplElement) {
-                String typeName = element.getSimpleName().toString().toUpperCase();
-                typeEnumBuilder.addEnumConstant(typeName);
+                // 枚举常量为注解中的id值
+                SourceImpl source = element.getAnnotation(SourceImpl.class);
+                typeEnumBuilder.addEnumConstant(source.id());
             }
             // JavaPoet里枚举内部类不能是空的
             if (sourceImplElement.size() != 0) {
@@ -242,7 +243,7 @@ public class SourceProcessor extends AbstractProcessor {
             for (Element element : sourceImplElement) {
                 SourceImpl source = element.getAnnotation(SourceImpl.class);
                 builder.addStatement("$L.put($L,$S)", SOURCE_NAME_MAP_FIELD_NAME,
-                        ENUM_CLS_NAME + "." + element.getSimpleName().toString().toUpperCase(), source.name());
+                        ENUM_CLS_NAME + "." + source.id(), source.name());
             }
         }
         return builder.build();

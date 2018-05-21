@@ -46,3 +46,6 @@ captures/
 /.idea/workspace.xml
 /.idea/libraries
 .idea/modules.xml
+/.idea
+.idea/caches/
+hh-core/src/main/java/org/huxizhijian/core/util/misc/

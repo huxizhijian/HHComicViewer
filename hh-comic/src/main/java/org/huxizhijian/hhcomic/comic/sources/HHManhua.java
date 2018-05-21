@@ -37,7 +37,7 @@ import static org.huxizhijian.hhcomic.comic.sources.HHManhua.HH_MANHUA;
  * @date 2018/4/9
  */
 @SuppressWarnings("AlibabaClassNamingShouldBeCamel")
-@SourceImpl(name = HH_MANHUA)
+@SourceImpl(id = "HH_MANHUA", name = HH_MANHUA)
 public class HHManhua extends ComicSource {
 
     public static final String HH_MANHUA = "汗汗漫画";

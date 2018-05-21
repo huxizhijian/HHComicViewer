@@ -31,6 +31,11 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.SOURCE)
 public @interface SourceImpl {
     /**
+     * @return id of source impl, it should be only id in all source impl.
+     */
+    String id();
+
+    /**
      * @return name of source impl, it will show to users.
      */
     String name();
