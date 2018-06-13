@@ -57,8 +57,9 @@ android {
 dependencies {
     api fileTree(include: ['*.jar'], dir: 'libs')
     // test
-    implementation "com.android.support.test.espresso:espresso-idling-resource:${espressoVersion}"
     testImplementation "junit:junit:${junitVersion}"
+    androidTestImplementation "com.android.support.test:runner:${testRunnerVersion}"
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:${espressoVersion}"
     // android support 包
     api "com.android.support:appcompat-v7:${supportLibVersion}"
     api "com.android.support:support-v4:${supportLibVersion}"
@@ -67,26 +68,26 @@ dependencies {
     api "com.android.support:support-v13:${supportLibVersion}"
     api "com.android.support:design:${supportLibVersion}"
     // glide 图片加载库
-    api 'com.github.bumptech.glide:glide:4.6.1'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.6.1'
+    api "com.github.bumptech.glide:glide:${glideVersion}"
+    annotationProcessor "com.github.bumptech.glide:compiler:${glideVersion}"
     // glide 变换
-    api 'jp.wasabeef:glide-transformations:3.0.1'
+    api "jp.wasabeef:glide-transformations:${glideTransformationsVersion}"
     // 一个封装了glide加载进度监听的库
     // compile 'com.sunfusheng:glideimageview:1.1.0'
     // gson JSON解析库
-    api 'com.google.code.gson:gson:2.8.2'
+    api "com.google.code.gson:gson:${gsonVersion}"
     // okhttp3 网络请求库
-    api 'com.squareup.okhttp3:okhttp:3.10.0'
+    api "com.squareup.okhttp3:okhttp:${okhttpVersion}"
     // Android工具类库
-    api 'com.blankj:utilcode:1.13.3'
+    api "com.blankj:utilcode:${utilcodeVersion}"
     // 打logger专用工具
-    api 'com.orhanobut:logger:2.1.1'
+    api "com.orhanobut:logger:${loggerVersion}"
     // 字体图标库，使用fontawesome开源图标库
-    api 'com.joanzapata.iconify:android-iconify-fontawesome:2.2.2'
+    api "com.joanzapata.iconify:android-iconify-fontawesome:${iconifyVersion}"
     // 阿里巴巴fastjson库
-    api 'com.alibaba:fastjson:1.2.39'
+    api "com.alibaba:fastjson:${fastjsonVersion}"
     // greenDAO库
-    api 'org.greenrobot:greendao:3.2.2'
+    api "org.greenrobot:greendao:${greendaoVersion}"
     // BRVAH RecyclerAdapter框架
-    api 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.30'
+    api "com.github.CymChad:BaseRecyclerViewAdapterHelper:${brvahVersion}"
 }
