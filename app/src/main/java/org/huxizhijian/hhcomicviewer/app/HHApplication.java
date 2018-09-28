@@ -24,10 +24,7 @@ import com.squareup.leakcanary.LeakCanary;
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
 
-import org.huxizhijian.core.app.HHEngine;
-import org.huxizhijian.hhcomic.oldcomic.ComicRouter;
-import org.huxizhijian.hhcomic.oldcomic.source.HHManHua;
-import org.huxizhijian.hhcomic.oldcomic.source.base.SourceEnum;
+import org.huxizhijian.core.app.HHGolbalVariable;
 import org.huxizhijian.hhcomicviewer.R;
 import org.huxizhijian.hhcomicviewer.option.HHComicWebVariable;
 import org.huxizhijian.sdk.SDKConstant;
@@ -117,12 +114,10 @@ public class HHApplication extends MultiDexApplication {
         initSDK();
         initBugly();
         // 初始化第三方库（核心包含的库）
-        HHEngine.init(this)
+        HHGolbalVariable.init(this)
                 .withIcon(new FontAwesomeModule())
                 .withConnectTimeOut(30000, TimeUnit.MILLISECONDS)
                 .configure();
-        ComicRouter.getInstance()
-                .addSource(SourceEnum.HHManHua.hashCode(), new HHManHua().defaultConfig());
     }
 
     /**

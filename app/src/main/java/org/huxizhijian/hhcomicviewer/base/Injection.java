@@ -16,18 +16,10 @@
 
 package org.huxizhijian.hhcomicviewer.base;
 
-import org.huxizhijian.hhcomic.oldcomic.repository.ComicRepository;
-import org.huxizhijian.hhcomic.oldcomic.repository.LocalComicRepository;
-import org.huxizhijian.hhcomic.oldcomic.repository.RemoteComicRepository;
-
 /**
  * @author huxizhijian
  * @date 2017/11/13
  */
 public class Injection {
 
-    public static ComicRepository provideComicRepository() {
-        return ComicRepository.getInstance(LocalComicRepository.getInstance(),
-                RemoteComicRepository.getInstance());
-    }
 }

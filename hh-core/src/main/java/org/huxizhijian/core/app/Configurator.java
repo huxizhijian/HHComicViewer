@@ -76,7 +76,7 @@ public class Configurator {
             HH_CONFIGS.put(ConfigKeys.OKHTTP_CLIENT, BUILDER.build());
         }
         //初始化Utils库
-        Utils.init((Application) HHEngine.getApplicationContext());
+        Utils.init((Application) HHGolbalVariable.getApplicationContext());
         //初始化icon库
         initIcons();
         //初始化logger库

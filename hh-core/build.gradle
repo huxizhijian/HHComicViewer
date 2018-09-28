@@ -89,4 +89,7 @@ dependencies {
     api 'org.greenrobot:greendao:3.2.2'
     // BRVAH RecyclerAdapter框架
     api 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.30'
+    // RxJava2
+    api 'io.reactivex.rxjava2:rxjava:2.2.2'
+    api 'io.reactivex.rxjava2:rxandroid:2.1.0'
 }
