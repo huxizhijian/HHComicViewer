@@ -61,7 +61,7 @@ public class ZoomableListView extends ListView {
     @Override
     public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        canvas.save(Canvas.MATRIX_SAVE_FLAG);
+        canvas.save();
         canvas.translate(mPosX, mPosY);
         canvas.scale(mScaleFactor, mScaleFactor);
         canvas.restore();
@@ -70,7 +70,7 @@ public class ZoomableListView extends ListView {
     @Override
     protected void dispatchDraw(Canvas canvas) {
         // Save the canvas to set the scaling factor returned from detector
-        canvas.save(Canvas.MATRIX_SAVE_FLAG);
+        canvas.save();
         if (mScaleFactor == 1.0f) {
             isPagerEnabled = true;
         } else {

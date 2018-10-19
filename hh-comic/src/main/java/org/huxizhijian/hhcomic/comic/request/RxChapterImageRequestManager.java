@@ -1,8 +1,9 @@
 package org.huxizhijian.hhcomic.comic.request;
 
 import org.huxizhijian.hhcomic.comic.HHComic;
-import org.huxizhijian.hhcomic.comic.bean.ChapterImage;
-import org.huxizhijian.hhcomic.comic.source.parser.ChapterImageParser;
+import org.huxizhijian.hhcomic.comic.bean.result.ChapterImage;
+import org.huxizhijian.hhcomic.comic.entity.Comic;
+import org.huxizhijian.hhcomic.comic.source.base.parser.ChapterImageParser;
 
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
@@ -20,12 +21,16 @@ public class RxChapterImageRequestManager extends RxRequestManager {
         super(okHttpClient);
     }
 
-    public Flowable<ChapterImage> getChapterImage(String sourceId, String comicId, String chapterId) {
+    public Flowable<ChapterImage> getChapterImage(String sourceId, Comic comic, String chapterId) {
+        return getChapterImage(sourceId, comic.getComicId(), chapterId, comic.getExtra());
+    }
+
+    public Flowable<ChapterImage> getChapterImage(String sourceId, String comicId, String chapterId, String extra) {
         return Flowable.create(emitter -> {
             ChapterImageParser parser = HHComic.getSource(sourceId);
-            Request request = parser.buildChapterRequest(comicId, chapterId);
+            Request request = parser.buildChapterRequest(comicId, chapterId, extra);
             Response response = mOkHttpClient.newCall(request).execute();
-            ChapterImage chapterImage = parser.getChapterImage(response.body().bytes(), comicId, chapterId);
+            ChapterImage chapterImage = parser.getChapterImage(response.body().bytes(), comicId, chapterId, extra);
             emitter.onNext(chapterImage);
             emitter.onComplete();
         }, BackpressureStrategy.BUFFER);

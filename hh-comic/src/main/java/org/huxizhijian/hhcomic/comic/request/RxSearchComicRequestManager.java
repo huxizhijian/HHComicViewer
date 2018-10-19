@@ -1,8 +1,8 @@
 package org.huxizhijian.hhcomic.comic.request;
 
 import org.huxizhijian.hhcomic.comic.HHComic;
-import org.huxizhijian.hhcomic.comic.bean.ComicResultList;
-import org.huxizhijian.hhcomic.comic.source.parser.SearchComicParser;
+import org.huxizhijian.hhcomic.comic.bean.result.ComicResultList;
+import org.huxizhijian.hhcomic.comic.source.base.parser.SearchComicParser;
 
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;

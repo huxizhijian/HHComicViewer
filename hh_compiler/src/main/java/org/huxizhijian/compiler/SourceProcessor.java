@@ -30,7 +30,8 @@ import org.huxizhijian.annotations.SourceInterface;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
-import java.util.EnumMap;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -68,15 +69,13 @@ public class SourceProcessor extends AbstractProcessor {
      */
     private static final String PACKAGE_NAME = "org.huxizhijian.generate";
     private static final String CLS_NAME = "SourceRouterApp";
-    private static final String ENUM_CLS_NAME = "SourceType";
     private static final ClassName THIS_TYPE = ClassName.get(PACKAGE_NAME, CLS_NAME);
-    private static final ClassName ENUM_TYPE = ClassName.get(PACKAGE_NAME, CLS_NAME + "." + ENUM_CLS_NAME);
 
     /**
      * 成员变量名
      */
     private static final String SOURCE_MAP_FIELD_NAME = "mSourceMap";
-    private static final String SOURCE_NAME_MAP_FIELD_NAME = "mSourceNameMap";
+    private static final String SOURCE_KEY_LIST_FIELD_NAME = "mSourceKeyList";
     private static final String APP_INSTANCE = "sSourceRouterApp";
 
     @Override
@@ -120,23 +119,6 @@ public class SourceProcessor extends AbstractProcessor {
         TypeSpec.Builder typeBuilder = TypeSpec.classBuilder(CLS_NAME)
                 .addModifiers(Modifier.PUBLIC);
 
-        // 生成的枚举类
-        TypeSpec.Builder typeEnumBuilder = TypeSpec.enumBuilder(ENUM_CLS_NAME)
-                .addModifiers(Modifier.PUBLIC);
-
-        // 加入枚举常量
-        if (sourceImplElement != null) {
-            for (Element element : sourceImplElement) {
-                // 枚举常量为注解中的id值
-                SourceImpl source = element.getAnnotation(SourceImpl.class);
-                typeEnumBuilder.addEnumConstant(source.id());
-            }
-            // JavaPoet里枚举内部类不能是空的
-            if (sourceImplElement.size() != 0) {
-                typeBuilder.addType(typeEnumBuilder.build());
-            }
-        }
-
         if (sourceInterfaceElement != null) {
             if (sourceInterfaceElement.size() > 1) {
                 throw new IllegalStateException("Only one interface could has @SourceInterface annotation!");
@@ -144,16 +126,17 @@ public class SourceProcessor extends AbstractProcessor {
                 for (Element element : sourceInterfaceElement) {
                     TypeName clazz = ClassName.get(element.asType());
                     typeBuilder.addField(sourceArraySpec(clazz));
+                    typeBuilder.addMethod(getSourceSpec(sourceImplElement, clazz));
                 }
             }
         }
 
         typeBuilder
-                .addField(sourceNameArraySpec())
                 .addField(staticInstantSpec())
+                .addField(sourceKeyListSpec())
+                .addMethod(getSourceKeyListSpec(sourceImplElement))
                 .addMethod(getInstantSpec())
-                .addMethod(constructorPrivate(sourceImplElement))
-                .addMethod(getSourceNameSpec())
+                .addMethod(constructorPrivate())
                 .build();
 
         // 生成的java文件
@@ -169,32 +152,31 @@ public class SourceProcessor extends AbstractProcessor {
     }
 
     /**
-     * 包含source名称的SparseArray成员变量
-     *
-     * @return field spec
-     */
-    private FieldSpec sourceNameArraySpec() {
-        // 使用EnumMap获得更快的枚举索引速度, EnumMap与序数索引数组的速度相当
-        TypeName arrayOfString = ParameterizedTypeName.get(ClassName.get(EnumMap.class),
-                ENUM_TYPE, ClassName.get(String.class));
-        return FieldSpec.builder(arrayOfString, SOURCE_NAME_MAP_FIELD_NAME)
-                .addModifiers(Modifier.PRIVATE, Modifier.FINAL)
-                .initializer("new $T($L)", arrayOfString, ENUM_TYPE.simpleName() + ".class")
-                .build();
-    }
-
-    /**
      * 包含source实例的SparseArray成员变量
      *
      * @param sourceName SourceInterface注解的类,仅能有一个
      * @return fieldSpec
      */
     private FieldSpec sourceArraySpec(TypeName sourceName) {
-        TypeName arrayOfSource = ParameterizedTypeName.get(ClassName.get(EnumMap.class),
-                ENUM_TYPE, ClassName.get(String.class));
+        TypeName arrayOfSource = ParameterizedTypeName.get(ClassName.get(HashMap.class),
+                ClassName.get(String.class), sourceName);
         return FieldSpec.builder(arrayOfSource, SOURCE_MAP_FIELD_NAME)
                 .addModifiers(Modifier.PRIVATE, Modifier.FINAL)
-                .initializer("new $T($L)", arrayOfSource, ENUM_TYPE.simpleName() + ".class")
+                .initializer("new $T()", arrayOfSource)
+                .build();
+    }
+
+    /**
+     * sourceKey的列表
+     *
+     * @return fieldSpec
+     */
+    private FieldSpec sourceKeyListSpec() {
+        TypeName arrayOfSourceKey = ParameterizedTypeName.get(ClassName.get(ArrayList.class),
+                ClassName.get(String.class));
+        return FieldSpec.builder(arrayOfSourceKey, SOURCE_KEY_LIST_FIELD_NAME)
+                .addModifiers(Modifier.PRIVATE, Modifier.FINAL)
+                .initializer("new $T()", arrayOfSourceKey)
                 .build();
     }
 
@@ -229,37 +211,66 @@ public class SourceProcessor extends AbstractProcessor {
                 .build();
     }
 
+    /**
+     * 返回sourceKeyList的方法
+     *
+     * @return methodSpec
+     */
+    private MethodSpec getSourceKeyListSpec(Set<? extends Element> sourceImplElement) {
+        TypeName arrayOfSourceKey = ParameterizedTypeName.get(ClassName.get(ArrayList.class),
+                ClassName.get(String.class));
+        MethodSpec.Builder builder = MethodSpec.methodBuilder("getSourceKeyList")
+                .addModifiers(Modifier.PUBLIC)
+                .returns(arrayOfSourceKey);
+        if (sourceImplElement != null) {
+            for (Element element : sourceImplElement) {
+                SourceImpl source = element.getAnnotation(SourceImpl.class);
+                builder.addStatement("$L.add($S)", SOURCE_KEY_LIST_FIELD_NAME, source.id());
+            }
+        }
+        return builder.addStatement("return $L", SOURCE_KEY_LIST_FIELD_NAME)
+                .build();
+    }
+
+    /**
+     * 获取source实例方法
+     *
+     * @param sourceImplElement 被{@link SourceImpl}注解修饰的类
+     * @return methodSpec
+     */
+    private MethodSpec getSourceSpec(Set<? extends Element> sourceImplElement, TypeName sourceName) {
+        String paraName = "sourceKey";
+        MethodSpec.Builder builder = MethodSpec.methodBuilder("getSource")
+                .addModifiers(Modifier.PUBLIC)
+                .addParameter(ClassName.get(String.class), paraName)
+                .returns(sourceName)
+                .beginControlFlow("if (!$L.containsKey($L))", SOURCE_MAP_FIELD_NAME, paraName)
+                .beginControlFlow("switch ($L)", paraName);
+        if (sourceImplElement != null) {
+            for (Element element : sourceImplElement) {
+                SourceImpl source = element.getAnnotation(SourceImpl.class);
+                builder.addCode("case $S:\n", source.id())
+                        .addStatement("  $L.put($L, new $T())", SOURCE_MAP_FIELD_NAME, paraName, ClassName.get(element.asType()))
+                        .addStatement("  break");
+            }
+            builder.addCode("default:\n")
+                    .addStatement("  return null")
+                    .endControlFlow()
+                    .endControlFlow();
+        }
+        return builder
+                .addStatement("return $L.get($L)", SOURCE_MAP_FIELD_NAME, paraName)
+                .build();
+    }
 
     /**
      * 构建私有构造方法, 具有一些初始化方法
      *
      * @return method spec
      */
-    private MethodSpec constructorPrivate(Set<? extends Element> sourceImplElement) {
-        MethodSpec.Builder builder = MethodSpec.constructorBuilder()
-                .addModifiers(Modifier.PRIVATE);
-        // 初始化mSourceNameArray
-        if (sourceImplElement != null) {
-            for (Element element : sourceImplElement) {
-                SourceImpl source = element.getAnnotation(SourceImpl.class);
-                builder.addStatement("$L.put($L,$S)", SOURCE_NAME_MAP_FIELD_NAME,
-                        ENUM_CLS_NAME + "." + source.id(), source.name());
-            }
-        }
-        return builder.build();
-    }
-
-    /**
-     * 获取source名称
-     *
-     * @return method spec
-     */
-    private MethodSpec getSourceNameSpec() {
-        return MethodSpec.methodBuilder("getSourceName")
-                .addModifiers(Modifier.PUBLIC)
-                .addParameter(ENUM_TYPE, "sourceType")
-                .returns(String.class)
-                .addStatement("return $L.get(sourceType)", SOURCE_NAME_MAP_FIELD_NAME)
+    private MethodSpec constructorPrivate() {
+        return MethodSpec.constructorBuilder()
+                .addModifiers(Modifier.PRIVATE)
                 .build();
     }
 }

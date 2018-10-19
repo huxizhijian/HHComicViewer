@@ -1,6 +1,8 @@
-package org.huxizhijian.hhcomic.comic.bean;
+package org.huxizhijian.hhcomic.comic.bean.result;
 
 import android.util.SparseArray;
+
+import java.io.IOException;
 
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
@@ -138,6 +140,6 @@ public final class ChapterImage {
          * @param page 想获取的页码
          * @return image图片的url
          */
-        String getPageImageUrl(int page);
+        String getPageImageUrl(int page) throws IOException;
     }
 }

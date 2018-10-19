@@ -3,7 +3,7 @@ package org.huxizhijian.hhcomic.comic.request;
 import org.huxizhijian.hhcomic.comic.HHComic;
 import org.huxizhijian.hhcomic.comic.entity.Chapter;
 import org.huxizhijian.hhcomic.comic.entity.Comic;
-import org.huxizhijian.hhcomic.comic.source.parser.ComicInfoParser;
+import org.huxizhijian.hhcomic.comic.source.base.parser.ComicInfoParser;
 
 import java.util.List;
 
@@ -29,18 +29,9 @@ public class RxComicInfoRequestManager extends RxRequestManager {
             Request request = parser.buildComicInfoRequest(comicId);
             Response response = mOkHttpClient.newCall(request).execute();
             Comic comic = parser.getComicInfo(response.body().bytes(), comicId);
-            emitter.onNext(comic);
-            emitter.onComplete();
-        }, BackpressureStrategy.BUFFER);
-    }
-
-    public Flowable<List<Chapter>> getChapterList(String sourceId, String comicId) {
-        return Flowable.create(emitter -> {
-            ComicInfoParser parser = HHComic.getSource(sourceId);
-            Request request = parser.buildComicInfoRequest(comicId);
-            Response response = mOkHttpClient.newCall(request).execute();
             List<Chapter> chapterList = parser.getChaptersInfo(response.body().bytes(), comicId);
-            emitter.onNext(chapterList);
+            comic.setChapterList(chapterList);
+            emitter.onNext(comic);
             emitter.onComplete();
         }, BackpressureStrategy.BUFFER);
     }

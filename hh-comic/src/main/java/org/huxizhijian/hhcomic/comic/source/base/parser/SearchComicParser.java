@@ -1,6 +1,8 @@
-package org.huxizhijian.hhcomic.comic.source.parser;
+package org.huxizhijian.hhcomic.comic.source.base.parser;
 
-import org.huxizhijian.hhcomic.comic.bean.ComicResultList;
+import org.huxizhijian.hhcomic.comic.bean.result.ComicResultList;
+
+import java.io.UnsupportedEncodingException;
 
 import okhttp3.Request;
 
@@ -28,6 +30,7 @@ public interface SearchComicParser {
      * @param searchKey 搜索关键词
      * @param page      页码
      * @return result list
+     * @throws UnsupportedEncodingException 可能出现的解析错误
      */
-    ComicResultList parseSearchList(byte[] html, String searchKey, int page);
+    ComicResultList parseSearchList(byte[] html, String searchKey, int page) throws UnsupportedEncodingException;
 }

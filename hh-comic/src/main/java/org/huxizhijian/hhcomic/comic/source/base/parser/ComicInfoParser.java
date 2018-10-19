@@ -1,8 +1,9 @@
-package org.huxizhijian.hhcomic.comic.source.parser;
+package org.huxizhijian.hhcomic.comic.source.base.parser;
 
 import org.huxizhijian.hhcomic.comic.entity.Chapter;
 import org.huxizhijian.hhcomic.comic.entity.Comic;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import okhttp3.Request;
@@ -29,15 +30,16 @@ public interface ComicInfoParser {
      * @param html    html
      * @param comicId comic id
      * @return comic
+     * @throws UnsupportedEncodingException 可能出现的转码异常
      */
-    Comic getComicInfo(byte[] html, String comicId);
+    Comic getComicInfo(byte[] html, String comicId) throws UnsupportedEncodingException;
 
     /**
-     * 获取章节详情
+     * 获取章节详情（如果需要网络加载，可以在方法实现中访问网络）
      *
      * @param html    html
      * @param comicId comic id
      * @return list of chapter
      */
-    List<Chapter> getChaptersInfo(byte[] html, String comicId);
+    List<Chapter> getChaptersInfo(byte[] html, String comicId) throws UnsupportedEncodingException;
 }

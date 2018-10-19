@@ -1,7 +1,11 @@
-package org.huxizhijian.hhcomic.comic.source.parser;
+package org.huxizhijian.hhcomic.comic.source.base.parser;
 
 import org.huxizhijian.hhcomic.comic.bean.Category;
-import org.huxizhijian.hhcomic.comic.bean.ComicResultList;
+import org.huxizhijian.hhcomic.comic.bean.FilterList;
+import org.huxizhijian.hhcomic.comic.bean.Sort;
+import org.huxizhijian.hhcomic.comic.bean.result.ComicResultList;
+
+import java.io.UnsupportedEncodingException;
 
 import okhttp3.Request;
 
@@ -18,9 +22,11 @@ public interface CategoryParser {
      *
      * @param category 分类实体类
      * @param page     列表第几页
+     * @param picker   过滤选择器
+     * @param sort     选择的排序
      * @return request
      */
-    Request buildCategoryRequest(Category category, int page);
+    Request buildCategoryRequest(Category category, int page, FilterList.FilterPicker picker, Sort sort);
 
     /**
      * 分析请求返回的数据，将网页转换成实体类的结果列表
@@ -29,6 +35,7 @@ public interface CategoryParser {
      * @param category 分类
      * @param page     请求的列表第几页
      * @return 返回结果列表实体类，包含一些额外信息
+     * @throws UnsupportedEncodingException 转码中可能出现的异常
      */
-    ComicResultList parseCategoryList(byte[] html, Category category, int page);
+    ComicResultList parseCategoryList(byte[] html, Category category, int page) throws UnsupportedEncodingException;
 }

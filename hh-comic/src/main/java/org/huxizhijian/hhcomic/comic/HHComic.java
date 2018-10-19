@@ -1,12 +1,15 @@
 package org.huxizhijian.hhcomic.comic;
 
+import org.huxizhijian.generate.SourceRouterApp;
 import org.huxizhijian.hhcomic.comic.request.RxChapterImageRequestManager;
 import org.huxizhijian.hhcomic.comic.request.RxComicInfoRequestManager;
-import org.huxizhijian.hhcomic.comic.request.RxRankComicRequestManager;
+import org.huxizhijian.hhcomic.comic.request.RxRankAndRecommendRequestManager;
 import org.huxizhijian.hhcomic.comic.request.RxRequestManagerFactory;
 import org.huxizhijian.hhcomic.comic.request.RxCategoryRequestManager;
 import org.huxizhijian.hhcomic.comic.request.RxSearchComicRequestManager;
-import org.huxizhijian.hhcomic.comic.source.Source;
+import org.huxizhijian.hhcomic.comic.source.base.Source;
+
+import java.util.List;
 
 /**
  * 工具类
@@ -25,10 +28,10 @@ public class HHComic {
     /**
      * 获取源id列表，这个列表如果用户排过序，则获取那个列表
      *
-     * @return source ids
+     * @return source key list
      */
-    public static String[] getSourceIdList() {
-        return null;
+    public static List<String> getSourceKeyList() {
+        return SourceRouterApp.getInstance().getSourceKeyList();
     }
 
     /**
@@ -38,7 +41,7 @@ public class HHComic {
      * @return source
      */
     public static Source getSource(String sourceId) {
-        return null;
+        return SourceRouterApp.getInstance().getSource(sourceId);
     }
 
     /**
@@ -58,8 +61,8 @@ public class HHComic {
         return RxRequestManagerFactory.comicInfo();
     }
 
-    public static RxRankComicRequestManager rank() {
-        return RxRequestManagerFactory.rank();
+    public static RxRankAndRecommendRequestManager rankAndRecommend() {
+        return RxRequestManagerFactory.rankAndRecommend();
     }
 
     public static RxSearchComicRequestManager search() {

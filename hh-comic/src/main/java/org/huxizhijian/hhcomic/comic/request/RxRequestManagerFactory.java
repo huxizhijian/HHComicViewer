@@ -26,8 +26,8 @@ public class RxRequestManagerFactory {
         return new RxComicInfoRequestManager(HHGolbalVariable.getConfiguration(ConfigKeys.OKHTTP_CLIENT));
     }
 
-    public static RxRankComicRequestManager rank() {
-        return new RxRankComicRequestManager(HHGolbalVariable.getConfiguration(ConfigKeys.OKHTTP_CLIENT));
+    public static RxRankAndRecommendRequestManager rankAndRecommend() {
+        return new RxRankAndRecommendRequestManager(HHGolbalVariable.getConfiguration(ConfigKeys.OKHTTP_CLIENT));
     }
 
     public static RxSearchComicRequestManager search() {

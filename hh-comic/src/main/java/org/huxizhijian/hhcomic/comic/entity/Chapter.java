@@ -48,4 +48,96 @@ public class Chapter {
      */
     private boolean mIsDownloadFinish;
 
+    public Chapter() {
+    }
+
+    public Chapter(String sourceKey, String comicId, String chapterId,
+                   String type, String chapterName, int page, boolean isDownload, boolean isDownloadFinish) {
+        mSourceKey = sourceKey;
+        mComicId = comicId;
+        mChapterId = chapterId;
+        mType = type;
+        mChapterName = chapterName;
+        mPage = page;
+        mIsDownload = isDownload;
+        mIsDownloadFinish = isDownloadFinish;
+    }
+
+    public String getSourceKey() {
+        return mSourceKey;
+    }
+
+    public void setSourceKey(String sourceKey) {
+        mSourceKey = sourceKey;
+    }
+
+    public String getComicId() {
+        return mComicId;
+    }
+
+    public void setComicId(String comicId) {
+        mComicId = comicId;
+    }
+
+    public String getChapterId() {
+        return mChapterId;
+    }
+
+    public void setChapterId(String chapterId) {
+        mChapterId = chapterId;
+    }
+
+    public String getType() {
+        return mType;
+    }
+
+    public void setType(String type) {
+        mType = type;
+    }
+
+    public String getChapterName() {
+        return mChapterName;
+    }
+
+    public void setChapterName(String chapterName) {
+        mChapterName = chapterName;
+    }
+
+    public int getPage() {
+        return mPage;
+    }
+
+    public void setPage(int page) {
+        mPage = page;
+    }
+
+    public boolean isDownload() {
+        return mIsDownload;
+    }
+
+    public void setDownload(boolean download) {
+        mIsDownload = download;
+    }
+
+    public boolean isDownloadFinish() {
+        return mIsDownloadFinish;
+    }
+
+    public void setDownloadFinish(boolean downloadFinish) {
+        mIsDownloadFinish = downloadFinish;
+    }
+
+    @Override
+    public String toString() {
+        return "Chapter{" +
+                "mSourceKey='" + mSourceKey + '\'' +
+                ", mComicId='" + mComicId + '\'' +
+                ", mChapterId='" + mChapterId + '\'' +
+                ", mType='" + mType + '\'' +
+                ", mChapterName='" + mChapterName + '\'' +
+                ", mPage=" + mPage +
+                ", mIsDownload=" + mIsDownload +
+                ", mIsDownloadFinish=" + mIsDownloadFinish +
+                '}';
+    }
 }
