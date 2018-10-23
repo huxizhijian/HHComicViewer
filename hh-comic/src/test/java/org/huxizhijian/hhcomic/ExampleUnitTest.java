@@ -16,7 +16,7 @@
 
 package org.huxizhijian.hhcomic;
 
-import org.huxizhijian.hhcomic.comic.entity.Comic;
+import org.huxizhijian.hhcomic.db.entity.Comic;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;

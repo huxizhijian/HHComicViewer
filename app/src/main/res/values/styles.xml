@@ -20,69 +20,6 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowBackground">@color/windowBackGround</item>
-        <item name="android:textColor">@android:color/black</item>
-        <item name="android:textColorPrimary">@android:color/white</item>
-        <item name="android:textColorPrimaryInverse">@android:color/background_dark</item>
     </style>
-
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.ActionBar"/>
-
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light">
-        <item name="colorPrimary">@color/main_color</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:windowBackground">@android:color/background_light</item>
-        <item name="android:textColor">@android:color/black</item>
-        <item name="android:textColorPrimary">@android:color/black</item>
-        <item name="android:textColorPrimaryInverse">@android:color/background_dark</item>
-    </style>
-
-    <style name="Animation.Popup" parent="@android:style/Animation">
-        <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
-        <item name="android:windowExitAnimation">@android:anim/fade_out</item>
-    </style>
-
-    <style name="OverflowMenuStyle" parent="Widget.AppCompat.Light.PopupMenu.Overflow">
-        <item name="overlapAnchor">false</item>
-        <item name="android:dropDownWidth">wrap_content</item>
-        <item name="android:paddingRight">5dp</item>
-        <item name="android:popupBackground">?attr/colorPrimary</item>
-        <item name="android:actionOverflowButtonStyle">
-            @style/Widget.AppCompat.Light.ActionButton.Overflow
-        </item>
-    </style>
-
-    <!-- 闪屏页 -->
-    <style name="SplashTheme" parent="android:Theme.NoTitleBar.Fullscreen">
-        <item name="android:windowBackground">@mipmap/kites_day</item>
-    </style>
-
-    <!--离线缓存进度条Style-->
-    <style name="NumberProgressBar_Beauty_Red">
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="progress_max">100</item>
-        <item name="progress_current">0</item>
-        <item name="progress_unreached_color">@color/gray_light</item>
-        <item name="progress_reached_color">@color/colorPrimary</item>
-        <item name="progress_text_size">10sp</item>
-        <item name="progress_text_color">#FF3D7F</item>
-        <item name="progress_reached_bar_height">20dp</item>
-        <item name="progress_unreached_bar_height">20dp</item>
-    </style>
-
-    <!-- SearchView -->
-    <style name="MaterialSearchViewStyle">
-        <item name="searchBackground">@color/white_ish</item>
-        <item name="searchCloseIcon">@drawable/ic_action_navigation_close</item>
-        <item name="searchBackIcon">@drawable/ic_action_navigation_arrow_back</item>
-        <item name="searchSuggestionBackground">@color/search_layover_bg</item>
-        <item name="searchBarHeight">?attr/actionBarSize</item>
-        <item name="android:textColor">@color/black</item>
-        <item name="android:textColorHint">@color/gray_50</item>
-        <item name="android:hint">@string/search_hint</item>
-        <item name="android:inputType">textCapWords</item>
-    </style>
-
 </resources>
 

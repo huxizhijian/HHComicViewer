@@ -22,10 +22,20 @@ package org.huxizhijian.core.app;
  * @author huxizhijian 2017/9/17
  */
 public enum ConfigKeys {
+    /**
+     * application context
+     */
     APPLICATION_CONTEXT,
+    /**
+     * 初始化是否完成
+     */
     CONFIG_READY,
-    ICON,
-    HANDLER,
+    /**
+     * 全局OKHttpClient
+     */
     OKHTTP_CLIENT,
+    /**
+     * 全局Interceptor
+     */
     INTERCEPTOR
 }

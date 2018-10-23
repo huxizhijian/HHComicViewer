@@ -18,30 +18,5 @@
     <color name="colorPrimary">#03a9f4</color>
     <color name="colorPrimaryDark">#0288d1</color>
     <color name="colorAccent">#ff2d6f</color>
-    <color name="colorComicInfo">#009688</color>
     <color name="windowBackGround">#f5f5f5</color>
-
-    <color name="main_color">#03a9f4</color>
-    <color name="dark_main_color">#0288d1</color>
-    <color name="shadow_main_color">#6603a9f4</color>
-    <color name="green_color_download">#2baf2b</color>
-    <color name="white">#ffffff</color>
-    <color name="dark_alpha">#89000000</color> <!-- 54%black -->
-    <color name="dark_icon">#99000000</color> <!-- 60% black-->
-    <color name="text_primary_light">#ffffffff</color>
-    <color name="gray_200">#eeeeee</color>
-    <color name="grey_ripple">#9ccc</color>
-
-    <color name="background_dark">#ff333333</color>
-    <color name="scrim">#99323232</color>
-
-    <color name="pink_500">#e91e63</color> <!-- pink 500 -->
-    <color name="purple_500">#9c27b0</color> <!-- purple 500 -->
-    <color name="blue_500">#5677fc</color> <!-- blue 500 -->
-    <color name="red_500">#e51c23</color> <!-- red 500 -->
-    <color name="green_500">#259b24</color> <!-- green 500 -->
-    <color name="orange_500">#ff9800</color>
-
-    <color name="gray_light">#dcdcdc</color>
-
 </resources>

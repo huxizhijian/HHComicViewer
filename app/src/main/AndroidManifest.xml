@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2016-2018 huxizhijian
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,33 +12,15 @@
   ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
-  -->
+-->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools"
-          package="org.huxizhijian.hhcomicviewer">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="org.huxizhijian.hhcomicviewer">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.BATTERY_STATS"/>
-    <uses-permission android:name="android.permission.EXPAND_STATUS_BAR"/>
-
-    <!-- MobShareSDK -->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS"/>
-    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
-
-    <!-- bugly -->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.READ_LOGS"/>
-    <!-- 保存资源到SD卡 -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:name=".app.HHApplication"
@@ -50,122 +31,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:theme">
-        <activity
-            android:name=".ui.main.MainActivity"
-            android:label="@string/app_name_short"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity
-            android:name=".ui.main.SplashActivity"
-            android:theme="@style/SplashTheme">
+
+        <activity android:name=".ui.MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".ui.entry.GalleryActivity"
-            android:theme="@android:style/Theme.DeviceDefault.NoActionBar.Fullscreen"/>
-        <activity
-            android:name=".ui.search.SearchActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.SEARCH"/>
-            </intent-filter>
-
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable"/>
-        </activity>
-
-        <service
-            android:name=".service.DownloadManagerService"
-            android:enabled="true"
-            android:exported="false"/>
-
-        <activity
-            android:name=".ui.user.PreferenceActivity"
-            android:label=""
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".ui.entry.ComicDetailsActivity"
-            android:screenOrientation="portrait">
-        </activity>
-
-        <!-- MobShareSDK -->
-        <activity
-            android:name="com.mob.tools.MobUIShell"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            android:windowSoftInputMode="stateHidden|adjustResize">
-            <intent-filter>
-                <data android:scheme="tencent100371282"/>
-
-                <action android:name="android.intent.action.VIEW"/>
-
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
-
-            <!-- 调用新浪原生SDK，需要注册的回调activity -->
-            <intent-filter>
-                <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY"/>
-
-                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <!-- 微信分享回调 -->
-        <activity
-            android:name=".wxapi.WXEntryActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:exported="true"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
-
-        <!-- bugly程序更新配置 -->
-        <activity
-            android:name="com.tencent.bugly.beta.ui.BetaActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize|locale"
-            android:theme="@android:style/Theme.Translucent"/>
-        <activity android:name=".ui.recommend.ComicShowActivity">
-        </activity>
-        <activity android:name=".ui.recommend.RankShowActivity">
-        </activity>
-        <activity android:name=".ui.recommend.ClassifiesShowActivity">
-        </activity>
-        <activity
-            android:name=".ui.download.OfflineComicDownloadActivity"
-            android:excludeFromRecents="true"
-            android:launchMode="singleTask">
-        </activity>
-        <activity
-            android:name=".ui.download.ComicChapterDownloadActivity"
-            android:excludeFromRecents="true"
-            android:launchMode="singleTask">
-        </activity>
-        <activity
-            android:name=".ui.download.DownloadingChapterActivity"
-            android:excludeFromRecents="true"
-            android:launchMode="singleTask">
-        </activity>
-
-        <provider
-            android:name="android.support.v4.content.FileProvider"
-            android:authorities="${applicationId}.fileProvider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths"/>
-        </provider>
-
-        <activity android:name=".ui.debug.DebugActivity">
-        </activity>
     </application>
 
 </manifest>

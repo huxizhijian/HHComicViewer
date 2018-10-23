@@ -243,6 +243,7 @@ public class SourceProcessor extends AbstractProcessor {
         MethodSpec.Builder builder = MethodSpec.methodBuilder("getSource")
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(ClassName.get(String.class), paraName)
+                .addException(IOException.class)
                 .returns(sourceName)
                 .beginControlFlow("if (!$L.containsKey($L))", SOURCE_MAP_FIELD_NAME, paraName)
                 .beginControlFlow("switch ($L)", paraName);

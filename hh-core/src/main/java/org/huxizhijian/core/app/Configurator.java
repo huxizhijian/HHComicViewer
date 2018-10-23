@@ -17,12 +17,9 @@
 package org.huxizhijian.core.app;
 
 import android.app.Application;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 
 import com.blankj.utilcode.util.Utils;
-import com.joanzapata.iconify.IconFontDescriptor;
-import com.joanzapata.iconify.Iconify;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
 
@@ -42,15 +39,12 @@ import okhttp3.OkHttpClient;
 public class Configurator {
 
     private static final HashMap<Object, Object> HH_CONFIGS = new HashMap<>();
-    private static final Handler HANDLER = new Handler();
-    private static final List<IconFontDescriptor> ICONS = new ArrayList<>();
     private static final List<Interceptor> INTERCEPTORS = new ArrayList<>();
     private static final OkHttpClient.Builder BUILDER = new OkHttpClient.Builder();
 
     private Configurator() {
         // 开始配置，标记为未完成配置
         HH_CONFIGS.put(ConfigKeys.CONFIG_READY, false);
-        HH_CONFIGS.put(ConfigKeys.HANDLER, HANDLER);
     }
 
     final HashMap<Object, Object> getHHConfigs() {
@@ -76,26 +70,10 @@ public class Configurator {
             HH_CONFIGS.put(ConfigKeys.OKHTTP_CLIENT, BUILDER.build());
         }
         //初始化Utils库
-        Utils.init((Application) HHGolbalVariable.getApplicationContext());
-        //初始化icon库
-        initIcons();
+        Utils.init((Application) HHGlobalVariable.getApplicationContext());
         //初始化logger库
         Logger.addLogAdapter(new AndroidLogAdapter());
         HH_CONFIGS.put(ConfigKeys.CONFIG_READY, true);
-    }
-
-    private void initIcons() {
-        if (ICONS.size() > 0) {
-            final Iconify.IconifyInitializer initializer = Iconify.with(ICONS.get(0));
-            for (int i = 1; i < ICONS.size(); i++) {
-                initializer.with(ICONS.get(i));
-            }
-        }
-    }
-
-    public final Configurator withIcon(IconFontDescriptor icon) {
-        ICONS.add(icon);
-        return this;
     }
 
     public final Configurator withConnectTimeOut(long timeOut, @NonNull TimeUnit unit) {
@@ -133,5 +111,4 @@ public class Configurator {
         checkConfiguration();
         return (T) HH_CONFIGS.get(key);
     }
-
 }

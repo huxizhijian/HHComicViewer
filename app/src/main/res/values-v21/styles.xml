@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2016-2018 huxizhijian
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,19 +16,9 @@
 <resources>
 
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/main_color</item>
-        <item name="colorPrimaryDark">@color/dark_main_color</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowBackground">@color/windowBackGround</item>
-        <item name="android:textColor">@android:color/black</item>
-        <item name="android:textColorPrimary">@android:color/white</item>
-        <item name="android:textColorPrimaryInverse">@android:color/background_dark</item>
-        <item name="android:windowContentTransitions">true</item>
     </style>
-
-    <style name="PlaidDarkOverlay" parent="@android:style/ThemeOverlay.Material.Dark.ActionBar">
-        <!-- Used to theme dark elements in light themed screens.
-             Extend the material dark Action Bar overlay as this contains text styling. -->
-    </style>
-
 </resources>

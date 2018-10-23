@@ -38,24 +38,4 @@
         <item>list_view</item>
     </array>
 
-    <array name="download_thread_count_string">
-        <item>1线程</item>
-        <item>3线程</item>
-        <item>5线程</item>
-    </array>
-
-    <array name="download_thread_count">
-        <item>1_thread</item>
-        <item>3_thread</item>
-        <item>5_thread</item>
-    </array>
-
-    <array name="reading_cache_size">
-        <item>40MB</item>
-        <item>80MB</item>
-        <item>160MB</item>
-        <item>320MB</item>
-        <item>640MB</item>
-    </array>
-
 </resources>

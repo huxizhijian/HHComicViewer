@@ -78,36 +78,10 @@ dependencies {
     implementation project(':hh-comic')
     // test
     implementation "com.android.support.test.espresso:espresso-idling-resource:${espressoVersion}"
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     testImplementation "junit:junit:${junitVersion}"
-    // Mob的ShareSDK依赖
-    implementation files('libs/MobCommons-2016.1107.1809.jar')
-    implementation files('libs/MobTools-2016.1107.1809.jar')
-    implementation files('libs/ShareSDK-Core-2.7.10.jar')
-    implementation files('libs/ShareSDK-Email-2.7.10.jar')
-    implementation files('libs/ShareSDK-QQ-2.7.10.jar')
-    implementation files('libs/ShareSDK-QZone-2.7.10.jar')
-    implementation files('libs/ShareSDK-ShortMessage-2.7.10.jar')
-    implementation files('libs/ShareSDK-SinaWeibo-2.7.10.jar')
-    implementation files('libs/ShareSDK-Wechat-2.7.10.jar')
-    implementation files('libs/ShareSDK-Wechat-Core-2.7.10.jar')
-    implementation files('libs/ShareSDK-Wechat-Favorite-2.7.10.jar')
-    implementation files('libs/ShareSDK-Wechat-Moments-2.7.10.jar')
-    // xUtils依赖（用于DB）
-    implementation 'org.xutils:xutils:3.3.38'
-    // statusBar依赖
-    implementation 'com.readystatesoftware.systembartint:systembartint:1.0.4'
-    // material控件库的依赖
-    implementation 'com.github.rey5137:material:1.2.4'
-    // 文件夹选择器依赖
-    implementation 'net.rdrei.android.dirchooser:library:3.2'
     // 多dex文件依赖
     implementation 'com.android.support:multidex:1.0.3'
-    // Recycler封装库依赖
-    implementation 'com.github.jdsjlzx:LRecyclerView:1.4.0'
-    // search bar依赖
-    implementation 'br.com.mauker.materialsearchview:materialsearchview:1.2.2'
-    // recycler加载动画依赖
-    implementation 'jp.wasabeef:recyclerview-animators:2.2.6'
     // leak canary依赖
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
     releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
