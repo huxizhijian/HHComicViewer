@@ -29,8 +29,8 @@
         android:label="@string/app_name"
         android:largeHeap="true"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        tools:replace="android:theme">
+        android:theme="@style/Theme.MyApp"
+        tools:ignore="GoogleAppIndexingWarning">
 
         <activity android:name=".ui.MainActivity">
             <intent-filter>

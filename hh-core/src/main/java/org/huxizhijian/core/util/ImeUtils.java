@@ -18,11 +18,12 @@ package org.huxizhijian.core.util;
 
 import android.content.Context;
 import android.os.ResultReceiver;
-import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import java.lang.reflect.Method;
+
+import androidx.annotation.NonNull;
 
 /**
  * Utility methods for working with the keyboard

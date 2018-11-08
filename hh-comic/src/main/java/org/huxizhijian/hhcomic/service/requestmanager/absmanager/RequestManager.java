@@ -1,4 +1,4 @@
-package org.huxizhijian.hhcomic.service.requestmanager.managerinterface;
+package org.huxizhijian.hhcomic.service.requestmanager.absmanager;
 
 /**
  * @author huxizhijian

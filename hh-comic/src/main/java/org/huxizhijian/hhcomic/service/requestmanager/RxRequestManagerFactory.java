@@ -1,7 +1,7 @@
 package org.huxizhijian.hhcomic.service.requestmanager;
 
 import org.huxizhijian.core.app.ConfigKeys;
-import org.huxizhijian.core.app.HHGlobalVariable;
+import org.huxizhijian.hhcomic.HHComic;
 
 /**
  * RequestManager的简单工厂
@@ -15,22 +15,22 @@ public class RxRequestManagerFactory {
     }
 
     public static RxCategoryRequestManager category() {
-        return new RxCategoryRequestManager(HHGlobalVariable.getConfiguration(ConfigKeys.OKHTTP_CLIENT));
+        return new RxCategoryRequestManager(HHComic.getConfiguration(ConfigKeys.OKHTTP_CLIENT));
     }
 
     public static RxChapterImageRequestManager chapterImage() {
-        return new RxChapterImageRequestManager(HHGlobalVariable.getConfiguration(ConfigKeys.OKHTTP_CLIENT));
+        return new RxChapterImageRequestManager(HHComic.getConfiguration(ConfigKeys.OKHTTP_CLIENT));
     }
 
     public static RxComicInfoRequestManager comicInfo() {
-        return new RxComicInfoRequestManager(HHGlobalVariable.getConfiguration(ConfigKeys.OKHTTP_CLIENT));
+        return new RxComicInfoRequestManager(HHComic.getConfiguration(ConfigKeys.OKHTTP_CLIENT));
     }
 
     public static RxRankAndRecommendRequestManager rankAndRecommend() {
-        return new RxRankAndRecommendRequestManager(HHGlobalVariable.getConfiguration(ConfigKeys.OKHTTP_CLIENT));
+        return new RxRankAndRecommendRequestManager(HHComic.getConfiguration(ConfigKeys.OKHTTP_CLIENT));
     }
 
     public static RxSearchComicRequestManager search() {
-        return new RxSearchComicRequestManager(HHGlobalVariable.getConfiguration(ConfigKeys.OKHTTP_CLIENT));
+        return new RxSearchComicRequestManager(HHComic.getConfiguration(ConfigKeys.OKHTTP_CLIENT));
     }
 }

@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2016-2018 huxizhijian
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,5 +14,15 @@
   ~ limitations under the License.
   -->
 <resources>
-
+    <attr format="color" name="colorPrimaryVariant"/>
+    <attr format="color" name="colorSecondaryVariant"/>
+    <attr format="color" name="colorBackground"/>
+    <attr format="color" name="colorSurface"/>
+    <attr format="color" name="colorOnPrimary"/>
+    <attr format="color" name="colorOnSecondary"/>
+    <attr format="color" name="colorOnBackground"/>
+    <attr format="color" name="colorOnSurface"/>
+    <attr format="color" name="scrimBackground"/>
+    <attr format="dimension" name="cornerRadiusPrimary"/>
+    <attr format="dimension" name="cornerRadiusSecondary"/>
 </resources>

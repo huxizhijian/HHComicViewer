@@ -21,23 +21,6 @@
 -dontwarn sun.misc.**
 -dontwarn android.databinding.**
 
-# xUtils混淆设置
--keepattributes Signature,*Annotation*
--keep public class org.xutils.** {
-    public protected *;
-}
--keep public interface org.xutils.** {
-    public protected *;
-}
--keepclassmembers class * extends org.xutils.** {
-    public protected *;
-}
--keepclassmembers @org.xutils.db.annotation.* class * {*;}
--keepclassmembers @org.xutils.http.annotation.* class * {*;}
--keepclassmembers class * {
-    @org.xutils.view.annotation.Event <methods>;
-}
-
 #okhttp3混淆设置
 -dontwarn okhttp3.**
 -dontwarn okio.**
@@ -86,34 +69,30 @@
 -keep class org.jsoup.**{*;}
 -keep interface org.jsoup.**{*;}
 
+#BRVAH混淆设置
+-keep class com.chad.library.adapter.** {
+*;
+}
+-keep public class * extends com.chad.library.adapter.base.BaseQuickAdapter
+-keep public class * extends com.chad.library.adapter.base.BaseViewHolder
+-keepclassmembers  class **$** extends com.chad.library.adapter.base.BaseViewHolder {
+     <init>(...);
+}
+
 #bugly混淆设置
 -dontwarn com.tencent.bugly.**
 -keep public class com.tencent.bugly.**{*;}
 -keep class android.support.**{*;}
-
-#LRecyclerview_library
--dontwarn com.github.jdsjlzx.**
--keep class com.github.jdsjlzx.**{*;}
 
 #fastjson混淆
 -keepattributes Signature
 -dontwarn com.alibaba.fastjson.**
 -keep class com.alibaba.fastjson.**{*; }
 
-#greendao混淆
--keepclassmembers class * extends org.greenrobot.greendao.AbstractDao {
-public static java.lang.String TABLENAME;
-}
--keep class **$Properties
-
 # If you do not use SQLCipher:
 -dontwarn org.greenrobot.greendao.database.**
 # If you do not use Rx:
 -dontwarn rx.**
-
-#material混淆
--dontwarn com.rey.material.widget.**
--dontwarn com.rey.material.app.**
 
 #自己定义的model不混淆
 -dontwarn org.huxizhijian.sdk.**
@@ -121,12 +100,12 @@ public static java.lang.String TABLENAME;
 -keep interface org.huxizhijian.sdk.**{*;}
 
 #实体类不要混淆
--dontwarn org.huxizhijian.hhcomicviewer2.model.**
--dontwarn org.huxizhijian.hhcomicviewer2.adapter.entity.**
--keep class org.huxizhijian.hhcomicviewer2.model.**{*;}
--keep class org.huxizhijian.hhcomicviewer2.adapter.entity.**{*;}
--keep interface org.huxizhijian.hhcomicviewer2.model.**{*;}
--keep interface org.huxizhijian.hhcomicviewer2.adapter.entity.**{*;}
+-dontwarn org.huxizhijian.hhcomicviewer.model.**
+-dontwarn org.huxizhijian.hhcomicviewer.adapter.entity.**
+-keep class org.huxizhijian.hhcomicviewer.model.**{*;}
+-keep class org.huxizhijian.hhcomicviewer.adapter.entity.**{*;}
+-keep interface org.huxizhijian.hhcomicviewer.model.**{*;}
+-keep interface org.huxizhijian.hhcomicviewer.adapter.entity.**{*;}
 
 #保持所有实现 Serializable 接口的类成员
 -keepclassmembers class * implements java.io.Serializable {

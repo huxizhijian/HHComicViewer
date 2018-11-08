@@ -15,10 +15,29 @@
   -->
 <resources>
 
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:windowBackground">@color/windowBackGround</item>
+    <style name="Theme.MyApp" parent="Theme.MaterialComponents.Light">
+        <!-- Original AppCompat attributes. -->
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_200</item>
+        <item name="colorSecondary">@color/secondary</item>
+        <item name="android:colorBackground">@color/surface</item>
+        <item name="android:textColor">@color/text_high_emphasis</item>
+        <item name="android:textColorPrimary">@color/text_high_emphasis</item>
+        <item name="android:textColorSecondary">@color/text_high_emphasis</item>
+        <item name="android:textColorHighlight">@color/text_high_emphasis</item>
+        <item name="android:textColorPrimaryInverse">@color/text_medium_emphasis</item>
+        <item name="android:textColorSecondaryInverse">@color/text_medium_emphasis</item>
+        <!-- New MaterialComponents attributes. -->
+        <item name="colorPrimaryVariant">@color/primary_300</item>
+        <item name="colorSecondaryVariant">@color/secondary_300</item>
+        <item name="colorBackground">@color/surface</item>
+        <item name="colorSurface">@color/surface</item>
+        <item name="colorOnPrimary">@color/text_high_emphasis</item>
+        <item name="colorOnSecondary">@color/text_high_emphasis</item>
+        <item name="colorOnBackground">@color/text_high_emphasis</item>
+        <item name="colorOnSurface">@color/text_high_emphasis</item>
+        <item name="scrimBackground">@color/secondary</item>
+        <item name="cornerRadiusPrimary">4dp</item>
+        <item name="cornerRadiusSecondary">4dp</item>
     </style>
 </resources>

@@ -1,58 +1,92 @@
 package org.huxizhijian.hhcomic.db.entity;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.Index;
+import androidx.room.PrimaryKey;
+
 /**
  * 漫画章节信息实体类
  *
  * @author huxizhijian
  * @date 2018/8/29
  */
+@Entity(tableName = "download_chapters",
+        indices = {@Index(value = {"source_key", "comic_id", "chapter_id"}, unique = true)})
 public class Chapter {
+
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "id")
+    private int mId;
 
     /**
      * 源Key
      */
+    @ColumnInfo(name = "source_key")
     private String mSourceKey;
 
     /**
      * 漫画id
      */
+    @ColumnInfo(name = "comic_id")
     private String mComicId;
 
     /**
      * 章节id
      */
+    @ColumnInfo(name = "chapter_id")
     private String mChapterId;
 
     /**
      * 章节分类
      */
+    @ColumnInfo(name = "type")
     private String mType;
 
     /**
      * 章节名称
      */
+    @ColumnInfo(name = "chapter_name")
     private String mChapterName;
 
     /**
      * 总页数
      */
+    @ColumnInfo(name = "page")
     private int mPage;
 
     /**
      * 是否下载
      */
+    @ColumnInfo(name = "is_download")
     private boolean mIsDownload;
 
     /**
      * 是否下载完毕
      */
+    @ColumnInfo(name = "is_download_finish")
     private boolean mIsDownloadFinish;
+
+    /**
+     * 下载地址
+     */
+    @ColumnInfo(name = "download_path")
+    private String mDownloadPath;
 
     public Chapter() {
     }
 
-    public Chapter(String sourceKey, String comicId, String chapterId,
-                   String type, String chapterName, int page, boolean isDownload, boolean isDownloadFinish) {
+    public Chapter(String sourceKey, String comicId, String chapterId, String type, String chapterName, int page) {
+        mSourceKey = sourceKey;
+        mComicId = comicId;
+        mChapterId = chapterId;
+        mType = type;
+        mChapterName = chapterName;
+        mPage = page;
+    }
+
+    public Chapter(String sourceKey, String comicId, String chapterId, String type, String chapterName,
+                   int page, boolean isDownload, boolean isDownloadFinish, String downloadPath) {
         mSourceKey = sourceKey;
         mComicId = comicId;
         mChapterId = chapterId;
@@ -61,6 +95,15 @@ public class Chapter {
         mPage = page;
         mIsDownload = isDownload;
         mIsDownloadFinish = isDownloadFinish;
+        mDownloadPath = downloadPath;
+    }
+
+    public int getId() {
+        return mId;
+    }
+
+    public void setId(int id) {
+        mId = id;
     }
 
     public String getSourceKey() {
@@ -127,10 +170,19 @@ public class Chapter {
         mIsDownloadFinish = downloadFinish;
     }
 
+    public String getDownloadPath() {
+        return mDownloadPath;
+    }
+
+    public void setDownloadPath(String downloadPath) {
+        mDownloadPath = downloadPath;
+    }
+
     @Override
     public String toString() {
         return "Chapter{" +
-                "mSourceKey='" + mSourceKey + '\'' +
+                "mId=" + mId +
+                ", mSourceKey='" + mSourceKey + '\'' +
                 ", mComicId='" + mComicId + '\'' +
                 ", mChapterId='" + mChapterId + '\'' +
                 ", mType='" + mType + '\'' +
@@ -138,6 +190,7 @@ public class Chapter {
                 ", mPage=" + mPage +
                 ", mIsDownload=" + mIsDownload +
                 ", mIsDownloadFinish=" + mIsDownloadFinish +
+                ", mDownloadPath='" + mDownloadPath + '\'' +
                 '}';
     }
 }

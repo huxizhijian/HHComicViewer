@@ -27,7 +27,7 @@ android {
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
     }
     buildTypes {
@@ -50,7 +50,7 @@ android {
 dependencies {
     api fileTree(include: ['*.jar'], dir: 'libs')
     // test
-    implementation "com.android.support.test.espresso:espresso-idling-resource:${espressoVersion}"
+    implementation "androidx.test.espresso:espresso-idling-resource:${espressoVersion}"
     testImplementation "junit:junit:${junitVersion}"
     // jsoup DOM操作库
     api 'org.jsoup:jsoup:1.11.3'

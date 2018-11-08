@@ -1,6 +1,6 @@
 package org.huxizhijian.hhcomic.service.bean;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import org.huxizhijian.hhcomic.service.bean.base.BaseListBuilder;
 import org.huxizhijian.hhcomic.service.bean.base.ResultFilterable;

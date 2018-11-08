@@ -1,6 +1,6 @@
 package org.huxizhijian.hhcomic.service.requestmanager;
 
-import org.huxizhijian.hhcomic.service.requestmanager.managerinterface.RequestManager;
+import org.huxizhijian.hhcomic.service.requestmanager.absmanager.RequestManager;
 
 import okhttp3.OkHttpClient;
 

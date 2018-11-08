@@ -16,7 +16,7 @@
 
 package org.huxizhijian.core.util;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 /**
  * google preconditions

@@ -1,7 +1,15 @@
 package org.huxizhijian.hhcomic.db.entity;
 
+import org.huxizhijian.hhcomic.db.entity.convert.MapJSONConvert;
+
 import java.util.List;
 import java.util.Map;
+
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.Index;
+import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
 
 /**
  * 漫画信息实体类
@@ -9,89 +17,117 @@ import java.util.Map;
  * @author huxizhijian
  * @date 2018/8/29
  */
+@Entity(tableName = "comics", indices = {@Index(value = {"source_key", "comic_id"}, unique = true)})
+@TypeConverters(MapJSONConvert.class)
 public class Comic {
+
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "id")
+    private int mId;
 
     /**
      * 漫画id
      */
+    @ColumnInfo(name = "comic_id")
     private String mComicId;
 
     /**
      * 源信息
      */
+    @ColumnInfo(name = "source_key")
     private String mSourceKey;
 
     /**
      * 标题
      */
+    @ColumnInfo(name = "title")
     private String mTitle;
 
     /**
      * 作者
      */
+    @ColumnInfo(name = "author")
     private String mAuthor;
 
     /**
      * 封面图片地址
      */
+    @ColumnInfo(name = "cover")
     private String mCover;
 
     /**
      * 简介
      */
+    @ColumnInfo(name = "description")
     private String mDescription;
 
     /**
      * 漫画最后更新时间
      */
+    @ColumnInfo(name = "comic_last_update_time")
     private String mComicLastUpdateTime;
 
     /**
      * 连载状态是否为已完结
      */
+    @ColumnInfo(name = "is_end")
     private boolean mIsEnd;
 
     /**
      * 额外信息，用于获取章节首页时额外需要的信息
      */
+    @ColumnInfo(name = "extra")
     private String mExtra;
 
     /**
      * 最后一次观看漫画的时间
      */
+    @ColumnInfo(name = "last_time")
     private long mLastTime;
 
     /**
      * 最后一次观看的章节
      */
+    @ColumnInfo(name = "last_read_chapter")
     private String mLastReadChapter;
 
     /**
      * 最后一次观看的章节页码
      */
+    @ColumnInfo(name = "last_read_page")
     private int mLastReadPage;
 
     /**
      * 是否存在下载的章节
      */
+    @ColumnInfo(name = "has_download_chapter")
     private boolean mHasDownloadChapter;
+
+    /**
+     * 最后一次启动下载任务时间
+     */
+    @ColumnInfo(name = "last_download_time")
+    private long mLastDownloadTime;
 
     /**
      * 是否在收藏中
      */
-    private boolean mIsInFavorite;
+    @ColumnInfo(name = "is_favorite")
+    private boolean mIsFavorite;
 
     /**
-     * 章节列表
+     * 章节列表，保存时通过type convert转化成json
      */
+    @ColumnInfo(name = "chapter_json")
     private Map<String, List<Chapter>> mChapterMap;
 
     public Comic() {
     }
 
-    public Comic(String comicId, String sourceKey, String title, String author, String cover, String description,
-                 String comicLastUpdateTime, boolean isEnd, String extra, long lastTime, String lastReadChapter,
-                 int lastReadPage, boolean hasDownloadChapter, boolean isInFavorite, Map<String, List<Chapter>> chapterMap) {
+    public Comic(int id, String comicId, String sourceKey, String title, String author, String cover, String description,
+                 String comicLastUpdateTime, boolean isEnd, String extra, long lastTime, String lastReadChapter, int lastReadPage,
+                 boolean hasDownloadChapter, long lastDownloadTime, boolean isFavorite, Map<String, List<Chapter>> chapterMap) {
+        mId = id;
         mComicId = comicId;
         mSourceKey = sourceKey;
         mTitle = title;
@@ -105,8 +141,17 @@ public class Comic {
         mLastReadChapter = lastReadChapter;
         mLastReadPage = lastReadPage;
         mHasDownloadChapter = hasDownloadChapter;
-        mIsInFavorite = isInFavorite;
+        mLastDownloadTime = lastDownloadTime;
+        mIsFavorite = isFavorite;
         mChapterMap = chapterMap;
+    }
+
+    public int getId() {
+        return mId;
+    }
+
+    public void setId(int id) {
+        mId = id;
     }
 
     public String getComicId() {
@@ -205,12 +250,12 @@ public class Comic {
         mHasDownloadChapter = hasDownloadChapter;
     }
 
-    public boolean isInFavorite() {
-        return mIsInFavorite;
+    public boolean isFavorite() {
+        return mIsFavorite;
     }
 
-    public void setInFavorite(boolean inFavorite) {
-        mIsInFavorite = inFavorite;
+    public void setFavorite(boolean favorite) {
+        mIsFavorite = favorite;
     }
 
     public String getExtra() {
@@ -219,6 +264,14 @@ public class Comic {
 
     public void setExtra(String extra) {
         mExtra = extra;
+    }
+
+    public long getLastDownloadTime() {
+        return mLastDownloadTime;
+    }
+
+    public void setLastDownloadTime(long lastDownloadTime) {
+        mLastDownloadTime = lastDownloadTime;
     }
 
     public Map<String, List<Chapter>> getChapterMap() {
@@ -232,7 +285,8 @@ public class Comic {
     @Override
     public String toString() {
         return "Comic{" +
-                "mComicId='" + mComicId + '\'' +
+                "mId=" + mId +
+                ", mComicId='" + mComicId + '\'' +
                 ", mSourceKey='" + mSourceKey + '\'' +
                 ", mTitle='" + mTitle + '\'' +
                 ", mAuthor='" + mAuthor + '\'' +
@@ -245,7 +299,8 @@ public class Comic {
                 ", mLastReadChapter='" + mLastReadChapter + '\'' +
                 ", mLastReadPage=" + mLastReadPage +
                 ", mHasDownloadChapter=" + mHasDownloadChapter +
-                ", mIsInFavorite=" + mIsInFavorite +
+                ", mLastDownloadTime=" + mLastDownloadTime +
+                ", mIsFavorite=" + mIsFavorite +
                 ", mChapterMap=" + mChapterMap +
                 '}';
     }

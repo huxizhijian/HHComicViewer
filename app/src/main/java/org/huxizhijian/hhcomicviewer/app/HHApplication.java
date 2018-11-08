@@ -16,21 +16,25 @@
 
 package org.huxizhijian.hhcomicviewer.app;
 
-import android.support.multidex.MultiDexApplication;
+import android.app.Application;
 
 import com.squareup.leakcanary.LeakCanary;
+
+import org.huxizhijian.hhcomic.HHComic;
 
 /**
  * 本工程的application
  *
  * @author huxizhijian on 2016/8/23.
  */
-public class HHApplication extends MultiDexApplication {
+public class HHApplication extends Application {
 
     @Override
     public void onCreate() {
         super.onCreate();
         initLeakCanary();
+        // 初始化core集成的第三方库和一些全局变量
+        HHComic.init(this);
     }
 
     private void initLeakCanary() {

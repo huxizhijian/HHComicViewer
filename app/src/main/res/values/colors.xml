@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2016-2018 huxizhijian
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,8 +14,32 @@
   ~ limitations under the License.
   -->
 <resources>
-    <color name="colorPrimary">#03a9f4</color>
-    <color name="colorPrimaryDark">#0288d1</color>
-    <color name="colorAccent">#ff2d6f</color>
-    <color name="windowBackGround">#f5f5f5</color>
+    <!--surface-->
+    <color name="surface">#FFFBFA</color>
+    <color name="surface_light">#FFFFFF</color>
+    <color name="surface_dark">#F3EFEE</color>
+    <!--primary-->
+    <color name="primary">#FFDBCF</color>
+    <color name="primary_50">#FFF0E9</color>
+    <color name="primary_100">#FEDBD0</color>
+    <color name="primary_200">#FCB8AB</color>
+    <color name="primary_300">#F2A9A5</color>
+    <color name="primary_400">#E29896</color>
+    <color name="primary_500">#C18083</color>
+    <color name="primary_600">#A36A72</color>
+    <color name="primary_700">#84565E</color>
+    <color name="primary_800">#664046</color>
+    <color name="primary_900">#442B2D</color>
+    <!--secondary-->
+    <color name="secondary">#FEEAE6</color>
+    <color name="secondary_300">#FC8F5C</color>
+    <color name="secondary_900">#BA4000</color>
+    <!--text-->
+    <color name="text_medium_emphasis">#442B2D</color>
+    <color name="text_high_emphasis">#442B2D</color>
+    <color name="text_disable">#60000000</color>
+    <color name="black_text_high_emphasis">#DD000000</color>
+    <color name="black_text_medium_emphasis">#99000000</color>
+    <color name="white_text_high_emphasis">#FFFFFF</color>
+    <color name="white_text_medium_emphasis">#99FFFFFF</color>
 </resources>

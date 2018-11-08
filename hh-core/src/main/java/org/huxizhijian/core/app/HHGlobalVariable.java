@@ -42,7 +42,7 @@ public final class HHGlobalVariable {
         return getConfigurator().getHHConfigs();
     }
 
-    public static <T> T getConfiguration(Object key) {
+    public static <T> T getConfiguration(ConfigKeys key) {
         return getConfigurator().getConfiguration(key);
     }
 

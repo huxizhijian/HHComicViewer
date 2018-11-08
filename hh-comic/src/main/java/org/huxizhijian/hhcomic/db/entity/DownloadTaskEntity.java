@@ -2,6 +2,7 @@ package org.huxizhijian.hhcomic.db.entity;
 
 /**
  * 章节下载任务信息实体类
+ * TODO 等待下载模块完成
  *
  * @author huxizhijian
  * @date 2018/8/31

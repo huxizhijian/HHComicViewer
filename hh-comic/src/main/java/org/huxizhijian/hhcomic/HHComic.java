@@ -1,5 +1,9 @@
 package org.huxizhijian.hhcomic;
 
+import android.content.Context;
+
+import org.huxizhijian.core.app.ConfigKeys;
+import org.huxizhijian.core.app.HHGlobalVariable;
 import org.huxizhijian.generate.SourceRouterApp;
 import org.huxizhijian.hhcomic.service.requestmanager.RxCategoryRequestManager;
 import org.huxizhijian.hhcomic.service.requestmanager.RxChapterImageRequestManager;
@@ -11,6 +15,7 @@ import org.huxizhijian.hhcomic.service.source.base.Source;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 工具类
@@ -27,7 +32,29 @@ public class HHComic {
     }
 
     /**
-     * 获取源id列表，这个列表如果用户排过序，则获取那个列表
+     * 初始化core集成的第三方库和一些全局变量
+     *
+     * @param context context
+     */
+    public static void init(Context context) {
+        HHGlobalVariable.init(context)
+                .withConnectTimeOut(15000, TimeUnit.MILLISECONDS)
+                .configure();
+    }
+
+    /**
+     * 全局OkHttpClient等第三方库配置信息
+     *
+     * @param key config keys
+     * @param <T> 返回类型随ConfigKeys不同而不同
+     * @return 结果
+     */
+    public static <T> T getConfiguration(ConfigKeys key) {
+        return HHGlobalVariable.getConfiguration(key);
+    }
+
+    /**
+     * 获取源id列表，这个列表如果用户排过序，则结果为排序后的列表列表
      *
      * @return source key list
      */
@@ -54,6 +81,9 @@ public class HHComic {
         return ServiceGuide.INSTANCE;
     }
 
+    /**
+     * 源的网络服务功能导航
+     */
     public enum ServiceGuide {
 
         /**
