@@ -30,7 +30,6 @@ import org.huxizhijian.annotations.SourceInterface;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -75,7 +74,7 @@ public class SourceProcessor extends AbstractProcessor {
      * 成员变量名
      */
     private static final String SOURCE_MAP_FIELD_NAME = "mSourceMap";
-    private static final String SOURCE_KEY_LIST_FIELD_NAME = "mSourceKeyList";
+    private static final String SOURCE_KEY_NAME_MAP_FIELD_NAME = "mSourceKeyNameMap";
     private static final String APP_INSTANCE = "sSourceRouterApp";
 
     @Override
@@ -125,7 +124,7 @@ public class SourceProcessor extends AbstractProcessor {
             } else {
                 for (Element element : sourceInterfaceElement) {
                     TypeName clazz = ClassName.get(element.asType());
-                    typeBuilder.addField(sourceArraySpec(clazz));
+                    typeBuilder.addField(sourceMapSpec(clazz));
                     typeBuilder.addMethod(getSourceSpec(sourceImplElement, clazz));
                 }
             }
@@ -134,9 +133,9 @@ public class SourceProcessor extends AbstractProcessor {
         typeBuilder
                 .addField(staticInstantSpec())
                 .addField(sourceKeyListSpec())
-                .addMethod(getSourceKeyListSpec(sourceImplElement))
+                .addMethod(getSourceKeyNameMapSpec())
                 .addMethod(getInstantSpec())
-                .addMethod(constructorPrivate())
+                .addMethod(constructorPrivate(sourceImplElement))
                 .build();
 
         // 生成的java文件
@@ -157,12 +156,12 @@ public class SourceProcessor extends AbstractProcessor {
      * @param sourceName SourceInterface注解的类,仅能有一个
      * @return fieldSpec
      */
-    private FieldSpec sourceArraySpec(TypeName sourceName) {
-        TypeName arrayOfSource = ParameterizedTypeName.get(ClassName.get(HashMap.class),
+    private FieldSpec sourceMapSpec(TypeName sourceName) {
+        TypeName mapOfSource = ParameterizedTypeName.get(ClassName.get(HashMap.class),
                 ClassName.get(String.class), sourceName);
-        return FieldSpec.builder(arrayOfSource, SOURCE_MAP_FIELD_NAME)
+        return FieldSpec.builder(mapOfSource, SOURCE_MAP_FIELD_NAME)
                 .addModifiers(Modifier.PRIVATE, Modifier.FINAL)
-                .initializer("new $T()", arrayOfSource)
+                .initializer("new $T()", mapOfSource)
                 .build();
     }
 
@@ -172,11 +171,11 @@ public class SourceProcessor extends AbstractProcessor {
      * @return fieldSpec
      */
     private FieldSpec sourceKeyListSpec() {
-        TypeName arrayOfSourceKey = ParameterizedTypeName.get(ClassName.get(ArrayList.class),
-                ClassName.get(String.class));
-        return FieldSpec.builder(arrayOfSourceKey, SOURCE_KEY_LIST_FIELD_NAME)
+        TypeName mapOfKeyAndName = ParameterizedTypeName.get(ClassName.get(HashMap.class),
+                ClassName.get(String.class), ClassName.get(String.class));
+        return FieldSpec.builder(mapOfKeyAndName, SOURCE_KEY_NAME_MAP_FIELD_NAME)
                 .addModifiers(Modifier.PRIVATE, Modifier.FINAL)
-                .initializer("new $T()", arrayOfSourceKey)
+                .initializer("new $T()", mapOfKeyAndName)
                 .build();
     }
 
@@ -216,19 +215,13 @@ public class SourceProcessor extends AbstractProcessor {
      *
      * @return methodSpec
      */
-    private MethodSpec getSourceKeyListSpec(Set<? extends Element> sourceImplElement) {
-        TypeName arrayOfSourceKey = ParameterizedTypeName.get(ClassName.get(ArrayList.class),
-                ClassName.get(String.class));
-        MethodSpec.Builder builder = MethodSpec.methodBuilder("getSourceKeyList")
+    private MethodSpec getSourceKeyNameMapSpec() {
+        TypeName mapOfKeyAndName = ParameterizedTypeName.get(ClassName.get(HashMap.class),
+                ClassName.get(String.class), ClassName.get(String.class));
+        MethodSpec.Builder builder = MethodSpec.methodBuilder("getSourceKeyNameMap")
                 .addModifiers(Modifier.PUBLIC)
-                .returns(arrayOfSourceKey);
-        if (sourceImplElement != null) {
-            for (Element element : sourceImplElement) {
-                SourceImpl source = element.getAnnotation(SourceImpl.class);
-                builder.addStatement("$L.add($S)", SOURCE_KEY_LIST_FIELD_NAME, source.id());
-            }
-        }
-        return builder.addStatement("return $L", SOURCE_KEY_LIST_FIELD_NAME)
+                .returns(mapOfKeyAndName);
+        return builder.addStatement("return $L", SOURCE_KEY_NAME_MAP_FIELD_NAME)
                 .build();
     }
 
@@ -269,8 +262,15 @@ public class SourceProcessor extends AbstractProcessor {
      *
      * @return method spec
      */
-    private MethodSpec constructorPrivate() {
-        return MethodSpec.constructorBuilder()
+    private MethodSpec constructorPrivate(Set<? extends Element> sourceImplElement) {
+        MethodSpec.Builder builder = MethodSpec.constructorBuilder();
+        if (sourceImplElement != null) {
+            for (Element element : sourceImplElement) {
+                SourceImpl source = element.getAnnotation(SourceImpl.class);
+                builder.addStatement("$L.put($S,$S)", SOURCE_KEY_NAME_MAP_FIELD_NAME, source.id(), source.name());
+            }
+        }
+        return builder
                 .addModifiers(Modifier.PRIVATE)
                 .build();
     }

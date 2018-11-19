@@ -34,4 +34,9 @@ public @interface SourceImpl {
      * @return id of source impl, it should be only id in all source impl.
      */
     String id();
+
+    /**
+     * @return name of source impl, user can see this.
+     */
+    String name();
 }

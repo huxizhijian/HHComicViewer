@@ -16,8 +16,8 @@
 
 package org.huxizhijian.hhcomic;
 
-import org.huxizhijian.hhcomic.db.entity.Chapter;
-import org.huxizhijian.hhcomic.db.entity.convert.MapJSONConvert;
+import org.huxizhijian.hhcomic.model.comic.db.entity.Chapter;
+import org.huxizhijian.hhcomic.model.comic.db.entity.convert.MapJSONConvert;
 import org.junit.Test;
 
 import java.io.IOException;

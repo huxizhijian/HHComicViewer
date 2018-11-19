@@ -20,7 +20,7 @@ import android.app.Application;
 
 import com.squareup.leakcanary.LeakCanary;
 
-import org.huxizhijian.hhcomic.HHComic;
+import org.huxizhijian.hhcomic.model.comic.HHComic;
 
 /**
  * 本工程的application
