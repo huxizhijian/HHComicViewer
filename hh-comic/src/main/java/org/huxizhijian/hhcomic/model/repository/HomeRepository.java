@@ -4,7 +4,7 @@ import org.huxizhijian.hhcomic.model.comic.HHComic;
 import org.huxizhijian.hhcomic.model.comic.service.bean.ComicListBean;
 import org.huxizhijian.hhcomic.model.comic.service.bean.FilterList;
 import org.huxizhijian.hhcomic.model.comic.service.bean.result.ComicResultList;
-import org.huxizhijian.hhcomic.model.repository.base.BaseRepository;
+import org.huxizhijian.hhcomic.model.repository.base.ComicRepository;
 import org.huxizhijian.hhcomic.model.repository.bean.Response;
 
 import androidx.annotation.NonNull;
@@ -18,7 +18,7 @@ import io.reactivex.schedulers.Schedulers;
  * @author huxizhijian
  * @date 2018/11/15
  */
-public class HomeRepository extends BaseRepository {
+public class HomeRepository extends ComicRepository {
 
     public HomeRepository() {
         super();

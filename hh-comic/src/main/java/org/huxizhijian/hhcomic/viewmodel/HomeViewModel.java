@@ -7,7 +7,7 @@ import org.huxizhijian.hhcomic.model.comic.service.bean.FilterList;
 import org.huxizhijian.hhcomic.model.comic.service.bean.result.ComicResultList;
 import org.huxizhijian.hhcomic.model.repository.HomeRepository;
 import org.huxizhijian.hhcomic.model.repository.bean.Response;
-import org.huxizhijian.hhcomic.viewmodel.base.BaseViewModel;
+import org.huxizhijian.hhcomic.viewmodel.base.ComicViewModel;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,7 +17,7 @@ import androidx.lifecycle.MutableLiveData;
  * @author huxizhijian
  * @date 2018/11/19
  */
-public class HomeViewModel extends BaseViewModel<HomeRepository> {
+public class HomeViewModel extends ComicViewModel<HomeRepository> {
 
     public HomeViewModel(@NonNull Application application) {
         super(application);

@@ -1,16 +1,17 @@
 package org.huxizhijian.hhcomicviewer.view;
 
-import android.os.Bundle;
-
+import org.huxizhijian.hhcomic.viewmodel.HomeViewModel;
 import org.huxizhijian.hhcomicviewer.R;
+import org.huxizhijian.hhcomicviewer.view.base.ComicActivity;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-public class MainActivity extends AppCompatActivity {
+/**
+ * @author huxizhijian
+ * @date 2018/11/20
+ */
+public class MainActivity extends ComicActivity<HomeViewModel> {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+    protected int getLayoutId() {
+        return R.layout.activity_main;
     }
 }
