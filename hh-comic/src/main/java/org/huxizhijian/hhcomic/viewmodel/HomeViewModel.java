@@ -24,16 +24,12 @@ public class HomeViewModel extends ComicViewModel<HomeRepository> {
     }
 
     public MutableLiveData<Response<ComicResultList>> getRecommendResult(String sourceKey) {
-        MutableLiveData<Response<ComicResultList>> responseLiveData = new MutableLiveData<>();
-        mRepository.getRecommendResult(sourceKey, responseLiveData);
-        return responseLiveData;
+        return mRepository.getRecommendResult(sourceKey);
     }
 
     public MutableLiveData<Response<ComicResultList>> getRankResult(@NonNull String sourceKey,
                                                                     @NonNull ComicListBean listBean, int page,
                                                                     @Nullable FilterList.FilterPicker picker) {
-        MutableLiveData<Response<ComicResultList>> responseLiveData = new MutableLiveData<>();
-        mRepository.getRankResult(sourceKey, listBean, page, picker, responseLiveData);
-        return responseLiveData;
+        return mRepository.getRankResult(sourceKey, listBean, page, picker);
     }
 }

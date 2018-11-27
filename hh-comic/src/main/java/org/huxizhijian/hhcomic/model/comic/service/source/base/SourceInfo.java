@@ -35,11 +35,25 @@ public interface SourceInfo {
     List<Category> getCategory();
 
     /**
+     * 是否有排序列表
+     *
+     * @return has rank
+     */
+    boolean hasRank();
+
+    /**
      * 获取源支持查询的排行榜
      *
      * @return rank list
      */
     List<ComicListBean> getRank();
+
+    /**
+     * 是否有推荐列表
+     *
+     * @return has recommend
+     */
+    boolean hasRecommend();
 
     /**
      * 获取源支持查询的推荐列表

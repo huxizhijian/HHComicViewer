@@ -95,7 +95,7 @@ public class Dmzj extends Source {
     }
 
     @Override
-    protected Category.ListBuilder initCategoryList(Category.ListBuilder listBuilder) throws IOException {
+    protected void initCategoryList(Category.ListBuilder listBuilder) throws IOException {
         // 请求category筛选
         Request filterRequest = newGetRequest(CATEGORY_FILTER);
         Response filterResponse = mOkHttpClient.newCall(filterRequest).execute();
@@ -143,11 +143,10 @@ public class Dmzj extends Source {
             listBuilder.addCategory(jsonObject.getString("title"), jsonObject.getString("tag_id"),
                     jsonObject.getString("cover"), categorySubtitle, filterList, sortList);
         }
-        return listBuilder;
     }
 
     @Override
-    protected ComicListBean.ListBuilder initRankBeanList(ComicListBean.ListBuilder listBuilder) throws IOException {
+    protected void initRankBeanList(ComicListBean.ListBuilder listBuilder) throws IOException {
         // 请求rank的类别筛选列表
         Request filterRequest = newGetRequest(RANK_FILTER);
         Response filterResponse = mOkHttpClient.newCall(filterRequest).execute();
@@ -179,14 +178,12 @@ public class Dmzj extends Source {
                 .addListBean("人气排行", "0", filterList)
                 .addListBean("吐槽排行", "1", filterList)
                 .addListBean("订阅排行", "2", filterList);
-
-        return listBuilder;
     }
 
     @Override
-    protected ComicListBean.ListBuilder initRecommendList(ComicListBean.ListBuilder listBuilder) throws IOException {
+    protected void initRecommendList(ComicListBean.ListBuilder listBuilder) throws IOException {
         // 主页推荐
-        return listBuilder
+        listBuilder
                 .addListBean("近期必看", "47")
                 .addListBean("国漫也精彩", "52")
                 .addListBean("美漫大事件", "53")

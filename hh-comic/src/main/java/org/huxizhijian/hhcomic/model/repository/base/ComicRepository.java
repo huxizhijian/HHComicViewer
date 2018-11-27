@@ -63,13 +63,14 @@ public abstract class ComicRepository extends BaseRepository {
     @SuppressWarnings("unchecked cast")
     protected <T> void successResult(@NonNull MutableLiveData<Response<T>> liveData, @NonNull Object obj) {
         Response<T> response = new Response<>((T) obj, Response.SUCCESS_STATE);
-        liveData.postValue(response);
+        // 注意，setValue()仅能在主线程使用，如果想要在子线程也可以使用，调用postValue()
+        liveData.setValue(response);
     }
 
     protected <T> void emptyResult(@NonNull MutableLiveData<Response<T>> liveData) {
         Response<T> response = new Response<>(null, Response.EMPTY_STATE);
         response.message = "空结果";
-        liveData.postValue(response);
+        liveData.setValue(response);
     }
 
     protected <T> void errorResult(@NonNull MutableLiveData<Response<T>> liveData, @NonNull Throwable throwable) {
@@ -94,7 +95,7 @@ public abstract class ComicRepository extends BaseRepository {
         } else {
             response.message = "错误";
         }
-        liveData.postValue(response);
+        liveData.setValue(response);
     }
 
     public List<SourceConfig> getSourceConfigs() {

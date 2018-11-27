@@ -14,6 +14,7 @@ import org.huxizhijian.hhcomic.model.comic.service.source.base.parser.SearchComi
 import java.io.IOException;
 import java.util.List;
 
+import androidx.annotation.Nullable;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 
@@ -80,10 +81,20 @@ public abstract class Source implements CategoryParser, ChapterImageParser, Comi
     public Source() throws IOException {
         mOkHttpClient = HHGlobalVariable.getConfiguration(ConfigKeys.OKHTTP_CLIENT);
         init();
-        mRankBeanList = mRankBeanListBuilder.build();
+        if (hasRank()) {
+            mRankBeanList = mRankBeanListBuilder.build();
+            if (mRankBeanList.size() == 0) {
+                throw new NullPointerException("Should add some list bean!");
+            }
+        }
+        if (hasRecommend()) {
+            mRecommendBeanList = mRecommendBeanListBuilder.build();
+            if (mRecommendBeanList.size() == 0) {
+                throw new NullPointerException("Should add some list bean!");
+            }
+        }
         mCategoryList = mCategoryListBuilder.build();
-        mRecommendBeanList = mRecommendBeanListBuilder.build();
-        if (mRankBeanList.size() == 0 || mCategoryList.size() == 0 || mRecommendBeanList.size() == 0) {
+        if (mCategoryList.size() == 0) {
             throw new NullPointerException("Should add some list bean!");
         }
     }
@@ -94,11 +105,25 @@ public abstract class Source implements CategoryParser, ChapterImageParser, Comi
     }
 
     @Override
+    public boolean hasRank() {
+        // 默认含有排行列表，没有的话override此方法
+        return true;
+    }
+
+    @Override
+    @Nullable
     public List<ComicListBean> getRank() {
         return mRankBeanList;
     }
 
     @Override
+    public boolean hasRecommend() {
+        // 默认含有推荐列表，没有的话override此方法
+        return true;
+    }
+
+    @Override
+    @Nullable
     public List<ComicListBean> getRecommend() {
         return mRecommendBeanList;
     }
@@ -107,28 +132,25 @@ public abstract class Source implements CategoryParser, ChapterImageParser, Comi
      * 初始化分类的实体类列表
      *
      * @param listBuilder 帮助构造list的建造者类
-     * @return 建造者类
      * @throws IOException 进行网络请求时可能发生的异常
      */
-    protected abstract Category.ListBuilder initCategoryList(Category.ListBuilder listBuilder) throws IOException;
+    protected abstract void initCategoryList(Category.ListBuilder listBuilder) throws IOException;
 
     /**
      * 初始化排行的实体类列表
      *
      * @param listBuilder 帮助构造list的建造者类
-     * @return 建造者类
      * @throws IOException 进行网络请求时可能发生的异常
      */
-    protected abstract ComicListBean.ListBuilder initRankBeanList(ComicListBean.ListBuilder listBuilder) throws IOException;
+    protected abstract void initRankBeanList(ComicListBean.ListBuilder listBuilder) throws IOException;
 
     /**
      * 初始化推荐的实体类列表
      *
      * @param listBuilder 帮助构造list的建造者类
-     * @return 建造者类
      * @throws IOException 进行网络请求时可能发生的异常
      */
-    protected abstract ComicListBean.ListBuilder initRecommendList(ComicListBean.ListBuilder listBuilder) throws IOException;
+    protected abstract void initRecommendList(ComicListBean.ListBuilder listBuilder) throws IOException;
 
     /**
      * 帮助构造request

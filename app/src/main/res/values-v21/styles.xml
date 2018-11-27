@@ -15,7 +15,7 @@
   -->
 <resources>
 
-    <style name="Theme.MyApp" parent="Theme.MaterialComponents.Light">
+    <style name="Theme.MyApp" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Original AppCompat attributes. -->
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_200</item>

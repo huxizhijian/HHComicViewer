@@ -75,8 +75,8 @@ public class HHManhua extends Source {
     }
 
     @Override
-    protected Category.ListBuilder initCategoryList(Category.ListBuilder listBuilder) {
-        return listBuilder
+    protected void initCategoryList(Category.ListBuilder listBuilder) {
+        listBuilder
                 .addCategory("漫画目录", "")
                 .addCategory("萌系", "class_1")
                 .addCategory("搞笑", "class_2")
@@ -103,8 +103,8 @@ public class HHManhua extends Source {
     }
 
     @Override
-    protected ComicListBean.ListBuilder initRankBeanList(ComicListBean.ListBuilder listBuilder) {
-        return listBuilder
+    protected void initRankBeanList(ComicListBean.ListBuilder listBuilder) {
+        listBuilder
                 .addListBean("最近刷新的漫画 TOP100", "newrating")
                 .addListBean("最多人看的漫画 TOP100", "hotrating")
                 .addListBean("评分最高的漫画 TOP100", "toprating")
@@ -112,8 +112,8 @@ public class HHManhua extends Source {
     }
 
     @Override
-    protected ComicListBean.ListBuilder initRecommendList(ComicListBean.ListBuilder listBuilder) {
-        return listBuilder
+    protected void initRecommendList(ComicListBean.ListBuilder listBuilder) {
+        listBuilder
                 .addListBean("新加漫画", "iTabHotHtm0")
                 .addListBean("人气榜漫", "iTabHotHtm1")
                 .addListBean("热点漫画", "iTabHotHtm2")

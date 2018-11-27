@@ -87,4 +87,6 @@ dependencies {
     // 腾讯bugly依赖
     implementation 'com.tencent.bugly:crashreport:2.6.6.1'
     implementation 'com.tencent.bugly:nativecrashreport:3.3.1'
+    // 加载动画框架
+    implementation 'com.github.ybq:Android-SpinKit:1.2.0'
 }

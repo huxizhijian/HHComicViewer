@@ -24,7 +24,8 @@ public class HomeRepository extends ComicRepository {
         super();
     }
 
-    public void getRecommendResult(@NonNull String sourceKey, @NonNull MutableLiveData<Response<ComicResultList>> responseLiveData) {
+    public MutableLiveData<Response<ComicResultList>> getRecommendResult(@NonNull String sourceKey) {
+        MutableLiveData<Response<ComicResultList>> responseLiveData = new MutableLiveData<>();
         Disposable disposable = HHComic.service().rankAndRecommend()
                 .getRecommendResult(sourceKey)
                 .subscribeOn(Schedulers.io())
@@ -32,11 +33,12 @@ public class HomeRepository extends ComicRepository {
                 .subscribe(comicResultList -> successResult(responseLiveData, comicResultList),
                         throwable -> errorResult(responseLiveData, throwable));
         addDisposable(disposable);
+        return responseLiveData;
     }
 
-    public void getRankResult(@NonNull String sourceKey, @NonNull ComicListBean listBean, int page,
-                              @Nullable FilterList.FilterPicker picker,
-                              @NonNull MutableLiveData<Response<ComicResultList>> responseLiveData) {
+    public MutableLiveData<Response<ComicResultList>> getRankResult(@NonNull String sourceKey, @NonNull ComicListBean listBean,
+                                                                    int page, @Nullable FilterList.FilterPicker picker) {
+        MutableLiveData<Response<ComicResultList>> responseLiveData = new MutableLiveData<>();
         Disposable disposable = HHComic.service().rankAndRecommend()
                 .getRankResult(sourceKey, listBean, page, picker)
                 .subscribeOn(Schedulers.io())
@@ -44,5 +46,6 @@ public class HomeRepository extends ComicRepository {
                 .subscribe(comicResultList -> successResult(responseLiveData, comicResultList),
                         throwable -> errorResult(responseLiveData, throwable));
         addDisposable(disposable);
+        return responseLiveData;
     }
 }
