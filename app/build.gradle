@@ -89,4 +89,9 @@ dependencies {
     implementation 'com.tencent.bugly:nativecrashreport:3.3.1'
     // 加载动画框架
     implementation 'com.github.ybq:Android-SpinKit:1.2.0'
+    // recyclerView,cardView包
+    implementation "androidx.recyclerview:recyclerview:${androidxVersion}"
+    implementation "androidx.cardview:cardview:${androidxVersion}"
+    // 新的design包
+    implementation "com.google.android.material:material:${materialVersion}"
 }

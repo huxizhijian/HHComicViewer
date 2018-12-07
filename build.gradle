@@ -51,7 +51,9 @@ ext {
     buildToolsVersion = "28.0.3"
 
     // App dependencies
+    appCompatVersion = "1.0.2"
     androidxVersion = "1.0.0"
+    materialVersion = "1.1.0-alpha01"
     junitVersion = "4.12"
     espressoVersion = "3.1.0"
     lifecycleVersion = "2.0.0"

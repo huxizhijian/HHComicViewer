@@ -40,8 +40,9 @@ public class RxRankAndRecommendRequestManager extends RxRequestManager {
             RankAndRecommendParser parser = HHComic.getSource(sourceId);
             Request request = parser.buildRecommendRequest();
             Response response = mOkHttpClient.newCall(request).execute();
+            byte[] html = response.body().bytes();
             for (ComicListBean recommendBean : ((Source) parser).getRecommend()) {
-                emitter.onNext(parser.parseRecommendList(response.body().bytes(), recommendBean));
+                emitter.onNext(parser.parseRecommendList(html, recommendBean));
             }
             emitter.onComplete();
         }, BackpressureStrategy.BUFFER);

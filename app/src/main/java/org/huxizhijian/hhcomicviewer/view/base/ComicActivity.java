@@ -6,6 +6,7 @@ import org.huxizhijian.hhcomic.viewmodel.base.ComicViewModel;
 
 import java.lang.reflect.ParameterizedType;
 
+import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
 
 /**
@@ -19,11 +20,23 @@ public abstract class ComicActivity<T extends ComicViewModel> extends BaseActivi
     protected T mViewModel;
 
     @Override
-    protected void initView(Bundle savedInstanceState) {
-        mViewModel = ViewModelProviders.of(this).get(getClassType());
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         dataObserver();
     }
 
+    @Override
+    protected void initData(Bundle savedInstanceState) {
+        mViewModel = ViewModelProviders.of(this).get(getClassType());
+    }
+
+    @Override
+    protected void initView(Bundle savedInstanceState) {
+    }
+
+    /**
+     * 数据观察者的绑定，在初始化数据和视图之后
+     */
     protected void dataObserver() {
     }
 

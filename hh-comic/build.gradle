@@ -53,7 +53,7 @@ dependencies {
     implementation "androidx.test.espresso:espresso-idling-resource:${espressoVersion}"
     testImplementation "junit:junit:${junitVersion}"
     // jsoup DOM操作库
-    api 'org.jsoup:jsoup:1.11.3'
+    implementation 'org.jsoup:jsoup:1.11.3'
     // modules
     api project(':hh-core')
     annotationProcessor project(':hh_compiler')

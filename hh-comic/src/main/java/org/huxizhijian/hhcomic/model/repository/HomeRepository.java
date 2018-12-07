@@ -5,7 +5,7 @@ import org.huxizhijian.hhcomic.model.comic.service.bean.ComicListBean;
 import org.huxizhijian.hhcomic.model.comic.service.bean.FilterList;
 import org.huxizhijian.hhcomic.model.comic.service.bean.result.ComicResultList;
 import org.huxizhijian.hhcomic.model.repository.base.ComicRepository;
-import org.huxizhijian.hhcomic.model.repository.bean.Response;
+import org.huxizhijian.hhcomic.model.repository.bean.Resource;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,8 +24,7 @@ public class HomeRepository extends ComicRepository {
         super();
     }
 
-    public MutableLiveData<Response<ComicResultList>> getRecommendResult(@NonNull String sourceKey) {
-        MutableLiveData<Response<ComicResultList>> responseLiveData = new MutableLiveData<>();
+    public void getRecommendResult(@NonNull String sourceKey, MutableLiveData<Resource<ComicResultList>> responseLiveData) {
         Disposable disposable = HHComic.service().rankAndRecommend()
                 .getRecommendResult(sourceKey)
                 .subscribeOn(Schedulers.io())
@@ -33,12 +32,11 @@ public class HomeRepository extends ComicRepository {
                 .subscribe(comicResultList -> successResult(responseLiveData, comicResultList),
                         throwable -> errorResult(responseLiveData, throwable));
         addDisposable(disposable);
-        return responseLiveData;
     }
 
-    public MutableLiveData<Response<ComicResultList>> getRankResult(@NonNull String sourceKey, @NonNull ComicListBean listBean,
-                                                                    int page, @Nullable FilterList.FilterPicker picker) {
-        MutableLiveData<Response<ComicResultList>> responseLiveData = new MutableLiveData<>();
+    public void getRankResult(@NonNull String sourceKey, @NonNull ComicListBean listBean,
+                              int page, @Nullable FilterList.FilterPicker picker,
+                              MutableLiveData<Resource<ComicResultList>> responseLiveData) {
         Disposable disposable = HHComic.service().rankAndRecommend()
                 .getRankResult(sourceKey, listBean, page, picker)
                 .subscribeOn(Schedulers.io())
@@ -46,6 +44,5 @@ public class HomeRepository extends ComicRepository {
                 .subscribe(comicResultList -> successResult(responseLiveData, comicResultList),
                         throwable -> errorResult(responseLiveData, throwable));
         addDisposable(disposable);
-        return responseLiveData;
     }
 }

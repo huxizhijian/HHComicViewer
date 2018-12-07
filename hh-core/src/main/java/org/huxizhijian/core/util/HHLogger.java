@@ -81,4 +81,10 @@ public class HHLogger {
             Logger.t(tag).e(message);
         }
     }
+
+    public static void e(String tag, Throwable throwable, String message, Object... args) {
+        if (LEVEL <= ERROR) {
+            Logger.t(tag).e(throwable, message, args);
+        }
+    }
 }

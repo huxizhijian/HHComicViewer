@@ -92,4 +92,12 @@ public class HHComicConfig {
         String json = HHPreference.getCustomAppProfile(HHComicConfigKey.SOURCE_CONFIGS);
         return (List<SourceConfig>) JSON.parse(json);
     }
+
+    public void setLastSourceKey(String sourceKey) {
+        HHPreference.setCustomAppProfile(HHComicConfigKey.LAST_SOURCE_KEY, sourceKey);
+    }
+
+    public String getLastSourceKey() {
+        return HHPreference.getCustomAppProfile(HHComicConfigKey.LAST_SOURCE_KEY);
+    }
 }

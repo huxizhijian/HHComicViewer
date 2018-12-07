@@ -6,6 +6,7 @@ import org.huxizhijian.hhcomic.model.comic.service.bean.result.ComicResultList;
 
 import java.io.UnsupportedEncodingException;
 
+import androidx.annotation.Nullable;
 import okhttp3.Request;
 
 /**
@@ -24,7 +25,7 @@ public interface RankAndRecommendParser {
      * @param picker   过滤选择器
      * @return request
      */
-    Request buildRankRequest(ComicListBean listBean, int page, FilterList.FilterPicker picker);
+    Request buildRankRequest(ComicListBean listBean, int page,@Nullable FilterList.FilterPicker picker);
 
     /**
      * 解析排行结果

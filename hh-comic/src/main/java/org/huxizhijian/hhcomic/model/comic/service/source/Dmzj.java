@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import androidx.annotation.Nullable;
 import okhttp3.Request;
 import okhttp3.Response;
 
@@ -99,7 +100,8 @@ public class Dmzj extends Source {
         // 请求category筛选
         Request filterRequest = newGetRequest(CATEGORY_FILTER);
         Response filterResponse = mOkHttpClient.newCall(filterRequest).execute();
-        JSONArray filterArray = JSONArray.parseArray(filterResponse.body().string());
+        String html = new String(filterResponse.body().bytes(), "utf-8");
+        JSONArray filterArray = JSONArray.parseArray(html);
 
         FilterList.Builder filterListBuilder = FilterList.newFilterList(SOURCE_KEY);
 
@@ -325,11 +327,11 @@ public class Dmzj extends Source {
     }
 
     @Override
-    public Request buildRankRequest(ComicListBean listBean, int page, FilterList.FilterPicker picker) {
-        Filter classifyFilter = picker.getPick("类别");
-        Filter timeFilter = picker.getPick("时间");
+    public Request buildRankRequest(ComicListBean listBean, int page, @Nullable FilterList.FilterPicker picker) {
+        String classifyId = picker.getPick("类别").getId();
+        String timeId = picker.getPick("时间").getId();
         return newGetRequest(String.format(Locale.CHINESE, RANK_URL,
-                classifyFilter.getId(), timeFilter.getId(), listBean.getListId(), page - 1));
+                classifyId, timeId, listBean.getListId(), page - 1));
     }
 
     @Override

@@ -15,4 +15,17 @@
   -->
 <resources>
     <string name="app_name">汗汗漫画</string>
+
+    <string name="app_full_name">汗汗漫画阅读器</string>
+    <string name="my_github">https://github.com/huxizhijian</string>
+
+    <string name="home">主页</string>
+    <string name="favorite">收藏</string>
+    <string name="history">历史</string>
+    <string name="download">下载</string>
+    <string name="setting">设置</string>
+    <string name="night_mode">夜间模式</string>
+    <string name="about">关于</string>
+    <string name="exchange">切换</string>
+    <string name="search">搜索</string>
 </resources>

@@ -101,4 +101,9 @@ public class HHComicConfigKey {
      * 源排序/开启信息
      */
     public static final String SOURCE_CONFIGS = "source_configs";
+
+    /**
+     * 上次退出应用时选择的源Key
+     */
+    public static final String LAST_SOURCE_KEY = "last_source_key";
 }

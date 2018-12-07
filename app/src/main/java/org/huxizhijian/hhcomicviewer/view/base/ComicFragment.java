@@ -1,11 +1,16 @@
 package org.huxizhijian.hhcomicviewer.view.base;
 
+import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
 import org.huxizhijian.hhcomic.viewmodel.base.ComicViewModel;
 
 import java.lang.reflect.ParameterizedType;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
 
 /**
@@ -18,8 +23,20 @@ public abstract class ComicFragment<T extends ComicViewModel> extends BaseFragme
 
     protected T mViewModel;
 
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = super.onCreateView(inflater, container, savedInstanceState);
+        dataObserver();
+        return view;
+    }
+
     @Override
     protected void initView(View rootView) {
+    }
+
+    @Override
+    protected void initData() {
         if (useActivityViewModel()) {
             mViewModel = ViewModelProviders.of(mActivity).get(getClassType());
         } else {

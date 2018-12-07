@@ -7,7 +7,7 @@ import org.huxizhijian.hhcomic.model.comic.config.HHComicConfig;
 import org.huxizhijian.hhcomic.model.comic.config.SourceConfig;
 import org.huxizhijian.hhcomic.model.comic.service.source.base.SourceInfo;
 import org.huxizhijian.hhcomic.model.repository.base.ComicRepository;
-import org.huxizhijian.hhcomic.model.repository.bean.Response;
+import org.huxizhijian.hhcomic.model.repository.bean.Resource;
 
 import java.util.List;
 
@@ -22,24 +22,59 @@ import androidx.lifecycle.MutableLiveData;
  */
 public class ComicViewModel<T extends ComicRepository> extends BaseViewModel<T> {
 
+    protected MutableLiveData<Resource<SourceInfo>> mSourceInfoLiveData;
+
     public ComicViewModel(@NonNull Application application) {
         super(application);
     }
 
+    /**
+     * 获取source的排序，key和name等信息
+     *
+     * @return source config list
+     */
     public List<SourceConfig> getSourceConfigs() {
         return mRepository.getSourceConfigs();
     }
 
-    public MutableLiveData<Response<SourceInfo>> getSourceInfo(String sourceKey) {
-        MutableLiveData<Response<SourceInfo>> mutableLiveData = new MutableLiveData<>();
-        mRepository.getSourceInfo(sourceKey, mutableLiveData);
-        return mutableLiveData;
+    /**
+     * 新建一个LiveData，并且返回
+     *
+     * @param sourceKey sourceKey
+     * @return liveData
+     */
+    public MutableLiveData<Resource<SourceInfo>> getSourceInfo(String sourceKey) {
+        mSourceInfoLiveData = new MutableLiveData<>();
+        mRepository.getSourceInfo(sourceKey, mSourceInfoLiveData);
+        mSourceInfoLiveData.setValue(Resource.loading(null));
+        return mSourceInfoLiveData;
     }
 
+    /**
+     * 使用外部提供的LiveData
+     *
+     * @param sourceKey          sourceKey
+     * @param sourceInfoLiveData liveData
+     */
+    public void retrySourceInfo(String sourceKey, MutableLiveData<Resource<SourceInfo>> sourceInfoLiveData) {
+        mRepository.getSourceInfo(sourceKey, sourceInfoLiveData);
+        sourceInfoLiveData.setValue(Resource.loading(null));
+    }
+
+    /**
+     * 配置
+     *
+     * @return 配置管理类
+     */
     public HHComicConfig getConfigUtil() {
         return mRepository.getConfigUtil();
     }
 
+    /**
+     * 数据库管理类
+     *
+     * @return db guide
+     */
     public HHComic.DatabaseGuide getDaoGuide() {
         return mRepository.getDaoGuide();
     }

@@ -60,14 +60,10 @@ dependencies {
     implementation "androidx.test.espresso:espresso-idling-resource:${espressoVersion}"
     testImplementation "junit:junit:${junitVersion}"
     // android support 包
-    // v7包
-    api "androidx.appcompat:appcompat:${androidxVersion}"
+    // appcompat,v7,v13包
+    api "androidx.appcompat:appcompat:${appCompatVersion}"
     api "androidx.legacy:legacy-support-v4:${androidxVersion}"
-    api "androidx.recyclerview:recyclerview:${androidxVersion}"
-    api "androidx.cardview:cardview:${androidxVersion}"
     api "androidx.legacy:legacy-support-v13:${androidxVersion}"
-    // 新的design包
-    api "com.google.android.material:material:${androidxVersion}"
     // Lifecycle ViewModel and LiveData
     api "androidx.lifecycle:lifecycle-extensions:${lifecycleVersion}"
     annotationProcessor "androidx.lifecycle:lifecycle-compiler:${lifecycleVersion}"

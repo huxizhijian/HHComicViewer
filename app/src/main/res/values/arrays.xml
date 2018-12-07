@@ -22,20 +22,9 @@
         <item>竖屏</item>
     </array>
 
-    <array name="screen_rotate">
-        <item>none</item>
-        <item>landscape</item>
-        <item>portrait</item>
-    </array>
-
     <array name="reading_direction_string">
         <item>从左至右</item>
         <item>从上至下</item>
-    </array>
-
-    <array name="reading_direction">
-        <item>view_pager</item>
-        <item>list_view</item>
     </array>
 
 </resources>

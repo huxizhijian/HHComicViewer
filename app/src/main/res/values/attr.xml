@@ -14,15 +14,11 @@
   ~ limitations under the License.
   -->
 <resources>
-    <attr format="color" name="colorPrimaryVariant"/>
-    <attr format="color" name="colorSecondaryVariant"/>
-    <attr format="color" name="colorBackground"/>
-    <attr format="color" name="colorSurface"/>
-    <attr format="color" name="colorOnPrimary"/>
-    <attr format="color" name="colorOnSecondary"/>
-    <attr format="color" name="colorOnBackground"/>
-    <attr format="color" name="colorOnSurface"/>
-    <attr format="color" name="scrimBackground"/>
-    <attr format="dimension" name="cornerRadiusPrimary"/>
-    <attr format="dimension" name="cornerRadiusSecondary"/>
+    <declare-styleable name="MultipleStatusView">
+        <attr name="loadingView" format="reference"/>
+        <attr name="errorView" format="reference"/>
+        <attr name="emptyView" format="reference"/>
+        <attr name="noNetworkView" format="reference"/>
+        <attr name="contentView" format="reference"/>
+    </declare-styleable>
 </resources>

@@ -33,9 +33,15 @@ public abstract class BaseFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         mRootView = inflater.inflate(getLayoutId(), null, false);
+        initData();
         initView(mRootView);
         return mRootView;
     }
+
+    /**
+     * 初始化数据
+     */
+    protected abstract void initData();
 
     /**
      * 初始化view
