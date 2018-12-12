@@ -14,17 +14,18 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <org.huxizhijian.hhcomicviewer.weight.MultipleStatusView
+        android:id="@+id/multiple_status_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/error_retry_view"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true" />
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:id="@+id/error_text_view"
-        android:text="加载错误，点击重试" />
-
-</FrameLayout>
+    </org.huxizhijian.hhcomicviewer.weight.MultipleStatusView>
+</layout>
