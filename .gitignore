@@ -37,15 +37,4 @@ captures/
 
 /build
 /projectFilesBackup
-/.idea/compiler.xml
-/.idea/copyright/profiles_settings.xml
-/.idea/gradle.xml
-/.idea/runConfigurations.xml
-/.idea/misc.xml
-/.idea/vcs.xml
-/.idea/workspace.xml
-/.idea/libraries
-.idea/modules.xml
-/.idea
-.idea/caches/
-hh-core/src/main/java/org/huxizhijian/core/util/misc/
+.idea
