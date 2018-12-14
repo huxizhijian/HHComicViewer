@@ -62,10 +62,10 @@ android {
     }
     repositories {
         mavenCentral()
-        maven { url 'http://guardian.github.com/maven/repo-releases' }
         jcenter()
-        maven { url "https://jitpack.io" }
-        maven { url 'https://maven.google.com' }
+        mavenLocal()
+        maven { url 'https://jitpack.io' }
+        google()
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8

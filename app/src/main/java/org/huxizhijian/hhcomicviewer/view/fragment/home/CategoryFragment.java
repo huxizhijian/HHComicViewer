@@ -16,9 +16,97 @@
 
 package org.huxizhijian.hhcomicviewer.view.fragment.home;
 
+import android.view.View;
+import android.widget.Toast;
+
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.BaseViewHolder;
+import com.google.android.material.button.MaterialButton;
+
+import org.huxizhijian.hhcomic.model.comic.service.bean.Category;
+import org.huxizhijian.hhcomic.model.comic.service.source.base.SourceInfo;
+import org.huxizhijian.hhcomic.model.repository.bean.Resource;
+import org.huxizhijian.hhcomic.viewmodel.HomeViewModel;
+import org.huxizhijian.hhcomicviewer.R;
+import org.huxizhijian.hhcomicviewer.view.base.ComicFragment;
+import org.huxizhijian.hhcomicviewer.weight.MultipleStatusView;
+
+import java.util.List;
+
+import androidx.lifecycle.MutableLiveData;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 /**
  * @author huxizhijian
  * @date 2018/12/5
  */
-public class CategoryFragment {
+public class CategoryFragment extends ComicFragment<HomeViewModel> {
+
+    private RecyclerView mRecyclerView;
+
+    private MultipleStatusView mStatusView;
+
+    @Override
+    protected void initView(View rootView) {
+        super.initView(rootView);
+        mStatusView = getViewById(R.id.multiple_status_view);
+        mRecyclerView = getViewById(R.id.recycler_view);
+        // 初始化RecyclerView
+        RecyclerView.LayoutManager manager = new GridLayoutManager(mActivity, 3);
+        mRecyclerView.setLayoutManager(manager);
+    }
+
+    @Override
+    protected void dataObserver() {
+        super.dataObserver();
+        MutableLiveData<Resource<SourceInfo>> liveData = mViewModel.getSourceInfoLiveData();
+        if (liveData != null) {
+            liveData.observe(this, resource -> {
+                switch (resource.state) {
+                    case Resource.SUCCESS:
+                        // 成功
+                        mStatusView.showContent();
+                        SourceInfo sourceInfo = resource.data;
+                        List<Category> categoryList = sourceInfo.getCategory();
+                        mRecyclerView.setAdapter(new BaseQuickAdapter<Category, BaseViewHolder>
+                                (R.layout.item_category_name, categoryList) {
+                            @Override
+                            protected void convert(BaseViewHolder helper, Category item) {
+                                MaterialButton button = helper.itemView.findViewById(R.id.button);
+                                button.setText(item.getCategoryName());
+                                button.setOnClickListener(v -> {
+                                    // 打开分类结果列表
+                                    Toast.makeText(mContext, item.getCategoryId(), Toast.LENGTH_SHORT).show();
+                                });
+                            }
+                        });
+                        break;
+                    case Resource.LOADING:
+                        // 加载中
+                        mStatusView.showLoading();
+                        break;
+                    case Resource.ERROR:
+                        // 失败
+                        mStatusView.showError();
+                        break;
+                    default:
+                        break;
+                }
+            });
+        } else {
+            mStatusView.showError();
+        }
+    }
+
+    @Override
+    protected boolean useActivityViewModel() {
+        // 使用activity的ViewModel
+        return true;
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.include_recycler_view;
+    }
 }
