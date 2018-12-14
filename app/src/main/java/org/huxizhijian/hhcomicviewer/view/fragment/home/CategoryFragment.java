@@ -20,7 +20,7 @@ import android.view.View;
 
 import org.huxizhijian.hhcomic.viewmodel.HomeViewModel;
 import org.huxizhijian.hhcomicviewer.R;
-import org.huxizhijian.hhcomicviewer.view.base.DataBindingFragment;
+import org.huxizhijian.hhcomicviewer.view.base.ComicFragment;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,7 +28,7 @@ import androidx.recyclerview.widget.RecyclerView;
  * @author huxizhijian
  * @date 2018/12/5
  */
-public class CategoryFragment extends DataBindingFragment<HomeViewModel> {
+public class CategoryFragment extends ComicFragment<HomeViewModel> {
 
     private RecyclerView mRecyclerView;
 
