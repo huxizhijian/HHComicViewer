@@ -16,9 +16,40 @@
 
 package org.huxizhijian.hhcomicviewer.view.fragment.home;
 
+import android.view.View;
+
+import org.huxizhijian.hhcomic.viewmodel.HomeViewModel;
+import org.huxizhijian.hhcomicviewer.R;
+import org.huxizhijian.hhcomicviewer.view.base.DataBindingFragment;
+
+import androidx.recyclerview.widget.RecyclerView;
+
 /**
  * @author huxizhijian
  * @date 2018/12/5
  */
-public class CategoryFragment {
+public class CategoryFragment extends DataBindingFragment<HomeViewModel> {
+
+    private RecyclerView mRecyclerView;
+
+    @Override
+    protected void initView(View rootView) {
+        super.initView(rootView);
+    }
+
+    @Override
+    protected void dataObserver() {
+        super.dataObserver();
+        if (mViewModel.getSourceInfoLiveData() == null) {
+            mViewModel.retrySourceInfo();
+        }
+        mViewModel.getSourceInfoLiveData().observe(this, resource -> {
+            
+        });
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.include_recycler_view;
+    }
 }

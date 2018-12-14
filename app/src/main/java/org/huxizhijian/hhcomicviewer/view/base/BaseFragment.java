@@ -22,6 +22,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -144,7 +145,7 @@ public abstract class BaseFragment extends Fragment {
     }
 
     @SuppressWarnings("unchecked")
-    protected <T extends View> T getViewById(int id) {
+    protected <T extends View> T getViewById(@IdRes int id) {
         return (T) mRootView.findViewById(id);
     }
 }
