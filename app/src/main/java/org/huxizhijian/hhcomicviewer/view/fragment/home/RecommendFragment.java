@@ -16,9 +16,17 @@
 
 package org.huxizhijian.hhcomicviewer.view.fragment.home;
 
+import org.huxizhijian.hhcomic.viewmodel.HomeViewModel;
+import org.huxizhijian.hhcomicviewer.view.base.ComicFragment;
+
 /**
  * @author huxizhijian
  * @date 2018/12/5
  */
-public class RecommendFragment {
+public class RecommendFragment extends ComicFragment<HomeViewModel> {
+
+    @Override
+    protected int getLayoutId() {
+        return 0;
+    }
 }

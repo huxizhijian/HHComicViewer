@@ -37,10 +37,11 @@ android {
         }
     }
     repositories {
-        google()
-        jcenter()
         mavenCentral()
+        jcenter()
+        mavenLocal()
         maven { url 'https://jitpack.io' }
+        google()
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8

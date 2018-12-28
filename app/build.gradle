@@ -15,6 +15,7 @@
  */
 
 apply plugin: 'com.android.application'
+apply plugin: 'org.greenrobot.greendao'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -52,18 +53,19 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    dataBinding {
+        enabled = true
+    }
     lintOptions {
         checkReleaseBuilds false
         abortOnError false
     }
-    dataBinding {
-        enabled = true
-    }
     repositories {
-        google()
-        jcenter()
         mavenCentral()
+        jcenter()
+        mavenLocal()
         maven { url 'https://jitpack.io' }
+        google()
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -87,7 +89,7 @@ dependencies {
     implementation 'com.tencent.bugly:nativecrashreport:3.3.1'
     // 加载动画框架
     implementation 'com.github.ybq:Android-SpinKit:1.2.0'
-    // recyclerView, cardView包
+    // recyclerView,cardView包
     implementation "androidx.recyclerview:recyclerview:${androidxVersion}"
     implementation "androidx.cardview:cardview:${androidxVersion}"
     // 新的design包

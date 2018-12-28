@@ -43,10 +43,11 @@ android {
         abortOnError false
     }
     repositories {
-        google()
-        jcenter()
         mavenCentral()
+        jcenter()
+        mavenLocal()
         maven { url 'https://jitpack.io' }
+        google()
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -74,7 +75,7 @@ dependencies {
     api "androidx.room:room-rxjava2:${roomVersion}"
     // glide 图片加载库
     api 'com.github.bumptech.glide:glide:4.8.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.7.1'
     // OKHttp3 网络请求库
     api 'com.squareup.okhttp3:okhttp:3.11.0'
     // Android工具类库
@@ -83,7 +84,7 @@ dependencies {
     api 'com.orhanobut:logger:2.2.0'
     // 阿里巴巴FastJson库
     api 'com.alibaba:fastjson:1.1.70.android'
-    // BRVAH RecyclerAdapter框架，使用AndroidX迁移版本，暂时不稳定版
+    // BRVAH RecyclerAdapter框架 兼容androidx的版本，unstable
     api 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.43-alpha1'
     // RxJava2
     api 'io.reactivex.rxjava2:rxjava:2.2.2'
