@@ -79,13 +79,13 @@ dependencies {
     // OKHttp3 网络请求库
     api 'com.squareup.okhttp3:okhttp:3.11.0'
     // Android工具类库
-    api 'com.blankj:utilcode:1.21.0'
+    api 'com.blankj:utilcode:1.23.0'
     // 打logger专用工具
     api 'com.orhanobut:logger:2.2.0'
     // 阿里巴巴FastJson库
     api 'com.alibaba:fastjson:1.1.70.android'
-    // BRVAH RecyclerAdapter框架 兼容androidx的版本，unstable
-    api 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.43-alpha1'
+    // BRVAH RecyclerAdapter框架 兼容androidx的版本，stable
+    api 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.45-androidx'
     // RxJava2
     api 'io.reactivex.rxjava2:rxjava:2.2.2'
     api 'io.reactivex.rxjava2:rxandroid:2.1.0'

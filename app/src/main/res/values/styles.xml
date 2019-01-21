@@ -13,15 +13,16 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="Theme.MyApp" parent="Theme.MaterialComponents.NoActionBar">
+    <!-- base theme 默认主题 -->
+    <style name="Theme.BaseTheme" parent="Theme.MaterialComponents.NoActionBar">
         <!-- Original AppCompat attributes. -->
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_200</item>
         <item name="colorSecondary">@color/secondary</item>
-        <item name="colorOnSurface">@color/text_high_emphasis</item>
         <item name="android:colorBackground">@color/surface</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
         <item name="android:textColor">@color/text_high_emphasis</item>
         <item name="android:textColorPrimary">@color/text_high_emphasis</item>
         <item name="android:textColorSecondary">@color/text_high_emphasis</item>
@@ -31,7 +32,11 @@
         <!-- style -->
         <item name="materialCardViewStyle">@style/Widget.MyApp.MyCard</item>
         <item name="tabStyle">@style/Widget.MyApp.TabLayout</item>
+        <item name="actionBarStyle">@style/Widget.MyApp.ActionBar</item>
+        <item name="buttonStyle">@style/Widget.MyApp.Button</item>
     </style>
+
+    <style name="Theme.MyApp" parent="Theme.BaseTheme"/>
 
     <style name="Widget.MyApp.MyCard" parent="Widget.MaterialComponents.CardView">
         <item name="cardCornerRadius">4dp</item>
@@ -43,5 +48,45 @@
         <item name="tabIndicatorColor">@color/text_high_emphasis</item>
         <item name="tabRippleColor">@color/secondary_300</item>
     </style>
+
+    <style name="Widget.MyApp.ActionBar" parent="@style/Widget.AppCompat.ActionBar.Solid">
+        <item name="background">@color/primary</item>
+        <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+    </style>
+
+    <style name="Widget.MyApp.Button" parent="Widget.MaterialComponents.Button">
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+        <item name="backgroundTint">?attr/colorPrimaryDark</item>
+    </style>
+
+    <style name="Widget.MyApp.Button.TextButton" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+    </style>
+
+    <style name="Widget.MyApp.Button.OutlineButton" parent="@style/Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+    </style>
+
+    <style name="Widget.MyApp.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="hintTextAppearance">@style/Widget.MyApp.TextInputLayout.HintText</item>
+        <item name="android:paddingBottom">8dp</item>
+    </style>
+
+    <style name="Widget.MyApp.TextInputLayout.HintText" parent="TextAppearance.MaterialComponents.Subtitle2">
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+    </style>
+
+    <style name="Widget.Shrine.Toolbar" parent="Widget.AppCompat.Toolbar">
+        <item name="android:background">?attr/colorPrimary</item>
+        <item name="android:theme">@style/Theme.MyApp</item>
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="titleTextAppearance">@style/TextAppearance.MyApp.Toolbar</item>
+    </style>
+
+    <style name="TextAppearance.MyApp.Toolbar" parent="TextAppearance.MaterialComponents.Button">
+        <item name="android:textSize">16sp</item>
+    </style>
+
 </resources>
 

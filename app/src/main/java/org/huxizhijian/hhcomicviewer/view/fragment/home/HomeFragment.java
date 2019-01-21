@@ -20,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.material.tabs.TabLayout;
 
@@ -140,6 +141,7 @@ public class HomeFragment extends ComicFragment<HomeViewModel> implements Toolba
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_search:
+                Toast.makeText(mActivity, "搜索", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.menu_exchange:
                 break;

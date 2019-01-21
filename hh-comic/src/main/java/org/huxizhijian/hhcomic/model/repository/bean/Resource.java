@@ -89,7 +89,7 @@ public class Resource<T> {
     public static final String NO_NETWORK = "NO_NETWORK";
 
     @StringDef({SUCCESS, ERROR, EMPTY, LOADING, NO_NETWORK})
-    @interface State {
+    public @interface State {
     }
 
     @Override

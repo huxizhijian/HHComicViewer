@@ -17,11 +17,16 @@
 package org.huxizhijian.hhcomic.model.repository;
 
 import org.huxizhijian.hhcomic.model.comic.HHComic;
+import org.huxizhijian.hhcomic.model.comic.db.entity.Comic;
 import org.huxizhijian.hhcomic.model.comic.service.bean.ComicListBean;
 import org.huxizhijian.hhcomic.model.comic.service.bean.FilterList;
 import org.huxizhijian.hhcomic.model.comic.service.bean.result.ComicResultList;
 import org.huxizhijian.hhcomic.model.repository.base.ComicRepository;
 import org.huxizhijian.hhcomic.model.repository.bean.Resource;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -40,13 +45,16 @@ public class HomeRepository extends ComicRepository {
         super();
     }
 
-    public void getRecommendResult(@NonNull String sourceKey, MutableLiveData<Resource<ComicResultList>> responseLiveData) {
+    public void getRecommendResult(@NonNull String sourceKey, MutableLiveData<Resource<Map<String, List<Comic>>>> responseLiveData) {
+        // 将onNext()的结果集合起来，以onComplete()的调用为结束，传送结果
+        Map<String, List<Comic>> recommendResult = new HashMap<>();
         Disposable disposable = HHComic.service().rankAndRecommend()
                 .getRecommendResult(sourceKey)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(comicResultList -> successResult(responseLiveData, comicResultList),
-                        throwable -> errorResult(responseLiveData, throwable));
+                .subscribe(comicResultList -> recommendResult.put(comicResultList.getResultName(), comicResultList.getComicList()),
+                        throwable -> errorResult(responseLiveData, throwable),
+                        () -> successResult(responseLiveData, recommendResult));
         addDisposable(disposable);
     }
 

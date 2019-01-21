@@ -19,6 +19,7 @@ package org.huxizhijian.hhcomic.viewmodel;
 import android.app.Application;
 
 import org.huxizhijian.hhcomic.model.comic.config.SourceConfig;
+import org.huxizhijian.hhcomic.model.comic.db.entity.Comic;
 import org.huxizhijian.hhcomic.model.comic.service.bean.ComicListBean;
 import org.huxizhijian.hhcomic.model.comic.service.bean.FilterList;
 import org.huxizhijian.hhcomic.model.comic.service.bean.result.ComicResultList;
@@ -28,6 +29,7 @@ import org.huxizhijian.hhcomic.model.repository.bean.Resource;
 import org.huxizhijian.hhcomic.viewmodel.base.ComicViewModel;
 
 import java.util.List;
+import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -44,7 +46,7 @@ public class HomeViewModel extends ComicViewModel<HomeRepository> {
      */
     private String mCurrentSourceKey;
 
-    private MutableLiveData<Resource<ComicResultList>> mRecommendLiveData;
+    private MutableLiveData<Resource<Map<String, List<Comic>>>> mRecommendLiveData;
 
     private MutableLiveData<Resource<ComicResultList>> mRankResultLiveData;
 
@@ -63,7 +65,7 @@ public class HomeViewModel extends ComicViewModel<HomeRepository> {
         return super.getSourceInfo(sourceKey);
     }
 
-    public MutableLiveData<Resource<ComicResultList>> getRecommendResult(String sourceKey) {
+    public MutableLiveData<Resource<Map<String, List<Comic>>>> getRecommendResult(String sourceKey) {
         mRecommendLiveData = new MutableLiveData<>();
         mRepository.getRecommendResult(sourceKey, mRecommendLiveData);
         mRecommendLiveData.setValue(Resource.loading(null));
@@ -71,8 +73,8 @@ public class HomeViewModel extends ComicViewModel<HomeRepository> {
     }
 
     public MutableLiveData<Resource<ComicResultList>> getRankResult(@NonNull String sourceKey,
-                                                                    @NonNull ComicListBean listBean, int page,
-                                                                    @Nullable FilterList.FilterPicker picker) {
+                                                                             @NonNull ComicListBean listBean, int page,
+                                                                             @Nullable FilterList.FilterPicker picker) {
         mRankResultLiveData = new MutableLiveData<>();
         mRepository.getRankResult(sourceKey, listBean, page, picker, mRankResultLiveData);
         mRankResultLiveData.setValue(Resource.loading(null));
@@ -80,7 +82,7 @@ public class HomeViewModel extends ComicViewModel<HomeRepository> {
     }
 
     @Nullable
-    public MutableLiveData<Resource<ComicResultList>> getRecommendLiveData() {
+    public MutableLiveData<Resource<Map<String, List<Comic>>>> getRecommendLiveData() {
         return mRecommendLiveData;
     }
 

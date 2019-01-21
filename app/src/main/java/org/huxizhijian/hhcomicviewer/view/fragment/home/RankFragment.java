@@ -16,8 +16,15 @@
 
 package org.huxizhijian.hhcomicviewer.view.fragment.home;
 
+import android.view.View;
+
 import org.huxizhijian.hhcomic.viewmodel.HomeViewModel;
+import org.huxizhijian.hhcomicviewer.R;
 import org.huxizhijian.hhcomicviewer.view.base.ComicFragment;
+import org.huxizhijian.hhcomicviewer.weight.MultipleStatusView;
+
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * @author huxizhijian
@@ -25,8 +32,27 @@ import org.huxizhijian.hhcomicviewer.view.base.ComicFragment;
  */
 public class RankFragment extends ComicFragment<HomeViewModel> {
 
+    private MultipleStatusView mStatusView;
+
+    private RecyclerView mRecyclerView;
+
+    @Override
+    protected void initView(View rootView) {
+        super.initView(rootView);
+        mStatusView = getViewById(R.id.multiple_status_view);
+        mRecyclerView = getViewById(R.id.recycler_view);
+        // 网格方式
+        mRecyclerView.setLayoutManager(new GridLayoutManager(mActivity, 3));
+    }
+
     @Override
     protected int getLayoutId() {
-        return 0;
+        return R.layout.content_recycler_view;
+    }
+
+    @Override
+    protected boolean useActivityViewModel() {
+        // 使用activity的ViewModel
+        return true;
     }
 }

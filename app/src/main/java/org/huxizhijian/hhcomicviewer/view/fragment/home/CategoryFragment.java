@@ -28,6 +28,7 @@ import org.huxizhijian.hhcomic.model.comic.service.source.base.SourceInfo;
 import org.huxizhijian.hhcomic.model.repository.bean.Resource;
 import org.huxizhijian.hhcomic.viewmodel.HomeViewModel;
 import org.huxizhijian.hhcomicviewer.R;
+import org.huxizhijian.hhcomicviewer.util.StatusViewHelper;
 import org.huxizhijian.hhcomicviewer.view.base.ComicFragment;
 import org.huxizhijian.hhcomicviewer.weight.MultipleStatusView;
 
@@ -55,6 +56,7 @@ public class CategoryFragment extends ComicFragment<HomeViewModel> {
         // 初始化RecyclerView
         RecyclerView.LayoutManager manager = new GridLayoutManager(mActivity, 3);
         mRecyclerView.setLayoutManager(manager);
+        mStatusView.setOnRetryClickListener(view -> mViewModel.retrySourceInfo());
     }
 
     @Override
@@ -62,38 +64,27 @@ public class CategoryFragment extends ComicFragment<HomeViewModel> {
         super.dataObserver();
         MutableLiveData<Resource<SourceInfo>> liveData = mViewModel.getSourceInfoLiveData();
         if (liveData != null) {
-            liveData.observe(this, resource -> {
-                switch (resource.state) {
-                    case Resource.SUCCESS:
-                        // 成功
-                        mStatusView.showContent();
-                        SourceInfo sourceInfo = resource.data;
-                        List<Category> categoryList = sourceInfo.getCategory();
-                        mRecyclerView.setAdapter(new BaseQuickAdapter<Category, BaseViewHolder>
-                                (R.layout.item_category_name, categoryList) {
-                            @Override
-                            protected void convert(BaseViewHolder helper, Category item) {
-                                MaterialButton button = helper.itemView.findViewById(R.id.button);
-                                button.setText(item.getCategoryName());
-                                button.setOnClickListener(v -> {
-                                    // 打开分类结果列表
-                                    Toast.makeText(mContext, item.getCategoryId(), Toast.LENGTH_SHORT).show();
-                                });
-                            }
-                        });
-                        break;
-                    case Resource.LOADING:
-                        // 加载中
-                        mStatusView.showLoading();
-                        break;
-                    case Resource.ERROR:
-                        // 失败
-                        mStatusView.showError();
-                        break;
-                    default:
-                        break;
-                }
-            });
+            liveData.observe(this, resource ->
+                    holdResourceState(resource.state, new StatusViewHelper.HandleStateImpl(mStatusView) {
+                        @Override
+                        public void onSuccess() {
+                            super.onSuccess();
+                            SourceInfo sourceInfo = resource.data;
+                            List<Category> categoryList = sourceInfo.getCategory();
+                            mRecyclerView.setAdapter(new BaseQuickAdapter<Category, BaseViewHolder>
+                                    (R.layout.item_category_name, categoryList) {
+                                @Override
+                                protected void convert(BaseViewHolder helper, Category item) {
+                                    MaterialButton button = helper.itemView.findViewById(R.id.button);
+                                    button.setText(item.getCategoryName());
+                                    button.setOnClickListener(v -> {
+                                        // 打开分类结果列表
+                                        Toast.makeText(mContext, item.getCategoryId(), Toast.LENGTH_SHORT).show();
+                                    });
+                                }
+                            });
+                        }
+                    }));
         } else {
             mStatusView.showError();
         }
@@ -107,6 +98,6 @@ public class CategoryFragment extends ComicFragment<HomeViewModel> {
 
     @Override
     protected int getLayoutId() {
-        return R.layout.include_recycler_view;
+        return R.layout.content_recycler_view;
     }
 }

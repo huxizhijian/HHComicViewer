@@ -21,7 +21,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.huxizhijian.hhcomic.model.repository.bean.Resource;
 import org.huxizhijian.hhcomic.viewmodel.base.ComicViewModel;
+import org.huxizhijian.hhcomicviewer.util.StatusViewHelper;
 
 import java.lang.reflect.ParameterizedType;
 
@@ -82,5 +84,10 @@ public abstract class ComicFragment<T extends ComicViewModel> extends BaseFragme
         return (Class<T>) ((ParameterizedType) getClass()
                 .getGenericSuperclass())
                 .getActualTypeArguments()[0];
+    }
+
+    protected void holdResourceState(@Resource.State @NonNull String state,
+                                     @NonNull StatusViewHelper.HandleStateListener listener) {
+        StatusViewHelper.holdResourceState(state, listener);
     }
 }
