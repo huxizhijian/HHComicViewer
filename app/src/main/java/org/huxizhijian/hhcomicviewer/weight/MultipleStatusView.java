@@ -32,10 +32,10 @@ import java.util.ArrayList;
 import androidx.annotation.IdRes;
 
 /**
- * 类描述：  一个方便在多种状态切换的view
- * <p>
- * 创建人:   续写经典
- * 创建时间: 2016/1/15 10:20.
+ * 一个方便在多种状态切换的view
+ *
+ * @author 续写经典
+ * @date 2016/1/15 10:20.
  */
 @SuppressWarnings("unused")
 public class MultipleStatusView extends RelativeLayout {

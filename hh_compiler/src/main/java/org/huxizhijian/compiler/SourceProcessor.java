@@ -56,7 +56,7 @@ import javax.lang.model.util.Types;
  */
 @SuppressWarnings("unused")
 @AutoService(Processor.class)
-public class SourceProcessor extends AbstractProcessor {
+public final class SourceProcessor extends AbstractProcessor {
 
     private Filer mFiler;
     private Types mTypeUtils;
@@ -69,6 +69,13 @@ public class SourceProcessor extends AbstractProcessor {
     private static final String PACKAGE_NAME = "org.huxizhijian.generate";
     private static final String CLS_NAME = "SourceRouterApp";
     private static final ClassName THIS_TYPE = ClassName.get(PACKAGE_NAME, CLS_NAME);
+
+    /**
+     * 要继承的接口
+     */
+    private static final String INTERFACE_PACKAGE_NAME = "org.huxizhijian.hhcomic.model.comic.service.source";
+    private static final String INTERFACE_CLS_NAME = "ISourceRouter";
+    private static final ClassName INTERFACE_TYPE = ClassName.get(INTERFACE_PACKAGE_NAME, INTERFACE_CLS_NAME);
 
     /**
      * 成员变量名
@@ -116,7 +123,8 @@ public class SourceProcessor extends AbstractProcessor {
 
         // 生成的java类名,修饰
         TypeSpec.Builder typeBuilder = TypeSpec.classBuilder(CLS_NAME)
-                .addModifiers(Modifier.PUBLIC);
+                .addModifiers(Modifier.PUBLIC)
+                .addSuperinterface(INTERFACE_TYPE);
 
         if (sourceInterfaceElement != null) {
             if (sourceInterfaceElement.size() > 1) {
@@ -220,6 +228,7 @@ public class SourceProcessor extends AbstractProcessor {
                 ClassName.get(String.class), ClassName.get(String.class));
         MethodSpec.Builder builder = MethodSpec.methodBuilder("getSourceKeyNameMap")
                 .addModifiers(Modifier.PUBLIC)
+                .addAnnotation(Override.class)
                 .returns(mapOfKeyAndName);
         return builder.addStatement("return $L", SOURCE_KEY_NAME_MAP_FIELD_NAME)
                 .build();
@@ -237,6 +246,7 @@ public class SourceProcessor extends AbstractProcessor {
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(ClassName.get(String.class), paraName)
                 .addException(IOException.class)
+                .addAnnotation(Override.class)
                 .returns(sourceName)
                 .beginControlFlow("if (!$L.containsKey($L))", SOURCE_MAP_FIELD_NAME, paraName)
                 .beginControlFlow("switch ($L)", paraName);

@@ -36,7 +36,7 @@ public class RxSearchComicRequestManager extends RxRequestManager {
         super(okHttpClient);
     }
 
-    Flowable<ComicResultList> searchComic(String sourceId, String searchKey, int page) {
+    public Flowable<ComicResultList> searchComic(String sourceId, String searchKey, int page) {
         return Flowable.create(emitter -> {
             SearchComicParser parser = HHComic.getSource(sourceId);
             Request request = parser.buildSearchRequest(searchKey, page);

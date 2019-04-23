@@ -17,10 +17,10 @@
 package org.huxizhijian.hhcomic.model.comic;
 
 import android.content.Context;
+import android.widget.Toast;
 
 import org.huxizhijian.core.app.ConfigKeys;
 import org.huxizhijian.core.app.HHGlobalVariable;
-import org.huxizhijian.generate.SourceRouterApp;
 import org.huxizhijian.hhcomic.model.comic.config.HHComicConfig;
 import org.huxizhijian.hhcomic.model.comic.config.SourceConfig;
 import org.huxizhijian.hhcomic.model.comic.db.HHDatabase;
@@ -32,9 +32,12 @@ import org.huxizhijian.hhcomic.model.comic.service.requestmanager.RxComicInfoReq
 import org.huxizhijian.hhcomic.model.comic.service.requestmanager.RxRankAndRecommendRequestManager;
 import org.huxizhijian.hhcomic.model.comic.service.requestmanager.RxRequestManagerFactory;
 import org.huxizhijian.hhcomic.model.comic.service.requestmanager.RxSearchComicRequestManager;
+import org.huxizhijian.hhcomic.model.comic.service.source.ISourceRouter;
 import org.huxizhijian.hhcomic.model.comic.service.source.base.Source;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +54,10 @@ import androidx.room.Room;
  */
 public class HHComic {
 
+    private static boolean sIsInit = false;
+
+    private static ISourceRouter sSourceRouter;
+
     /**
      * 采用私有构造方法，该类仅仅集合了comic的所有model功能
      */
@@ -66,6 +73,26 @@ public class HHComic {
         HHGlobalVariable.init(context)
                 .withConnectTimeOut(15000, TimeUnit.MILLISECONDS)
                 .configure();
+        // 反射调用generate中的SourceRouterApp类
+        try {
+            Class clz = Class.forName("org.huxizhijian.generate.SourceRouterApp");
+            Method getInstance = clz.getMethod("getInstance");
+            // 获取源单例管理器单例
+            sSourceRouter = (ISourceRouter) getInstance.invoke(null);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } finally {
+            // 反射出错本app自然无法继续
+            // 会反馈到Bugly
+            Toast.makeText(context, "反射调用出现错误", Toast.LENGTH_SHORT).show();
+        }
+        sIsInit = true;
     }
 
     /**
@@ -85,9 +112,13 @@ public class HHComic {
      * @return source key list
      */
     public static List<SourceConfig> getSourceConfigList() {
+        if (sIsInit = false) {
+            // 没有初始化
+            return null;
+        }
         List<SourceConfig> sourceConfigList = config().getSourceConfigs();
         if (sourceConfigList == null) {
-            Map<String, String> sourceKeyNameMap = SourceRouterApp.getInstance().getSourceKeyNameMap();
+            Map<String, String> sourceKeyNameMap = sSourceRouter.getSourceKeyNameMap();
             Set<String> keySet = sourceKeyNameMap.keySet();
             sourceConfigList = new ArrayList<>();
             SourceConfig sourceConfig;
@@ -106,7 +137,11 @@ public class HHComic {
      * @return source
      */
     public static Source getSource(String sourceKey) throws IOException {
-        return SourceRouterApp.getInstance().getSource(sourceKey);
+        if (sIsInit = false) {
+            // 没有初始化
+            return null;
+        }
+        return sSourceRouter.getSource(sourceKey);
     }
 
     public static DatabaseGuide db() {
