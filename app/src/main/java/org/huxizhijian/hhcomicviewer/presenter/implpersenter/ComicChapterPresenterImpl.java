@@ -24,7 +24,9 @@ import org.huxizhijian.hhcomicviewer.utils.HHApiProvider;
 import org.huxizhijian.sdk.network.service.NormalRequest;
 import org.huxizhijian.sdk.network.service.NormalResponse;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @Author wei on 2017/1/7.
@@ -40,36 +42,15 @@ public class ComicChapterPresenterImpl implements IComicChapterPresenter {
 
     @Override
     public void getComicChapter(final ComicChapter comicChapter) {
-        /*Request request = new Request.Builder().get()
-                .url(CommonUtils.getChapterUrl(comicChapter.getCid(), comicChapter.getChid(),
-                        comicChapter.getServerId()))
-                .build();
-        HHApplication.getInstance().getClient().newCall(request)
-                .enqueue(new Callback() {
-                    @Override
-                    public void onFailure(Call call, IOException e) {
-                        mListener.onFail(e, comicChapter);
-                    }
-
-                    @Override
-                    public void onResponse(Call call, Response response) throws IOException {
-                        try {
-                            final String content = new String(response.body().bytes(), "gb2312");
-                            comicChapter.updatePicList(comicChapter.getServerId(), content);
-                            mListener.onSuccess(comicChapter);
-                        } catch (UnsupportedEncodingException e) {
-                            mListener.onFail(e, comicChapter);
-                        }
-                    }
-                });*/
-
         HHApiProvider.getInstance().getWebContentAsyn(CommonUtils.getChapterUrl(comicChapter.getCid(),
                 comicChapter.getChid(), comicChapter.getServerId()), new NormalResponse<byte[]>() {
             @Override
             public void success(NormalRequest request, byte[] data) {
+                // 该回调位于子线程
                 try {
-                    final String content = new String(data, "gb2312");
-                    comicChapter.updatePicList(comicChapter.getServerId(), content);
+                    final String content = new String(data, StandardCharsets.UTF_8);
+                    // 该方法只能在子线程中调用
+                    comicChapter.updatePicList(content);
                     for (int i = 0; i < comicChapter.getPicList().size(); i++) {
                         System.out.println(comicChapter.getPicList().get(i));
                     }
@@ -77,6 +58,10 @@ public class ComicChapterPresenterImpl implements IComicChapterPresenter {
                         mListener.onSuccess(comicChapter);
                     }
                 } catch (UnsupportedEncodingException e) {
+                    if (mListener != null) {
+                        mListener.onException(e, comicChapter);
+                    }
+                } catch (IOException e) {
                     if (mListener != null) {
                         mListener.onException(e, comicChapter);
                     }

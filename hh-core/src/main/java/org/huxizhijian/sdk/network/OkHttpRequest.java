@@ -68,10 +68,12 @@ public class OkHttpRequest extends BufferHttpRequest {
         return new OkHttpResponse(response);
     }
 
+    @Override
     public HttpMethod getMethod() {
         return mMethod;
     }
 
+    @Override
     public URI getUri() {
         return URI.create(mUrl);
     }

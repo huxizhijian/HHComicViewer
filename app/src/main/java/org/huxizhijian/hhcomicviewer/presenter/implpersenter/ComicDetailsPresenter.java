@@ -43,34 +43,6 @@ public class ComicDetailsPresenter implements IComicDetailsPresenter {
 
     @Override
     public void getComic(final int cid, final Comic oldComic) {
-        /*final Request request = new Request.Builder().get()
-                .url(CommonUtils.getComicUrl(cid))
-                .build();
-        HHApplication.getInstance().getClient().newCall(request)
-                .enqueue(new Callback() {
-                    @Override
-                    public void onFailure(Call call, IOException e) {
-                        mComicDetailsActivity.onFailure(e);
-                    }
-
-                    @Override
-                    public void onResponse(Call call, Response response) throws IOException {
-                        Comic comic = null;
-                        try {
-                            String content = new String(response.body().bytes(), "utf-8");
-                            //初始化
-                            if (oldComic == null) {
-                                comic = new Comic(cid, content);
-                            } else {
-                                comic = oldComic;
-                                comic.checkUpdate(content);
-                            }
-                            mComicDetailsActivity.onResponse(comic);
-                        } catch (UnsupportedEncodingException e) {
-                            mComicDetailsActivity.onFailure(e);
-                        }
-                    }
-                });*/
         HHApiProvider.getInstance().getWebContentAsyn(CommonUtils.getComicUrl(cid), new NormalResponse<byte[]>() {
             @Override
             public void success(NormalRequest request, byte[] data) {

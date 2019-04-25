@@ -47,7 +47,9 @@ public class ComicChapterDBHelper {
     }
 
     public SparseArray<List<ComicChapter>> findDownloadChapterMap(List<Comic> downloadedComics) {
-        if (downloadedComics == null || downloadedComics.size() == 0) return new SparseArray<>();
+        if (downloadedComics == null || downloadedComics.size() == 0) {
+            return new SparseArray<>();
+        }
         SparseArray<List<ComicChapter>> downloadedChapterMap = new SparseArray<>();
         List<ComicChapter> comicChapters;
         for (int i = 0; i < downloadedComics.size(); i++) {
@@ -58,7 +60,9 @@ public class ComicChapterDBHelper {
     }
 
     public SparseArray<List<ComicChapter>> findDownloadedChapterMap(List<Comic> finishedComics) {
-        if (finishedComics == null || finishedComics.size() == 0) return new SparseArray<>();
+        if (finishedComics == null || finishedComics.size() == 0) {
+            return new SparseArray<>();
+        }
         SparseArray<List<ComicChapter>> downloadedChapterMap = new SparseArray<>();
         List<ComicChapter> comicChapters;
         for (int i = 0; i < finishedComics.size(); i++) {
@@ -75,7 +79,9 @@ public class ComicChapterDBHelper {
     }
 
     public List<Comic> findFinishedComicList(List<Comic> downloadedComics) {
-        if (downloadedComics == null || downloadedComics.size() == 0) return new ArrayList<>();
+        if (downloadedComics == null || downloadedComics.size() == 0) {
+            return new ArrayList<>();
+        }
         List<Comic> finishedComics = new ArrayList<>();
         List<ComicChapter> comicChapters;
         for (int i = 0; i < downloadedComics.size(); i++) {

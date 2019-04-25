@@ -49,6 +49,7 @@
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
+        android:networkSecurityConfig="@xml/network_security_config"
         tools:replace="android:theme">
         <activity
             android:name=".ui.main.MainActivity"
@@ -163,9 +164,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths"/>
         </provider>
-
-        <activity android:name=".ui.debug.DebugActivity">
-        </activity>
     </application>
 
 </manifest>

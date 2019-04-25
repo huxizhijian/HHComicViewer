@@ -170,14 +170,11 @@ public class GalleryActivity extends Activity implements View.OnClickListener,
     @Override
     public void onSuccess(ComicChapter comicChapter) {
         this.mComicChapter = comicChapter;
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (mReadingDirection == VIEW_PAGER) {
-                    initImageViewInViewPager();
-                } else {
-                    initImageViewInListView();
-                }
+        runOnUiThread(() -> {
+            if (mReadingDirection == VIEW_PAGER) {
+                initImageViewInViewPager();
+            } else {
+                initImageViewInListView();
             }
         });
     }
@@ -186,24 +183,14 @@ public class GalleryActivity extends Activity implements View.OnClickListener,
     public void onException(Throwable e, ComicChapter comicChapter) {
         Log.e("getWebContentAsyn", "onError: " + e.toString());
         if (CommonUtils.getAPNType(GalleryActivity.this) == CommonUtils.NONEWTWORK) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(GalleryActivity.this, Constants.NO_NETWORK, Toast.LENGTH_SHORT).show();
-                }
-            });
+            runOnUiThread(() -> Toast.makeText(GalleryActivity.this, Constants.NO_NETWORK, Toast.LENGTH_SHORT).show());
         }
     }
 
     @Override
     public void onFail(int errorCode, String errorMsg, ComicChapter comicChapter) {
         if (CommonUtils.getAPNType(GalleryActivity.this) == CommonUtils.NONEWTWORK) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(GalleryActivity.this, Constants.NO_NETWORK, Toast.LENGTH_SHORT).show();
-                }
-            });
+            runOnUiThread(() -> Toast.makeText(GalleryActivity.this, Constants.NO_NETWORK, Toast.LENGTH_SHORT).show());
         }
     }
 
@@ -352,15 +339,15 @@ public class GalleryActivity extends Activity implements View.OnClickListener,
     }
 
     private void initMenu() {
-        mMenu = (RelativeLayout) findViewById(R.id.menu_gallery);
-        TextView btn_prev = (TextView) findViewById(R.id.btn_prev_gallery);
-        TextView btn_next = (TextView) findViewById(R.id.btn_next_gallery);
-        mSeekBar = (SeekBar) findViewById(R.id.seekBar_gallery);
-        mTv_name = (TextView) findViewById(R.id.tv_name_gallery);
-        mTv_progress = (TextView) findViewById(R.id.tv_progress_gallery);
-        mTv_time = (TextView) findViewById(R.id.tv_time_gallery);
-        mIv_battery = (ImageView) findViewById(R.id.iv_battery_gallery);
-        mTv_position = (TextView) findViewById(R.id.tv_position_gallery);
+        mMenu = findViewById(R.id.menu_gallery);
+        TextView btnPrev = findViewById(R.id.btn_prev_gallery);
+        TextView btnNext = findViewById(R.id.btn_next_gallery);
+        mSeekBar = findViewById(R.id.seekBar_gallery);
+        mTv_name = findViewById(R.id.tv_name_gallery);
+        mTv_progress = findViewById(R.id.tv_progress_gallery);
+        mTv_time = findViewById(R.id.tv_time_gallery);
+        mIv_battery = findViewById(R.id.iv_battery_gallery);
+        mTv_position = findViewById(R.id.tv_position_gallery);
 
         //用户设置
         preferencesSet();
@@ -383,8 +370,8 @@ public class GalleryActivity extends Activity implements View.OnClickListener,
             }
         });
 
-        btn_prev.setOnClickListener(this);
-        btn_next.setOnClickListener(this);
+        btnPrev.setOnClickListener(this);
+        btnNext.setOnClickListener(this);
         mTv_time.setText(CommonUtils.getNowDate());
 
         //设置10秒后更新时间
@@ -445,10 +432,10 @@ public class GalleryActivity extends Activity implements View.OnClickListener,
     }
 
     private void initView() {
-        mListView = (ZoomableListView) findViewById(R.id.list_view_gallery);
-        mViewPager = (ViewPager) findViewById(R.id.viewPager_gallery);
-        mProgressBar = (ProgressBar) findViewById(R.id.pg_loading_gallery);
-        mFrameLayout = (OpenMenuFrameLayout) findViewById(R.id.frame_gallery);
+        mListView = findViewById(R.id.list_view_gallery);
+        mViewPager = findViewById(R.id.viewPager_gallery);
+        mProgressBar = findViewById(R.id.pg_loading_gallery);
+        mFrameLayout = findViewById(R.id.frame_gallery);
     }
 
     @Override

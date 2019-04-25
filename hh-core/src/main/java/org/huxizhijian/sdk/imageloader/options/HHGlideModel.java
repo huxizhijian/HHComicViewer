@@ -8,6 +8,7 @@ import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.cache.DiskCache;
 import com.bumptech.glide.load.engine.cache.DiskLruCacheWrapper;
 import com.bumptech.glide.module.AppGlideModule;
+import com.bumptech.glide.request.RequestOptions;
 
 import org.huxizhijian.sdk.sharedpreferences.SharedPreferencesManager;
 
@@ -49,7 +50,12 @@ public class HHGlideModel extends AppGlideModule {
                 format = DecodeFormat.PREFER_ARGB_8888;
                 break;
         }
-        builder.setDecodeFormat(format);
+        // 高版本配置，没有禁用Hardware Bitmaps，仅Android O以上版本的新特性
+        // 参阅https://muyangmin.github.io/glide-docs-cn/doc/hardwarebitmaps.html了解不能使用Hardware Bitmaps的情况
+        // 不禁用可能会导致错误，但是有着节省内存和避免内存抖动的优点
+        builder.setDefaultRequestOptions(new RequestOptions()
+        .format(format)
+        );
 
         builder.setDiskCache(new DiskCache.Factory() {
             @Override
@@ -82,7 +88,7 @@ public class HHGlideModel extends AppGlideModule {
                 }
                 File cacheLocation = new File(path, cacheName);
                 cacheLocation.mkdirs();
-                return DiskLruCacheWrapper.get(cacheLocation, sizeInMB * 1024 * 1024);
+                return DiskLruCacheWrapper.create(cacheLocation, sizeInMB * 1024 * 1024);
             }
         });
     }

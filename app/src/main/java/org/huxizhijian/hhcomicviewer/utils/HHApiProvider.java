@@ -69,6 +69,10 @@ public class HHApiProvider {
         sWorkStation.add(request);
     }
 
+    /**
+     * 更新方法
+     * 暂时还没用
+     */
     public void updateVariable() {
         NormalRequest request = new NormalRequest();
         request.setUrl(Constants.HH_VARIABLE_SITE);

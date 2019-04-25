@@ -352,7 +352,7 @@ public class CommonUtils {
     }
 
     /**
-     * 根据页面规律组合出章节url
+     * 根据页面规律组合出章节url，仅仅会获取第一页地址
      *
      * @param cid
      * @param chid
@@ -360,8 +360,12 @@ public class CommonUtils {
      * @return
      */
     public static String getChapterUrl(int cid, long chid, int serverId) {
+        return getChapterUrl(cid, chid, serverId, 1);
+    }
+
+    public static String getChapterUrl(int cid, long chid, int serverId, int page) {
         HHComicWebVariable variable = HHApplication.getInstance().getHHWebVariable();
-        return variable.getChsite() + cid + "/" + chid + variable.getBehind() + serverId;
+        return variable.getChsite() + chid + String.format(variable.getBehind(), page) + serverId;
     }
 
     /**

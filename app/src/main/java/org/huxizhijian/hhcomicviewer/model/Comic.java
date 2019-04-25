@@ -29,7 +29,6 @@ import java.util.List;
 
 /**
  * 保存于数据库的实体Comic类
- * will deprecated see {@link org.huxizhijian.hhcomic.comic.bean.Comic}
  *
  * @author huxizhijian
  * @date 2016/8/23

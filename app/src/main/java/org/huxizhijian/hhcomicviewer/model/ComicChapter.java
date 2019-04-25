@@ -17,11 +17,13 @@
 package org.huxizhijian.hhcomicviewer.model;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.WorkerThread;
 
 import org.huxizhijian.hhcomicviewer.utils.ParsePicUrlList;
 import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -29,7 +31,6 @@ import java.util.ArrayList;
  * 章节实体类，主要保存下载状态
  * Created by wei on 2016/8/23.
  */
-@Deprecated
 @Table(name = "comic_chapter")
 public class ComicChapter implements Serializable, Comparable {
     @Column(name = "id", isId = true)
@@ -66,12 +67,6 @@ public class ComicChapter implements Serializable, Comparable {
     public ComicChapter() {
     }
 
-    public ComicChapter(long chid, int serverId, String content) {
-        this.picList = ParsePicUrlList.scanPicInPage(serverId, content);
-        this.chid = chid;
-        this.pageCount = picList.size();
-    }
-
     public ComicChapter(String comicTitle, int cid, long chid, String chapterName, int serverId) {
         this.comicTitle = comicTitle;
         this.cid = cid;
@@ -80,8 +75,9 @@ public class ComicChapter implements Serializable, Comparable {
         this.serverId = serverId;
     }
 
-    public void updatePicList(int serverId, String content) {
-        this.picList = ParsePicUrlList.scanPicInPage(serverId, content);
+    @WorkerThread
+    public void updatePicList(String content) throws IOException {
+        this.picList = ParsePicUrlList.scanPicInPage(cid, chid, serverId, content);
         this.pageCount = this.picList.size();
     }
 

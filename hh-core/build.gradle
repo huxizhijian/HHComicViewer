@@ -39,11 +39,10 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+    api fileTree(include: ['*.jar'], dir: 'libs')
     // test
     api "com.android.support.test.espresso:espresso-idling-resource:${espressoVersion}"
-    testApi "junit:junit:${junitVersion}"
-    testApi 'junit:junit:4.12'
+    testImplementation "junit:junit:${junitVersion}"
     // android support 包
     api "com.android.support:appcompat-v7:${supportLibVersion}"
     api "com.android.support:support-v4:${supportLibVersion}"
@@ -52,20 +51,20 @@ dependencies {
     api "com.android.support:support-v13:${supportLibVersion}"
     api "com.android.support:design:${supportLibVersion}"
     // glide 图片加载库
-    api 'com.github.bumptech.glide:glide:4.3.1'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.3.1'
+    api 'com.github.bumptech.glide:glide:4.8.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
 //     glide 变换
     api 'jp.wasabeef:glide-transformations:3.0.1'
     // 一个封装了glide加载进度监听的库
 //    compile 'com.sunfusheng:glideimageview:1.1.0'
     // gson JSON解析库
-    api 'com.google.code.gson:gson:2.8.2'
+    api 'com.google.code.gson:gson:2.8.5'
     // okhttp3 网络请求库
-    api 'com.squareup.okhttp3:okhttp:3.9.1'
+    api 'com.squareup.okhttp3:okhttp:3.12.1'
     // Android工具类库
-    api 'com.blankj:utilcode:1.9.0'
+    api 'com.blankj:utilcode:1.23.0'
     // 打logger专用工具
-    api 'com.orhanobut:logger:2.1.1'
+    api 'com.orhanobut:logger:2.2.0'
     // 字体图标库，使用fontawesome开源图标库
     api 'com.joanzapata.iconify:android-iconify-fontawesome:2.2.2'
     // 阿里巴巴fastjson库

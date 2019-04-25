@@ -24,5 +24,6 @@ import org.huxizhijian.hhcomicviewer.model.ComicChapter;
 
 public interface IComicChapterPresenter {
     void getComicChapter(ComicChapter comicChapter);
+
     void removeListener();
 }

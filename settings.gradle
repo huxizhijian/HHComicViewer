@@ -1,1 +1,1 @@
-include ':app', ':hh-core', ':hh-comic', ':hh_annotations', ':hh_compiler'
+include ':app', ':hh-core', ':hh-comic'

@@ -16,18 +16,21 @@
 
 package org.huxizhijian.hhcomicviewer.presenter.viewinterface;
 
+import android.support.annotation.UiThread;
+
 import org.huxizhijian.hhcomicviewer.model.ComicChapter;
 
 /**
- * Created by wei on 2017/1/7.
+ * @date  2017/1/7.
  */
-
 public interface IComicChapterListener {
 
+    @UiThread
     void onSuccess(ComicChapter comicChapter);
 
+    @UiThread
     void onException(Throwable e, ComicChapter comicChapter);
 
+    @UiThread
     void onFail(int errorCode, String errorMsg, ComicChapter comicChapter);
-
 }
