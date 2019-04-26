@@ -71,7 +71,7 @@
     <string name="hot_comics" translatable="false">热点漫画</string>
     <string name="more" translatable="false">更多</string>
     <string name="rank" translatable="false">排行榜</string>
-    <string name="classifies">分类</string>
+    <string name="classifies" translatable="false">分类</string>
 
     <integer name="anim_duration_medium" translatable="false">500</integer>
 
@@ -88,7 +88,7 @@
     <string name="error" translatable="false">发生错误</string>
     <string name="no_result" translatable="false">没有获取到漫画</string>
     <string name="no_network_please_retry" translatable="false">没有网络，请开启网络后再点击重试</string>
-    <string name="clear_search_history">清除搜索历史</string>
+    <string name="clear_search_history" translatable="false">清除搜索历史</string>
     <string name="enter_page_want_to_jump" translatable="false">请输入想跳转的页数</string>
     <string name="ensure_delete_mark" translatable="false">是否确定删除收藏？</string>
     <string name="delete_all_chapter" translatable="false">删除下载的章节图片</string>
@@ -96,11 +96,11 @@
     <string name="edit" translatable="false">编辑</string>
     <string name="right" translatable="false">确定</string>
 
-    <string name="app_version" translatable="false">汗汗漫画阅读器  v1.08.1</string>
+    <string name="app_version" translatable="false">汗汗漫画阅读器  v1.08.2</string>
     <string name="loading" translatable="false">加载中…</string>
     <string name="retry" translatable="false">重试</string>
     <string name="search_query_will_no_be_empty" translatable="false">搜索内容不能为空！</string>
     <string name="press_again_to_exit" translatable="false">再按一次退出</string>
-    <string name="clear_successful">成功清除！</string>
+    <string name="clear_successful" translatable="false">成功清除！</string>
 
 </resources>
