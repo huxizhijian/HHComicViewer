@@ -19,13 +19,11 @@ apply plugin: 'java-library'
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     // java poet java诗人,帮助我们通过类调用的形式生成代码
-    compile 'com.squareup:javapoet:1.11.1'
+    implementation 'com.squareup:javapoet:1.11.1'
     // Auto Service Google 出品的自动生成配置信息库
-    compile 'com.google.auto.service:auto-service:1.0-rc5'
-    compile 'com.google.auto:auto-common:0.10'
-    compile project(':hh_annotations')
+    implementation 'com.google.auto.service:auto-service:1.0-rc5'
+    implementation project(':hh_annotations')
 }
 
-tasks.withType(JavaCompile) {
-    options.encoding = "UTF-8"
-}
+sourceCompatibility = "1.8"
+targetCompatibility = "1.8"

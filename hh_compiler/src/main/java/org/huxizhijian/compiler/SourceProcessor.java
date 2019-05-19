@@ -48,7 +48,6 @@ import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
 /**
- * 注解处理器
  * A processor for generate java class to auto add source
  *
  * @author huxizhijian
@@ -64,21 +63,21 @@ public final class SourceProcessor extends AbstractProcessor {
     private Elements mElementUtils;
 
     /**
-     * 生成类的包名和类名
+     * generate class package name and class name
      */
     private static final String PACKAGE_NAME = "org.huxizhijian.generate";
     private static final String CLS_NAME = "SourceRouterApp";
     private static final ClassName THIS_TYPE = ClassName.get(PACKAGE_NAME, CLS_NAME);
 
     /**
-     * 要继承的接口
+     * implements interface package and name
      */
     private static final String INTERFACE_PACKAGE_NAME = "org.huxizhijian.hhcomic.model.comic.service.source";
     private static final String INTERFACE_CLS_NAME = "ISourceRouter";
     private static final ClassName INTERFACE_TYPE = ClassName.get(INTERFACE_PACKAGE_NAME, INTERFACE_CLS_NAME);
 
     /**
-     * 成员变量名
+     * class field name
      */
     private static final String SOURCE_MAP_FIELD_NAME = "mSourceMap";
     private static final String SOURCE_KEY_NAME_MAP_FIELD_NAME = "mSourceKeyNameMap";
@@ -117,24 +116,18 @@ public final class SourceProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        // 取出两者注解的类的Element
         Set<? extends Element> sourceImplElement = roundEnv.getElementsAnnotatedWith(SourceImpl.class);
         Set<? extends Element> sourceInterfaceElement = roundEnv.getElementsAnnotatedWith(SourceInterface.class);
 
-        // 生成的java类名,修饰
         TypeSpec.Builder typeBuilder = TypeSpec.classBuilder(CLS_NAME)
                 .addModifiers(Modifier.PUBLIC)
                 .addSuperinterface(INTERFACE_TYPE);
 
-        if (sourceInterfaceElement != null) {
-            if (sourceInterfaceElement.size() > 1) {
-                throw new IllegalStateException("Only one interface could has @SourceInterface annotation!");
-            } else {
-                for (Element element : sourceInterfaceElement) {
-                    TypeName clazz = ClassName.get(element.asType());
-                    typeBuilder.addField(sourceMapSpec(clazz));
-                    typeBuilder.addMethod(getSourceSpec(sourceImplElement, clazz));
-                }
+        if (sourceInterfaceElement != null && !sourceInterfaceElement.isEmpty()) {
+            for (Element element : sourceInterfaceElement) {
+                TypeName clazz = ClassName.get(element.asType());
+                typeBuilder.addField(sourceMapSpec(clazz));
+                typeBuilder.addMethod(getSourceSpec(sourceImplElement, clazz));
             }
         }
 
@@ -143,10 +136,9 @@ public final class SourceProcessor extends AbstractProcessor {
                 .addField(sourceKeyListSpec())
                 .addMethod(getSourceKeyNameMapSpec())
                 .addMethod(getInstantSpec())
-                .addMethod(constructorPrivate(sourceImplElement))
-                .build();
+                .addMethod(constructorPrivate(sourceImplElement));
 
-        // 生成的java文件
+        // generate java file
         JavaFile javaFile = JavaFile.builder(PACKAGE_NAME, typeBuilder.build())
                 .build();
 
@@ -159,9 +151,9 @@ public final class SourceProcessor extends AbstractProcessor {
     }
 
     /**
-     * 包含source实例的SparseArray成员变量
+     * Class field SparseArray mSourceMap, contain Source instances
      *
-     * @param sourceName SourceInterface注解的类,仅能有一个
+     * @param sourceName annotation @SourceInterface class type name
      * @return fieldSpec
      */
     private FieldSpec sourceMapSpec(TypeName sourceName) {
@@ -174,7 +166,7 @@ public final class SourceProcessor extends AbstractProcessor {
     }
 
     /**
-     * sourceKey的列表
+     * sourceKey list
      *
      * @return fieldSpec
      */
@@ -188,7 +180,7 @@ public final class SourceProcessor extends AbstractProcessor {
     }
 
     /**
-     * 生成本类的静态成员变量, 用于单例模式
+     * Use static field to implement singleton pattern
      *
      * @return field spec
      */
@@ -199,7 +191,7 @@ public final class SourceProcessor extends AbstractProcessor {
     }
 
     /**
-     * 单例模式获取实例方法
+     * get instance method
      *
      * @return method spec
      */
@@ -219,7 +211,7 @@ public final class SourceProcessor extends AbstractProcessor {
     }
 
     /**
-     * 返回sourceKeyList的方法
+     * return sourceKeyList method
      *
      * @return methodSpec
      */
@@ -235,7 +227,7 @@ public final class SourceProcessor extends AbstractProcessor {
     }
 
     /**
-     * 获取source实例方法
+     * get source instance method
      *
      * @param sourceImplElement 被{@link SourceImpl}注解修饰的类
      * @return methodSpec
@@ -268,7 +260,7 @@ public final class SourceProcessor extends AbstractProcessor {
     }
 
     /**
-     * 构建私有构造方法, 具有一些初始化方法
+     * constructor
      *
      * @return method spec
      */

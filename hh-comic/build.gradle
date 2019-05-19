@@ -15,7 +15,6 @@
  */
 
 apply plugin: 'com.android.library'
-apply plugin: 'org.greenrobot.greendao'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -58,6 +57,6 @@ dependencies {
     implementation 'org.jsoup:jsoup:1.11.3'
     // modules
     api project(':hh-core')
+    implementation project(':hh_annotations')
     annotationProcessor project(':hh_compiler')
-    compileOnly project(':hh_annotations')
 }
