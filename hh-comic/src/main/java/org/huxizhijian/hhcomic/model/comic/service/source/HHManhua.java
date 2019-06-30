@@ -53,9 +53,9 @@ import okhttp3.Response;
 @SourceImpl(id = HHManhua.SOURCE_KEY, name = HHManhua.SOURCE_NAME)
 public class HHManhua extends Source {
 
-    static final String SOURCE_KEY = "HHManhua";
+    public static final String SOURCE_KEY = "HHManhua";
 
-    static final String SOURCE_NAME = "汗汗漫画";
+    public static final String SOURCE_NAME = "汗汗漫画";
 
     private static final String BASE_URL = "http://www.hheehh.com";
 

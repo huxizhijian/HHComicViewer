@@ -26,6 +26,6 @@ import java.lang.annotation.Target;
  * @date 2018/4/2
  */
 @Target(ElementType.TYPE)
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.CLASS)
 public @interface SourceInterface {
 }

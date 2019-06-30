@@ -28,6 +28,11 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
+        javaCompileOptions {
+            annotationProcessorOptions {
+                includeCompileClasspath false
+            }
+        }
     }
     buildTypes {
         release {
@@ -54,7 +59,7 @@ dependencies {
     implementation "androidx.test.espresso:espresso-idling-resource:${espressoVersion}"
     testImplementation "junit:junit:${junitVersion}"
     // jsoup DOM操作库
-    implementation 'org.jsoup:jsoup:1.11.3'
+    implementation 'org.jsoup:jsoup:1.12.1'
     // modules
     api project(':hh-core')
     implementation project(':hh_annotations')

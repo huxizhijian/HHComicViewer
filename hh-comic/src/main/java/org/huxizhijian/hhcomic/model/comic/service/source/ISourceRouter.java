@@ -2,6 +2,7 @@ package org.huxizhijian.hhcomic.model.comic.service.source;
 
 import org.huxizhijian.hhcomic.model.comic.service.source.base.Source;
 
+import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -24,5 +25,5 @@ public interface ISourceRouter {
      * @param sourceKey source key
      * @return source instance
      */
-    Source getSource(String sourceKey);
+    Source getSource(String sourceKey) throws IOException;
 }

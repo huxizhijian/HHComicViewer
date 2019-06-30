@@ -28,7 +28,7 @@ import java.lang.annotation.Target;
  * @date 2018/3/5.
  */
 @Target(ElementType.TYPE)
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.CLASS)
 public @interface SourceImpl {
     /**
      * @return id of source impl, it should be only id in all source impl.

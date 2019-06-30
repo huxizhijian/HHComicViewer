@@ -20,9 +20,11 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     // java poet java诗人,帮助我们通过类调用的形式生成代码
     implementation 'com.squareup:javapoet:1.11.1'
-    // Auto Service Google 出品的自动生成配置信息库
-    implementation 'com.google.auto.service:auto-service:1.0-rc5'
+    // 注解库
     implementation project(':hh_annotations')
+    // 协助自动注册META-INF
+    implementation 'com.google.auto.service:auto-service:1.0-rc5'
+    annotationProcessor 'com.google.auto.service:auto-service:1.0-rc5'
 }
 
 sourceCompatibility = "1.8"

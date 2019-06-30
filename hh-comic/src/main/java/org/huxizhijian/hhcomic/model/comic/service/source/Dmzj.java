@@ -60,11 +60,11 @@ public class Dmzj extends Source {
     /**
      * 源id
      */
-    static final String SOURCE_KEY = "DMZJ";
+    public static final String SOURCE_KEY = "DMZJ";
     /**
      * 源名称
      */
-    static final String SOURCE_NAME = "动漫之家";
+    public static final String SOURCE_NAME = "动漫之家";
     /**
      * API V3
      */

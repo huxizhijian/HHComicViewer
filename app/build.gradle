@@ -79,13 +79,13 @@ dependencies {
     implementation "androidx.test.espresso:espresso-idling-resource:${espressoVersion}"
     testImplementation "junit:junit:${junitVersion}"
     // leak canary依赖
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.2'
-    releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.2'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.3'
+    releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.3'
     // Optional, if you use support library fragments:
-    debugImplementation 'com.squareup.leakcanary:leakcanary-support-fragment:1.6.2'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-support-fragment:1.6.3'
     // 腾讯bugly依赖
-    implementation 'com.tencent.bugly:crashreport:2.6.6.1'
-    implementation 'com.tencent.bugly:nativecrashreport:3.6.0.1'
+    implementation 'com.tencent.bugly:crashreport:2.8.6'
+    implementation 'com.tencent.bugly:nativecrashreport:3.7.1'
     // 加载动画框架
     implementation 'com.github.ybq:Android-SpinKit:1.2.0'
     // recyclerView,cardView包
