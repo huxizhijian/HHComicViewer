@@ -20,8 +20,6 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.widget.ImageView;
-
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
@@ -29,15 +27,13 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
-
+import jp.wasabeef.glide.transformations.BlurTransformation;
 import org.huxizhijian.sdk.imageloader.listener.ImageLoaderManager;
 import org.huxizhijian.sdk.imageloader.listener.ImageLoaderProgressListener;
 import org.huxizhijian.sdk.imageloader.listener.ImageRequestListener;
 import org.huxizhijian.sdk.imageloader.options.GlideApp;
 
 import java.io.File;
-
-import jp.wasabeef.glide.transformations.BlurTransformation;
 
 
 /**
@@ -86,20 +82,6 @@ public class GlideUtils implements ImageLoaderManager {
 
     @Override
     public void displayGalleryFull(Context context, String url, ImageView imageView, final ImageLoaderProgressListener listener) {
-        /*// 创建一个Loader
-        GlideAppImageLoader loader = GlideAppImageLoader.create(imageView);
-        // 设置监听
-        loader.setOnGlideAppImageViewListener(url, new OnGlideAppImageViewListener() {
-            @Override
-            public void onProgress(int percent, boolean isDone, GlideAppException exception) {
-                listener.onProgress(percent, isDone, exception);
-            }
-        });
-        // 设置渐变，并且加载到ImageView中
-        loader.requestBuilder(url, GALLERY_REQUEST_OPTIONS)
-                .transition(DrawableTransitionOptions.withCrossFade())
-                .into(imageView);*/
-        // TODO: 2017/10/27 实现一个进度条监听图片加载
         displayGalleryFull(context, url, imageView);
     }
 
