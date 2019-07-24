@@ -133,6 +133,10 @@ public class GalleryActivity extends Activity implements View.OnClickListener,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery);
         mComic = (Comic) getIntent().getSerializableExtra("comic");
+        if (mComic == null) {
+            Toast.makeText(this, "出错了~", Toast.LENGTH_SHORT).show();
+            finish();
+        }
         mChapterPosition = getIntent().getIntExtra("position", 0);
         initMenu();
         initView();

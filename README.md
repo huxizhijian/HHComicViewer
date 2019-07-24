@@ -25,7 +25,6 @@ Here is the libraries
 [jsoup](https://jsoup.org/)<br>
 [ShareSDK](http://www.mob.com/)<br>
 [Bugly](https://bugly.qq.com/v2/index)<br>
-[xutils3](https://github.com/wyouflf/xUtils3)<br>
 [SystemBarTint](https://github.com/jgilfelt/SystemBarTint)<br>
 [material](https://github.com/rey5137/material)<br>
 [Android-DirectoryChooser](https://github.com/passy/Android-DirectoryChooser)<br>
@@ -36,11 +35,11 @@ Here is the libraries
 [materialsearchview](https://github.com/Mauker1/MaterialSearchView)<br>
 [leakcanary](https://github.com/square/leakcanary)<br>
 [RecyclerView Animators](https://github.com/wasabeef/recyclerview-animators)<br>
+[greenDAO](https://github.com/greenrobot/greenDAO)
 
 # Download
 
 [github release](https://github.com/huxizhijian/HHComicViewer/releases)<br>
-[fir.im download](https://fir.im/dxbw)<br>
 
 # TODO
 

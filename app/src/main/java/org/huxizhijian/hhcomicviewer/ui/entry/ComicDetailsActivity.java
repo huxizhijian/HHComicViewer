@@ -45,13 +45,7 @@ import android.support.v7.widget.RecyclerView;
 import android.transition.ArcMotion;
 import android.transition.Fade;
 import android.transition.Transition;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewAnimationUtils;
-import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
+import android.view.*;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -59,13 +53,12 @@ import android.view.animation.Interpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
-
+import cn.sharesdk.onekeyshare.OnekeyShare;
 import com.rey.material.app.BottomSheetDialog;
-
-import org.huxizhijian.hhcomicviewer.app.HHApplication;
 import org.huxizhijian.hhcomicviewer.R;
 import org.huxizhijian.hhcomicviewer.adapter.VolDownloadSelectorAdapter;
 import org.huxizhijian.hhcomicviewer.adapter.VolRecyclerViewAdapter;
+import org.huxizhijian.hhcomicviewer.app.HHApplication;
 import org.huxizhijian.hhcomicviewer.databinding.ActivityComicDetailsBinding;
 import org.huxizhijian.hhcomicviewer.db.ComicChapterDBHelper;
 import org.huxizhijian.hhcomicviewer.db.ComicDBHelper;
@@ -90,8 +83,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import cn.sharesdk.onekeyshare.OnekeyShare;
 
 import static org.huxizhijian.sdk.util.TransitionLeakFixUtil.removeActivityFromTransitionManager;
 
@@ -673,17 +664,21 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        mComic = (Comic) data.getSerializableExtra("comic");
-        mComic.setLastReadTime(System.currentTimeMillis());
-        if (mVolAdapter != null) {
-            mVolAdapter.setReadChapter(mComic.getReadChapter());
+        Comic comic = (Comic) data.getSerializableExtra("comic");
+        if (comic != null) {
+            mComic = comic;
+            mComic.setLastReadTime(System.currentTimeMillis());
+            if (mVolAdapter != null) {
+                mVolAdapter.setReadChapter(mComic.getReadChapter());
+            }
         }
     }
 
     private void read() {
         //单击toolbar的按钮
-        if (mComic == null || mComic.getChapterId() == null || mComic.getChapterId().size() == 0)
+        if (mComic == null || mComic.getChapterId() == null || mComic.getChapterId().size() == 0) {
             return;
+        }
         Intent intent = new Intent(ComicDetailsActivity.this, GalleryActivity.class);
         intent.putExtra("comic", mComic);
         intent.putExtra("position", mComic.getReadChapter() == -1 ? 0 : mComic.getReadChapter());
@@ -698,7 +693,9 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
                 break;
             case R.id.btn_favorite:
                 //收藏
-                if (mComic == null) return;
+                if (mComic == null) {
+                    return;
+                }
                 Comic findComic = mComicDBHelper.findByCid(mComic.getCid());
                 if (findComic != null) {
                     if (findComic.isMark()) {
@@ -724,13 +721,15 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
                     Toast.makeText(ComicDetailsActivity.this, "收藏成功!", Toast.LENGTH_SHORT).show();
                     mBinding.btnFavoriteComicDetails.setImageResource(R.mipmap.my_favorite);
                     mBinding.buttonTextFavoriteComicDetails.setText("已收藏");
-                } else if (mComic == null) {
+                } else {
                     Toast.makeText(ComicDetailsActivity.this, "还没有加载完成，请耐心等待~", Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.btn_share:
                 //分享
-                if (mComic == null) break;
+                if (mComic == null) {
+                    break;
+                }
 
                 OnekeyShare oks = new OnekeyShare();
                 //关闭sso授权
@@ -801,12 +800,16 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
                 //阅读按钮（FAB收起时显示）
                 read();
                 break;
+            default:
+                break;
         }
     }
 
     private void searchAuthor() {
         Intent intent;
-        if (mComic == null) return;
+        if (mComic == null) {
+            return;
+        }
         intent = new Intent(this, SearchActivity.class);
         intent.setAction(Intent.ACTION_SEARCH);
         intent.putExtra(SearchManager.QUERY, mComic.getAuthor());
@@ -988,6 +991,8 @@ public class ComicDetailsActivity extends AppCompatActivity implements View.OnCl
                     // permission denied, boo! Disable the functionality that depends on this permission.
                     return;
                 }
+                break;
+            default:
                 break;
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);

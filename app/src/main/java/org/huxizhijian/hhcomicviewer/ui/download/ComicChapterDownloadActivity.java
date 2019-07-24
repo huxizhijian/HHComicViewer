@@ -24,6 +24,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 
+import android.widget.Toast;
 import org.huxizhijian.hhcomicviewer.R;
 import org.huxizhijian.hhcomicviewer.adapter.DownloadedComicChapterAdapter;
 import org.huxizhijian.hhcomicviewer.model.Comic;
@@ -48,6 +49,10 @@ public class ComicChapterDownloadActivity extends OfflineDownloadBaseActivity {
         setSupportActionBar(mBinding.toolbar);
         Intent intent = getIntent();
         mComic = (Comic) intent.getSerializableExtra("comic");
+        if (mComic == null){
+            Toast.makeText(this, "出错了~", Toast.LENGTH_SHORT).show();
+            finish();
+        }
         initSupportAppBar(mComic.getTitle());
         //设置过渡动画
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
