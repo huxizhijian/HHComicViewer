@@ -1,3 +1,4 @@
+# DEPRECATED
 # HHComicViewer
 
 这是一个汗汗漫画android平台阅读软件<br>
